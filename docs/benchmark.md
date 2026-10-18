@@ -74,8 +74,9 @@ The synthetic fleet covers these instead:
 - OpenAPI fallback (D5)
 - Constants across modules
 
-Not covered by any test yet:
-- The Java `RouteLocator` DSL
-- Flyway `V*__*.sql` naming
-- `@Document` collections (piggymetrics has some; I did not inspect the edges)
-- Shared-database detection (tables are scoped per service)
+Covered by unit tests:
+- The Java `RouteLocator` DSL (`GatewayJavaDslTest`). This test found that rewrite replacements such as `"/${s}"` were being resolved as property placeholders. That is now fixed.
+- Flyway `V*__*.sql`, multi-line Liquibase XML, `@Document` collections and JPA default naming (`DataExtractorTest`).
+
+Still not covered:
+- Shared-database detection (tables are scoped per service).

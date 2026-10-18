@@ -1,0 +1,26 @@
+name: Release
+
+# Push a tag like v0.1.0 to build, test and publish ssg-0.1.0.zip/.tar to GitHub Releases.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build distributions
+        run: ./gradlew build distZip distTar -PreleaseVersion="${GITHUB_REF_NAME#v}" --console=plain
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/distributions/* --title "$GITHUB_REF_NAME" --generate-notes

@@ -14,6 +14,8 @@ build/install/ssg/bin/ssg scan --repos ./fleet/* --profile default \
     --aliases aliases.yml --config-repo ./config-repo --out ./out
 ```
 
+Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`. Releases are built by `.github/workflows/release.yml` when a `v*` tag is pushed.
+
 `./gradlew build` compiles and runs the tests. `ssg diff` is planned for Phase 2 and is not implemented (it exits with code 2).
 
 ## Options

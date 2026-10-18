@@ -145,7 +145,8 @@ public final class GatewayExtractor implements Extractor {
                     .findFirst().map(c -> s.eval(c.getArgument(0))).orElse(Value.unresolved(l.toString()));
             var filters = new ArrayList<Def>();
             for (MethodCallExpr c : calls.reversed()) { // innermost calls come last in the chain
-                List<String> args = c.getArguments().stream().map(a -> s.eval(a).text()).toList();
+                // no placeholder resolution: "/${seg}" in rewritePath is a regex group reference, not a property
+                List<String> args = c.getArguments().stream().map(a -> s.index().eval(a).text()).toList();
                 switch (c.getNameAsString()) {
                     case "stripPrefix" -> filters.add(new Def("StripPrefix", args, null));
                     case "prefixPath" -> filters.add(new Def("PrefixPath", args, null));

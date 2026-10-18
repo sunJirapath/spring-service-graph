@@ -3,7 +3,8 @@ plugins {
 }
 
 group = "io.github.sunjirapath"
-version = "0.1.0-SNAPSHOT"
+// release builds pass -PreleaseVersion=1.2.3 (from the git tag)
+version = providers.gradleProperty("releaseVersion").getOrElse("0.1.0-SNAPSHOT")
 
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(21) }
