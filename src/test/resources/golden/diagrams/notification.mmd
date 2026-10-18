@@ -1,0 +1,8 @@
+flowchart LR
+  n0["gateway"]
+  n1["notification"]
+  n2[/"account.created"/]
+  n3[/"audit.events"/]
+  n0 -->|http-exchange| n1
+  n2 -->|consume| n1
+  n3 -->|consume| n1

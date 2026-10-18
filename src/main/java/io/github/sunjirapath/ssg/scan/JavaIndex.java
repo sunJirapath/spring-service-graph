@@ -1,0 +1,357 @@
+package io.github.sunjirapath.ssg.scan;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.CallableDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.Type;
+import io.github.sunjirapath.ssg.model.Confidence;
+import io.github.sunjirapath.ssg.model.Evidence;
+import io.github.sunjirapath.ssg.model.Value;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+/**
+ * All parsed Java sources of one repo, plus name lookup and constant folding.
+ * No symbol solver: names are resolved through locals, fields (including inherited ones),
+ * imports and the same package, which covers how constants are written in practice.
+ */
+public final class JavaIndex {
+
+    /** A file the parser rejected or only partly understood. */
+    public record Problem(Path file, int line, String message) {}
+
+    private static final int MAX_DEPTH = 24;
+
+    private final Repo repo;
+    private final List<CompilationUnit> units = new ArrayList<>();
+    private final Map<String, TypeDeclaration<?>> typesByFqn = new HashMap<>();
+    private final Map<CompilationUnit, Path> files = new HashMap<>();
+    private final List<Problem> problems = new ArrayList<>();
+
+    private JavaIndex(Repo repo) {
+        this.repo = repo;
+    }
+
+    public static JavaIndex build(Repo repo) {
+        var idx = new JavaIndex(repo);
+        var parser = new JavaParser(new ParserConfiguration()
+                .setLanguageLevel(ParserConfiguration.LanguageLevel.BLEEDING_EDGE));
+        try (Stream<Path> walk = Files.walk(repo.root())) {
+            for (Path f : walk.filter(idx::isMainSource).sorted().toList()) {
+                var result = parser.parse(f);
+                result.getProblems().forEach(p -> idx.problems.add(new Problem(f,
+                        p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
+                        p.getMessage().lines().findFirst().orElse("parse error"))));
+                result.getResult().ifPresent(cu -> idx.add(f, cu));
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return idx;
+    }
+
+    /** Main sources and generated sources (openapi-generator output); never tests. */
+    private boolean isMainSource(Path f) {
+        String p = rel(f);
+        if (!p.endsWith(".java") || p.contains("/.git/") || p.contains("/node_modules/") || p.contains("/src/test/")) {
+            return false;
+        }
+        boolean inBuildDir = p.contains("/build/") || p.contains("/target/");
+        return inBuildDir ? p.contains("generated") : p.contains("/src/main/java/");
+    }
+
+    /** Repo-relative path with a leading slash, so markers never match the checkout location. */
+    private String rel(Path f) {
+        return "/" + repo.relative(f);
+    }
+
+    /** The module directory a source file belongs to. */
+    public Path moduleOf(Path file) {
+        String p = rel(file);
+        for (String marker : List.of("/src/main/java/", "/build/", "/target/")) {
+            int i = p.indexOf(marker);
+            if (i >= 0) return repo.root().resolve(p.substring(0, i).replaceFirst("^/", "")).normalize();
+        }
+        return file.getParent();
+    }
+
+    private void add(Path file, CompilationUnit cu) {
+        units.add(cu);
+        files.put(cu, file);
+        for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) {
+            t.getFullyQualifiedName().ifPresent(fqn -> typesByFqn.putIfAbsent(fqn, t));
+        }
+    }
+
+    public Repo repo() { return repo; }
+    public List<CompilationUnit> units() { return units; }
+    public List<Problem> problems() { return problems; }
+    public Path fileOf(CompilationUnit cu) { return files.get(cu); }
+
+    public Evidence evidence(Node n) {
+        CompilationUnit cu = n.findCompilationUnit().orElseThrow();
+        return repo.evidence(files.get(cu), n.getBegin().map(p -> p.line).orElse(1));
+    }
+
+    public boolean isGenerated(CompilationUnit cu) {
+        return !rel(files.get(cu)).contains("/src/main/java/");
+    }
+
+    // ---------------------------------------------------------------- types
+
+    /** Resolves a (possibly dotted) type name as seen from {@code context}. */
+    public Optional<TypeDeclaration<?>> resolveType(String name, Node context) {
+        if (typesByFqn.containsKey(name)) return Optional.of(typesByFqn.get(name));
+        int dot = name.indexOf('.');
+        String head = dot < 0 ? name : name.substring(0, dot);
+        Optional<TypeDeclaration<?>> t = resolveSimple(head, context);
+        if (t.isEmpty() || dot < 0) return t;
+        String fqn = t.get().getFullyQualifiedName().orElse("") + name.substring(dot);
+        return Optional.ofNullable(typesByFqn.get(fqn));
+    }
+
+    public Optional<TypeDeclaration<?>> resolveType(ClassOrInterfaceType type, Node context) {
+        return resolveType(type.getNameWithScope(), context);
+    }
+
+    private Optional<TypeDeclaration<?>> resolveSimple(String simple, Node context) {
+        // enclosing and member types first
+        for (Node n = context; n != null; n = n.getParentNode().orElse(null)) {
+            if (n instanceof TypeDeclaration<?> td) {
+                if (td.getNameAsString().equals(simple)) return Optional.of(td);
+                TypeDeclaration<?> member = td.getFullyQualifiedName().map(f -> typesByFqn.get(f + "." + simple)).orElse(null);
+                if (member != null) return Optional.of(member);
+            }
+        }
+        CompilationUnit cu = context.findCompilationUnit().orElse(null);
+        if (cu == null) return Optional.empty();
+        // Java precedence: single-type imports, then the same package, then on-demand imports
+        var single = new ArrayList<String>();
+        var onDemand = new ArrayList<String>();
+        for (ImportDeclaration imp : cu.getImports()) {
+            if (imp.isStatic()) continue;
+            if (imp.isAsterisk()) onDemand.add(imp.getNameAsString() + "." + simple);
+            else if (imp.getName().getIdentifier().equals(simple)) single.add(imp.getNameAsString());
+        }
+        single.add(cu.getPackageDeclaration().map(p -> p.getNameAsString() + ".").orElse("") + simple);
+        single.addAll(onDemand);
+        return single.stream().map(typesByFqn::get).filter(java.util.Objects::nonNull).findFirst();
+    }
+
+    /** Super types (extends + implements) that exist in this repo's sources. */
+    public List<TypeDeclaration<?>> superTypes(TypeDeclaration<?> t) {
+        if (!(t instanceof ClassOrInterfaceDeclaration c)) return List.of();
+        var out = new ArrayList<TypeDeclaration<?>>();
+        for (var st : concat(c.getExtendedTypes(), c.getImplementedTypes())) resolveType(st, t).ifPresent(out::add);
+        return out;
+    }
+
+    private static List<ClassOrInterfaceType> concat(NodeList<ClassOrInterfaceType> a, NodeList<ClassOrInterfaceType> b) {
+        var l = new ArrayList<>(a);
+        l.addAll(b);
+        return l;
+    }
+
+    // ---------------------------------------------------------------- declarations
+
+    /** The local variable, parameter or field that {@code name} refers to at {@code context}. */
+    public Optional<Node> declarationOf(String name, Node context) {
+        for (Node n = context; n != null; n = n.getParentNode().orElse(null)) {
+            switch (n) {
+                case BlockStmt b -> {
+                    for (var st : b.getStatements()) {
+                        if (st instanceof ExpressionStmt es && es.getExpression() instanceof VariableDeclarationExpr v) {
+                            var hit = v.getVariables().stream().filter(d -> d.getNameAsString().equals(name)).findFirst();
+                            if (hit.isPresent()) return Optional.of(hit.get());
+                        }
+                    }
+                }
+                case CallableDeclaration<?> c -> {
+                    var hit = c.getParameters().stream().filter(p -> p.getNameAsString().equals(name)).findFirst();
+                    if (hit.isPresent()) return Optional.of(hit.get());
+                }
+                case LambdaExpr l -> {
+                    var hit = l.getParameters().stream().filter(p -> p.getNameAsString().equals(name)).findFirst();
+                    if (hit.isPresent()) return Optional.of(hit.get());
+                }
+                case TypeDeclaration<?> t -> {
+                    var hit = fieldOf(t, name, 0);
+                    if (hit.isPresent()) return hit.map(v -> (Node) v);
+                    if (t instanceof RecordDeclaration r) {
+                        var comp = r.getParameters().stream().filter(p -> p.getNameAsString().equals(name)).findFirst();
+                        if (comp.isPresent()) return Optional.of(comp.get());
+                    }
+                }
+                default -> { }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** A field declared in {@code t} or inherited from a super type found in sources. */
+    public Optional<VariableDeclarator> fieldOf(TypeDeclaration<?> t, String name, int depth) {
+        for (FieldDeclaration f : t.getFields()) {
+            for (VariableDeclarator v : f.getVariables()) if (v.getNameAsString().equals(name)) return Optional.of(v);
+        }
+        if (depth > MAX_DEPTH) return Optional.empty();
+        for (var st : superTypes(t)) {
+            var hit = fieldOf(st, name, depth + 1);
+            if (hit.isPresent()) return hit;
+        }
+        return Optional.empty();
+    }
+
+    /** Simple name of the declared type of {@code name} at {@code context}, e.g. "RestTemplate". */
+    public Optional<String> declaredType(String name, Node context) {
+        return declarationOf(name, context).map(d -> switch (d) {
+            case VariableDeclarator v -> simpleName(v.getType());
+            case Parameter p -> simpleName(p.getType());
+            default -> "";
+        });
+    }
+
+    public static String simpleName(Type t) {
+        return t instanceof ClassOrInterfaceType c ? c.getName().getIdentifier() : t.asString();
+    }
+
+    // ---------------------------------------------------------------- folding
+
+    /** Folds an expression to a string value. Property placeholders are left for {@link Config}. */
+    public Value eval(Expression e) {
+        return eval(e, 0);
+    }
+
+    /** Like {@link #eval} but expands array initializers: {@code {"a", B.C}} gives two values. */
+    public List<Value> evalAll(Expression e) {
+        if (e instanceof ArrayInitializerExpr a) return a.getValues().stream().map(this::eval).toList();
+        return List.of(eval(e));
+    }
+
+    private Value eval(Expression e, int depth) {
+        if (depth > MAX_DEPTH) return Value.unresolved(e.toString());
+        return switch (e) {
+            case StringLiteralExpr s -> Value.exact(s.asString());
+            case TextBlockLiteralExpr t -> Value.exact(t.asString());
+            case CharLiteralExpr c -> Value.exact(c.asChar() + "");
+            case IntegerLiteralExpr i -> Value.exact(i.getValue());
+            case LongLiteralExpr l -> Value.exact(l.getValue().replaceAll("[lL]$", ""));
+            case BooleanLiteralExpr b -> Value.exact(b.getValue() + "");
+            case EnclosedExpr en -> eval(en.getInner(), depth + 1);
+            case CastExpr c -> eval(c.getExpression(), depth + 1);
+            case BinaryExpr b when b.getOperator() == BinaryExpr.Operator.PLUS ->
+                    raw(eval(b.getLeft(), depth + 1).concat(eval(b.getRight(), depth + 1), b.toString()), e);
+            case NameExpr n -> evalDeclaration(declarationOf(n.getNameAsString(), n), n, depth)
+                    .orElseGet(() -> staticImport(n, depth));
+            case FieldAccessExpr f -> evalFieldAccess(f, depth);
+            case MethodCallExpr m -> evalCall(m, depth);
+            default -> Value.unresolved(e.toString());
+        };
+    }
+
+    private static Value raw(Value v, Expression e) {
+        return new Value(v.text(), v.confidence(), e.toString(), v.via());
+    }
+
+    private Optional<Value> evalDeclaration(Optional<Node> decl, Expression use, int depth) {
+        if (decl.isEmpty()) return Optional.empty();
+        Node d = decl.get();
+        Evidence at = evidence(d);
+        // @Value("${...}") on a field or parameter: the placeholder text is the value
+        NodeWithAnnotations<?> annotated = d instanceof Parameter p ? p
+                : d.getParentNode().filter(FieldDeclaration.class::isInstance).map(FieldDeclaration.class::cast).orElse(null);
+        if (annotated != null) {
+            var v = Ann.find(annotated, "Value").flatMap(a -> Ann.attr(a, "value"));
+            if (v.isPresent()) return Optional.of(raw(eval(v.get(), depth + 1).withConfidence(Confidence.RESOLVED, at), use));
+        }
+        if (d instanceof VariableDeclarator v && v.getInitializer().isPresent()) {
+            // shortcut: a non-final field or local reassigned later still folds to its initializer.
+            return Optional.of(raw(eval(v.getInitializer().get(), depth + 1).withConfidence(Confidence.RESOLVED, at), use));
+        }
+        return Optional.of(Value.unresolved(use.toString()));
+    }
+
+    private Value staticImport(NameExpr n, int depth) {
+        String name = n.getNameAsString();
+        CompilationUnit cu = n.findCompilationUnit().orElse(null);
+        if (cu == null) return Value.unresolved(name);
+        for (ImportDeclaration imp : cu.getImports()) {
+            if (!imp.isStatic()) continue;
+            String type;
+            if (imp.isAsterisk()) type = imp.getNameAsString();
+            else if (imp.getName().getIdentifier().equals(name)) type = imp.getName().getQualifier().map(Object::toString).orElse("");
+            else continue;
+            var t = Optional.ofNullable(typesByFqn.get(type));
+            var v = t.flatMap(td -> fieldOf(td, name, 0));
+            if (v.isPresent()) return evalDeclaration(v.map(x -> (Node) x), n, depth).orElseThrow();
+        }
+        return Value.unresolved(name);
+    }
+
+    private Value evalFieldAccess(FieldAccessExpr f, int depth) {
+        String name = f.getNameAsString();
+        if (f.getScope() instanceof ThisExpr) {
+            var t = f.findAncestor(TypeDeclaration.class);
+            return t.flatMap(td -> fieldOf((TypeDeclaration<?>) td, name, 0))
+                    .flatMap(v -> evalDeclaration(Optional.of(v), f, depth))
+                    .orElseGet(() -> Value.unresolved(f.toString()));
+        }
+        return resolveType(f.getScope().toString(), f)
+                .flatMap(t -> fieldOf(t, name, 0))
+                .flatMap(v -> evalDeclaration(Optional.of(v), f, depth))
+                .orElseGet(() -> Value.unresolved(f.toString()));
+    }
+
+    private Value evalCall(MethodCallExpr m, int depth) {
+        String name = m.getNameAsString();
+        // discoveryClient.getInstances("svc").get(0).getUri() / loadBalancer.choose("svc").getUri()
+        for (Expression s = m; s instanceof MethodCallExpr c; s = c.getScope().orElse(null)) {
+            if ((c.getNameAsString().equals("getInstances") || c.getNameAsString().equals("choose"))
+                    && c.getArguments().size() == 1) {
+                Value svc = eval(c.getArgument(0), depth + 1);
+                return raw(Value.exact("lb://").concat(svc, m.toString()).withConfidence(Confidence.RESOLVED, null), m);
+            }
+        }
+        // a zero-arg helper in the same class that only returns an expression: getBaseUrl() { return X; }
+        if (m.getArguments().isEmpty() && (m.getScope().isEmpty() || m.getScope().get() instanceof ThisExpr)) {
+            var helper = m.findAncestor(TypeDeclaration.class).stream()
+                    .flatMap(t -> ((TypeDeclaration<?>) t).getMethodsByName(name).stream())
+                    .filter(md -> md.getParameters().isEmpty() && md.getBody().map(b -> b.getStatements().size() == 1).orElse(false))
+                    .flatMap(md -> md.getBody().get().getStatement(0).toReturnStmt().flatMap(r -> r.getExpression()).stream())
+                    .findFirst();
+            if (helper.isPresent()) return raw(eval(helper.get(), depth + 1).withConfidence(Confidence.RESOLVED, evidence(helper.get())), m);
+        }
+        if (m.getScope().isPresent() && m.getArguments().isEmpty()
+                && List.of("toString", "trim", "strip", "toURI", "toUriString").contains(name)) {
+            return raw(eval(m.getScope().get(), depth + 1), m);
+        }
+        if (m.getScope().map(Object::toString).orElse("").equals("String") && name.equals("valueOf")
+                && m.getArguments().size() == 1) {
+            return raw(eval(m.getArgument(0), depth + 1), m);
+        }
+        return Value.unresolved(m.toString());
+    }
+}

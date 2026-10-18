@@ -1,0 +1,8 @@
+flowchart LR
+  n0["account"]
+  n1["gateway"]
+  n2[("accounts")]
+  n3[/"account.created"/]
+  n0 -->|owns, uses| n2
+  n0 -->|produce| n3
+  n1 -->|feign, gateway| n0

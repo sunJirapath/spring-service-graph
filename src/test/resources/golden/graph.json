@@ -1,0 +1,402 @@
+{
+  "nodes" : [
+    {
+      "kind" : "endpoint",
+      "id" : "endpoint:account-admin:DELETE /admin/accounts/{id}",
+      "service" : "account-admin",
+      "method" : "DELETE",
+      "path" : "/admin/accounts/{id}"
+    },
+    {
+      "kind" : "endpoint",
+      "id" : "endpoint:account:GET /api/accounts/{id}",
+      "service" : "account",
+      "method" : "GET",
+      "path" : "/api/accounts/{id}"
+    },
+    {
+      "kind" : "endpoint",
+      "id" : "endpoint:account:POST /api/accounts",
+      "service" : "account",
+      "method" : "POST",
+      "path" : "/api/accounts"
+    },
+    {
+      "kind" : "endpoint",
+      "id" : "endpoint:gateway:* /account-api/**",
+      "service" : "gateway",
+      "method" : "*",
+      "path" : "/account-api/**"
+    },
+    {
+      "kind" : "endpoint",
+      "id" : "endpoint:notification:POST /notifications",
+      "service" : "notification",
+      "method" : "POST",
+      "path" : "/notifications"
+    },
+    {
+      "kind" : "external",
+      "id" : "external:unresolved",
+      "name" : "unresolved"
+    },
+    {
+      "kind" : "service",
+      "id" : "service:account",
+      "name" : "account",
+      "repo" : "account",
+      "path" : "account-service"
+    },
+    {
+      "kind" : "service",
+      "id" : "service:account-admin",
+      "name" : "account-admin",
+      "repo" : "account",
+      "path" : "account-admin"
+    },
+    {
+      "kind" : "service",
+      "id" : "service:gateway",
+      "name" : "gateway",
+      "repo" : "gateway",
+      "path" : "."
+    },
+    {
+      "kind" : "service",
+      "id" : "service:notification",
+      "name" : "notification",
+      "repo" : "notification",
+      "path" : "."
+    },
+    {
+      "kind" : "table",
+      "id" : "table:account/accounts",
+      "service" : "account",
+      "name" : "accounts",
+      "store" : "sql"
+    },
+    {
+      "kind" : "topic",
+      "id" : "topic:account.created",
+      "name" : "account.created"
+    },
+    {
+      "kind" : "topic",
+      "id" : "topic:audit.events",
+      "name" : "audit.events"
+    }
+  ],
+  "edges" : [
+    {
+      "kind" : "EXPOSES",
+      "from" : "service:account",
+      "to" : "endpoint:account:GET /api/accounts/{id}",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "source" : "controller"
+      },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java",
+          "line" : 17
+        }
+      ]
+    },
+    {
+      "kind" : "EXPOSES",
+      "from" : "service:account",
+      "to" : "endpoint:account:POST /api/accounts",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "source" : "controller"
+      },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java",
+          "line" : 22
+        }
+      ]
+    },
+    {
+      "kind" : "PRODUCES",
+      "from" : "service:account",
+      "to" : "topic:account.created",
+      "confidence" : "RESOLVED",
+      "attrs" : {
+        "via" : "KafkaTemplate"
+      },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/events/AccountEvents.java",
+          "line" : 17
+        },
+        {
+          "repo" : "account",
+          "file" : "account-api/src/main/java/demo/account/api/Topics.java",
+          "line" : 4
+        },
+        {
+          "repo" : "account",
+          "file" : "account-api/src/main/java/demo/account/api/Topics.java",
+          "line" : 5
+        }
+      ]
+    },
+    {
+      "kind" : "OWNS",
+      "from" : "service:account",
+      "to" : "table:account/accounts",
+      "confidence" : "EXACT",
+      "attrs" : { },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/resources/db/changelog/db.changelog-master.yaml",
+          "line" : 7
+        }
+      ]
+    },
+    {
+      "kind" : "USES",
+      "from" : "service:account",
+      "to" : "table:account/accounts",
+      "confidence" : "EXACT",
+      "attrs" : { },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/data/AccountEntity.java",
+          "line" : 7
+        },
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/data/AccountRepository.java",
+          "line" : 6
+        }
+      ]
+    },
+    {
+      "kind" : "EXPOSES",
+      "from" : "service:account-admin",
+      "to" : "endpoint:account-admin:DELETE /admin/accounts/{id}",
+      "confidence" : "RESOLVED",
+      "attrs" : {
+        "source" : "openapi"
+      },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-admin/src/main/resources/openapi/admin-api.yaml",
+          "line" : 9
+        }
+      ]
+    },
+    {
+      "kind" : "EXPOSES",
+      "from" : "service:gateway",
+      "to" : "endpoint:gateway:* /account-api/**",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "source" : "gateway-route"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/resources/application.yml",
+          "line" : 12
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "endpoint:account:GET /api/accounts/{id}",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "client" : "feign",
+        "method" : "GET",
+        "path" : "/api/accounts/{id}"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/client/AccountClient.java",
+          "line" : 11
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "endpoint:account:GET /api/accounts/{id}",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "client" : "gateway",
+        "method" : "*",
+        "path" : "/**"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/resources/application.yml",
+          "line" : 10
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "endpoint:account:POST /api/accounts",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "client" : "gateway",
+        "method" : "*",
+        "path" : "/**"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/resources/application.yml",
+          "line" : 10
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "endpoint:notification:POST /notifications",
+      "confidence" : "RESOLVED",
+      "attrs" : {
+        "client" : "http-exchange",
+        "method" : "POST",
+        "path" : "/notifications"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/client/NotificationClient.java",
+          "line" : 10
+        },
+        {
+          "repo" : "gateway",
+          "file" : "src/main/resources/application.yml",
+          "line" : 17
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "external:unresolved",
+      "confidence" : "UNRESOLVED",
+      "attrs" : {
+        "client" : "rest-template",
+        "method" : "GET",
+        "path" : "{?}/reports/{?}",
+        "raw" : "baseUrlFor(region) + \"/reports/\" + id"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/report/LegacyReportClient.java",
+          "line" : 16
+        }
+      ]
+    },
+    {
+      "kind" : "CALLS",
+      "from" : "service:gateway",
+      "to" : "service:account",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "client" : "feign",
+        "method" : "POST",
+        "path" : "/api/accounts/{id}/close"
+      },
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/client/AccountClient.java",
+          "line" : 14
+        }
+      ]
+    },
+    {
+      "kind" : "EXPOSES",
+      "from" : "service:notification",
+      "to" : "endpoint:notification:POST /notifications",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "source" : "controller"
+      },
+      "evidence" : [
+        {
+          "repo" : "notification",
+          "file" : "src/main/java/demo/notification/web/NotificationController.java",
+          "line" : 12
+        }
+      ]
+    },
+    {
+      "kind" : "CONSUMES",
+      "from" : "service:notification",
+      "to" : "topic:account.created",
+      "confidence" : "RESOLVED",
+      "attrs" : {
+        "via" : "KafkaListener"
+      },
+      "evidence" : [
+        {
+          "repo" : "notification",
+          "file" : "src/main/java/demo/notification/events/AccountCreatedListener.java",
+          "line" : 9
+        }
+      ]
+    },
+    {
+      "kind" : "CONSUMES",
+      "from" : "service:notification",
+      "to" : "topic:audit.events",
+      "confidence" : "EXACT",
+      "attrs" : {
+        "via" : "cloud-stream:audit-in-0"
+      },
+      "evidence" : [
+        {
+          "repo" : "notification",
+          "file" : "src/main/resources/application.yml",
+          "line" : 8
+        }
+      ]
+    }
+  ],
+  "findings" : [
+    {
+      "kind" : "CONTRACT_DRIFT",
+      "service" : "gateway",
+      "message" : "feign call POST /api/accounts/{id}/close matches no endpoint exposed by account",
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/client/AccountClient.java",
+          "line" : 14
+        }
+      ]
+    },
+    {
+      "kind" : "UNRESOLVED",
+      "service" : "gateway",
+      "message" : "rest-template call GET {?}/reports/{?} (from `baseUrlFor(region) + \"/reports/\" + id`)",
+      "evidence" : [
+        {
+          "repo" : "gateway",
+          "file" : "src/main/java/demo/gateway/report/LegacyReportClient.java",
+          "line" : 16
+        }
+      ]
+    }
+  ]
+}

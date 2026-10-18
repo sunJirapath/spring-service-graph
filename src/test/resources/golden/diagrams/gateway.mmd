@@ -1,0 +1,8 @@
+flowchart LR
+  n0{{"unresolved"}}
+  n1["account"]
+  n2["gateway"]
+  n3["notification"]
+  n2 -->|rest-template| n0
+  n2 -->|feign, gateway| n1
+  n2 -->|http-exchange| n3

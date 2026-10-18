@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: notification
+  cloud:
+    stream:
+      bindings:
+        audit-in-0:
+          destination: audit.events
+          group: notification

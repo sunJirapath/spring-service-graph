@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: account-route
+              uri: lb://account
+              predicates:
+                - Path=/account-api/**
+              filters:
+                - StripPrefix=1
+clients:
+  notification:
+    base-url: http://notification:8080
+    api-key: s3cr3t-do-not-leak

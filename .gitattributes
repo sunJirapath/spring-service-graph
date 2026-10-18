@@ -1,0 +1,4 @@
+# golden files are compared byte for byte
+* text=auto eol=lf
+*.bat text eol=crlf
+*.jar binary

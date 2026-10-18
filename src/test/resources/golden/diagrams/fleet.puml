@@ -1,0 +1,19 @@
+@startuml fleet
+skinparam componentStyle rectangle
+left to right direction
+
+cloud "unresolved" as n0
+component "account" as n1
+component "account-admin" as n2
+component "gateway" as n3
+component "notification" as n4
+queue "account.created" as n5
+queue "audit.events" as n6
+
+n1 --> n5 : produce
+n3 --> n0 : rest-template
+n3 --> n1 : feign, gateway
+n3 --> n4 : http-exchange
+n5 --> n4 : consume
+n6 --> n4 : consume
+@enduml

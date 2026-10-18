@@ -1,0 +1,3 @@
+clients:
+  notification:
+    base-url: http://notification.prod.svc:8080
