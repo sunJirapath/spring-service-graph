@@ -28,6 +28,10 @@ application {
     applicationName = "ssg"
 }
 
+tasks.jar {
+    manifest { attributes("Implementation-Version" to project.version) }
+}
+
 tasks.test {
     useJUnitPlatform()
     // regenerate golden files with: ./gradlew test -PupdateGolden

@@ -39,6 +39,13 @@ public final class MarkdownOutput {
         TextFile.write(w.out.resolve("index.md"), w.index());
     }
 
+    /** One service page with evidence as plain {@code repo/file:line} text (no links), e.g. for MCP. */
+    public static String servicePage(Graph graph, String service) {
+        var w = new MarkdownOutput(graph, Map.of(), Path.of("."));
+        return w.g.services().stream().filter(s -> s.name().equals(service)).findFirst().map(w::servicePage)
+                .orElseThrow(() -> new IllegalArgumentException("unknown service: " + service));
+    }
+
     // ---------------------------------------------------------------- service page
 
     private String servicePage(Node.Service s) {
@@ -67,12 +74,14 @@ public final class MarkdownOutput {
                 .append("Repo `").append(s.repo()).append("`, module `").append(s.path()).append("`.\n\n");
 
         md.append("## Exposes\n\n");
-        table(md, List.of("Method", "Path", "Called by", "Source", "Confidence", "Evidence"), exposes, e -> {
+        table(md, List.of("Method", "Path", "Called by", "Reaches", "Source", "Confidence", "Evidence"), exposes, e -> {
             var ep = (Node.Endpoint) g.nodes.get(e.to());
             String callers = g.to(e.to(), Edge.Kind.CALLS).stream().map(c -> g.owner(c.from())).distinct().sorted()
                     .collect(Collectors.joining(", "));
-            return List.of(ep.method(), code(ep.path()), callers.isEmpty() ? "-" : callers, e.attrs().get("source"),
-                    e.confidence().name(), evidence(dir, e.evidence()));
+            String reaches = g.from(e.to(), Edge.Kind.REACHES).stream().map(r -> g.label(r.to())).distinct().sorted()
+                    .map(MarkdownOutput::code).collect(Collectors.joining("<br>"));
+            return List.of(ep.method(), code(ep.path()), callers.isEmpty() ? "-" : callers, reaches.isEmpty() ? "-" : reaches,
+                    e.attrs().get("source"), e.confidence().name(), evidence(dir, e.evidence()));
         });
 
         md.append("## Calls\n\n");

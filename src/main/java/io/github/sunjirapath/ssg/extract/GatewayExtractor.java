@@ -71,7 +71,7 @@ public final class GatewayExtractor implements Extractor {
             if (!p.name.equals("Path")) continue;
             for (String pattern : p.args) {
                 Value inbound = Value.exact(Mappings.join(pattern));
-                for (String verb : methods) facts.add(new Fact.Endpoint(verb, inbound, p.evidence, "gateway-route"));
+                for (String verb : methods) facts.add(new Fact.Endpoint(verb, inbound, p.evidence, "gateway-route", null));
                 if (!uri.text().contains("://")) continue; // forward:, no:// are local
                 Value target = OutboundHttpExtractor.url(uri, rewrite(pattern, filters));
                 for (String verb : methods) facts.add(new Fact.Call("gateway", verb, target, uriEntry.evidence()));
@@ -160,7 +160,7 @@ public final class GatewayExtractor implements Extractor {
                 for (var arg : c.getArguments()) {
                     Value pattern = s.eval(arg);
                     var ev = s.evidence(c);
-                    facts.add(new Fact.Endpoint("*", Mappings.joinValues(pattern), ev, "gateway-route"));
+                    facts.add(new Fact.Endpoint("*", Mappings.joinValues(pattern), ev, "gateway-route", null));
                     if (!uri.text().contains("://")) continue;
                     Value path = pattern.resolved() ? rewrite(pattern.text(), filters) : pattern;
                     facts.add(new Fact.Call("gateway", "*", OutboundHttpExtractor.url(uri, path), ev));

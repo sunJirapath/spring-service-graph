@@ -41,7 +41,7 @@ public final class DiagramOutput {
             String to;
             String label;
             switch (e.kind()) {
-                case EXPOSES -> { continue; }
+                case EXPOSES, REACHES -> { continue; }
                 case CALLS -> {
                     from = e.from();
                     Node t = g.nodes.get(e.to());

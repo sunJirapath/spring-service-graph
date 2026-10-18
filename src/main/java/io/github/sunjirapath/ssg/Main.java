@@ -1,10 +1,16 @@
 package io.github.sunjirapath.ssg;
 
+import io.github.sunjirapath.ssg.diff.GraphDiff;
+import io.github.sunjirapath.ssg.mcp.GraphQueries;
+import io.github.sunjirapath.ssg.mcp.McpServer;
 import io.github.sunjirapath.ssg.output.DiagramOutput;
 import io.github.sunjirapath.ssg.output.JsonOutput;
 import io.github.sunjirapath.ssg.output.MarkdownOutput;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,13 +19,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** {@code ssg scan --repos <dir>... [--profile p] [--aliases f] [--config-repo d] --out d}. */
+/** Command line: {@code ssg scan}, {@code ssg diff}, {@code ssg mcp}. */
 public final class Main {
 
     private static final String USAGE = """
             usage: ssg scan --repos <dir>... [--profile <name>] [--aliases <aliases.yml>]
                             [--config-repo <dir>] --out <dir>
-                   ssg diff --base <dir> --head <dir>   (not implemented yet)
+                   ssg diff --base <dir|graph.json> --head <dir|graph.json>   (Markdown impact report on stdout)
+                   ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
             """;
 
     private Main() {}
@@ -46,8 +53,18 @@ public final class Main {
         return switch (args[0]) {
             case "scan" -> scan(opts);
             case "diff" -> {
-                System.err.println("ssg diff is planned for Phase 2");
-                yield 2;
+                var base = JsonOutput.read(Path.of(single(opts, "--base", null)));
+                var head = JsonOutput.read(Path.of(single(opts, "--head", null)));
+                utf8Stdout().print(GraphDiff.report(base, head));
+                yield 0;
+            }
+            case "mcp" -> {
+                var graph = JsonOutput.read(Path.of(single(opts, "--graph", null)));
+                String version = java.util.Objects.requireNonNullElse(Main.class.getPackage().getImplementationVersion(), "dev");
+                System.err.println("ssg mcp: serving " + graph.nodes().size() + " nodes on stdio");
+                new McpServer(new GraphQueries(graph), version)
+                        .serve(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)), utf8Stdout());
+                yield 0;
             }
             default -> throw new IllegalArgumentException("unknown command: " + args[0]);
         };
@@ -70,6 +87,11 @@ public final class Main {
         System.out.printf("%d nodes, %d edges, %d findings -> %s%n", g.nodes().size(), g.edges().size(),
                 g.findings().size(), out.toAbsolutePath().normalize());
         return 0;
+    }
+
+    /** stdout carries Markdown and JSON-RPC, so it is UTF-8 whatever the console code page is. */
+    private static java.io.PrintStream utf8Stdout() {
+        return new java.io.PrintStream(new java.io.FileOutputStream(java.io.FileDescriptor.out), true, StandardCharsets.UTF_8);
     }
 
     /** {@code --name v1 v2 --other v}: each option collects values until the next {@code --}. */

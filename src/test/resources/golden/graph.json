@@ -88,6 +88,27 @@
   ],
   "edges" : [
     {
+      "kind" : "REACHES",
+      "from" : "endpoint:account:POST /api/accounts",
+      "to" : "topic:account.created",
+      "confidence" : "RESOLVED",
+      "attrs" : {
+        "chain" : "AccountController.createAccount → AccountEvents.accountCreated"
+      },
+      "evidence" : [
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/events/AccountEvents.java",
+          "line" : 17
+        },
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/web/AccountController.java",
+          "line" : 26
+        }
+      ]
+    },
+    {
       "kind" : "EXPOSES",
       "from" : "service:account",
       "to" : "endpoint:account:GET /api/accounts/{id}",

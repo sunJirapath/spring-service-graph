@@ -79,16 +79,19 @@ public final class Linker {
 
     private void addFacts(ServiceFacts sf) {
         String from = Node.Service.idOf(sf.service());
+        var sinkTargets = new HashMap<Evidence, List<String>>(); // where a fact was found -> nodes it links to
         for (Fact f : sf.facts()) {
             switch (f) {
                 case Fact.Endpoint e -> { }
-                case Fact.Call c -> call(sf.service(), from, c);
+                case Fact.Reach r -> { } // after all sinks are linked, below
+                case Fact.Call c -> sinkTargets.computeIfAbsent(c.evidence(), k -> new ArrayList<>()).addAll(call(sf.service(), from, c));
                 case Fact.TopicUse t -> {
                     String name = t.topic().resolved() ? t.topic().text() : "?" + t.topic().raw();
                     String tid = Node.Topic.idOf(name);
                     nodes.putIfAbsent(tid, new Node.Topic(tid, name));
                     var kind = t.produce() ? Edge.Kind.PRODUCES : Edge.Kind.CONSUMES;
                     edge(kind, from, tid, t.topic(), t.evidence(), attrs("via", t.via()));
+                    sinkTargets.computeIfAbsent(t.evidence(), k -> new ArrayList<>()).add(tid);
                     if (!t.topic().resolved()) {
                         unresolved(sf.service(), (t.produce() ? "produced" : "consumed") + " topic", t.topic(), t.evidence());
                     }
@@ -98,15 +101,25 @@ public final class Linker {
                     nodes.merge(tid, new Node.Table(tid, sf.service(), t.table().text(), t.store()),
                             (old, neu) -> t.store().equals("mongo") ? neu : old);
                     edge(t.owns() ? Edge.Kind.OWNS : Edge.Kind.USES, from, tid, t.table(), t.evidence(), new TreeMap<>());
+                    sinkTargets.computeIfAbsent(t.evidence(), k -> new ArrayList<>()).add(tid);
                     if (!t.table().resolved()) unresolved(sf.service(), "table", t.table(), t.evidence());
                 }
                 case Fact.Problem p -> findings.add(new Finding(Finding.Kind.valueOf(p.kind()), sf.service(), p.message(),
                         List.of(p.evidence())));
             }
         }
+        for (Fact f : sf.facts()) {
+            if (!(f instanceof Fact.Reach r)) continue;
+            String eid = Node.Endpoint.idOf(sf.service(), r.method(), r.path());
+            var via = new Value("", Confidence.RESOLVED, "", List.of(r.handler()));
+            for (String target : sinkTargets.getOrDefault(r.sink(), List.of())) {
+                edge(Edge.Kind.REACHES, eid, target, via, r.sink(), attrs("chain", r.chain()));
+            }
+        }
     }
 
-    private void call(String service, String from, Fact.Call c) {
+    /** Links one call and returns the node ids it now points to. */
+    private List<String> call(String service, String from, Fact.Call c) {
         Url url = parse(c.url().text());
         var attrs = attrs("client", c.client(), "method", c.method(), "path", url.path());
         if (!c.url().resolved()) attrs.put("raw", c.url().raw());
@@ -116,23 +129,24 @@ public final class Linker {
         if (target == null) {
             nodes.putIfAbsent(UNRESOLVED_TARGET, new Node.External(UNRESOLVED_TARGET, "unresolved"));
             edge(Edge.Kind.CALLS, from, UNRESOLVED_TARGET, c.url(), c.evidence(), attrs);
-            return;
+            return List.of(UNRESOLVED_TARGET);
         }
         if (target.startsWith("external:")) {
             nodes.putIfAbsent(target, new Node.External(target, target.substring("external:".length())));
             edge(Edge.Kind.CALLS, from, target, c.url(), c.evidence(), attrs);
-            return;
+            return List.of(target);
         }
         var matched = endpoints.getOrDefault(target, List.of()).stream()
                 .filter(e -> methodMatches(c.method(), e.method()) && PathMatch.matches(url.path(), e.path()))
                 .toList();
         for (EndpointRef e : matched) edge(Edge.Kind.CALLS, from, e.id(), c.url(), c.evidence(), attrs);
-        if (!matched.isEmpty()) return;
+        if (!matched.isEmpty()) return matched.stream().map(EndpointRef::id).toList();
         edge(Edge.Kind.CALLS, from, Node.Service.idOf(target), c.url(), c.evidence(), attrs);
         if (!url.path().contains(Value.UNKNOWN)) {
             findings.add(new Finding(Finding.Kind.CONTRACT_DRIFT, service, c.client() + " call " + c.method() + " "
                     + url.path() + " matches no endpoint exposed by " + target, List.of(c.evidence())));
         }
+        return List.of(Node.Service.idOf(target));
     }
 
     /** Service name, {@code external:<name>}, or null when the host is not known statically. */

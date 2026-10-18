@@ -80,12 +80,16 @@ final class Mappings {
                                 java.util.Set<TypeDeclaration<?>> visited, int depth) {
         if (depth > 8 || !visited.add(type)) return;
         for (MethodDeclaration m : type.getMethods()) {
-            // name + parameter types, so overloads stay distinct while overrides shadow
-            String sig = m.getNameAsString() + m.getParameters().stream()
-                    .map(p -> io.github.sunjirapath.ssg.scan.JavaIndex.simpleName(p.getType())).toList();
+            String sig = signature(m);
             if (mapped.test(m) && seen.add(sig)) out.add(m);
         }
         for (var st : s.index().superTypes(type)) collect(st, s, mapped, out, seen, visited, depth + 1);
+    }
+
+    /** Name + parameter types, so overloads stay distinct while overrides match. */
+    static String signature(MethodDeclaration m) {
+        return m.getNameAsString() + m.getParameters().stream()
+                .map(p -> io.github.sunjirapath.ssg.scan.JavaIndex.simpleName(p.getType())).toList();
     }
 
     /** Joins path segments: adds leading slashes, drops trailing ones, keeps "/" for the root. */

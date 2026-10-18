@@ -31,11 +31,12 @@ public final class InboundHttpExtractor implements Extractor {
                 List<Value> classPaths = classPaths(c, s);
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
+                    var handler = s.evidence(override(c, m));
                     for (Value cp : classPaths) {
                         for (Value mp : mapping.paths()) {
                             Value path = Mappings.joinValues(contextPath, cp, mp);
                             for (String verb : mapping.methods()) {
-                                facts.add(new Fact.Endpoint(verb, path, s.evidence(m), "controller"));
+                                facts.add(new Fact.Endpoint(verb, path, s.evidence(m), "controller", handler));
                             }
                         }
                     }
@@ -57,6 +58,12 @@ public final class InboundHttpExtractor implements Extractor {
             facts.addAll(spec);
         }
         return facts;
+    }
+
+    /** The controller's own method overriding {@code m} (same name and parameter types), else {@code m}. */
+    private static MethodDeclaration override(ClassOrInterfaceDeclaration c, MethodDeclaration m) {
+        return c.getMethodsByName(m.getNameAsString()).stream()
+                .filter(o -> Mappings.signature(o).equals(Mappings.signature(m))).findFirst().orElse(m);
     }
 
     /** Class-level paths: on the controller, else on the first super type that declares one. */

@@ -16,7 +16,7 @@ build/install/ssg/bin/ssg scan --repos ./fleet/* --profile default \
 
 Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`. Releases are built by `.github/workflows/release.yml` when a `v*` tag is pushed.
 
-`./gradlew build` compiles and runs the tests. `ssg diff` is planned for Phase 2 and is not implemented (it exits with code 2).
+`./gradlew build` compiles and runs the tests. Kotlin sources are not scanned yet.
 
 ## Options
 
@@ -90,6 +90,65 @@ Call targets are resolved in this order:
 
 When the target is a service, the call path is matched against that service's endpoints (and `UNRESOLVED` parts are kept separate, so an edge is not dropped because its path is unknown). Matching is segment by segment: `{var}` on either side matches one segment, `**` matches the rest, a trailing unknown `{?}` matches one or more segments, and the query string is ignored. HTTP methods must be equal unless either side is `*`. An edge's confidence is the lowest confidence of its parts. A call to a known service whose method and path match no exposed endpoint becomes a `CONTRACT_DRIFT` finding.
 
+## Endpoint reach
+
+For every controller endpoint, ssg walks the in-service method calls from its handler (breadth first, at most 6 calls deep) and records `REACHES` edges from the endpoint to what it ends up touching:
+- the endpoints it calls in other services (via Feign, `@HttpExchange`, RestTemplate, WebClient, RestClient)
+- the topics it publishes to
+- the tables behind the repositories it uses
+
+Calls are resolved without a symbol solver:
+- `this` and unqualified calls go to the enclosing type.
+- `field.m()` uses the field's declared type.
+- `Type.m()` is resolved statically.
+- An interface call goes to its implementations in the service.
+
+A repository counts as soon as the walk calls any method on it, so Spring Data's synthesized methods such as `findByEmail` are covered. Each edge carries the call chain, for example `AccountController.create → AccountService.create → AccountEvents.accountCreated`.
+
+Not followed: calls on method chains, lambdas, method references and `@Async` or event listeners. A repository maps only to its entity's table, even when a custom `@Query` reads other tables.
+
+## Diff: merge-request impact
+
+```
+ssg scan --repos ... --out out-base     # on the target branch
+ssg scan --repos ... --out out-head     # on the MR branch
+ssg diff --base out-base --head out-head > impact.md
+```
+
+The report is Markdown on stdout. It opens with **Breaking changes**:
+- removed endpoints or services that are still called
+- topics that lost their last producer but still have consumers
+- new contract drift
+
+Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported. The exit code is always 0.
+
+## MCP server
+
+```
+ssg mcp --graph out
+```
+
+This serves the graph to an MCP client over stdio (JSON-RPC 2.0). The server is read-only and exposes three tools:
+
+| Tool | Arguments | Answers |
+|---|---|---|
+| `who_calls` | `target` | Incoming edges with evidence: callers of an endpoint or service, producers and consumers of a topic, owners and users of a table, and the endpoints that reach it. |
+| `impact_of` | `target`, `depth` (1-10, default 3) | What may break if the target changes. It walks backwards through endpoints using reach, and returns the affected nodes with the edge that explains each one. |
+| `service_card` | `service` | The service's page as Markdown, with evidence as plain `repo/file:line`. |
+
+A `target` can be any of:
+- a node id from `graph.json`
+- a service or topic name
+- `METHOD /path` or `service METHOD /path`
+- an endpoint path
+- a table name
+
+Example client configuration:
+
+```json
+{ "mcpServers": { "ssg": { "command": "/path/to/ssg/bin/ssg", "args": ["mcp", "--graph", "/path/to/out"] } } }
+```
+
 ## Output
 
 ```
@@ -101,7 +160,7 @@ out/
   diagrams/<service>.mmd  Mermaid diagram per service
 ```
 
-Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`. Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`.
+Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`.
 
 A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):
 

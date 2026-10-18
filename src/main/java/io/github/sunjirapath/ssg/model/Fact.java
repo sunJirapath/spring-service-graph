@@ -3,8 +3,18 @@ package io.github.sunjirapath.ssg.model;
 /** A raw fact found in one service by one extractor, before linking. */
 public sealed interface Fact {
 
-    /** An HTTP endpoint the service serves. {@code method} is {@code *} when any method matches. */
-    record Endpoint(String method, Value path, Evidence evidence, String source) implements Fact {}
+    /**
+     * An HTTP endpoint the service serves. {@code method} is {@code *} when any method matches.
+     * {@code handler} is the Java method that runs for it (the controller override when the mapping
+     * sits on an interface); null for endpoints from specs or gateway config.
+     */
+    record Endpoint(String method, Value path, Evidence evidence, String source, Evidence handler) implements Fact {}
+
+    /**
+     * The endpoint's handler reaches the fact recorded at {@code sink} (an outbound call, a
+     * produced topic or a repository) through {@code chain} of in-service method calls.
+     */
+    record Reach(String method, String path, Evidence handler, Evidence sink, String chain) implements Fact {}
 
     /**
      * An outbound HTTP call. Load-balanced targets (Feign names, {@code lb://}) are normalized

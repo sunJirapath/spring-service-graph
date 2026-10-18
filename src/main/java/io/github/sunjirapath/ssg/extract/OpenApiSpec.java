@@ -71,7 +71,7 @@ final class OpenApiSpec {
                 Value path = Mappings.joinValues(contextPath, Value.exact(base), Value.exact(scalar(p.getKeyNode())))
                         .withConfidence(Confidence.RESOLVED, null);
                 int line = op.getKeyNode().getStartMark().getLine() + 1;
-                out.add(new Fact.Endpoint(verb.toUpperCase(), path, s.repo().evidence(file, line), "openapi"));
+                out.add(new Fact.Endpoint(verb.toUpperCase(), path, s.repo().evidence(file, line), "openapi", null));
             }
         }
     }

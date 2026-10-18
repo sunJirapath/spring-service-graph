@@ -16,9 +16,9 @@ Repo `account`, module `account-admin`.
 
 ## Exposes
 
-| Method | Path | Called by | Source | Confidence | Evidence |
-|---|---|---|---|---|---|
-| DELETE | `/admin/accounts/{id}` | - | openapi | RESOLVED | [account/account-admin/src/main/resources/openapi/admin-api.yaml:9](../../../src/test/resources/fleet/account/account-admin/src/main/resources/openapi/admin-api.yaml#L9) |
+| Method | Path | Called by | Reaches | Source | Confidence | Evidence |
+|---|---|---|---|---|---|---|
+| DELETE | `/admin/accounts/{id}` | - | - | openapi | RESOLVED | [account/account-admin/src/main/resources/openapi/admin-api.yaml:9](../../../src/test/resources/fleet/account/account-admin/src/main/resources/openapi/admin-api.yaml#L9) |
 
 ## Calls
 

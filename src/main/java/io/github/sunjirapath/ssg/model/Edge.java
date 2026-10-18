@@ -12,5 +12,9 @@ public record Edge(Kind kind, String from, String to, Confidence confidence, Sor
                    List<Evidence> evidence) {
 
     // An enum, not a sealed hierarchy: edge kinds carry no data of their own.
-    public enum Kind { EXPOSES, CALLS, PRODUCES, CONSUMES, OWNS, USES }
+    public enum Kind {
+        EXPOSES, CALLS, PRODUCES, CONSUMES, OWNS, USES,
+        /** endpoint -> what its handler reaches inside the service: a called endpoint, a topic, a table */
+        REACHES
+    }
 }

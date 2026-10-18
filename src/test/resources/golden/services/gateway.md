@@ -16,9 +16,9 @@ Repo `gateway`, module `.`.
 
 ## Exposes
 
-| Method | Path | Called by | Source | Confidence | Evidence |
-|---|---|---|---|---|---|
-| * | `/account-api/**` | - | gateway-route | EXACT | [gateway/src/main/resources/application.yml:12](../../../src/test/resources/fleet/gateway/src/main/resources/application.yml#L12) |
+| Method | Path | Called by | Reaches | Source | Confidence | Evidence |
+|---|---|---|---|---|---|---|
+| * | `/account-api/**` | - | - | gateway-route | EXACT | [gateway/src/main/resources/application.yml:12](../../../src/test/resources/fleet/gateway/src/main/resources/application.yml#L12) |
 
 ## Calls
 

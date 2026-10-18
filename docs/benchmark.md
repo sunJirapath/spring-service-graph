@@ -80,3 +80,26 @@ Covered by unit tests:
 
 Still not covered:
 - Shared-database detection (tables are scoped per service).
+
+## Phase 2: endpoint reach on the benchmarks
+
+| Fleet | Endpoints | Endpoints with reach | REACHES edges |
+|---|---|---|---|
+| petclinic | 20 | 13 | 15 |
+| piggymetrics | 11 | 10 | 13 |
+| microservice-kafka | 10 | 9 | 10 |
+
+I spot-checked the chains against the source. Examples:
+- piggymetrics `POST /accounts` → `AccountServiceImpl.create` → `AuthServiceClient.createUser` → auth-service `POST /uaa/users`
+- microservice-kafka `POST /` → `OrderService.order` → `fireOrderCreatedEvent` → topic `order`
+- petclinic gateway `GET /api/gateway/owners/{ownerId}` → both the customers and visits WebClient calls
+
+Endpoints without reach are:
+- gateway routes (from config, no Java handler)
+- the gateway fallback controller
+- genai's chat endpoint, whose work happens inside Spring AI tool callbacks that are not followed
+
+| # | Symptom | Cause | Status |
+|---|---|---|---|
+| 7 | petclinic `GET /petTypes` reaches table `pets`, but its `@Query` reads `types` | A repository maps only to its entity's table | Known limit. A fix would need `@Query` SQL/JPQL parsing. |
+| 8 | Each endpoint gets only one chain per sink (the shortest) | BFS keeps the first path found | By design, to keep pages readable |

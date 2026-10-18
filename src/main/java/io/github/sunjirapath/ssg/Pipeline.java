@@ -1,6 +1,7 @@
 package io.github.sunjirapath.ssg;
 
 import io.github.sunjirapath.ssg.extract.Extractor;
+import io.github.sunjirapath.ssg.extract.ReachAnalysis;
 import io.github.sunjirapath.ssg.link.Linker;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Finding;
@@ -46,6 +47,7 @@ public final class Pipeline {
                 if (prev != null) System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + seen.get(s.name()));
                 var facts = new ArrayList<Fact>();
                 for (Extractor x : Extractor.all()) facts.addAll(x.extract(s));
+                facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
             }
             for (JavaIndex.Problem pr : index.problems()) {

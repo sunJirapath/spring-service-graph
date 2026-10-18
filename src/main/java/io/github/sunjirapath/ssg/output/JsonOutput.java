@@ -21,4 +21,10 @@ public final class JsonOutput {
                 .writer(printer).writeValueAsString(graph);
         TextFile.write(out.resolve("graph.json"), json + "\n");
     }
+
+    /** Reads a graph written by {@link #write}; {@code path} is the output directory or the graph.json file. */
+    public static Graph read(Path path) throws IOException {
+        Path file = java.nio.file.Files.isDirectory(path) ? path.resolve("graph.json") : path;
+        return new ObjectMapper().readValue(file.toFile(), Graph.class);
+    }
 }
