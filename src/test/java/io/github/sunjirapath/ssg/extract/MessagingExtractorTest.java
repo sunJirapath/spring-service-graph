@@ -78,6 +78,105 @@ class MessagingExtractorTest {
         assertThat(topics(facts, false)).isEmpty();
     }
 
+    @Test
+    void bindingRoutesSendToQueueAndFollowsDeadLetterArguments(@TempDir Path tmp) {
+        var facts = repo(tmp, """
+                package x;
+                class QueueEnum { static final String CANCEL = "cancel"; static final String TTL = "cancel.ttl"; static final String EX = "ex"; static final String TTL_EX = "ttl.ex"; }
+                class Config {
+                    @Bean DirectExchange orderDirect() { return ExchangeBuilder.directExchange(QueueEnum.EX).durable(true).build(); }
+                    @Bean DirectExchange ttlDirect() { return new DirectExchange(QueueEnum.TTL_EX); }
+                    @Bean Queue cancelQueue() { return new Queue(QueueEnum.CANCEL); }
+                    @Bean Queue ttlQueue() {
+                        return QueueBuilder.durable(QueueEnum.TTL)
+                                .withArgument("x-dead-letter-exchange", QueueEnum.EX)
+                                .withArgument("x-dead-letter-routing-key", QueueEnum.CANCEL).build();
+                    }
+                    @Bean Binding cancelBinding(Queue cancelQueue, DirectExchange orderDirect) {
+                        return BindingBuilder.bind(cancelQueue).to(orderDirect).with(QueueEnum.CANCEL);
+                    }
+                    @Bean Binding ttlBinding() { return BindingBuilder.bind(ttlQueue()).to(ttlDirect()).with(QueueEnum.TTL); }
+                }
+                class P {
+                    RabbitTemplate rabbit;
+                    void send() { rabbit.convertAndSend(QueueEnum.TTL_EX, QueueEnum.TTL, "m"); }
+                }
+                """).facts(new MessagingExtractor());
+
+        assertThat(topics(facts, true)).containsExactly("cancel.ttl", "cancel");
+    }
+
+    @Test
+    void deadLetterBuilderAndMapFormsAndCycles(@TempDir Path tmp) {
+        var facts = repo(tmp, """
+                package x;
+                class Config {
+                    @Bean TopicExchange t() { return new TopicExchange("t"); }
+                    @Bean Queue a() { return QueueBuilder.nonDurable("a").deadLetterExchange("t").deadLetterRoutingKey("b").build(); }
+                    @Bean Queue b() {
+                        Map<String, Object> args = new HashMap<>();
+                        args.put("x-dead-letter-exchange", "t");
+                        args.put("x-dead-letter-routing-key", "a");
+                        args.put("x-message-ttl", 5);
+                        return new Queue("b", true, false, false, args);
+                    }
+                    @Bean Binding ba() { return BindingBuilder.bind(a()).to(t()).with("ka"); }
+                    @Bean Binding bb() { return BindingBuilder.bind(b()).to(t()).with("b"); }
+                    @Bean Binding other() { return BindingBuilder.bind(a()).to(t()).with("a"); }
+                }
+                class P {
+                    RabbitTemplate rabbit;
+                    void send() { rabbit.convertAndSend("t", "ka", "m"); }
+                }
+                """).facts(new MessagingExtractor());
+
+        // a -> b -> a is a cycle, each queue once
+        assertThat(topics(facts, true)).containsExactly("a", "b");
+    }
+
+    @Test
+    void unmatchedSendsFallBackToTheRoutingKey(@TempDir Path tmp) {
+        var facts = repo(tmp, """
+                package x;
+                class Config {
+                    @Bean DirectExchange e() { return new DirectExchange("e"); }
+                    @Bean FanoutExchange f() { return new FanoutExchange("f"); }
+                    @Bean Queue q() { return new Queue("q"); }
+                    @Bean Queue fq() { return new Queue("fq"); }
+                    @Bean Queue unnamed() { return null; }
+                    @Bean Queue noArgs() { return new Queue(); }
+                    @Bean Queue helped() {
+                        helper.durable("x"); helper.put("only-one"); helper.bind();
+                        return new Queue("helped");
+                    }
+                    @Bean Exchange noName() { return null; }
+                    @Bean Exchange odd() { other.directExchange("z"); builder.fooExchange(); new HashMap<>(); new FanoutExchange(); return null; }
+                    @Bean Binding noTarget() { return BindingBuilder.bind(helped()).with("nt"); }
+                    @Bean Binding bound() { return BindingBuilder.bind(q()).to(e()).with("k"); }
+                    @Bean Binding keyless() { return BindingBuilder.bind(fq()).to(f()); }
+                    @Bean Binding missingQueue() { return BindingBuilder.bind(unknown()).to(e()).with("z"); }
+                    @Bean Binding strayExchange() { return BindingBuilder.bind(q()).to(elsewhere()).with("loose"); }
+                }
+                class P {
+                    RabbitTemplate rabbit; String dynamic;
+                    void send() {
+                        rabbit.convertAndSend("other", "k", "m");
+                        rabbit.convertAndSend("e", "k", "m");
+                        rabbit.convertAndSend("e", "nobind", "m");
+                        rabbit.convertAndSend("f", "fq", "m");
+                        rabbit.convertAndSend("e", "z", "m");
+                        rabbit.convertAndSend("any", "loose", "m");
+                        rabbit.convertAndSend("e", dynamic, "m");
+                        rabbit.convertAndSend("k", "m");
+                        rabbit.convertAndSend("e", "nt", "m");
+                    }
+                }
+                """).facts(new MessagingExtractor());
+
+        // "other"/k is not bound to exchange e so it names the key; the stray binding's exchange is unknown, so it matches any
+        assertThat(topics(facts, true)).containsExactly("k", "q", "nobind", "fq", "z", "q", "{?}", "q", "helped");
+    }
+
     private static TempRepo repo(Path tmp, String source) {
         return TempRepo.at(tmp.resolve("repo")).app().java("x/Messaging.java", source);
     }
