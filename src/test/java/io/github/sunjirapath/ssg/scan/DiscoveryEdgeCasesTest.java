@@ -38,6 +38,17 @@ class DiscoveryEdgeCasesTest {
     }
 
     @Test
+    void unnamedApplicationsWithTheSameFolderNameAreToldApartByParentFolder() {
+        var repo = repo("same-folder")
+                .file("integration/http/src/main/java/a/App.java", "package a; @SpringBootApplication class App {}")
+                .file("transport/http/src/main/java/b/App.java", "package b; @SpringBootApplication class App {}")
+                .file("billing/src/main/java/c/App.java", "package c; @SpringBootApplication class App {}");
+
+        assertThat(repo.services()).extracting(Service::name)
+                .containsExactlyInAnyOrder("integration-http", "transport-http", "billing");
+    }
+
+    @Test
     void twoApplicationClassesInSameModuleStillProduceOneService() {
         var repo = repo("two-apps-one-module")
                 .java("one/First.java", "package one; @SpringBootApplication class First {}")
