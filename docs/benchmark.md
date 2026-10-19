@@ -160,7 +160,7 @@ These counts are of files under `src/main/java`.
 | `JdbcTemplate` / `JdbcClient` | 3 → 1 UNRESOLVED (a `--sql-methods` hint) | — | 203 → 422 UNRESOLVED, mostly SQL not resolved statically |
 | `KafkaTemplate` / `@KafkaListener` | 6 → 4 PRODUCES, 1 CONSUMES (was 1 PRODUCES) | — | 4 → 0 |
 | `RestTemplate` / `WebClient` / `RestClient` | 34 → 25 CALLS | — | 4 → 0 |
-| `CREATE TABLE` / `createTable` | 863 in root `sql/` → 0 | 378 in `dolphinscheduler-dao` (several databases) → 296 OWNS (was 0, gap #4) | 741 + 320 Liquibase → 244 OWNS |
+| `CREATE TABLE` / `createTable` | 863 in root `sql/` → 0 → 48 OWNS (root DDL fix) | 378 in `dolphinscheduler-dao` (several databases) → 296 OWNS (was 0, gap #4) | 741 + 320 Liquibase → 244 OWNS |
 
 The services are named from `spring.application.name`.
 
@@ -186,7 +186,7 @@ The services are named from `spring.application.name`.
 | 1 | yudao-cloud | **Fixed.** 0 of 47 Feign clients became CALLS, so the whole RPC graph between its 25 services is missing. | The clients live in shared `yudao-module-*-api` and `yudao-common` modules. Those have no app, and the services pull them in as Maven dependencies. ssg attributes code to a service only by module folder. |
 | 2 | yudao-cloud | **Fixed.** 36/36 CONTRACT_DRIFT findings are false positives, for example `/admin-api/crm/**` matches nothing on crm-server. | A starter adds `/admin-api` and `/app-api` in code, with `RequestMappingHandlerMapping.setPathPrefixes`, keyed by controller package. ssg sees only the annotation paths. |
 | 3 | yudao-cloud, dolphinscheduler | No tables at all. | They use MyBatis-Plus (`@TableName` entities, `BaseMapper<T>` mappers) instead of JPA or Spring Data. |
-| 4 | yudao-cloud, dolphinscheduler | **Fixed** for dolphinscheduler: 296 OWNS. Still open for yudao-cloud. No OWNS, although 1,200+ `CREATE TABLE` statements exist. | The DDL lives outside every service module: in the root `sql/` folder, or in a shared `-dao` module. This has the same root cause as #1. |
+| 4 | yudao-cloud, dolphinscheduler | **Fixed.** dolphinscheduler: 296 OWNS. yudao-cloud: 48 OWNS (root DDL fix). There were no OWNS, although 1,200+ `CREATE TABLE` statements exist. | The DDL lives outside every service module: in the root `sql/` folder, or in a shared `-dao` module. This has the same root cause as #1. |
 | 5 | fineract | The whole repo is dropped, with one `warn: no @SpringBootApplication`. | It boots through `SpringApplicationBuilder` with an `@EnableAutoConfiguration`-style configuration class. Even with that fixed, its 170 JAX-RS resources would give no endpoints. |
 | 6 | dolphinscheduler, yudao-cloud | 5 of 6 dolphinscheduler services and several yudao-cloud services show no outbound edges. | They use transports ssg does not read: dolphinscheduler's own Netty RPC, plus RocketMQ, RabbitMQ and Redis streams (15 files in yudao-cloud). These are out of scope. |
 | 7 | dolphinscheduler | 1 noisy MISSING_INTERFACE finding. | The controller implements Spring Boot's own `ErrorController`. Framework interfaces carry no mappings and should not be reported. |
@@ -207,7 +207,12 @@ The services are named from `spring.application.name`.
 Tests are in `ModuleDependencyTest`: `controllersCountOnlyFromModulesTheLauncherDependsOnDirectly`, `beanInTransitiveStarterMakesItsFeignClientCallsCount`, `sameNamedInterfaceResolvesToTheCopyInTheServicesOwnDependencies`, `sharedDdlAndUsedMapperXmlCountForEveryDependent`, `commentedOutExcludedAndTestScopedDependenciesAreIgnored` and `gradleProjectDependenciesAreFollowed`.
 - yudao-cloud: CALLS 479 → 731. The 3 starter clients above are now attributed: every service gets the `*CommonApi` calls. There are still no self-calls.
 - dolphinscheduler: OWNS 0 → 296 (gap #4).
-- Still open: DDL in a root `sql/` or `db/` folder that is no module (yudao-cloud's 863, and mall-swarm, pig and jeecgboot below). Nothing decides which one service owns a shared schema either: every dependent gets OWNS.
+- Nothing decides which one service owns a shared schema: every dependent gets OWNS.
+
+**Root DDL is now read (gap #4).** A `CREATE TABLE` in a `.sql` file outside any `src/` folder, such as yudao's `sql/`, jeecgboot's and pig's `db/` or mall-swarm's `mall.sql`, counts as OWNS for every service that already uses that table through an entity, mapper or SQL (`DataExtractor.rootDdl`). Tables that no service uses get nothing. The files are parsed once per repo. Test `ownsUsedTablesFromRootSqlFolder`.
+- OWNS, master `38273d8` → after: yudao-cloud 0 → 48, jeecgboot 40 → 95, mall-swarm 0 → 79, pig 0 → 38. Times at `-Xmx6g` stayed within 2 s.
+- yudao-cloud's root `sql/` has 863 statements but only 60 distinct tables, repeated across the dm, highgo, kingbase, mysql and oceanbase dialects. Most of its 564 USES are tables of modules such as `ai_*` that are not in it.
+- Limits: a non-module folder named `src` is skipped, and every service that uses a shared table owns it.
 - Not read: Gradle `projectDir` remaps, Maven profiles, and exclusions that apply to the whole closure rather than one edge.
 
 **Gap #2 is fixed.** Controllers get Spring MVC path prefixes, applied after the context path, and the first prefix whose predicate matches wins (`InboundHttpExtractor.pathPrefixes`).
@@ -262,7 +267,7 @@ These counts are of files under `src/main/java`.
 | `@FeignClient` → CALLS | 8 | 20 in `-api` → 0 → 43 (gap #1) | 10 in `-upms-api` → 0 → 13 (gap #1) → 16 (Maven module fix) | — | — | 6 → 2 → 123 (Maven module fix) | — | — |
 | MyBatis-Plus `@TableName` / `BaseMapper` | — | — | 16 / 37 → 0 → 38 USES (gap #3) | — | — | 50 / 65 → 0 (gaps #1 and #3, see below) → 105 tables (Maven module fix) | — | — |
 | `@Entity` → tables | 3 | 4 | — | 6 → 9 | 81 → 82 | — | — | 118 in `dao/` → 6 → 33 |
-| `CREATE TABLE` outside services (gap #4) | 76 in `mall.sql` | — | 60 in `db/` | — | — | 143 in the root `db/` | 156 Flyway tables in `framework/domain` → 159 OWNS (Maven module fix) | — |
+| `CREATE TABLE` outside services (gap #4) | 76 in `mall.sql` → 79 OWNS (root DDL fix) | — | 60 in `db/` → 38 OWNS (root DDL fix) | — | — | 143 in the root `db/` → 40 → 95 OWNS (root DDL fix) | 156 Flyway tables in `framework/domain` → 159 OWNS (Maven module fix) | — |
 | RabbitMQ, RocketMQ, Redis or other messaging (gap #6) | RabbitMQ | RocketMQ | — | 95 files of Eventuate Tram | — | — | — | TbQueue, 7 RabbitMQ files |
 
 ### What worked
@@ -282,7 +287,7 @@ Rows 1–8 are the gaps listed above, as they show up in these repos. Rows 9 and
 |---|---|---|---|
 | 1 | jeecgboot | **Fixed.** `jeecg-system-start` now has 801 endpoints, from `jeecg-system-biz`. It had 0, even after gap #1's fix. 80 of 100 controllers are in `jeecg-system-biz` and other modules with no app. | The launcher names no type from `jeecg-system-biz`. The only link is the Maven dependency in its `pom.xml`, which gap #1's fix did not read. Maven module dependencies are now read (see field test 2). |
 | 3 | pig | **Fixed.** There were 21 UNRESOLVED of the form "repository SysJobMapper: entity SysJob not found in sources". Now they are 0, and pig has 38 tables, `sys_job` among them. | The entity is in the sources (`SysJob.java:41`, `extends Model<SysJob>`), but it has no `@TableName`. A `BaseMapper` entity without `@TableName` now maps to its snake-case name, as MyBatis-Plus does. Spring Data repositories get no such fallback. |
-| 4 | mall-swarm, pig, jeecgboot, metersphere | **Fixed** for metersphere: 159 OWNS from the Flyway DDL in `framework/domain`. Still open for mall-swarm, pig and jeecgboot: no OWNS for 76, 60 and 143 tables. | The DDL is in a root `sql/`/`db/` folder, which no service depends on, or in a shared Flyway module, which is now read through the Maven dependency. |
+| 4 | mall-swarm, pig, jeecgboot, metersphere | **Fixed.** metersphere: 159 OWNS from the Flyway DDL in `framework/domain`. mall-swarm 0 → 79, pig 0 → 38 and jeecgboot 40 → 95 OWNS from root DDL that their services use (field test 2, root DDL fix). | The DDL is in a root `sql/`/`db/` folder, which no service depends on, or in a shared Flyway module, which is now read through the Maven dependency. |
 | 5 | jeecgboot | The bundled Nacos server `JeecgNacosApplication` is missed. | It boots through `SpringApplicationBuilder` outside a static `main`. |
 | 6 | mall-swarm, paascloud, ftgo, thingsboard | Services that talk only through messaging show no edges. | RabbitMQ, RocketMQ, Redis pub/sub, Eventuate Tram and thingsboard's TbQueue are not read. |
 | 9 | paascloud, pig, jeecgboot | **Fixed.** A whole `application.yml` was dropped with a stderr warning: 10 files in paascloud, 7 in pig and 5 in jeecgboot. Service names fell back to folder names, and pig's gateway routes were lost. Now there are no warnings. pig has its 5 gateway routes, plus the `openapi` route to itself, as 11 EXACT CALLS. In jeecgboot, 4 services get their real names, such as `jeecg-gateway` instead of `jeecg-cloud-gateway`. `jeecg-system-cloud-start` merges with `jeecg-system-start`, because both set `name: jeecg-system`, and gives a correct DUPLICATE_SERVICE finding. paascloud's and pig's names already matched their folders. | Maven resource filtering placeholders such as `@pom.artifactId@` or `@config.server-addr@` are not valid YAML. Before parsing, `@artifactId@`, `@project.artifactId@` and `@pom.artifactId@` now become the artifactId of the nearest `pom.xml`, and any other token becomes an unresolved `${...}`. Test `mavenFilteredYamlIsReadWithTheModuleArtifactIdAndOtherTokensUnresolved`. pig's 5 routes now give 5 CONTRACT_DRIFT findings, such as `/admin/**` matching nothing in `pig-upms-biz`. No `StripPrefix` filter is in the repo, so the prefix is probably stripped by config held in Nacos. |

@@ -62,6 +62,19 @@ class DataExtractorTest {
     }
 
     @Test
+    void ownsUsedTablesFromRootSqlFolder(@TempDir Path repo) throws IOException {
+        Files.createDirectories(repo.resolve("sql"));
+        Files.writeString(repo.resolve("sql/x.sql"), "-- schema\nCREATE TABLE `used_t` (id int);\nCREATE TABLE other_t (id int);\n");
+        var facts = extract(repo, "package x; @Entity class UsedT {}");
+
+        assertThat(facts).filteredOn(f -> f instanceof Fact.TableUse t && t.owns()).singleElement()
+                .isInstanceOfSatisfying(Fact.TableUse.class, t -> {
+                    assertThat(t.table().text()).isEqualTo("used_t");
+                    assertThat(t.evidence().line()).isEqualTo(2);
+                });
+    }
+
+    @Test
     void readsMultilineLiquibaseCreateTable(@TempDir Path repo) throws IOException {
         var facts = extract(repo, "package x; class Empty {}", "db/changelog/changes.xml", """
                 <databaseChangeLog>

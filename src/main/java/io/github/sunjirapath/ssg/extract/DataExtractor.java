@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +52,48 @@ public final class DataExtractor implements Extractor {
             }
         }
         migrations(s, facts);
+        rootDdl(s, facts);
         return facts;
+    }
+
+    private record Ddl(Path file, String table, int line, String via) {}
+
+    private static final Map<Path, List<Ddl>> ROOT_DDL = new ConcurrentHashMap<>(); // parsed once per repo, shared by all services
+
+    /** CREATE TABLEs in .sql files outside any src/ (yudao's sql/, mall.sql): owned by services that use the table. */
+    private static void rootDdl(Service s, List<Fact> facts) {
+        var used = new HashSet<String>();
+        var owned = new HashSet<String>();
+        for (Fact f : facts)
+            if (f instanceof Fact.TableUse t && t.table().resolved() && t.store().equals("sql")) (t.owns() ? owned : used).add(t.table().text());
+        if (used.isEmpty()) return;
+        for (Ddl d : ROOT_DDL.computeIfAbsent(s.repo().root(), r -> rootDdl(s))) {
+            if (used.contains(d.table) && owned.add(d.table))
+                facts.add(new Fact.TableUse(true, Value.exact(d.table), "sql", s.repo().evidence(d.file, d.line), d.via));
+        }
+    }
+
+    private static List<Ddl> rootDdl(Service s) {
+        var out = new ArrayList<Ddl>();
+        try {
+            for (Path f : s.repo().files(s.repo().root())) {
+                if (!f.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".sql")) continue;
+                if (("/" + s.repo().relative(f)).contains("/src/")) continue; // module resources are read by migrations()
+                try {
+                    String code = blankComments(Files.readString(f));
+                    Matcher m = CREATE_TABLE.matcher(code);
+                    while (m.find()) {
+                        int line = (int) code.substring(0, m.start()).chars().filter(ch -> ch == '\n').count() + 1;
+                        out.add(new Ddl(f, normalize(m.group(1)), line, via(s, f)));
+                    }
+                } catch (IOException | RuntimeException e) {
+                    System.err.println("warn: cannot read " + f + ": " + e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("warn: cannot list " + s.repo().root() + ": " + e.getMessage());
+        }
+        return out;
     }
 
     private record Mapped(Value name, String store, String via) {}
