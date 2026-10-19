@@ -127,3 +127,68 @@ What it found, and what changed:
 | Page links depend on where the fleet is checked out. | `--link-base` URL template. |
 | `OutOfMemoryError` at `-Xmx256m` for 5 MB of source. | Measured at about 80 MB of heap per MB of Java in the largest repo; documented. A structural reduction is still open. |
 | Reach became quadratic once JDBC sinks existed (found while testing the fix: 140 s for 1.7 MB). | Sinks and methods are indexed once: 3.5 s, identical output. |
+
+## Messy real-world code bases (2026-10-19, ssg at 7c8de01)
+
+These are three large public code bases, picked because they look like company code rather than samples. They are cloned by `scripts/bench-clone.sh`, which sets `core.longpaths` because dolphinscheduler has paths over 260 characters. Each was scanned on its own with no aliases or config repo:
+```bash
+ssg scan --repos bench/<name> --out build/bench/<name>
+```
+Time was measured at `-Xmx8g` on a 16-thread Windows machine. "Heap needed" is the smallest `-Xmx` that worked.
+
+| Code base | Commit | Main Java | Apps | Services | Endpoints | CALLS | Topics | Tables | Findings | Time | Heap needed |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3392 | 61 | 1 | 0 | 36 CONTRACT_DRIFT, 15 UNRESOLVED | 31 s | 1.5 GB (OOM at 1 GB) |
+| apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 0 | 1 MISSING_INTERFACE | 6 s | 384 MB (OOM at 256 MB) |
+| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 0 | 0 | 0 | 0 | 0 | 0 (one stderr warning) | 12 s | over 1 GB (peak 1.9 GB) |
+
+Notes on the counts:
+- yudao-cloud's 61 CALLS are 36 gateway routes and 25 calls from HTTP clients.
+- Its one topic is produced from `config.getTopic()`, so it is UNRESOLVED.
+
+### Recall against grep
+
+These counts are of files under `src/main/java`.
+
+| Construct | yudao-cloud | dolphinscheduler | fineract |
+|---|---|---|---|
+| Controller classes → endpoints | 657 → 3392 endpoints in 24/25 services | 35 → 239 | 3 + 170 JAX-RS `@Path` → 0 |
+| `@FeignClient` → CALLS | **47 → 0** | — | — |
+| `@TableName` (MyBatis-Plus) → tables | **547 → 0** | **48 → 0** | — |
+| `@Entity` / `extends *Repository<` → tables | — | — | 254 / 200 → 0 |
+| `JdbcTemplate` / `JdbcClient` | 3 → 1 UNRESOLVED (a `--sql-methods` hint) | — | 203 → 0 |
+| `KafkaTemplate` / `@KafkaListener` | 6 → 1 PRODUCES | — | 4 → 0 |
+| `RestTemplate` / `WebClient` / `RestClient` | 34 → 25 CALLS | — | 4 → 0 |
+| `CREATE TABLE` / `createTable` | 863 in root `sql/` → 0 | 378 in `dolphinscheduler-dao` → 0 | 741 + 320 Liquibase → 0 |
+
+The services are named from `spring.application.name`.
+
+### What worked
+
+**yudao-cloud**
+- All 25 apps were found.
+- 140 `/rpc-api/**` endpoints were found. Each server's `*ApiImpl` `@RestController` takes its mappings from a Feign interface in a sibling `-api` module, and these were resolved across the modules.
+- Gateway YAML routes with the custom `grayLb://` scheme were linked to their services.
+- WebClient calls to 3 external hosts resolved through constants.
+- 11 `baseUrl + "/..."` calls were kept as UNRESOLVED rather than dropped.
+
+**dolphinscheduler**
+- Its 8 apps became 6 services. The 3 tool apps share one module.
+
+**Both**
+- No crashes and no stderr warnings.
+
+### Gaps, by impact
+
+| # | Code base | Symptom | Cause |
+|---|---|---|---|
+| 1 | yudao-cloud | 0 of 47 Feign clients become CALLS, so the whole RPC graph between its 25 services is missing. | The clients live in shared `yudao-module-*-api` and `yudao-common` modules. Those have no app, and the services pull them in as Maven dependencies. ssg attributes code to a service only by module folder. |
+| 2 | yudao-cloud | 36/36 CONTRACT_DRIFT findings are false positives, for example `/admin-api/crm/**` matches nothing on crm-server. | A starter adds `/admin-api` and `/app-api` in code, with `RequestMappingHandlerMapping.setPathPrefixes`, keyed by controller package. ssg sees only the annotation paths. |
+| 3 | yudao-cloud, dolphinscheduler | No tables at all. | They use MyBatis-Plus (`@TableName` entities, `BaseMapper<T>` mappers) instead of JPA or Spring Data. |
+| 4 | yudao-cloud, dolphinscheduler | No OWNS, although 1,200+ `CREATE TABLE` statements exist. | The DDL lives outside every service module: in the root `sql/` folder, or in a shared `-dao` module. This has the same root cause as #1. |
+| 5 | fineract | The whole repo is dropped, with one `warn: no @SpringBootApplication`. | It boots through `SpringApplicationBuilder` with an `@EnableAutoConfiguration`-style configuration class. Even with that fixed, its 170 JAX-RS resources would give no endpoints. |
+| 6 | dolphinscheduler, yudao-cloud | 5 of 6 dolphinscheduler services and several yudao-cloud services show no outbound edges. | They use transports ssg does not read: dolphinscheduler's own Netty RPC, plus RocketMQ, RabbitMQ and Redis streams (15 files in yudao-cloud). These are out of scope. |
+| 7 | dolphinscheduler | 1 noisy MISSING_INTERFACE finding. | The controller implements Spring Boot's own `ErrorController`. Framework interfaces carry no mappings and should not be reported. |
+| 8 | all | 50–70 MB of heap per MB of Java. Fineract runs out of memory at 1 GB although it yields no service. | Every source file is parsed before discovery, so even a repo with no app gets fully parsed. This adds to the open memory item from field test 1. |
+
+The JDBC support from field test 1 was barely exercised. Fineract would have exercised it with 203 `JdbcTemplate` files, but gap #5 hides it.
