@@ -108,15 +108,24 @@ class ConfigEdgeCasesTest {
     }
 
     @Test
-    void knownLimitProfileExpressionsAreNotEvaluated() {
-        var config = yaml("profile-expression", """
+    void profileExpressionsAreEvaluated() {
+        assertThat(valueFor("!dev", "prod")).isEqualTo("hit");
+        assertThat(valueFor("!dev", "dev")).isEqualTo("base");
+        assertThat(valueFor("a & b", "a")).isEqualTo("base");
+        assertThat(valueFor("a | b", "b")).isEqualTo("hit");
+        assertThat(valueFor("(a | b) & !c", "a")).isEqualTo("hit");
+        assertThat(valueFor("(a | b) & !c", "c")).isEqualTo("base");
+        assertThat(valueFor("x, !y", "z")).isEqualTo("hit");
+        assertThat(valueFor("a & b", "b")).isEqualTo("base");
+    }
+
+    private String valueFor(String expression, String profile) {
+        return yaml("profile-expression", """
                 value: base
                 ---
-                spring.config.activate.on-profile: "!dev"
-                value: not-dev
-                """, "prod");
-
-        assertThat(config.get("value").value()).isEqualTo("base");
+                spring.config.activate.on-profile: "%s"
+                value: hit
+                """.formatted(expression), profile).get("value").value();
     }
 
     @Test
