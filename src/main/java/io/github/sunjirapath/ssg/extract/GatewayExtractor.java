@@ -2,6 +2,7 @@ package io.github.sunjirapath.ssg.extract;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import io.github.sunjirapath.ssg.model.Confidence;
@@ -143,6 +144,17 @@ public final class GatewayExtractor implements Extractor {
             var calls = l.findAll(MethodCallExpr.class);
             Value uri = calls.stream().filter(c -> c.getNameAsString().equals("uri") && c.getArguments().size() == 1)
                     .findFirst().map(c -> s.eval(c.getArgument(0))).orElse(Value.unresolved(l.toString()));
+            calls.stream().filter(c -> c.getNameAsString().equals("uri") && c.getArguments().size() == 1).findFirst()
+                    .filter(c -> !uri.resolved()).ifPresent(c -> facts.add(new Fact.Problem("UNRESOLVED",
+                            "gateway route uri not resolved statically (from `" + uri.raw() + "`)", s.evidence(c))));
+            var verbs = new ArrayList<String>(); // .method("POST") / .method(HttpMethod.POST), also after .and()
+            for (MethodCallExpr c : calls) {
+                if (!c.getNameAsString().equals("method")) continue;
+                for (var a : c.getArguments()) {
+                    verbs.add((a instanceof FieldAccessExpr f ? f.getNameAsString() : s.index().eval(a).text()).toUpperCase());
+                }
+            }
+            if (verbs.isEmpty()) verbs.add("*");
             var filters = new ArrayList<Def>();
             for (MethodCallExpr c : calls.reversed()) { // innermost calls come last in the chain
                 // no placeholder resolution: "/${seg}" in rewritePath is a regex group reference, not a property
@@ -160,10 +172,10 @@ public final class GatewayExtractor implements Extractor {
                 for (var arg : c.getArguments()) {
                     Value pattern = s.eval(arg);
                     var ev = s.evidence(c);
-                    facts.add(new Fact.Endpoint("*", Mappings.joinValues(pattern), ev, "gateway-route", null));
+                    for (String verb : verbs) facts.add(new Fact.Endpoint(verb, Mappings.joinValues(pattern), ev, "gateway-route", null));
                     if (!remote(uri)) continue;
                     Value path = pattern.resolved() ? rewrite(pattern.text(), filters) : pattern;
-                    facts.add(new Fact.Call("gateway", "*", OutboundHttpExtractor.url(uri, path), ev));
+                    for (String verb : verbs) facts.add(new Fact.Call("gateway", verb, OutboundHttpExtractor.url(uri, path), ev));
                 }
             }
         }

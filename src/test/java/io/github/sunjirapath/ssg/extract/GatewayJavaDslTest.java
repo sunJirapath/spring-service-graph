@@ -52,6 +52,29 @@ class GatewayJavaDslTest {
                         e -> assertThat(e.evidence().line()).isEqualTo(4));
     }
 
+    @Test
+    void appliesMethodPredicatesAndReportsUnresolvedUri(@TempDir Path repo) throws IOException {
+        var facts = new GatewayExtractor().extract(service(repo, """
+                package x;
+                @Configuration class Routes {
+                    @Bean RouteLocator routes(RouteLocatorBuilder b, Urls u) {
+                        return b.routes()
+                            .route("a", r -> r.path("/a/**").and().method("post").uri("lb://a"))
+                            .route("b", r -> r.method(HttpMethod.PUT).and().path("/b/**").uri("lb://b"))
+                            .route("c", r -> r.path("/c/**").uri(u.getC())).build();
+                    }
+                }"""));
+
+        assertThat(facts).filteredOn(Fact.Call.class::isInstance)
+                .extracting(f -> ((Fact.Call) f).method() + " " + ((Fact.Call) f).url().text())
+                .containsExactlyInAnyOrder("POST lb://a/a/**", "PUT lb://b/b/**");
+        assertThat(facts).filteredOn(Fact.Problem.class::isInstance).singleElement()
+                .isInstanceOfSatisfying(Fact.Problem.class, p -> {
+                    assertThat(p.kind()).isEqualTo("UNRESOLVED");
+                    assertThat(p.evidence().line()).isEqualTo(7);
+                });
+    }
+
     private static Service service(Path repo, String routes) throws IOException {
         Path src = repo.resolve("src/main/java/x");
         Files.createDirectories(src);
