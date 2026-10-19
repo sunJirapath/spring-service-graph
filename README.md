@@ -193,7 +193,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 ## Known limits
 
 - Tables are scoped per service: two services using the same table name get separate nodes.
-- In a repo with several Spring Boot apps, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively; Gradle `projectDir` remaps and Maven profiles are not read.
+- In a repo with several Spring Boot apps, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively, with Gradle `projectDir` remaps, `${}` and managed versions, profiles active by default and exclusions below the dependency that declares them. Only library beans under the app's component-scan packages, or registered as auto-configurations or through `@Import`, count; profiles switched on any other way are not read.
 - Profile expressions such as `!dev` or `a & b` are not evaluated, only plain profile lists.
 - Config repo: only the repo root is read, not per-app subfolders or custom search locations.
 - A non-final field or local variable that is reassigned later still folds to its initializer.
