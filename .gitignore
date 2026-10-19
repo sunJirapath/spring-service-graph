@@ -4,3 +4,4 @@ bench/
 out/
 .idea/
 *.iml
+snapshots/
