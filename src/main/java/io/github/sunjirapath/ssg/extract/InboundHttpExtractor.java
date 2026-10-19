@@ -4,6 +4,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.MethodReferenceExpr;
@@ -254,9 +255,10 @@ public final class InboundHttpExtractor implements Extractor {
     /**
      * yudao's {@code setPathPrefixes}, built from {@code @ConfigurationProperties} defaults such as
      * {@code new Api("/admin-api", "**.controller.admin.**")}: a prefix for the {@code @RestController}s in packages
-     * matching an Ant pattern with "." separators.
+     * matching an Ant pattern with "." separators. A config key such as {@code yudao.web.admin-api.prefix}
+     * overrides the default prefix.
      */
-    // shortcut: reads the constructor defaults only, not yudao.web.*.prefix overrides in config; read those if a fork sets them.
+    // shortcut: the package pattern is always the constructor default; read <prefix>.<field>.controller if a fork overrides it.
     private static List<Prefix> packagePrefixes(Service s) {
         var out = new ArrayList<Prefix>();
         for (CompilationUnit cu : s.units()) {
@@ -265,11 +267,22 @@ public final class InboundHttpExtractor implements Extractor {
                 if (a.size() == 2 && a.get(0) instanceof StringLiteralExpr p && p.getValue().startsWith("/")
                         && a.get(1) instanceof StringLiteralExpr pkg && ANT_PACKAGE.matcher(pkg.getValue()).matches()) {
                     Pattern packages = antPackage(pkg.getValue());
-                    out.add(new Prefix(s.eval(p), c -> Ann.has(c, "RestController") && packages.matcher("." + packageOf(c)).matches()));
+                    String key = overrideKey(s, o);
+                    Value prefix = key != null && s.config().get(key) != null ? s.config().valueOf(key) : s.eval(p);
+                    out.add(new Prefix(prefix, c -> Ann.has(c, "RestController") && packages.matcher("." + packageOf(c)).matches()));
                 }
             }
         }
         return out;
+    }
+
+    /** "yudao.web.admin-api.prefix" for {@code adminApi = new Api(..)} in {@code @ConfigurationProperties("yudao.web")}. */
+    private static String overrideKey(Service s, ObjectCreationExpr o) {
+        if (!(o.getParentNode().orElse(null) instanceof VariableDeclarator v)) return null;
+        return o.findAncestor(ClassOrInterfaceDeclaration.class).flatMap(c -> Ann.find(c, "ConfigurationProperties"))
+                .flatMap(ann -> Ann.attr(ann, "prefix", "value")).map(e -> s.eval(e).text())
+                .map(prefix -> prefix + "." + v.getNameAsString().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase() + ".prefix")
+                .orElse(null);
     }
 
     /** Matches "." + package name: {@code **} is any number of segments, {@code *} part of one. */

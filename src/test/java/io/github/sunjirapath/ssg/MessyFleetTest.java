@@ -97,10 +97,12 @@ class MessyFleetTest {
     }
 
     @Test
-    void knownLimitNonFinalFieldInitializerStillResolvesHost() {
+    void reassignedNonFinalFieldDoesNotResolveHost() {
         assertThat(edges(Edge.Kind.CALLS, "service:gateway-edge", "endpoint:legacy-api:GET /legacy/orders/{id}"))
                 .filteredOn(e -> e.attrs().get("client").equals("webclient"))
-                .singleElement().satisfies(e -> assertThat(e.confidence()).isEqualTo(Confidence.RESOLVED));
+                .isEmpty();
+        assertThat(edges(Edge.Kind.CALLS, "service:gateway-edge", "external:unresolved"))
+                .anySatisfy(e -> assertThat(e.attrs()).containsEntry("path", "{?}/legacy/orders/42"));
     }
 
     @Test
@@ -115,6 +117,7 @@ class MessyFleetTest {
     @Test
     void runtimeBuiltWebClientUrlIsKeptAsUnresolved() {
         assertThat(edges(Edge.Kind.CALLS, "service:gateway-edge", "external:unresolved"))
+                .filteredOn(e -> e.attrs().get("path").contains("/runtime/"))
                 .singleElement().satisfies(e -> {
                     assertThat(e.confidence()).isEqualTo(Confidence.UNRESOLVED);
                     assertThat(e.attrs()).containsEntry("client", "webclient")

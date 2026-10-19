@@ -83,6 +83,19 @@ class ReachAnalysisTest {
     }
 
     @Test
+    void keepsHandlersAndSinksOnOneLineApart(@TempDir Path repo) throws IOException {
+        var facts = facts(repo, """
+                @RestController class C { KafkaTemplate k; @GetMapping("/x") Object a(Object x) { k.send("ta", x); return x; } @GetMapping("/y") Object b(Object x) { k.send("tb", x); return x; } }
+                """);
+        var topics = facts.stream().filter(Fact.TopicUse.class::isInstance).map(Fact.TopicUse.class::cast).toList();
+        var ta = topics.stream().filter(t -> t.topic().text().equals("ta")).findFirst().orElseThrow().evidence();
+        var tb = topics.stream().filter(t -> t.topic().text().equals("tb")).findFirst().orElseThrow().evidence();
+
+        assertThat(reaches(repo, facts)).extracting(r -> r.path() + " " + (r.sink().equals(ta) ? "ta" : r.sink().equals(tb) ? "tb" : "?"))
+                .containsExactlyInAnyOrder("/x ta", "/y tb");
+    }
+
+    @Test
     void ignoresEndpointsWithoutJavaHandlers(@TempDir Path repo) throws IOException {
         Path resources = repo.resolve("src/main/resources");
         Files.createDirectories(resources);
@@ -123,7 +136,6 @@ class ReachAnalysisTest {
         var methods = new StringBuilder();
         for (int i = 1; i <= count; i++) {
             String next = i == count ? "kafkaTemplate.send(\"deep\", x); return x;" : "return a" + (i + 1) + "(x);";
-            // one method per line: sinks are matched to methods by line, see ReachAnalysis
             methods.append("private Object a").append(i).append("(Object x) { ").append(next).append(" }\n");
         }
         return "@RestController class C { KafkaTemplate kafkaTemplate;\n@GetMapping(\"/x\") Object get(Object x) { return a1(x); }\n"

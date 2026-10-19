@@ -289,7 +289,7 @@ class JavaIndexEdgeCasesTest {
     }
 
     @Test
-    void knownLimitNonFinalReassignedFieldStillFoldsItsInitializer() {
+    void nonFinalFieldReassignedInItsClassIsUnresolved() {
         var value = fold(repo("reassigned").java("x/Use.java", """
                 package x;
                 class Use {
@@ -298,8 +298,146 @@ class JavaIndexEdgeCasesTest {
                 }
                 """));
 
+        assertThat(value.text()).isEqualTo("{?}");
+        assertThat(value.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void fieldReassignedThroughThisToAnotherConstantIsUnresolved() {
+        var value = fold(repo("reassigned-this").java("x/Use.java", """
+                package x;
+                class Use {
+                    String path = "/initial";
+                    void set() { this.path = "/other"; }
+                    void m() { use(path); }
+                }
+                """));
+
+        assertThat(value.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void reassignmentToTheSameConstantOrOfAShadowingLocalStillFolds() {
+        var value = fold(repo("reassigned-same").java("x/Use.java", """
+                package x;
+                class Use {
+                    String path = "/initial";
+                    void reset() { path = "/initial"; }
+                    void other() { String path = "x"; path = runtime(); }
+                    void ignored() { arr[0] = "a"; other.path = "b"; this.name = "c"; }
+                    class Inner { String path; void s() { this.path = "d"; } }
+                    void m() { use(path); }
+                }
+                """));
+
         assertThat(value.text()).isEqualTo("/initial");
         assertThat(value.confidence()).isEqualTo(Confidence.RESOLVED);
+    }
+
+    @Test
+    void fieldsAssignedFromEachOtherTerminate() {
+        var value = fold(repo("assigned-cycle").java("x/Use.java", """
+                package x;
+                class Use {
+                    String a = "/a";
+                    String b = "/b";
+                    void swap() { a = b; b = a; }
+                    void m() { use(a); }
+                }
+                """));
+
+        assertThat(value.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void localAppendedToLaterIsUnresolved() {
+        var value = fold(repo("local-appended").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String q) { String url = "/items"; this.url = "/field"; url += q; use(url); }
+                }
+                """));
+
+        assertThat(value.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void queryAppendKeepsThePathButOtherAppendsDoNot() {
+        var path = fold(repo("query-append").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String a, String b) { String url = "/items"; url += "?a=" + a; url += "&b=" + b; use(url); }
+                }
+                """));
+        var other = fold(repo("path-append").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m() { String url = "/items"; url += "/more"; use(url); }
+                }
+                """));
+
+        assertThat(path.text()).isEqualTo("/items");
+        assertThat(other.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void selfAssignedQueryAndAppendsAfterAQueryKeepThePath() {
+        var self = fold(repo("self-append").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String t) { String url = "/items"; url = url + "?t=" + t; use(url); }
+                }
+                """));
+        var afterQuery = fold(repo("after-query").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String b) { String url = "/items?a=1&"; url += "b=" + b; use(url); }
+                }
+                """));
+        var selfPath = fold(repo("self-path").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m() { String url = "/items"; url = url + "/more"; use(url); }
+                }
+                """));
+        var otherBase = fold(repo("other-base").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String o) { String url = "/items"; url = o + "?t"; use(url); }
+                }
+                """));
+
+        var sqlClause = fold(repo("sql-clause").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(boolean f) { String sql = "SELECT * FROM t"; if (f) sql += " WHERE a = ?"; use(sql); }
+                }
+                """));
+        var sqlCall = fold(repo("sql-call").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m() { String sql = "SELECT * FROM t"; sql += where(); use(sql); }
+                }
+                """));
+
+        assertThat(self.text()).isEqualTo("/items");
+        assertThat(afterQuery.text()).isEqualTo("/items?a=1&");
+        assertThat(sqlClause.text()).isEqualTo("SELECT * FROM t");
+        assertThat(sqlCall.text()).isEqualTo("SELECT * FROM t");
+        assertThat(selfPath.confidence()).isEqualTo(Confidence.UNRESOLVED);
+        assertThat(otherBase.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void finalLocalIsNotScannedForAssignments() {
+        var value = fold(repo("final-local").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m() { final String url = "/items"; use(url); }
+                }
+                """));
+
+        assertThat(value.text()).isEqualTo("/items");
     }
 
     @Test

@@ -24,7 +24,11 @@ public record Repo(String name, Path root) {
     }
 
     public Evidence evidence(Path file, int line) {
-        return new Evidence(name, relative(file), line);
+        return evidence(file, line, 0);
+    }
+
+    public Evidence evidence(Path file, int line, int column) {
+        return new Evidence(name, relative(file), line, column);
     }
 
     /**

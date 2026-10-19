@@ -5,12 +5,14 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.ast.expr.ThisExpr;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
 import io.github.sunjirapath.ssg.scan.Ann;
@@ -103,13 +105,35 @@ public final class OutboundHttpExtractor implements Extractor {
         }
         Expression arg = call.getArgument(0);
         Value url = arg instanceof ObjectCreationExpr ? Value.unresolved(arg.toString()) : s.eval(arg);
-        if (!url.resolved() && arg instanceof NameExpr n && s.index().declarationOf(n.getNameAsString(), n)
-                .filter(Parameter.class::isInstance)
-                .filter(p -> p.getParentNode().filter(LambdaExpr.class::isInstance).isPresent()).isPresent()) {
-            // shortcut: callback arguments need context-aware parameter binding to trace their URLs.
-            url = new Value(url.text(), url.confidence(), "lambda parameter '" + arg + "'", url.via());
+        var lambdaParam = arg instanceof NameExpr n ? s.index().declarationOf(n.getNameAsString(), n)
+                .filter(Parameter.class::isInstance).map(Parameter.class::cast)
+                .filter(p -> p.getParentNode().orElse(null) instanceof LambdaExpr) : Optional.<Parameter>empty();
+        if (!url.resolved() && lambdaParam.isPresent()) {
+            Value unbound = new Value(url.text(), url.confidence(), "lambda parameter '" + arg + "'", url.via());
+            url = callSiteValue(s, lambdaParam.get()).orElse(unbound);
         }
         return Optional.of(new Fact.Call("rest-template", verb, withBaseUrl(s, call, url), s.evidence(call)));
+    }
+
+    /**
+     * Binds a lambda parameter for {@code call(u -> rest.getForObject(u, ..))} when the same class's
+     * {@code call(f)} runs {@code f.apply("http://..")} with a resolvable argument.
+     * shortcut: one level only, by name and arity, inline lambdas only; upgrade when callbacks nest or are stored first.
+     */
+    private static Optional<Value> callSiteValue(Service s, Parameter p) {
+        LambdaExpr l = (LambdaExpr) p.getParentNode().orElseThrow();
+        int k = l.getParameters().indexOf(p);
+        if (!(l.getParentNode().orElse(null) instanceof MethodCallExpr site)
+                || site.getScope().filter(sc -> !(sc instanceof ThisExpr)).isPresent()) return Optional.empty();
+        int i = site.getArguments().indexOf(l);
+        return site.findAncestor(TypeDeclaration.class).stream()
+                .flatMap(t -> ((TypeDeclaration<?>) t).getMethodsByName(site.getNameAsString()).stream())
+                .filter(m -> m.getParameters().size() == site.getArguments().size())
+                .findFirst().flatMap(m -> m.findAll(MethodCallExpr.class).stream()
+                        .filter(c -> c.getScope().orElse(null) instanceof NameExpr f
+                                && f.getNameAsString().equals(m.getParameter(i).getNameAsString())
+                                && c.getArguments().size() > k)
+                        .map(c -> s.eval(c.getArgument(k))).filter(Value::resolved).findFirst());
     }
 
     /** {@code client.get().uri(...)} and {@code client.method(HttpMethod.X).uri(...)} for WebClient and RestClient. */

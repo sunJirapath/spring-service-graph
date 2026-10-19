@@ -1,5 +1,6 @@
 package io.github.sunjirapath.ssg.extract;
 
+import com.github.javaparser.Position;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -33,9 +34,7 @@ import java.util.stream.Stream;
  * {@code field.m()} through the field's declared type, {@code Type.m()} statically, and interface or
  * abstract receivers to their implementations in the service (a concrete receiver resolves only to its
  * own type and supertypes). Calls on chains, lambdas and method references are not followed.
- *
- * <p>shortcut: sinks are matched to methods by file and line (evidence has no column), so two methods
- * declared on the same source line cannot be told apart; add columns to Evidence if that ever matters.
+ * Handlers and sinks are matched to methods by file, line and column, so methods sharing a line stay apart.
  */
 public final class ReachAnalysis {
 
@@ -45,7 +44,7 @@ public final class ReachAnalysis {
 
     private final Service s;
     private final Map<String, List<Evidence>> sinksByFile = new java.util.HashMap<>(); // repo-relative file -> sink locations
-    private final Map<String, MethodDeclaration> methodsAt = new java.util.HashMap<>(); // "file:line" -> method
+    private final Map<String, MethodDeclaration> methodsAt = new java.util.HashMap<>(); // "file:line:column" -> method
     private final Map<CompilationUnit, String> fileOf = new IdentityHashMap<>();
     private final Map<String, Evidence> repositories = new LinkedHashMap<>(); // simple name -> TableUse evidence
     private final Map<TypeDeclaration<?>, List<TypeDeclaration<?>>> implementations = new IdentityHashMap<>();
@@ -73,7 +72,7 @@ public final class ReachAnalysis {
             String file = s.repo().relative(s.index().fileOf(cu));
             fileOf.put(cu, file);
             for (var m : cu.findAll(MethodDeclaration.class)) {
-                m.getName().getBegin().ifPresent(p -> methodsAt.putIfAbsent(file + ":" + p.line, m)); // handlers are cited by name line
+                m.getName().getBegin().ifPresent(p -> methodsAt.putIfAbsent(file + ":" + p.line + ":" + p.column, m)); // handlers are cited by name
             }
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
                 for (var st : s.index().superTypes(c)) implementations.computeIfAbsent(st, k -> new ArrayList<>()).add(c);
@@ -101,10 +100,9 @@ public final class ReachAnalysis {
         while (!queue.isEmpty()) {
             Step step = queue.poll();
             String file = step.method.findCompilationUnit().map(fileOf::get).orElse(null);
-            int begin = step.method.getBegin().map(p -> p.line).orElse(-1);
-            int end = step.method.getEnd().map(p -> p.line).orElse(-1);
+            var range = step.method.getRange();
             for (Evidence ev : sinksByFile.getOrDefault(file, List.of())) {
-                if (ev.line() >= begin && ev.line() <= end) reached.putIfAbsent(ev, step.chain);
+                if (range.map(r -> r.contains(new Position(ev.line(), ev.column()))).orElse(false)) reached.putIfAbsent(ev, step.chain);
             }
             if (step.depth >= MAX_DEPTH) continue;
             for (MethodCallExpr call : step.method.findAll(MethodCallExpr.class)) {
@@ -177,7 +175,7 @@ public final class ReachAnalysis {
     }
 
     private Optional<MethodDeclaration> methodAt(Evidence ev) {
-        return Optional.ofNullable(methodsAt.get(ev.file() + ":" + ev.line()));
+        return Optional.ofNullable(methodsAt.get(ev.file() + ":" + ev.line() + ":" + ev.column()));
     }
 
     private static Evidence evidenceOf(Fact f) {

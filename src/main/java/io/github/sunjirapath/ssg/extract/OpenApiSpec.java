@@ -81,13 +81,12 @@ final class OpenApiSpec {
 
     private static void read(Service s, Path file, MappingNode root, Value contextPath,
                              java.util.function.Predicate<java.util.Set<String>> keep, List<Fact.Endpoint> out) {
-        // shortcut: openapi-generator lets ${openapi.<name>.base-path} override this; we use the spec's server path.
-        String base = get(root, "basePath").map(OpenApiSpec::scalar)
+        Value base = baseOverride(s, root).orElseGet(() -> Value.exact(get(root, "basePath").map(OpenApiSpec::scalar)
                 .or(() -> get(root, "servers").filter(SequenceNode.class::isInstance)
                         .flatMap(n -> ((SequenceNode) n).getValue().stream().findFirst())
                         .flatMap(n -> n instanceof MappingNode m ? get(m, "url") : Optional.empty())
                         .map(n -> pathOf(scalar(n))))
-                .orElse("");
+                .orElse("")));
         var paths = get(root, "paths");
         if (paths.isEmpty() || !(paths.get() instanceof MappingNode pm)) return;
         for (NodeTuple p : pm.getValue()) {
@@ -101,12 +100,24 @@ final class OpenApiSpec {
                         .map(OpenApiSpec::scalar).orElse("default") : "default";
                 // a HashSet, not Set.of: the tag and the path segment often give the same name
                 if (keep != null && !keep.test(new java.util.HashSet<>(List.of(squash(tag + "Api"), squash(firstSegment + "Api"))))) continue;
-                Value path = Mappings.joinValues(contextPath, Value.exact(base), Value.exact(scalar(p.getKeyNode())))
+                Value path = Mappings.joinValues(contextPath, base, Value.exact(scalar(p.getKeyNode())))
                         .withConfidence(Confidence.RESOLVED, null);
                 int line = op.getKeyNode().getStartMark().getLine() + 1;
                 out.add(new Fact.Endpoint(verb.toUpperCase(), path, s.repo().evidence(file, line), "openapi", null));
             }
         }
+    }
+
+    /**
+     * openapi-generator's {@code ${openapi.<name>.base-path}}, which replaces the spec's server path:
+     * the key whose name matches the spec's info.title, else the only such key.
+     */
+    private static Optional<Value> baseOverride(Service s, MappingNode root) {
+        var keys = s.config().withPrefix("openapi.").keySet().stream().filter(k -> k.matches("openapi\\..+\\.base-path")).toList();
+        String title = squash(get(root, "info").map(n -> n instanceof MappingNode m ? get(m, "title").map(OpenApiSpec::scalar).orElse("") : "").orElse(""));
+        return keys.stream().filter(k -> squash(k.substring("openapi.".length(), k.length() - ".base-path".length())).equals(title)).findFirst()
+                .or(() -> keys.size() == 1 ? Optional.of(keys.get(0)) : Optional.empty())
+                .map(s.config()::valueOf);
     }
 
     /** "Line Items" + "Api" and "LineItemsApi" both become "lineitemsapi". */
