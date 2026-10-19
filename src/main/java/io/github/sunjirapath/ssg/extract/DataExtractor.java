@@ -64,6 +64,8 @@ public final class DataExtractor implements Extractor {
             Value name = Ann.attr(tableName.get(), "value").map(s::eval).orElse(Value.exact(snake(c.getNameAsString())));
             return Optional.of(new Mapped(normalized(name), "sql", "TableName"));
         }
+        var table = Ann.find(c, "Table").flatMap(a -> Ann.attr(a, "name", "value")); // tk.mybatis entities carry @Table alone
+        if (table.isPresent()) return Optional.of(new Mapped(normalized(s.eval(table.get())), "sql", "Table"));
         var doc = Ann.find(c, "Document");
         if (doc.isPresent()) {
             Value name = Ann.attr(doc.get(), "collection", "value").map(s::eval)
@@ -152,9 +154,23 @@ public final class DataExtractor implements Extractor {
     }
 
     private static void xml(Service s, Path f, String text, List<Fact> facts) {
+        if (text.contains("<mapper")) mapper(s, f, text, facts);
         if (!text.contains("databaseChangeLog")) return;
         Matcher m = XML_CREATE_TABLE.matcher(text);
         while (m.find()) facts.add(own(s, f, text, m.start(), m.group(1), "liquibase"));
+    }
+
+    private static final Pattern MAPPER_STATEMENT = Pattern.compile("<(select|insert|update|delete)\\b[^>]*>(.*?)</\\1>", Pattern.DOTALL);
+
+    /** MyBatis mapper XML: tables used by each statement. shortcut: {@code <include>} fragments are not folded in. */
+    private static void mapper(Service s, Path f, String text, List<Fact> facts) {
+        Matcher m = MAPPER_STATEMENT.matcher(text);
+        while (m.find()) {
+            String sql = m.group(2).replaceAll("<!\\[CDATA\\[|\\]\\]>", " ").replaceAll("<[^>]*>", " ");
+            int line = (int) text.substring(0, m.start()).chars().filter(ch -> ch == '\n').count() + 1;
+            for (String t : JdbcExtractor.tables(sql))
+                facts.add(new Fact.TableUse(false, Value.exact(t), "sql", s.repo().evidence(f, line), "mybatis-xml"));
+        }
     }
 
     private static void yaml(Service s, Path f, String text, List<Fact> facts) {
