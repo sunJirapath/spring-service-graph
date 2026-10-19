@@ -125,7 +125,7 @@ What it found, and what changed:
 | 32/35 tables were used through `JdbcTemplate` SQL (251 sites), so there were no `USES` or `REACHES` edges and impact analysis failed. | New `JdbcExtractor` with `--sql-methods` for wrapper methods. Reach now reaches tables through JDBC. |
 | MCP lookups needed the exact `{var}` names; concrete paths failed. | Paths match templates as the linker does. `impact_of` reports the depth it used and notes clamping. |
 | Page links depend on where the fleet is checked out. | `--link-base` URL template. |
-| `OutOfMemoryError` at `-Xmx256m` for 5 MB of source. | Measured at about 80 MB of heap per MB of Java in the largest repo; documented. A structural reduction is still open. |
+| `OutOfMemoryError` at `-Xmx256m` for 5 MB of source. | Measured at about 80 MB of heap per MB of Java in the largest repo; documented. **Fixed** by gap #8 of field test 2: the indexed trees are compacted, and every bench repo now fits in 384 MB (under 20 MB per MB of Java). |
 | Reach became quadratic once JDBC sinks existed (found while testing the fix: 140 s for 1.7 MB). | Sinks and methods are indexed once: 3.5 s, identical output. |
 
 ## Messy real-world code bases (2026-10-19, ssg at 7c8de01)
@@ -138,9 +138,9 @@ Time was measured at `-Xmx8g` on a 16-thread Windows machine. "Heap needed" is t
 
 | Code base | Commit | Main Java | Apps | Services | Endpoints | CALLS | Topics | Tables | Findings | Time | Heap needed |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3449 | 3954 (479) | 3 (1) | 564 (547) | 7 CONTRACT_DRIFT, 18 (15) UNRESOLVED | 66 s (59 s) | 1.5 GB (OOM at 1 GB) |
-| apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 296 (86) | 0 | 16 s (14 s) | 384 MB (OOM at 256 MB) |
-| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 968 (3) | 2 | 2 | 304 (308) | 422 (425) UNRESOLVED | 27 s | 768 MB (OOM at 512 MB; was 2 GB, gap #8) |
+| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3449 | 3954 (479) | 3 (1) | 564 (547) | 7 CONTRACT_DRIFT, 18 (15) UNRESOLVED | 66 s (59 s) | 384 MB (OOM at 256 MB; was 1.5 GB, gap #8) |
+| apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 296 (86) | 0 | 16 s (14 s) | 256 MB (was 384 MB, gap #8) |
+| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 968 (3) | 2 | 2 | 304 (308) | 422 (425) UNRESOLVED | 27 s | 384 MB (OOM at 256 MB; was 2 GB, gap #8) |
 
 Notes on the counts:
 - yudao-cloud's 479 CALLS were 418 Feign calls, 36 gateway routes and 25 calls from HTTP clients. Before gap #1 was fixed there were 61, with no Feign calls. The 252 new ones come from the `*CommonApi` Feign clients in `yudao-common` and its starters, which every service now gets through its Maven dependencies.
@@ -190,7 +190,7 @@ The services are named from `spring.application.name`.
 | 5 | fineract | **Fixed.** Endpoints 3 → 968 and REACHES 62 → 4597: JAX-RS `@Path` resources and `@ApplicationPath` are read (`1d60d4e`). Before: the whole repo is dropped, with one `warn: no @SpringBootApplication`. | It boots through `SpringApplicationBuilder` with an `@EnableAutoConfiguration`-style configuration class. Even with that fixed, its 170 JAX-RS resources would give no endpoints. |
 | 6 | dolphinscheduler, yudao-cloud | **Partly fixed.** RabbitMQ and RocketMQ are now read: yudao-cloud has 11 PRODUCES and 5 CONSUMES, for example infra-server `infra-server-websocket` through `@RocketMQMessageListener`. mall-swarm's `RabbitTemplate` and `@RabbitListener` show up too. Before: 5 of 6 dolphinscheduler services and several yudao-cloud services show no outbound edges. | They use transports ssg does not read: dolphinscheduler's own Netty RPC, plus RocketMQ, RabbitMQ and Redis streams (15 files in yudao-cloud). Netty RPC and Redis streams are still out of scope. Many yudao-cloud destinations are runtime values (`?topic`), so they stay unresolved. |
 | 7 | dolphinscheduler | 1 noisy MISSING_INTERFACE finding. | The controller implements Spring Boot's own `ErrorController`. Framework interfaces carry no mappings and should not be reported. |
-| 8 | all | **Fixed.** The minimum heap is now 768 MB for fineract (was 2 GB), thingsboard and yudao-cloud, 512 MB for metersphere and 256 MB for dolphinscheduler. Output is byte-identical at `-Xmx8g` (`1f58667`). Before: 50–70 MB of heap per MB of Java. Fineract runs out of memory at 1 GB although it yields no service. | Every source file is parsed before discovery, so even a repo with no app gets fully parsed. This adds to the open memory item from field test 1. |
+| 8 | all | **Fixed.** The minimum heap is now 384 MB for fineract (was 2 GB), thingsboard and yudao-cloud, and 256 MB for metersphere and dolphinscheduler. Dropping token lists (`1f58667`) took the three big repos to 768 MB. Compacting the indexed trees then halved it again: one shared empty list for the mostly empty per-node lists, and one copy of equal ranges, positions and names. Fineract's live heap went from 687 MB to 360 MB. Output is byte-identical to the previous build on all 14 repos, and scan times are unchanged. Before: 50–70 MB of heap per MB of Java. Fineract runs out of memory at 1 GB although it yields no service. | Every source file is parsed before discovery, so even a repo with no app gets fully parsed. This adds to the open memory item from field test 1. |
 
 **Gap #1 is fixed.** A service in a multi-app repo now also gets the library sources it uses. A library source is one in a module with no app, and it counts as used when the service's own code names one of its types. That includes `@EnableFeignClients(clients = X.class)`. The rule is applied again through the library files it pulls in. A type that the service implements or extends is left out, because a server's `*ApiImpl` is the implementation, not a client. Evidence still points at the interface in its `-api` module.
 - yudao-cloud: 44 of the 47 Feign interfaces are attributed. They give 418 CALLS, every one linked to a real endpoint, and there are no self-calls.
@@ -263,8 +263,8 @@ These are eight more public code bases, cloned by `scripts/bench-clone.sh` and s
 | microservices-patterns/ftgo-application | `558dfc5` | 0.3 MB | 8 | 7 (6) | 24 (16) | 1 | 0 | 9 (6) | 8 UNRESOLVED, 1 DUPLICATE_SERVICE (was 1 UNRESOLVED) | 3 s | 256 MB |
 | shopizer-ecommerce/shopizer | `6a4a0a6` | 3.5 MB | 1 | 1 | 321 | 0 | 0 | 82 (81) | 0 | 15 s (62 s, gap #10) | 256 MB |
 | jeecgboot/JeecgBoot | `4998e64` | 4.8 MB | 11 | 10 | 987 (74) | 123 (2) | 0 | 105 (48) | 14 CONTRACT_DRIFT, 12 UNRESOLVED, 1 DUPLICATE_SERVICE (was 1 DUPLICATE_SERVICE) | 6 s | 384 MB |
-| metersphere/metersphere | `53df526` | 12.1 MB | 1 | 1 | 1053 | 2 | 5 | 161 (0) | 2 UNRESOLVED (was also 1 MISSING_INTERFACE) | 15 s | 1 GB |
-| thingsboard/thingsboard | `4dc9403` | 21.8 MB | 25 | 24 (16) | 850 (0) | 26 (3) | 0 | 31 (6) | 46 UNRESOLVED (11, 1) | 55 s | 768 MB (was 2 GB, gap #8) |
+| metersphere/metersphere | `53df526` | 12.1 MB | 1 | 1 | 1053 | 2 | 5 | 161 (0) | 2 UNRESOLVED (was also 1 MISSING_INTERFACE) | 15 s | 256 MB (was 1 GB, gap #8) |
+| thingsboard/thingsboard | `4dc9403` | 21.8 MB | 25 | 24 (16) | 850 (0) | 26 (3) | 0 | 31 (6) | 46 UNRESOLVED (11, 1) | 55 s | 384 MB (OOM at 256 MB; was 2 GB, gap #8) |
 
 Notes on the counts:
 - mall-swarm's 253 CALLS are 245 gateway routes and 8 Feign calls.

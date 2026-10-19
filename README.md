@@ -200,7 +200,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 - OpenAPI specs: `${openapi.<name>.base-path}` overrides are not applied; the spec's server path is used.
 - Values built by method calls (other than zero-argument helpers in the same class that only `return` an expression), `String.format` or `static {}` blocks are `UNRESOLVED`. Constants inherited from super types found in sources are resolved.
 - Java only; Kotlin sources are not scanned.
-- Memory: a scan holds the syntax trees of one repo at a time, roughly 80 MB of heap per MB of Java source in the largest repo (a 12 MB repo needs about 1 GB). Raise it with `JAVA_OPTS=-Xmx2g` if needed.
+- Memory: a scan holds the syntax trees of one repo at a time, under 20 MB of heap per MB of Java source (a 28 MB repo fits in 384 MB, a 12 MB repo in 256 MB). Raise it with `JAVA_OPTS=-Xmx1g` if needed.
 - Nested checkouts are skipped: any folder below a repo root with its own `.git` (worktrees, submodules, vendored clones).
 - JDBC: an implicit comma join (`FROM a, b`) yields only the first table; SQL built at runtime is reported as `UNRESOLVED`.
 - Static analysis misses runtime-only behaviour (dynamic URLs, service discovery lookups at runtime).

@@ -2,6 +2,8 @@ package io.github.sunjirapath.ssg.scan;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.Position;
+import com.github.javaparser.Range;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
@@ -28,6 +30,7 @@ import io.github.sunjirapath.ssg.model.Value;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -65,13 +68,14 @@ public final class JavaIndex {
                 .setLanguageLevel(ParserConfiguration.LanguageLevel.BLEEDING_EDGE)
                 // comments are never read; tokens are needed while parsing, node positions (evidence lines) come from them
                 .setAttributeComments(false));
+        var shared = new HashMap<Object, Object>(); // equal positions and names, one copy each
         try {
             for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
                 var result = parser.parse(f);
                 result.getProblems().forEach(p -> idx.problems.add(new Problem(f,
                         p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
                         p.getMessage().lines().findFirst().orElse("parse error"))));
-                result.getResult().ifPresent(cu -> idx.add(f, cu));
+                result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -104,17 +108,66 @@ public final class JavaIndex {
         return file.getParent();
     }
 
-    private void add(Path file, CompilationUnit cu) {
-        // keep each node's range but drop its token list: the tokens (whitespace included) are most of the heap
-        cu.walk(n -> {
-            var range = n.getRange().orElse(null);
-            n.setTokenRange(null);
-            n.setRange(range);
-        });
+    private void add(Path file, CompilationUnit cu, Map<Object, Object> shared) {
+        var ranges = new HashMap<Range, Range>(); // a node and its only child often span the same text
+        cu.walk(n -> compact(n, shared, ranges));
         units.add(cu);
         files.put(cu, file);
         for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) {
             t.getFullyQualifiedName().ifPresent(fqn -> typesByFqn.computeIfAbsent(fqn, k -> new ArrayList<>()).add(t));
+        }
+    }
+
+    // nothing edits a tree once indexed, so empty lists can be one shared instance
+    // shortcut: reflects into JavaParser private fields (fails fast at startup if renamed), recheck on a JavaParser upgrade
+    private static final ArrayList<Object> NONE = new ArrayList<>(0);
+    private static final Field CHILDREN = field(Node.class, "childNodes"), ORPHANS = field(Node.class, "orphanComments"),
+            OBSERVERS = field(Node.class, "observers"), INNER = field(NodeList.class, "innerList"),
+            LIST_OBSERVERS = field(NodeList.class, "observers"), SIMPLE_ID = field(SimpleName.class, "identifier"),
+            NAME_ID = field(Name.class, "identifier");
+
+    /**
+     * Shrinks one parsed node in place: keeps its range but drops its token list (the tokens, whitespace included,
+     * were most of the heap), shares equal ranges, positions and names, and swaps the per-node lists
+     * (three per node, mostly empty; comments are never attributed) for one shared empty list.
+     */
+    @SuppressWarnings("unchecked")
+    private static void compact(Node n, Map<Object, Object> shared, Map<Range, Range> ranges) {
+        var range = n.getRange(); // absent on the few nodes the parser makes up
+        n.setTokenRange(null);
+        range.ifPresent(r -> n.setRange(ranges.computeIfAbsent(r, k -> new Range(one(shared, k.begin), one(shared, k.end)))));
+        try {
+            // the setters skip equal values, so share names through the field
+            if (n instanceof SimpleName s) SIMPLE_ID.set(n, one(shared, s.getIdentifier()));
+            if (n instanceof Name s) NAME_ID.set(n, one(shared, s.getIdentifier()));
+            var children = (ArrayList<Object>) CHILDREN.get(n);
+            if (children.isEmpty()) CHILDREN.set(n, NONE); else children.trimToSize();
+            ORPHANS.set(n, NONE);
+            OBSERVERS.set(n, NONE);
+            for (var p : n.getMetaModel().getAllPropertyMetaModels()) {
+                if (p.isNodeList() && p.getValue(n) instanceof NodeList<?> list) {
+                    var inner = (List<Object>) INNER.get(list);
+                    if (inner.isEmpty()) INNER.set(list, List.of()); else ((ArrayList<Object>) inner).trimToSize();
+                    LIST_OBSERVERS.set(list, List.of());
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T one(Map<Object, Object> shared, T value) {
+        return (T) shared.computeIfAbsent(value, k -> k);
+    }
+
+    private static Field field(Class<?> type, String name) {
+        try {
+            Field f = type.getDeclaredField(name);
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException("javaparser changed: no " + type.getSimpleName() + "." + name, e);
         }
     }
 

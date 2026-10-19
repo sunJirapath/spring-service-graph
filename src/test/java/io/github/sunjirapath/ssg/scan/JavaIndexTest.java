@@ -34,6 +34,23 @@ class JavaIndexTest {
     }
 
     @Test
+    void compactedTreesKeepLinesNamesAndStructure() throws IOException {
+        src("a/A.java", "package a;\nclass A {\n  void m() { use(1); }\n}\n");
+        src("a/B.java", "package a;\nclass B {\n\n  void m() { use(2); }\n}\n");
+        var calls = JavaIndex.build(Repo.of(repo)).units().stream()
+                .flatMap(u -> u.findAll(MethodCallExpr.class).stream()).toList();
+        assertThat(calls).extracting(c -> c.getBegin().orElseThrow().line).containsExactlyInAnyOrder(3, 4);
+        assertThat(calls).allSatisfy(c -> {
+            assertThat(c.getNameAsString()).isEqualTo("use");
+            assertThat(c.getArguments()).hasSize(1);
+            assertThat(c.getTokenRange()).isEmpty();
+            assertThat(c.getArgument(0).getParentNode()).containsSame(c);
+        });
+        // names are shared across files, so equal identifiers are one instance
+        assertThat(calls.get(0).getName().getIdentifier()).isSameAs(calls.get(1).getName().getIdentifier());
+    }
+
+    @Test
     void constantFromAnotherPackageViaImport() throws IOException {
         src("a/Topics.java", "package a; public final class Topics { public static final String P = \"acc\"; "
                 + "public static final String CREATED = P + \".created\"; }");
