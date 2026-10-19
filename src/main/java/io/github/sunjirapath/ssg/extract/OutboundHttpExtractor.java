@@ -4,6 +4,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
@@ -102,6 +103,12 @@ public final class OutboundHttpExtractor implements Extractor {
         }
         Expression arg = call.getArgument(0);
         Value url = arg instanceof ObjectCreationExpr ? Value.unresolved(arg.toString()) : s.eval(arg);
+        if (!url.resolved() && arg instanceof NameExpr n && s.index().declarationOf(n.getNameAsString(), n)
+                .filter(Parameter.class::isInstance)
+                .filter(p -> p.getParentNode().filter(LambdaExpr.class::isInstance).isPresent()).isPresent()) {
+            // shortcut: callback arguments need context-aware parameter binding to trace their URLs.
+            url = new Value(url.text(), url.confidence(), "lambda parameter '" + arg + "'", url.via());
+        }
         return Optional.of(new Fact.Call("rest-template", verb, withBaseUrl(s, call, url), s.evidence(call)));
     }
 

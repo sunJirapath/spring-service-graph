@@ -45,6 +45,71 @@ class JdbcExtractorTest {
     }
 
     @Test
+    void executeConnectionCallbacksAreNotSql(@TempDir Path tmp) {
+        var facts = extract(tmp, "callbacks", """
+                package x;
+                class Queries {
+                    JdbcTemplate jdbc;
+                    void run(ConnectionCallback<String> callback) {
+                        jdbc.execute((ConnectionCallback<byte[]>) connection -> {
+                            LargeObject lo = connection.unwrap(PgConnection.class).getLargeObjectAPI().open(1);
+                            return lo.getInputStream().readAllBytes();
+                        });
+                        jdbc.execute((ConnectionCallback<Long>) connection -> {
+                            return connection.unwrap(PgConnection.class).getLargeObjectAPI().createLO();
+                        });
+                        jdbc.execute(((ConnectionCallback<String>) connection -> connection.getCatalog()));
+                        jdbc.execute(callback);
+                    }
+                }
+                """);
+
+        assertThat(facts).isEmpty();
+    }
+
+    @Test
+    void executeStatementCallbackWithRuntimeSqlRemainsUnresolved(@TempDir Path tmp) {
+        var facts = extract(tmp, "statement-callback", """
+                package x;
+                class Queries {
+                    JdbcTemplate jdbc;
+                    void run(String sql) {
+                        jdbc.execute((StatementCallback<Object>) stmt -> {
+                            stmt.execute(sql);
+                            return null;
+                        });
+                    }
+                }
+                """);
+
+        assertThat(facts).singleElement().isInstanceOfSatisfying(Fact.Problem.class, p -> {
+            assertThat(p.kind()).isEqualTo("UNRESOLVED");
+            assertThat(p.message()).contains("SQL not resolved", "stmt.execute(sql)");
+        });
+    }
+
+    @Test
+    void executeStillReadsSqlArguments(@TempDir Path tmp) {
+        var facts = extract(tmp, "execute-sql", """
+                package x;
+                class Queries {
+                    JdbcTemplate jdbc;
+                    void run(String sql) {
+                        jdbc.execute((String) ("DELETE FROM audit_events"));
+                        jdbc.execute(sql);
+                    }
+                }
+                """);
+
+        assertThat(tableNames(facts)).containsExactly("audit_events");
+        assertThat(facts).filteredOn(Fact.Problem.class::isInstance).singleElement()
+                .isInstanceOfSatisfying(Fact.Problem.class, p -> {
+                    assertThat(p.kind()).isEqualTo("UNRESOLVED");
+                    assertThat(p.message()).contains("parameter 'sql'", "Queries.run");
+                });
+    }
+
+    @Test
     void extractsAllSupportedJdbcReceiverTypes(@TempDir Path tmp) {
         var facts = extract(tmp, "types", """
                 package x;
