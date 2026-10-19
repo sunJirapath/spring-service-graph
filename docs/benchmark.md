@@ -154,7 +154,7 @@ These counts are of files under `src/main/java`.
 |---|---|---|---|
 | Controller classes → endpoints | 657 → 3392 endpoints in 24/25 services | 35 → 239 | 3 + 170 JAX-RS `@Path` → 3 (JAX-RS is not read) |
 | `@FeignClient` → CALLS | 47 → 418 CALLS from 23 services, all RESOLVED (was 0, gap #1) | — | — |
-| `@TableName` (MyBatis-Plus) → tables | 547 → 547, used by 22 services, 8021 REACHES (was 0, gap #3) | 48 → 43 in 4 services (was 0, gap #3; needs gap #1, since the mappers live in `-dao`) | — |
+| `@TableName` (MyBatis-Plus) → tables | 547 → 547, used by 22 services, 8027 REACHES (was 0, gap #3) | 48 → 43 in 4 services (was 0, gap #3; needs gap #1, since the mappers live in `-dao`) | — |
 | `@Entity` / `extends *Repository<` → tables | — | — | 254 / 200 → 308 tables, 277 USES, 58 REACHES (was 0, gap #5) |
 | `JdbcTemplate` / `JdbcClient` | 3 → 1 UNRESOLVED (a `--sql-methods` hint) | — | 203 → 425 UNRESOLVED, mostly SQL not resolved statically |
 | `KafkaTemplate` / `@KafkaListener` | 6 → 1 PRODUCES | — | 4 → 0 |
@@ -216,17 +216,17 @@ These are eight more public code bases, cloned by `scripts/bench-clone.sh` and s
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | macrozheng/mall-swarm | `04c442f` | 2.9 MB | 7 | 7 | 250 | 253 | 0 | 3 | 1 UNRESOLVED | 5 s | 256 MB |
 | paascloud/paascloud-master | `781281a` | 1.6 MB | 10 | 10 | 189 | 43 (0) | 0 | 4 | 0 | 4 s | 256 MB |
-| pig-mesh/pig | `a0d273a` | 1.6 MB | 8 | 8 (7) | 288 | 13 (0) | 0 | 38 (0) | 0 | 3 s | 256 MB |
+| pig-mesh/pig | `a0d273a` | 1.6 MB | 8 | 8 (7) | 294 (288) | 24 (0) | 0 | 38 (0) | 5 CONTRACT_DRIFT (0) | 3 s | 256 MB |
 | microservices-patterns/ftgo-application | `558dfc5` | 0.3 MB | 8 | 7 (6) | 19 (16) | 1 | 0 | 9 (6) | 1 UNRESOLVED, 1 DUPLICATE_SERVICE (was 1 UNRESOLVED) | 3 s | 256 MB |
 | shopizer-ecommerce/shopizer | `6a4a0a6` | 3.5 MB | 1 | 1 | 321 | 0 | 0 | 81 | 0 | 15 s (62 s, gap #10) | 256 MB |
-| jeecgboot/JeecgBoot | `4998e64` | 4.8 MB | 11 | 11 (10) | 74 | 2 | 0 | 40 | 0 | 6 s | 384 MB |
+| jeecgboot/JeecgBoot | `4998e64` | 4.8 MB | 11 | 10 | 74 | 2 | 0 | 40 | 1 DUPLICATE_SERVICE | 6 s | 384 MB |
 | metersphere/metersphere | `53df526` | 12.1 MB | 1 | 1 | 1053 | 2 | 5 | 0 | 2 UNRESOLVED (was also 1 MISSING_INTERFACE) | 15 s | 1 GB |
 | thingsboard/thingsboard | `4dc9403` | 21.8 MB | 25 | 21 (16) | 850 (0) | 26 (3) | 0 | 33 (6) | 46 UNRESOLVED, 3 DUPLICATE_SERVICE (11, 1) | 50 s | 2 GB |
 
 Notes on the counts:
 - mall-swarm's 253 CALLS are 245 gateway routes and 8 Feign calls.
 - paascloud's 43 new CALLS are EXACT. They come from Feign clients in its shared `-provider-api` modules, which gap #1's fix now attributes.
-- pig's 13 new CALLS are RESOLVED: 11 go to `pig-upms-biz` and 2 to `pig-auth`. Its new service is `pig-register` (gap #5).
+- pig's 24 new CALLS are 13 RESOLVED Feign calls (11 to `pig-upms-biz`, 2 to `pig-auth`) and 11 EXACT gateway routes (gap #9). The 6 new endpoints are the gateway's route patterns, such as `* /admin/**`. Its new service is `pig-register` (gap #5).
 - ftgo's 8th app is not a separate service: the delivery service sets `spring.application.name=ftgo-order-service`, so the 2 merge and give a correct DUPLICATE_SERVICE finding.
 - In thingsboard, `application` now gives 849 endpoints. It boots through `@SpringBootConfiguration` with a `main` method (gap #5).
 
