@@ -162,7 +162,7 @@ public final class JdbcExtractor implements Extractor {
             + "|\\b(?:extract|trim|substring|position|overlay)\\s*\\([^()]*\\)"
             + "|\\bfor\\s+update\\b|\\bon\\s+duplicate\\s+key\\s+update\\b|\\bdo\\s+update\\b");
     private static final Pattern CTE = Pattern.compile("(?i)(?:\\bwith\\s+(?:recursive\\s+)?|,\\s*)([A-Za-z_]\\w*)\\s+as\\s*\\(");
-    private static final Pattern TABLE = Pattern.compile("(?i)\\b(?:from|join|into|update)\\s+([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
+    private static final Pattern TABLE = Pattern.compile("(?i)\\b(from|join|into|update)\\s+([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
     /** The next table of an implicit comma join, {@code FROM a x, b y}: the previous table's optional alias, then a comma. */
     private static final Pattern COMMA = Pattern.compile("(?i)\\s*(?:(?:as\\s+)?(?!(?:where|join|inner|left|right|full|cross|natural|on|using|set|select|values|group|order|having|limit|union)\\b)[A-Za-z_]\\w*)?"
             + "\\s*,\\s*([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
@@ -185,14 +185,15 @@ public final class JdbcExtractor implements Extractor {
         Matcher m = TABLE.matcher(code);
         boolean catalog = code.toLowerCase(Locale.ROOT).contains("information_schema");
         while (m.find()) {
-            String raw = m.group(1);
+            String raw = m.group(2);
+            boolean list = !m.group(1).equalsIgnoreCase("into") && !m.group(1).equalsIgnoreCase("update"); // INTO t a, b is a column list once MyBatis tags are gone
             Matcher more = COMMA.matcher(code);
             for (int end = m.end(); ; end = more.end()) {
                 String t = name.apply(raw);
                 if (!(t == null || t.isEmpty() || NOT_TABLES.contains(t) || ctes.contains(t) || SYSTEM.matcher(raw).find()
                         || catalog && (t.equals("columns") || t.equals("tables")))) out.add(t); // else system catalog, not a table
                 more.region(end, code.length());
-                if (!more.lookingAt()) break;
+                if (!list || !more.lookingAt()) break;
                 raw = more.group(1);
             }
         }

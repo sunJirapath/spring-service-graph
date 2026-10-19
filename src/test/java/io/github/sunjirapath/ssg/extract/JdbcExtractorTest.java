@@ -457,6 +457,9 @@ class JdbcExtractorTest {
         assertThat(JdbcExtractor.tables("select * from a, b x, c as y where a.id = x.id")).containsExactly("a", "b", "c");
         assertThat(JdbcExtractor.tables("update t set a = 1, b = 2 where id in (1, 2)")).containsExactly("t");
         assertThat(JdbcExtractor.tables("insert into t (a, b) select 1, 2 from u limit 1, 2")).containsExactly("t", "u");
+        // MyBatis insertSelective once its <trim prefix="("> tags are gone
+        assertThat(JdbcExtractor.tables("insert into t   admin_id,   address,   values   #{a},")).containsExactly("t");
+        assertThat(JdbcExtractor.tables("update t   name = #{n},   city = #{c}")).containsExactly("t");
     }
 
     @Test
