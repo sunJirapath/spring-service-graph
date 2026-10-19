@@ -20,9 +20,11 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,20 +122,37 @@ public final class DataExtractor implements Extractor {
 
     // ---------------------------------------------------------------- migrations
 
+    /**
+     * Resources of the service module and the library modules it depends on, plus mapper XML kept next to the Java
+     * sources. A library mapper XML counts only when its namespace is a mapper interface among the service's units.
+     */
     private static void migrations(Service s, List<Fact> facts) {
-        try {
-            for (Path f : s.repo().files(s.resources())) {
-                String name = f.getFileName().toString().toLowerCase(Locale.ROOT);
-                try { // one unreadable or malformed file must not hide the others
-                    if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
-                    else if (name.endsWith(".xml")) xml(s, f, Files.readString(f), facts);
-                    else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
-                } catch (IOException | RuntimeException e) {
-                    System.err.println("warn: cannot read " + f + ": " + e.getMessage());
+        Set<String> types = null; // FQNs declared in the service's units, for library mapper XML
+        for (Path module : s.modules()) {
+            for (Path dir : List.of(module.resolve("src/main/resources"), module.resolve("src/main/java"))) {
+                boolean javaDir = dir.endsWith("java");
+                try {
+                    for (Path f : s.repo().files(dir)) {
+                        String name = f.getFileName().toString().toLowerCase(Locale.ROOT);
+                        if (javaDir && !name.endsWith(".xml")) continue;
+                        try { // one unreadable or malformed file must not hide the others
+                            if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
+                            else if (name.endsWith(".xml")) {
+                                String text = Files.readString(f);
+                                if (!module.equals(s.moduleRoot()) && text.contains("<mapper")) {
+                                    if (types == null) types = declaredTypes(s);
+                                    if (!types.contains(namespace(text))) continue; // a shared mapper this service never uses
+                                }
+                                xml(s, f, text, facts);
+                            } else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
+                        } catch (IOException | RuntimeException e) {
+                            System.err.println("warn: cannot read " + f + ": " + e.getMessage());
+                        }
+                    }
+                } catch (IOException e) {
+                    System.err.println("warn: cannot list " + dir + ": " + e.getMessage());
                 }
             }
-        } catch (IOException e) {
-            System.err.println("warn: cannot list " + s.resources() + ": " + e.getMessage());
         }
     }
 
@@ -164,6 +183,20 @@ public final class DataExtractor implements Extractor {
         if (!text.contains("databaseChangeLog")) return;
         Matcher m = XML_CREATE_TABLE.matcher(text);
         while (m.find()) facts.add(own(s, f, text, m.start(), m.group(1), "liquibase"));
+    }
+
+    private static final Pattern NAMESPACE = Pattern.compile("<mapper\\b[^>]*\\bnamespace\\s*=\\s*[\"']([^\"']+)");
+
+    private static String namespace(String mapperXml) {
+        Matcher m = NAMESPACE.matcher(mapperXml);
+        return m.find() ? m.group(1).trim() : "";
+    }
+
+    private static Set<String> declaredTypes(Service s) {
+        var out = new HashSet<String>();
+        for (CompilationUnit cu : s.units())
+            for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) t.getFullyQualifiedName().ifPresent(out::add);
+        return out;
     }
 
     private static final Pattern MAPPER_STATEMENT = Pattern.compile("<(select|insert|update|delete)\\b[^>]*>(.*?)</\\1>", Pattern.DOTALL);
