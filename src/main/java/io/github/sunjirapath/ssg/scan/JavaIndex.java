@@ -60,7 +60,7 @@ public final class JavaIndex {
         var idx = new JavaIndex(repo);
         var parser = new JavaParser(new ParserConfiguration()
                 .setLanguageLevel(ParserConfiguration.LanguageLevel.BLEEDING_EDGE)
-                // comments are never read; tokens must stay, node positions (evidence lines) come from them
+                // comments are never read; tokens are needed while parsing, node positions (evidence lines) come from them
                 .setAttributeComments(false));
         try {
             for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
@@ -102,6 +102,12 @@ public final class JavaIndex {
     }
 
     private void add(Path file, CompilationUnit cu) {
+        // keep each node's range but drop its token list: the tokens (whitespace included) are most of the heap
+        cu.walk(n -> {
+            var range = n.getRange().orElse(null);
+            n.setTokenRange(null);
+            n.setRange(range);
+        });
         units.add(cu);
         files.put(cu, file);
         for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) {
