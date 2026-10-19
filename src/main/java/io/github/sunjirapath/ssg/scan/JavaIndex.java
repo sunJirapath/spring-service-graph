@@ -147,7 +147,7 @@ public final class JavaIndex {
             for (var p : n.getMetaModel().getAllPropertyMetaModels()) {
                 if (p.isNodeList() && p.getValue(n) instanceof NodeList<?> list) {
                     var inner = (List<Object>) INNER.get(list);
-                    if (inner.isEmpty()) INNER.set(list, List.of()); else ((ArrayList<Object>) inner).trimToSize();
+                    INNER.set(list, List.copyOf(inner)); // immutable lists of up to two hold their items without an array
                     LIST_OBSERVERS.set(list, List.of());
                 }
             }

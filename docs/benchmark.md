@@ -140,7 +140,7 @@ Time was measured at `-Xmx8g` on a 16-thread Windows machine. "Heap needed" is t
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3449 | 3954 (479) | 3 (1) | 564 (547) | 7 CONTRACT_DRIFT, 18 (15) UNRESOLVED | 66 s (59 s) | 384 MB (OOM at 256 MB; was 1.5 GB, gap #8) |
 | apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 296 (86) | 0 | 16 s (14 s) | 256 MB (was 384 MB, gap #8) |
-| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 968 (3) | 2 | 2 | 304 (308) | 422 (425) UNRESOLVED | 27 s | 384 MB (OOM at 256 MB; was 2 GB, gap #8) |
+| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 968 (3) | 2 | 2 | 304 (308) | 422 (425) UNRESOLVED | 27 s | 352 MB (OOM at 320 MB; was 2 GB, gap #8) |
 
 Notes on the counts:
 - yudao-cloud's 479 CALLS were 418 Feign calls, 36 gateway routes and 25 calls from HTTP clients. Before gap #1 was fixed there were 61, with no Feign calls. The 252 new ones come from the `*CommonApi` Feign clients in `yudao-common` and its starters, which every service now gets through its Maven dependencies.
