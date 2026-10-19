@@ -438,6 +438,28 @@ class JdbcExtractorTest {
     }
 
     @Test
+    void jpqlQueryMapsEntityNamesToTheirTables(@TempDir Path tmp) {
+        var facts = extract(tmp, "jpql", """
+                package x;
+                @Entity @Table(name = "types") class PetType {}
+                @Entity class Pet {}
+                interface Repo {
+                    @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name") List<Object> types();
+                    @Query("select p from Pet p, Missing m, PetType t join fetch p.owner") List<Object> both();
+                }
+                """);
+
+        assertThat(tableNames(facts)).containsExactly("types", "pet", "types");
+    }
+
+    @Test
+    void implicitCommaJoinsYieldEveryTable() {
+        assertThat(JdbcExtractor.tables("select * from a, b x, c as y where a.id = x.id")).containsExactly("a", "b", "c");
+        assertThat(JdbcExtractor.tables("update t set a = 1, b = 2 where id in (1, 2)")).containsExactly("t");
+        assertThat(JdbcExtractor.tables("insert into t (a, b) select 1, 2 from u limit 1, 2")).containsExactly("t", "u");
+    }
+
+    @Test
     void edgeCallsAddNoTablesOrProblems(@TempDir Path tmp) {
         var facts = extract(tmp, "edge-calls", """
                 package x;

@@ -112,6 +112,22 @@ class DataExtractorTest {
     }
 
     @Test
+    void foldsMapperSqlFragmentsIntoStatementsAndSurvivesCycles(@TempDir Path repo) throws IOException {
+        var facts = extract(repo, "package x; class Empty {}", "mapper/OrderMapper.xml", """
+                <mapper namespace="x.OrderMapper">
+                  <sql id="from">from orders o <include refid="joins"/></sql>
+                  <sql id="joins">join items i on i.oid = o.id <include refid="x.OrderMapper.from"/></sql>
+                  <select id="find">select * <include refid="from"></include></select>
+                  <select id="gone">select 1 <include refid="other.ns.missing"/></select>
+                </mapper>
+                """);
+
+        assertThat(facts).filteredOn(Fact.TableUse.class::isInstance)
+                .extracting(f -> ((Fact.TableUse) f).table().text())
+                .containsExactly("orders", "items");
+    }
+
+    @Test
     void readsTableAnnotationWithoutEntity(@TempDir Path repo) throws IOException {
         var facts = extract(repo, "package x; @Table(name = \"mdc_address\") class MdcAddress {}");
 
