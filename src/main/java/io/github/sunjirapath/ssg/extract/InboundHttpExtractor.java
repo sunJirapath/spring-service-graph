@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
- * WebFlux router beans and {@code @RestController}/{@code @Controller} endpoints, including mappings declared only on
+ * JAX-RS resources, WebFlux router beans and {@code @RestController}/{@code @Controller} endpoints, including mappings declared only on
  * implemented interfaces (openapi-generator {@code interfaceOnly}). When such an interface is
  * not in the checkout (an unbuilt repo), endpoints come from the OpenAPI spec instead.
  */
@@ -37,6 +37,9 @@ public final class InboundHttpExtractor implements Extractor {
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
         Value contextPath = contextPath(s);
+        Value jaxRsPath = s.units().stream().flatMap(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).stream())
+                .flatMap(c -> Ann.find(c, "ApplicationPath").stream()).flatMap(a -> Ann.attr(a, "value").stream())
+                .map(s::eval).findFirst().orElse(Value.exact(""));
         List<Prefix> prefixes = pathPrefixes(s);
         var missing = new java.util.LinkedHashMap<ClassOrInterfaceDeclaration, List<String>>(); // controller -> absent interfaces
         for (CompilationUnit cu : s.units()) {
@@ -44,6 +47,7 @@ public final class InboundHttpExtractor implements Extractor {
                 if (Ann.has(m, "Bean")) functionalRoutes(m, s, contextPath, facts);
             }
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
+                jaxRsResources(c, s, contextPath, jaxRsPath, facts);
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
                 Value prefix = prefixes.stream().filter(p -> p.applies().test(c)).map(Prefix::path).findFirst().orElse(Value.exact(""));
                 List<Value> classPaths = classPaths(c, s);
@@ -78,6 +82,20 @@ public final class InboundHttpExtractor implements Extractor {
             for (Fact.Endpoint e : spec) if (exposed.add(e.method() + " " + e.path().text())) facts.add(e);
         });
         return facts;
+    }
+
+    private static void jaxRsResources(ClassOrInterfaceDeclaration c, Service s, Value contextPath, Value applicationPath,
+                                       List<Fact> facts) {
+        if (c.isInterface() || !Ann.has(c, "Path")) return;
+        Value classPath = Ann.find(c, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
+        for (var m : c.getMethods()) {
+            var verb = Ann.find(m, "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD");
+            if (verb.isEmpty()) continue; // @Path without an HTTP method is a sub-resource locator
+            Value methodPath = Ann.find(m, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
+            facts.add(new Fact.Endpoint(verb.get().getName().getIdentifier(),
+                    Mappings.joinValues(contextPath, applicationPath, classPath, methodPath), s.evidence(verb.get()),
+                    "jax-rs", s.evidence(m.getName())));
+        }
     }
 
     private record Route(String method, Value path) {}

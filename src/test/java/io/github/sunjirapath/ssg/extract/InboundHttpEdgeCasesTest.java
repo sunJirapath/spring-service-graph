@@ -553,6 +553,76 @@ class InboundHttpEdgeCasesTest {
                 .containsExactlyInAnyOrder("GET /composed", "POST /reverse");
     }
 
+    @Test
+    void extractsJavaxAndJakartaJaxRsResourcesAndSkipsLocators(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("jax-rs")).app()
+                .resource("application.properties", "spring.mvc.servlet.path=/rest\n")
+                .java("x/Application.java", "package x; @jakarta.ws.rs.ApplicationPath(\"/application\") class Application {}")
+                .java("x/Paths.java", "package x; class Paths { static final String API = \"/api\"; }")
+                .java("x/Resource.java", """
+                        package x;
+                        import javax.ws.rs.*;
+                        @Path(Paths.API) class Resource {
+                            @GET
+                            public Object list() { return null; }
+                            @POST @Path("items") public Object create() { return null; }
+                            @PUT @Path("/{id}") public Object update() { return null; }
+                            @DELETE @Path("/{id}") public Object delete() { return null; }
+                            @PATCH @Path("/{id}") public Object patch() { return null; }
+                            @HEAD public Object head() { return null; }
+                            @Path("/locator") public Object locator() { return null; }
+                            public void helper() {}
+                        }
+                        @Path("/interface") interface Api { @GET Object get(); }
+                        class NotAResource { @GET @Path("/orphan") Object get() { return null; } }
+                        """)
+                .java("x/JakartaResource.java", """
+                        package x;
+                        import jakarta.ws.rs.GET;
+                        @jakarta.ws.rs.Path("/jakarta") class JakartaResource {
+                            @GET @jakarta.ws.rs.Path("{id}") public Object get() { return null; }
+                        }
+                        """));
+
+        assertThat(endpoints).extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactlyInAnyOrder(
+                "GET /rest/application/api", "POST /rest/application/api/items", "PUT /rest/application/api/{id}",
+                "DELETE /rest/application/api/{id}", "PATCH /rest/application/api/{id}", "HEAD /rest/application/api",
+                "GET /rest/application/jakarta/{id}");
+        assertThat(endpoints).filteredOn(e -> methodAndPath(e).equals("GET /rest/application/api")).singleElement().satisfies(e -> {
+            assertThat(e.path().confidence()).isEqualTo(Confidence.RESOLVED);
+            assertThat(e.path().via()).anySatisfy(v -> assertThat(v.file()).endsWith("Paths.java"));
+            assertThat(e.evidence().file()).endsWith("Resource.java");
+            assertThat(e.evidence().line()).isEqualTo(4);
+            assertThat(e.handler().line()).isEqualTo(5);
+        });
+    }
+
+    @Test
+    void extractsJaxRsResourcesOnlyFromServiceUnits(@TempDir Path tmp) {
+        var repo = TempRepo.at(tmp.resolve("jax-rs-fleet"))
+                .file("a/src/main/java/a/App.java", "package a; @SpringBootApplication class App {}")
+                .file("a/src/main/resources/application.properties", "spring.application.name=alpha\n")
+                .file("a/src/main/java/a/Resource.java", """
+                        package a;
+                        import jakarta.ws.rs.*;
+                        @Path("/alpha") class Resource { @GET public Object get() { return null; } }
+                        """)
+                .file("b/src/main/java/b/App.java", "package b; @SpringBootApplication class App {}")
+                .file("b/src/main/resources/application.properties", "spring.application.name=beta\n")
+                .file("b/src/main/java/b/Resource.java", """
+                        package b;
+                        import javax.ws.rs.*;
+                        @Path("/beta") class Resource { @GET public Object get() { return null; } }
+                        """);
+
+        assertThat(new InboundHttpExtractor().extract(repo.service("alpha")))
+                .filteredOn(Fact.Endpoint.class::isInstance).map(Fact.Endpoint.class::cast)
+                .extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactly("GET /alpha");
+        assertThat(new InboundHttpExtractor().extract(repo.service("beta")))
+                .filteredOn(Fact.Endpoint.class::isInstance).map(Fact.Endpoint.class::cast)
+                .extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactly("GET /beta");
+    }
+
     private static TempRepo missingInterfaceRepo(Path root) {
         return TempRepo.at(root).app().java("x/C.java", "package x; @RestController class C implements MissingApi {}");
     }
