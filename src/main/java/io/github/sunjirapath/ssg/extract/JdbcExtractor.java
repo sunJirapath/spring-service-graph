@@ -19,8 +19,10 @@ import io.github.sunjirapath.ssg.scan.Service;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,8 +50,9 @@ public final class JdbcExtractor implements Extractor {
     @Override
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
+        var entities = DataExtractor.entityTables(s);
         for (CompilationUnit cu : s.units()) {
-            for (MethodDeclaration m : cu.findAll(MethodDeclaration.class)) nativeQuery(s, m, facts);
+            for (MethodDeclaration m : cu.findAll(MethodDeclaration.class)) query(s, m, entities, facts);
             for (MethodCallExpr call : cu.findAll(MethodCallExpr.class)) {
                 boolean client = isClientCall(s, call);
                 boolean wrapper = !client && isWrapperCall(s, call);
@@ -95,15 +98,20 @@ public final class JdbcExtractor implements Extractor {
         }
     }
 
-    /** Spring Data {@code @Query(value = "...", nativeQuery = true)}: the SQL names tables directly. */
-    // shortcut: JPQL @Query names entities, whose tables the entity extractor already reports; read it if fleets use JPQL-only repositories
-    private static void nativeQuery(Service s, MethodDeclaration m, List<Fact> facts) {
+    /**
+     * Spring Data {@code @Query}: native SQL names tables directly; JPQL names entities, mapped to their tables.
+     * shortcut: JPQL entities are matched by class name (not {@code @Entity(name=)}) among the service's own units, upgrade if fleets rename entities
+     */
+    private static void query(Service s, MethodDeclaration m, Map<String, String> entities, List<Fact> facts) {
         var q = Ann.find(m, "Query");
-        if (q.isEmpty() || !Ann.attr(q.get(), "nativeQuery").map(e -> e.toString().equals("true")).orElse(false)) return;
+        if (q.isEmpty()) return;
+        boolean nativeQuery = Ann.attr(q.get(), "nativeQuery").map(e -> e.toString().equals("true")).orElse(false);
         var sqlExpr = Ann.attr(q.get(), "value");
         if (sqlExpr.isEmpty()) return;
         Value sql = s.eval(sqlExpr.get());
-        for (String t : tables(sql.text())) {
+        var tables = nativeQuery ? tables(sql.text())
+                : tables(sql.text(), raw -> raw.contains(".") ? null : entities.get(raw.toLowerCase(Locale.ROOT))); // "o.pets" is a join path
+        for (String t : tables) {
             facts.add(new Fact.TableUse(false, new Value(t, sql.confidence(), sql.raw(), sql.via()), "sql", s.evidence(m), "@Query"));
         }
     }
@@ -154,16 +162,21 @@ public final class JdbcExtractor implements Extractor {
             + "|\\b(?:extract|trim|substring|position|overlay)\\s*\\([^()]*\\)"
             + "|\\bfor\\s+update\\b|\\bon\\s+duplicate\\s+key\\s+update\\b|\\bdo\\s+update\\b");
     private static final Pattern CTE = Pattern.compile("(?i)(?:\\bwith\\s+(?:recursive\\s+)?|,\\s*)([A-Za-z_]\\w*)\\s+as\\s*\\(");
-    private static final Pattern TABLE = Pattern.compile("(?i)\\b(?:from|join|into|update)\\s+([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
+    private static final Pattern TABLE = Pattern.compile("(?i)\\b(from|join|into|update)\\s+([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
+    /** The next table of an implicit comma join, {@code FROM a x, b y}: the previous table's optional alias, then a comma. */
+    private static final Pattern COMMA = Pattern.compile("(?i)\\s*(?:(?:as\\s+)?(?!(?:where|join|inner|left|right|full|cross|natural|on|using|set|select|values|group|order|having|limit|union)\\b)[A-Za-z_]\\w*)?"
+            + "\\s*,\\s*([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
     private static final Pattern SYSTEM = Pattern.compile("(?i)^[`\"\\[]?(?:information_schema|pg_catalog|pg_)");
     private static final Set<String> NOT_TABLES = Set.of("select", "set", "values", "where", "lateral", "unnest", "dual",
             "only", "table", "the");
 
-    /**
-     * Table names in a SQL string, lower-cased, without schema or quotes, in order of appearance.
-     * shortcut: implicit comma joins ("FROM a, b") yield only the first table; use explicit JOINs or extend this.
-     */
+    /** Table names in a SQL string, lower-cased, without schema or quotes, in order of appearance. */
     static List<String> tables(String sql) {
+        return tables(sql, DataExtractor::normalize);
+    }
+
+    /** As {@link #tables(String)}, with {@code name} turning a raw table token into the table, or null to skip it. */
+    static List<String> tables(String sql, UnaryOperator<String> name) {
         String code = NOISE.matcher(sql).replaceAll(" ");
         var ctes = new LinkedHashSet<String>();
         Matcher c = CTE.matcher(code);
@@ -172,10 +185,17 @@ public final class JdbcExtractor implements Extractor {
         Matcher m = TABLE.matcher(code);
         boolean catalog = code.toLowerCase(Locale.ROOT).contains("information_schema");
         while (m.find()) {
-            String t = DataExtractor.normalize(m.group(1));
-            if (t.isEmpty() || NOT_TABLES.contains(t) || ctes.contains(t) || SYSTEM.matcher(m.group(1)).find()
-                    || catalog && (t.equals("columns") || t.equals("tables"))) continue; // system catalog, not a table
-            out.add(t);
+            String raw = m.group(2);
+            boolean list = !m.group(1).equalsIgnoreCase("into") && !m.group(1).equalsIgnoreCase("update"); // INTO t a, b is a column list once MyBatis tags are gone
+            Matcher more = COMMA.matcher(code);
+            for (int end = m.end(); ; end = more.end()) {
+                String t = name.apply(raw);
+                if (!(t == null || t.isEmpty() || NOT_TABLES.contains(t) || ctes.contains(t) || SYSTEM.matcher(raw).find()
+                        || catalog && (t.equals("columns") || t.equals("tables")))) out.add(t); // else system catalog, not a table
+                more.region(end, code.length());
+                if (!list || !more.lookingAt()) break;
+                raw = more.group(1);
+            }
         }
         return List.copyOf(out);
     }

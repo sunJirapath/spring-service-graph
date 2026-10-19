@@ -48,6 +48,23 @@ class ReachAnalysisTest {
     }
 
     @Test
+    void reachesTheTableAQueryMethodNames(@TempDir Path repo) throws IOException {
+        var facts = facts(repo, """
+                @RestController class C { PetRepo pets; @GetMapping("/petTypes") Object get() { return pets.findPetTypes(); } }
+                interface PetRepo extends JpaRepository<Pet, Long> {
+                    @Query("SELECT t FROM PetType t") Object findPetTypes();
+                }
+                @Entity class Pet {}
+                @Entity @Table(name = "types") class PetType {}
+                """);
+        var table = facts.stream().filter(Fact.TableUse.class::isInstance).map(Fact.TableUse.class::cast)
+                .filter(t -> t.via().equals("@Query")).findFirst().orElseThrow();
+
+        assertThat(table.table().text()).isEqualTo("types");
+        assertThat(reaches(repo, facts)).anySatisfy(r -> assertThat(r.sink()).isEqualTo(table.evidence()));
+    }
+
+    @Test
     void reachesFeignCall(@TempDir Path repo) throws IOException {
         var facts = facts(repo, """
                 @RestController class C { BillingClient billing; @GetMapping("/payments/{id}") Object get(String id) { return billing.invoice(id); } }

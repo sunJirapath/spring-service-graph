@@ -57,7 +57,7 @@ public final class ReachAnalysis {
             switch (f) {
                 case Fact.Call c -> sinks.add(c);
                 case Fact.TopicUse t when t.produce() -> sinks.add(t);
-                case Fact.TableUse t when t.via().equals("jdbc") -> sinks.add(t); // located at the SQL call site
+                case Fact.TableUse t when t.via().equals("jdbc") || t.via().equals("@Query") -> sinks.add(t); // at the SQL call site or query method
                 case Fact.TableUse t when t.via().startsWith("repository ") ->
                         repositories.putIfAbsent(t.via().substring("repository ".length()), t.evidence());
                 default -> { }

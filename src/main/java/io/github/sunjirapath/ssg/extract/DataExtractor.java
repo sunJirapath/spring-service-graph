@@ -20,6 +20,7 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -118,6 +119,16 @@ public final class DataExtractor implements Extractor {
             return Optional.of(new Mapped(name, elastic(c) ? "elasticsearch" : "mongo", "Document"));
         }
         return Optional.empty();
+    }
+
+    /** Lower-cased entity class name to table, for resolving JPQL entity names. */
+    static Map<String, String> entityTables(Service s) {
+        var out = new HashMap<String, String>();
+        for (CompilationUnit cu : s.units())
+            for (TypeDeclaration<?> c : cu.findAll(TypeDeclaration.class))
+                if (Ann.has(c, "Entity"))
+                    table(s, c).filter(t -> t.name.resolved()).ifPresent(t -> out.put(c.getNameAsString().toLowerCase(Locale.ROOT), t.name.text()));
+        return out;
     }
 
     private static boolean elastic(TypeDeclaration<?> c) {
@@ -243,15 +254,44 @@ public final class DataExtractor implements Extractor {
 
     private static final Pattern MAPPER_STATEMENT = Pattern.compile("<(select|insert|update|delete)\\b[^>]*>(.*?)</\\1>", Pattern.DOTALL);
 
-    /** MyBatis mapper XML: tables used by each statement. shortcut: {@code <include>} fragments are not folded in. */
+    private static final Pattern SQL_FRAGMENT = Pattern.compile("<sql\\b[^>]*\\bid\\s*=\\s*[\"']([^\"']+)[\"'][^>]*>(.*?)</sql>", Pattern.DOTALL);
+    private static final Pattern INCLUDE = Pattern.compile("<include\\b[^>]*\\brefid\\s*=\\s*[\"']([^\"']+)[\"'][^>]*?(?:/>|>.*?</include>)", Pattern.DOTALL);
+
+    /**
+     * MyBatis mapper XML: tables used by each statement, with {@code <include>} fragments of the same mapper folded in.
+     * shortcut: fragments of other mappers ({@code other.ns.id}) are not folded in, upgrade when fleets share SQL fragments across mappers.
+     */
     private static void mapper(Service s, Path f, String text, List<Fact> facts) {
+        var fragments = new HashMap<String, String>();
+        String ns = namespace(text);
+        Matcher fm = SQL_FRAGMENT.matcher(text);
+        while (fm.find()) {
+            fragments.put(fm.group(1), fm.group(2));
+            fragments.put(ns + "." + fm.group(1), fm.group(2));
+        }
         Matcher m = MAPPER_STATEMENT.matcher(text);
         while (m.find()) {
-            String sql = m.group(2).replaceAll("<!\\[CDATA\\[|\\]\\]>", " ").replaceAll("<[^>]*>", " ");
+            String sql = fold(m.group(2), fragments, new HashSet<>()).replaceAll("<!\\[CDATA\\[|\\]\\]>", " ").replaceAll("<[^>]*>", " ");
             int line = (int) text.substring(0, m.start()).chars().filter(ch -> ch == '\n').count() + 1;
             for (String t : JdbcExtractor.tables(sql))
                 facts.add(new Fact.TableUse(false, Value.exact(t), "sql", s.repo().evidence(f, line), "mybatis-xml"));
         }
+    }
+
+    /** Replaces each {@code <include refid>} by its fragment; an include cycle or unknown fragment becomes blank. */
+    private static String fold(String body, Map<String, String> fragments, Set<String> open) {
+        Matcher m = INCLUDE.matcher(body);
+        var sb = new StringBuilder();
+        while (m.find()) {
+            String id = m.group(1);
+            String rep = " ";
+            if (fragments.containsKey(id) && open.add(id)) {
+                rep = fold(fragments.get(id), fragments, open);
+                open.remove(id);
+            }
+            m.appendReplacement(sb, Matcher.quoteReplacement(rep));
+        }
+        return m.appendTail(sb).toString();
     }
 
     private static void yaml(Service s, Path f, String text, List<Fact> facts) {

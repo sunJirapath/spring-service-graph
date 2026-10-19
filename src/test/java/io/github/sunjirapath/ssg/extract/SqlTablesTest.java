@@ -120,9 +120,9 @@ class SqlTablesTest {
     }
 
     @Test
-    void knownLimitImplicitCommaJoinYieldsOnlyFirstTable() {
+    void implicitCommaJoinYieldsEveryTable() {
         assertThat(JdbcExtractor.tables("SELECT * FROM first_table, second_table"))
-                .containsExactly("first_table");
+                .containsExactly("first_table", "second_table");
     }
 
     @Test
