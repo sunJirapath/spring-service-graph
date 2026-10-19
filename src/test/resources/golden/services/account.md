@@ -18,8 +18,8 @@ Repo `account`, module `account-service`.
 
 | Method | Path | Called by | Reaches | Source | Confidence | Evidence |
 |---|---|---|---|---|---|---|
-| GET | `/api/accounts/{id}` | gateway | - | controller | EXACT | [account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java:17](../../../src/test/resources/fleet/account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java#L17) |
-| POST | `/api/accounts` | gateway | `account.created` | controller | EXACT | [account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java:22](../../../src/test/resources/fleet/account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java#L22) |
+| GET | `/api/accounts/{id}` | gateway | - | controller | EXACT | [account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java:17](../../../src/test/resources/fleet/account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java#L17)<br>[account/account-service/src/main/java/demo/account/web/AccountController.java:22](../../../src/test/resources/fleet/account/account-service/src/main/java/demo/account/web/AccountController.java#L22) |
+| POST | `/api/accounts` | gateway | `account.created` | controller | EXACT | [account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java:22](../../../src/test/resources/fleet/account/account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java#L22)<br>[account/account-service/src/main/java/demo/account/web/AccountController.java:27](../../../src/test/resources/fleet/account/account-service/src/main/java/demo/account/web/AccountController.java#L27) |
 
 ## Calls
 

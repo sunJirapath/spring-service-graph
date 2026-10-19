@@ -26,6 +26,8 @@ Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`
 | `--profile <name>` | no, default `default` | Spring profile whose `application-<profile>.*` / `bootstrap-<profile>.*` files are layered over the base config. |
 | `--aliases <file>` | no | Host-to-target map, see Linking rules. |
 | `--config-repo <dir>` | no | Spring Cloud Config style repo. `application.*`, `application-<profile>.*`, `<app>.*` and `<app>-<profile>.*` from its root override the service's own config. Only the repo root is read. |
+| `--sql-methods <m>...` | no | In-house wrapper methods that take SQL, as `method` or `Type.method`, given as several values or comma-separated. Their SQL arguments are read like `JdbcTemplate` calls. Without this, ssg reports where SQL arrives as a method parameter and suggests the wrapper to list. |
+| `--link-base <url>` | no | URL template for evidence links in the Markdown, e.g. `https://git.example/{repo}/blob/main/{file}#L{line}`. Without it, links are relative paths to the local checkout. |
 | `--out <dir>` | yes | Output directory. |
 
 A service is a module with a `@SpringBootApplication` class. Its name is `spring.application.name`, falling back to the module directory name.
@@ -71,6 +73,7 @@ A service is a module with a `@SpringBootApplication` class. Its name is `spring
 | `@Entity` / `@Table`, `@Document` (Mongo) | Service USES the table or collection. |
 | Spring Data repositories | Taken from the `<Entity, ID>` type argument only; derived query methods are not interpreted. |
 | Liquibase `createTable`, Flyway migrations, `schema.sql` | Service OWNS the table. |
+| SQL passed to `JdbcTemplate`, `NamedParameterJdbcTemplate`, `JdbcOperations`, `JdbcClient` or a `--sql-methods` wrapper | Service USES each table after `FROM`/`JOIN`/`INTO`/`UPDATE`. The SQL is folded through constants and text blocks; CTEs, comments, literals, `FOR UPDATE` and `EXTRACT(.. FROM ..)` are not mistaken for tables. |
 
 `@LoadBalanced` bean definitions are not calls; only call sites produce edges.
 
@@ -96,6 +99,7 @@ For every controller endpoint, ssg walks the in-service method calls from its ha
 - the endpoints it calls in other services (via Feign, `@HttpExchange`, RestTemplate, WebClient, RestClient)
 - the topics it publishes to
 - the tables behind the repositories it uses
+- the tables in the SQL it runs through JDBC
 
 Calls are resolved without a symbol solver:
 - `this` and unqualified calls go to the enclosing type.
@@ -191,11 +195,14 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 - OpenAPI specs: `${openapi.<name>.base-path}` overrides are not applied; the spec's server path is used.
 - Values built by method calls (other than zero-argument helpers in the same class that only `return` an expression), `String.format` or `static {}` blocks are `UNRESOLVED`. Constants inherited from super types found in sources are resolved.
 - Java only; Kotlin sources are not scanned.
+- Memory: a scan holds the syntax trees of one repo at a time, roughly 80 MB of heap per MB of Java source in the largest repo (a 12 MB repo needs about 1 GB). Raise it with `JAVA_OPTS=-Xmx2g` if needed.
+- Nested checkouts are skipped: any folder below a repo root with its own `.git` (worktrees, submodules, vendored clones).
+- JDBC: an implicit comma join (`FROM a, b`) yields only the first table; SQL built at runtime is reported as `UNRESOLVED`.
 - Static analysis misses runtime-only behaviour (dynamic URLs, service discovery lookups at runtime).
 
 ## Testing and benchmark
 
-There are about 550 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 95%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
+There are about 630 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 94%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
 
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 

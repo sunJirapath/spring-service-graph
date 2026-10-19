@@ -1,5 +1,6 @@
 package io.github.sunjirapath.ssg.mcp;
 
+import io.github.sunjirapath.ssg.link.PathMatch;
 import io.github.sunjirapath.ssg.model.Edge;
 import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
@@ -36,19 +37,39 @@ public final class GraphQueries {
         for (String id : List.of(Node.Service.idOf(t), Node.Topic.idOf(t), Node.External.idOf(t))) {
             if (nodes.containsKey(id)) return List.of(id);
         }
-        var out = new ArrayList<String>();
+        var out = new ArrayList<String>(endpoints(t));
         for (Node n : g.nodes()) {
-            boolean hit = switch (n) {
-                case Node.Endpoint e -> t.equals(e.path()) || t.equalsIgnoreCase(e.method() + " " + e.path())
-                        || t.equalsIgnoreCase(e.service() + " " + e.method() + " " + e.path());
-                case Node.Table tb -> t.equals(tb.name()) || t.equals(tb.service() + "/" + tb.name());
-                default -> false;
-            };
-            if (hit) out.add(n.id());
+            if (n instanceof Node.Table tb && (t.equals(tb.name()) || t.equals(tb.service() + "/" + tb.name()))) out.add(n.id());
         }
         if (out.isEmpty()) throw new IllegalArgumentException("no node matches '" + target
                 + "'; use a service or topic name, 'METHOD /path', a table name, or a node id from graph.json");
         return out;
+    }
+
+    /**
+     * Endpoints for {@code /path}, {@code METHOD /path} or {@code service METHOD /path}. Paths match
+     * templates the way calls are linked, so {@code /x/{id}} finds {@code /x/{orderId}} and
+     * {@code /x/123} finds the template. Exact paths win; catch-all {@code **} routes count only
+     * when nothing more specific matches.
+     */
+    private List<String> endpoints(String target) {
+        String[] parts = target.split("\\s+");
+        String path = parts[parts.length - 1];
+        if (!path.startsWith("/")) return List.of();
+        String method = parts.length >= 2 ? parts[parts.length - 2] : "*";
+        String service = parts.length >= 3 ? parts[0] : null;
+        var candidates = g.nodes().stream().filter(Node.Endpoint.class::isInstance).map(Node.Endpoint.class::cast)
+                .filter(e -> service == null || e.service().equalsIgnoreCase(service))
+                .filter(e -> method.equals("*") || e.method().equals("*") || e.method().equalsIgnoreCase(method))
+                .toList();
+        for (var pick : List.<java.util.function.Predicate<Node.Endpoint>>of(
+                e -> e.path().equals(path),
+                e -> !e.path().contains("**") && PathMatch.matches(path, e.path()),
+                e -> PathMatch.matches(path, e.path()))) {
+            var hits = candidates.stream().filter(pick).map(Node::id).toList();
+            if (!hits.isEmpty()) return hits;
+        }
+        return List.of();
     }
 
     /** Every edge pointing at the target (or, for a service, at it or its endpoints), except EXPOSES. */
@@ -68,7 +89,8 @@ public final class GraphQueries {
      * Endpoints keep the walk going (their callers are affected too); a service reached through a
      * plain CALLS edge is a leaf, because without reach data we cannot tell which of its endpoints use it.
      */
-    public Map<String, Object> impactOf(String target, int depth) {
+    public Map<String, Object> impactOf(String target, int requestedDepth) {
+        int depth = Math.clamp(requestedDepth, 1, 10);
         var start = expand(resolve(target));
         var affected = new ArrayList<Map<String, Object>>();
         var seen = new LinkedHashSet<>(start);
@@ -90,6 +112,8 @@ public final class GraphQueries {
         var out = new LinkedHashMap<String, Object>();
         out.put("target", target);
         out.put("matches", resolve(target));
+        out.put("depth", depth);
+        if (depth != requestedDepth) out.put("note", "depth " + requestedDepth + " is outside 1-10; used " + depth);
         out.put("affectedServices", services);
         out.put("affected", affected);
         return out;

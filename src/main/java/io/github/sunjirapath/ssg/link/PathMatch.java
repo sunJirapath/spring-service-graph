@@ -10,11 +10,11 @@ import java.util.regex.Pattern;
  * {@code {var}} matches one segment on either side; {@code **} matches the rest;
  * a trailing unknown segment ({@code {?}}) matches one or more segments.
  */
-final class PathMatch {
+public final class PathMatch {
 
     private PathMatch() {}
 
-    static boolean matches(String call, String endpoint) {
+    public static boolean matches(String call, String endpoint) {
         return match(segments(call), 0, segments(endpoint), 0);
     }
 

@@ -44,22 +44,37 @@ public final class ReachAnalysis {
     private record Step(MethodDeclaration method, String chain, int depth) {}
 
     private final Service s;
-    private final List<Fact> sinks = new ArrayList<>();
+    private final Map<String, List<Evidence>> sinksByFile = new java.util.HashMap<>(); // repo-relative file -> sink locations
+    private final Map<String, MethodDeclaration> methodsAt = new java.util.HashMap<>(); // "file:line" -> method
+    private final Map<CompilationUnit, String> fileOf = new IdentityHashMap<>();
     private final Map<String, Evidence> repositories = new LinkedHashMap<>(); // simple name -> TableUse evidence
     private final Map<TypeDeclaration<?>, List<TypeDeclaration<?>>> implementations = new IdentityHashMap<>();
 
     private ReachAnalysis(Service s, List<Fact> facts) {
         this.s = s;
+        var sinks = new ArrayList<Fact>();
         for (Fact f : facts) {
             switch (f) {
                 case Fact.Call c -> sinks.add(c);
                 case Fact.TopicUse t when t.produce() -> sinks.add(t);
+                case Fact.TableUse t when t.via().equals("jdbc") -> sinks.add(t); // located at the SQL call site
                 case Fact.TableUse t when t.via().startsWith("repository ") ->
                         repositories.putIfAbsent(t.via().substring("repository ".length()), t.evidence());
                 default -> { }
             }
         }
+        for (Fact sink : sinks) {
+            Evidence ev = evidenceOf(sink);
+            var list = sinksByFile.computeIfAbsent(ev.file(), k -> new ArrayList<>());
+            if (!list.contains(ev)) list.add(ev);
+        }
+        // indexes built once: per-endpoint scans over every unit made big services quadratic
         for (CompilationUnit cu : s.units()) {
+            String file = s.repo().relative(s.index().fileOf(cu));
+            fileOf.put(cu, file);
+            for (var m : cu.findAll(MethodDeclaration.class)) {
+                m.getName().getBegin().ifPresent(p -> methodsAt.putIfAbsent(file + ":" + p.line, m)); // handlers are cited by name line
+            }
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
                 for (var st : s.index().superTypes(c)) implementations.computeIfAbsent(st, k -> new ArrayList<>()).add(c);
             }
@@ -85,9 +100,11 @@ public final class ReachAnalysis {
         seen.put(start.get(), true);
         while (!queue.isEmpty()) {
             Step step = queue.poll();
-            for (Fact sink : sinks) {
-                Evidence ev = evidenceOf(sink);
-                if (contains(step.method, ev)) reached.putIfAbsent(ev, step.chain);
+            String file = step.method.findCompilationUnit().map(fileOf::get).orElse(null);
+            int begin = step.method.getBegin().map(p -> p.line).orElse(-1);
+            int end = step.method.getEnd().map(p -> p.line).orElse(-1);
+            for (Evidence ev : sinksByFile.getOrDefault(file, List.of())) {
+                if (ev.line() >= begin && ev.line() <= end) reached.putIfAbsent(ev, step.chain);
             }
             if (step.depth >= MAX_DEPTH) continue;
             for (MethodCallExpr call : step.method.findAll(MethodCallExpr.class)) {
@@ -142,23 +159,14 @@ public final class ReachAnalysis {
     }
 
     private Optional<MethodDeclaration> methodAt(Evidence ev) {
-        return s.units().stream().filter(cu -> s.repo().relative(s.index().fileOf(cu)).equals(ev.file()))
-                .flatMap(cu -> cu.findAll(MethodDeclaration.class).stream())
-                .filter(m -> m.getBegin().map(p -> p.line).orElse(-1) == ev.line()).findFirst();
-    }
-
-    private boolean contains(MethodDeclaration m, Evidence ev) {
-        var cu = m.findCompilationUnit().orElseThrow();
-        if (!s.repo().relative(s.index().fileOf(cu)).equals(ev.file())) return false;
-        int begin = m.getBegin().map(p -> p.line).orElse(-1);
-        int end = m.getEnd().map(p -> p.line).orElse(-1);
-        return ev.line() >= begin && ev.line() <= end;
+        return Optional.ofNullable(methodsAt.get(ev.file() + ":" + ev.line()));
     }
 
     private static Evidence evidenceOf(Fact f) {
         return switch (f) {
             case Fact.Call c -> c.evidence();
             case Fact.TopicUse t -> t.evidence();
+            case Fact.TableUse t -> t.evidence();
             default -> throw new IllegalArgumentException(f.toString());
         };
     }

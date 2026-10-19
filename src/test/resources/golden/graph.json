@@ -104,7 +104,7 @@
         {
           "repo" : "account",
           "file" : "account-service/src/main/java/demo/account/web/AccountController.java",
-          "line" : 26
+          "line" : 27
         }
       ]
     },
@@ -121,6 +121,11 @@
           "repo" : "account",
           "file" : "account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java",
           "line" : 17
+        },
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/web/AccountController.java",
+          "line" : 22
         }
       ]
     },
@@ -137,6 +142,11 @@
           "repo" : "account",
           "file" : "account-service/target/generated-sources/openapi/src/main/java/demo/account/web/api/AccountsApi.java",
           "line" : 22
+        },
+        {
+          "repo" : "account",
+          "file" : "account-service/src/main/java/demo/account/web/AccountController.java",
+          "line" : 27
         }
       ]
     },
@@ -358,6 +368,11 @@
           "repo" : "notification",
           "file" : "src/main/java/demo/notification/web/NotificationController.java",
           "line" : 12
+        },
+        {
+          "repo" : "notification",
+          "file" : "src/main/java/demo/notification/web/NotificationController.java",
+          "line" : 13
         }
       ]
     },

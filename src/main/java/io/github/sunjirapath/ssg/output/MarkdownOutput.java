@@ -25,15 +25,26 @@ public final class MarkdownOutput {
     private final GraphView g;
     private final Map<String, Path> repoRoots;
     private final Path out;
+    /** e.g. https://git.example/{repo}/blob/main/{file}#L{line}; null links to local files */
+    private final String linkBase;
 
-    private MarkdownOutput(Graph graph, Map<String, Path> repoRoots, Path out) {
+    private MarkdownOutput(Graph graph, Map<String, Path> repoRoots, Path out, String linkBase) {
+        this.linkBase = linkBase == null || linkBase.isBlank() ? null : linkBase;
         this.g = new GraphView(graph);
         this.repoRoots = repoRoots;
         this.out = out.toAbsolutePath().normalize();
     }
 
     public static void write(Graph graph, Map<String, Path> repoRoots, Path out) throws IOException {
-        var w = new MarkdownOutput(graph, repoRoots, out);
+        write(graph, repoRoots, out, null);
+    }
+
+    /**
+     * @param linkBase URL template for evidence links with {repo}, {file} and {line}, so pages do not
+     *                 depend on where the fleet is checked out; null links to the local files
+     */
+    public static void write(Graph graph, Map<String, Path> repoRoots, Path out, String linkBase) throws IOException {
+        var w = new MarkdownOutput(graph, repoRoots, out, linkBase);
         for (Node.Service s : w.g.services()) {
             TextFile.write(w.out.resolve("services/" + GraphView.fileName(s.name()) + ".md"), w.servicePage(s));
         }
@@ -42,7 +53,7 @@ public final class MarkdownOutput {
 
     /** One service page with evidence as plain {@code repo/file:line} text (no links), e.g. for MCP. */
     public static String servicePage(Graph graph, String service) {
-        var w = new MarkdownOutput(graph, Map.of(), Path.of("."));
+        var w = new MarkdownOutput(graph, Map.of(), Path.of("."), null);
         return w.g.services().stream().filter(s -> s.name().equals(service)).findFirst().map(w::servicePage)
                 .orElseThrow(() -> new IllegalArgumentException("unknown service: " + service));
     }
@@ -193,6 +204,10 @@ public final class MarkdownOutput {
         return evidence.stream().map(e -> {
             Path root = repoRoots.get(e.repo());
             String text = e.repo() + "/" + e.file() + ":" + e.line();
+            if (linkBase != null) {
+                return "[" + text + "](" + linkBase.replace("{repo}", e.repo()).replace("{file}", e.file().replace(" ", "%20"))
+                        .replace("{line}", String.valueOf(e.line())) + ")";
+            }
             if (root == null) return "`" + text + "`";
             Path target = root.resolve(e.file());
             // no relative path exists across drives (C: vs E:), so link the absolute file URI there

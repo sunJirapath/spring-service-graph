@@ -72,7 +72,7 @@ public final class KafkaExtractor implements Extractor {
         if (call.getScope().isEmpty()) return;
         Expression scope = call.getScope().get();
         String name = call.getNameAsString();
-        if ((name.equals("send") || name.equals("sendDefault")) && isReceiver(s, scope, TEMPLATE_TYPES, "kafkatemplate")) {
+        if ((name.equals("send") || name.equals("sendDefault")) && Receivers.isReceiver(s, scope, TEMPLATE_TYPES, "kafkatemplate")) {
             Value topic;
             if (name.equals("sendDefault")) topic = s.config().valueOf("spring.kafka.template.default-topic");
             else if (call.getArguments().isEmpty()) return;
@@ -81,7 +81,7 @@ public final class KafkaExtractor implements Extractor {
             else if (call.getArguments().size() == 1) topic = Value.unresolved(call.getArgument(0).toString());
             else topic = s.eval(call.getArgument(0));
             facts.add(new Fact.TopicUse(true, topic, s.evidence(call), "KafkaTemplate"));
-        } else if (name.equals("send") && call.getArguments().size() >= 2 && isReceiver(s, scope, Set.of("StreamBridge"), "streambridge")) {
+        } else if (name.equals("send") && call.getArguments().size() >= 2 && Receivers.isReceiver(s, scope, Set.of("StreamBridge"), "streambridge")) {
             Value binding = s.eval(call.getArgument(0));
             bridgeBindings.add(binding.text());
             String key = BINDINGS + binding.text() + ".destination";
@@ -111,16 +111,5 @@ public final class KafkaExtractor implements Extractor {
                         e.evidence(), "cloud-stream:" + binding));
             }
         }
-    }
-
-    static boolean isReceiver(Service s, Expression scope, Set<String> types, String nameHint) {
-        String name = switch (scope) {
-            case NameExpr n -> n.getNameAsString();
-            case FieldAccessExpr f -> f.getNameAsString();
-            default -> "";
-        };
-        if (name.isEmpty()) return false;
-        return s.index().declaredType(name, scope).map(types::contains)
-                .orElseGet(() -> name.toLowerCase().contains(nameHint));
     }
 }

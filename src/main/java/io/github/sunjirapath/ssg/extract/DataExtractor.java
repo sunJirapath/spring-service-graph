@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * Tables and collections: {@code @Entity}/{@code @Table}, {@code @Document}, Spring Data
@@ -99,9 +98,8 @@ public final class DataExtractor implements Extractor {
     // ---------------------------------------------------------------- migrations
 
     private static void migrations(Service s, List<Fact> facts) {
-        if (!Files.isDirectory(s.resources())) return;
-        try (Stream<Path> walk = Files.walk(s.resources())) {
-            for (Path f : walk.filter(Files::isRegularFile).sorted().toList()) {
+        try {
+            for (Path f : s.repo().files(s.resources())) {
                 String name = f.getFileName().toString().toLowerCase(Locale.ROOT);
                 try { // one unreadable or malformed file must not hide the others
                     if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);

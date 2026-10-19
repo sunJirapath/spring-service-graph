@@ -72,7 +72,9 @@ public final class Linker {
             String eid = Node.Endpoint.idOf(sf.service(), e.method(), path);
             nodes.put(eid, new Node.Endpoint(eid, sf.service(), e.method(), path));
             endpoints.computeIfAbsent(sf.service(), k -> new ArrayList<>()).add(new EndpointRef(eid, e.method(), path));
-            edge(Edge.Kind.EXPOSES, id, eid, e.path(), e.evidence(), attrs("source", e.source()));
+            // second evidence: the handler a reader edits (the mapping may sit on a generated interface)
+            Value exposed = e.handler() == null ? e.path() : e.path().withConfidence(e.path().confidence(), e.handler());
+            edge(Edge.Kind.EXPOSES, id, eid, exposed, e.evidence(), attrs("source", e.source()));
             if (!e.path().resolved()) unresolved(sf.service(), "endpoint " + e.method() + " " + path, e.path(), e.evidence());
         }
     }

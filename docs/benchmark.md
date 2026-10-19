@@ -103,3 +103,27 @@ Endpoints without reach are:
 |---|---|---|---|
 | 7 | petclinic `GET /petTypes` reaches table `pets`, but its `@Query` reads `types` | A repository maps only to its entity's table | Known limit. A fix would need `@Query` SQL/JPQL parsing. |
 | 8 | Each endpoint gets only one chain per sink (the shortest) | BFS keeps the first path found | By design, to keep pages readable |
+
+## Field test 1: a private one-repo service (2026-10-19, snapshot 56e97fa)
+
+An agent ran ssg on a real Spring Boot 4 / Java 21 service that is not public. The fleet was one repo with one service, 124 endpoints (116 of them on openapi-generator `interfaceOnly` interfaces), 35 Flyway tables and `JdbcTemplate` data access. It followed `docs/field-test-prompt.md`, and only anonymized results were kept.
+
+What already worked:
+- endpoints: 124/124 with 0 false positives, built or unbuilt
+- Flyway ownership: 35/35
+- the diff of a real merge: exact
+- output: deterministic
+- secrets: none leaked
+
+What it found, and what changed:
+
+| Finding | Change |
+|---|---|
+| Nested git worktrees (`.claude/worktrees/*`, each with a `.git` file) were scanned as part of the repo. Same-name apps merged silently, a stale interface copy won, 3 endpoints were dropped and memory tripled. | One shared directory walk skips folders below a repo root that have their own `.git`. A `DUPLICATE_SERVICE` finding is raised. Types with the same FQN resolve to the copy in the referring module. |
+| The OpenAPI fallback added every operation of the spec, including tags no controller implements. Endpoints were duplicated and counts were inconsistent. | The fallback keeps operations whose tag (or first path segment) names a missing interface. For untagged specs it keeps operations whose interface is not in the service's sources. Duplicates of controller endpoints are dropped. |
+| Evidence pointed at the first annotation (`@Operation`), up to 30 lines above the mapping, and only at generated files. | Evidence is the mapping annotation, plus the handler method as a second entry. |
+| 32/35 tables were used through `JdbcTemplate` SQL (251 sites), so there were no `USES` or `REACHES` edges and impact analysis failed. | New `JdbcExtractor` with `--sql-methods` for wrapper methods. Reach now reaches tables through JDBC. |
+| MCP lookups needed the exact `{var}` names; concrete paths failed. | Paths match templates as the linker does. `impact_of` reports the depth it used and notes clamping. |
+| Page links depend on where the fleet is checked out. | `--link-base` URL template. |
+| `OutOfMemoryError` at `-Xmx256m` for 5 MB of source. | Measured at about 80 MB of heap per MB of Java in the largest repo; documented. A structural reduction is still open. |
+| Reach became quadratic once JDBC sinks existed (found while testing the fix: 140 s for 1.7 MB). | Sinks and methods are indexed once: 3.5 s, identical output. |

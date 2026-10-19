@@ -9,6 +9,7 @@
 #   SSG_PROFILE           Spring profile (optional)
 #   SSG_ALIASES           aliases.yml (optional)
 #   SSG_CONFIG_REPO       Spring Cloud Config repo checkout (optional)
+#   SSG_SQL_METHODS       in-house wrapper methods that take SQL, e.g. "SqlRunner.query Db.exec" (optional)
 #   SSG_OUT               output directory (default ./ssg-impact)
 #   SSG_FAIL_ON_BREAKING  "true" to exit 3 when breaking changes are found
 #   SSG                   ssg launcher (default: ssg on PATH)
@@ -31,6 +32,7 @@ opts=()
 [ -n "${SSG_PROFILE:-}" ] && opts+=(--profile "$SSG_PROFILE")
 [ -n "${SSG_ALIASES:-}" ] && opts+=(--aliases "$SSG_ALIASES")
 [ -n "${SSG_CONFIG_REPO:-}" ] && opts+=(--config-repo "$SSG_CONFIG_REPO")
+if [ -n "${SSG_SQL_METHODS:-}" ]; then read -r -d '' -a sql <<< "$SSG_SQL_METHODS" || true; opts+=(--sql-methods "${sql[@]}"); fi
 
 mkdir -p "$out"
 "$ssg" scan --repos "$SSG_BASE" "${fleet[@]}" "${opts[@]}" --out "$out/base"

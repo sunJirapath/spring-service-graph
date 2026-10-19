@@ -18,7 +18,7 @@ Repo `notification`, module `.`.
 
 | Method | Path | Called by | Reaches | Source | Confidence | Evidence |
 |---|---|---|---|---|---|---|
-| POST | `/notifications` | gateway | - | controller | EXACT | [notification/src/main/java/demo/notification/web/NotificationController.java:12](../../../src/test/resources/fleet/notification/src/main/java/demo/notification/web/NotificationController.java#L12) |
+| POST | `/notifications` | gateway | - | controller | EXACT | [notification/src/main/java/demo/notification/web/NotificationController.java:12](../../../src/test/resources/fleet/notification/src/main/java/demo/notification/web/NotificationController.java#L12)<br>[notification/src/main/java/demo/notification/web/NotificationController.java:13](../../../src/test/resources/fleet/notification/src/main/java/demo/notification/web/NotificationController.java#L13) |
 
 ## Calls
 

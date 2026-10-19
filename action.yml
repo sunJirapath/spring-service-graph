@@ -23,6 +23,9 @@ inputs:
   config-repo:
     description: Spring Cloud Config repo checkout.
     default: ''
+  sql-methods:
+    description: In-house wrapper methods that take SQL (method or Type.method), separated by spaces or newlines.
+    default: ''
   fail-on-breaking:
     description: Fail the job when the report lists breaking changes.
     default: 'false'
@@ -64,6 +67,7 @@ runs:
         SSG_PROFILE: ${{ inputs.profile }}
         SSG_ALIASES: ${{ inputs.aliases }}
         SSG_CONFIG_REPO: ${{ inputs.config-repo }}
+        SSG_SQL_METHODS: ${{ inputs.sql-methods }}
         SSG_OUT: ${{ runner.temp }}/ssg-impact
         SSG_FAIL_ON_BREAKING: 'false' # gate in the last step, after the comment is posted
       run: |

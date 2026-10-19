@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * All parsed Java sources of one repo, plus name lookup and constant folding.
@@ -48,7 +47,7 @@ public final class JavaIndex {
 
     private final Repo repo;
     private final List<CompilationUnit> units = new ArrayList<>();
-    private final Map<String, TypeDeclaration<?>> typesByFqn = new HashMap<>();
+    private final Map<String, List<TypeDeclaration<?>>> typesByFqn = new HashMap<>(); // same FQN may live in several modules
     private final Map<CompilationUnit, Path> files = new HashMap<>();
     private final List<Problem> problems = new ArrayList<>();
 
@@ -59,9 +58,11 @@ public final class JavaIndex {
     public static JavaIndex build(Repo repo) {
         var idx = new JavaIndex(repo);
         var parser = new JavaParser(new ParserConfiguration()
-                .setLanguageLevel(ParserConfiguration.LanguageLevel.BLEEDING_EDGE));
-        try (Stream<Path> walk = Files.walk(repo.root())) {
-            for (Path f : walk.filter(idx::isMainSource).sorted().toList()) {
+                .setLanguageLevel(ParserConfiguration.LanguageLevel.BLEEDING_EDGE)
+                // comments are never read; tokens must stay, node positions (evidence lines) come from them
+                .setAttributeComments(false));
+        try {
+            for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
                 var result = parser.parse(f);
                 result.getProblems().forEach(p -> idx.problems.add(new Problem(f,
                         p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
@@ -103,7 +104,7 @@ public final class JavaIndex {
         units.add(cu);
         files.put(cu, file);
         for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) {
-            t.getFullyQualifiedName().ifPresent(fqn -> typesByFqn.putIfAbsent(fqn, t));
+            t.getFullyQualifiedName().ifPresent(fqn -> typesByFqn.computeIfAbsent(fqn, k -> new ArrayList<>()).add(t));
         }
     }
 
@@ -125,13 +126,14 @@ public final class JavaIndex {
 
     /** Resolves a (possibly dotted) type name as seen from {@code context}. */
     public Optional<TypeDeclaration<?>> resolveType(String name, Node context) {
-        if (typesByFqn.containsKey(name)) return Optional.of(typesByFqn.get(name));
+        TypeDeclaration<?> exact = type(name, context);
+        if (exact != null) return Optional.of(exact);
         int dot = name.indexOf('.');
         String head = dot < 0 ? name : name.substring(0, dot);
         Optional<TypeDeclaration<?>> t = resolveSimple(head, context);
         if (t.isEmpty() || dot < 0) return t;
         String fqn = t.get().getFullyQualifiedName().orElse("") + name.substring(dot);
-        return Optional.ofNullable(typesByFqn.get(fqn));
+        return Optional.ofNullable(type(fqn, context));
     }
 
     public Optional<TypeDeclaration<?>> resolveType(ClassOrInterfaceType type, Node context) {
@@ -143,7 +145,7 @@ public final class JavaIndex {
         for (Node n = context; n != null; n = n.getParentNode().orElse(null)) {
             if (n instanceof TypeDeclaration<?> td) {
                 if (td.getNameAsString().equals(simple)) return Optional.of(td);
-                TypeDeclaration<?> member = td.getFullyQualifiedName().map(f -> typesByFqn.get(f + "." + simple)).orElse(null);
+                TypeDeclaration<?> member = td.getFullyQualifiedName().map(f -> type(f + "." + simple, context)).orElse(null);
                 if (member != null) return Optional.of(member);
             }
         }
@@ -159,7 +161,23 @@ public final class JavaIndex {
         }
         single.add(cu.getPackageDeclaration().map(p -> p.getNameAsString() + ".").orElse("") + simple);
         single.addAll(onDemand);
-        return single.stream().map(typesByFqn::get).filter(java.util.Objects::nonNull).findFirst();
+        return single.stream().<TypeDeclaration<?>>map(n -> type(n, context)).filter(java.util.Objects::nonNull).findFirst();
+    }
+
+    /**
+     * The type with this FQN; when several modules declare it (copies, per-service generated code),
+     * the one in the same module as {@code context}.
+     */
+    private TypeDeclaration<?> type(String fqn, Node context) {
+        var all = typesByFqn.get(fqn);
+        if (all == null) return null;
+        if (all.size() == 1) return all.getFirst();
+        Path module = moduleOfNode(context);
+        return all.stream().filter(t -> module != null && module.equals(moduleOfNode(t))).findFirst().orElse(all.getFirst());
+    }
+
+    private Path moduleOfNode(Node n) {
+        return n.findCompilationUnit().map(files::get).map(this::moduleOf).orElse(null);
     }
 
     /** Super types (extends + implements) that exist in this repo's sources. */
@@ -315,7 +333,7 @@ public final class JavaIndex {
             if (imp.isAsterisk()) type = imp.getNameAsString();
             else if (imp.getName().getIdentifier().equals(name)) type = imp.getName().getQualifier().map(Object::toString).orElse("");
             else continue;
-            var t = Optional.ofNullable(typesByFqn.get(type));
+            var t = Optional.ofNullable(type(type, n));
             var v = t.flatMap(td -> fieldOf(td, name, 0));
             if (v.isPresent()) return evalDeclaration(v.map(x -> (Node) x), n, depth).orElseThrow();
         }

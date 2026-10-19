@@ -3,6 +3,7 @@ package io.github.sunjirapath.ssg;
 import io.github.sunjirapath.ssg.extract.Extractor;
 import io.github.sunjirapath.ssg.extract.ReachAnalysis;
 import io.github.sunjirapath.ssg.link.Linker;
+import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Finding;
 import io.github.sunjirapath.ssg.model.Graph;
@@ -23,7 +24,16 @@ import java.util.TreeMap;
 /** scan = discover services, run every extractor, link. */
 public final class Pipeline {
 
-    public record Options(List<Path> repos, String profile, Path aliases, Path configRepo) {}
+    /** @param sqlMethods in-house wrapper methods that take SQL ({@code method} or {@code Type.method}) */
+    public record Options(List<Path> repos, String profile, Path aliases, Path configRepo, List<String> sqlMethods) {
+        public Options {
+            sqlMethods = List.copyOf(sqlMethods);
+        }
+
+        public Options(List<Path> repos, String profile, Path aliases, Path configRepo) {
+            this(repos, profile, aliases, configRepo, List.of());
+        }
+    }
 
     /** @param repoRoots repo name -> checkout root, for evidence links */
     public record Result(Graph graph, Map<String, Path> repoRoots) {}
@@ -44,9 +54,14 @@ public final class Pipeline {
             if (services.isEmpty()) System.err.println("warn: no @SpringBootApplication in " + repo.root());
             for (Service s : services) {
                 String prev = seen.put(s.name(), repo.name() + "/" + s.path());
-                if (prev != null) System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + seen.get(s.name()));
+                if (prev != null) {
+                    System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
+                    // two apps with one name merge into one graph node; say so instead of hiding it
+                    extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
+                            + "' is used by " + prev + " and " + repo.name() + "/" + s.path(), List.of(new Evidence(repo.name(), s.path(), 1))));
+                }
                 var facts = new ArrayList<Fact>();
-                for (Extractor x : Extractor.all()) facts.addAll(x.extract(s));
+                for (Extractor x : Extractor.all(java.util.Set.copyOf(o.sqlMethods()))) facts.addAll(x.extract(s));
                 facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
             }

@@ -103,7 +103,7 @@ public final class McpServer {
             String text = switch (name) {
                 case "who_calls" -> PRETTY.writeValueAsString(queries.whoCalls(required(args, "target")));
                 case "impact_of" -> PRETTY.writeValueAsString(
-                        queries.impactOf(required(args, "target"), Math.clamp(args.path("depth").asInt(3), 1, 10)));
+                        queries.impactOf(required(args, "target"), args.path("depth").asInt(3)));
                 case "service_card" -> queries.serviceCard(required(args, "service"));
                 default -> throw new IllegalArgumentException("unknown tool: " + name);
             };

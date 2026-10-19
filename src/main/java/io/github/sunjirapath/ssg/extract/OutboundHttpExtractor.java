@@ -69,7 +69,7 @@ public final class OutboundHttpExtractor implements Extractor {
             for (Value cp : classPaths) {
                 for (Value mp : mapping.paths()) {
                     Value full = url(base, Mappings.joinValues(path, cp, mp));
-                    for (String verb : mapping.methods()) facts.add(new Fact.Call("feign", verb, full, s.evidence(m)));
+                    for (String verb : mapping.methods()) facts.add(new Fact.Call("feign", verb, full, s.evidence(mapping.annotation())));
                 }
             }
         }
@@ -86,7 +86,7 @@ public final class OutboundHttpExtractor implements Extractor {
                             .orElse(List.of("*"))
                     : mapping.methods();
             for (Value mp : mapping.paths()) {
-                for (String verb : verbs) facts.add(new Fact.Call("http-exchange", verb, url(base, mp), s.evidence(m)));
+                for (String verb : verbs) facts.add(new Fact.Call("http-exchange", verb, url(base, mp), s.evidence(mapping.annotation())));
             }
         }
     }

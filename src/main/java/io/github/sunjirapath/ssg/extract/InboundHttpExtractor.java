@@ -24,39 +24,41 @@ public final class InboundHttpExtractor implements Extractor {
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
         Value contextPath = contextPath(s);
-        var missing = new ArrayList<ClassOrInterfaceDeclaration>();
+        var missing = new java.util.LinkedHashMap<ClassOrInterfaceDeclaration, List<String>>(); // controller -> absent interfaces
         for (CompilationUnit cu : s.units()) {
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
                 List<Value> classPaths = classPaths(c, s);
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
-                    var handler = s.evidence(override(c, m));
+                    var handler = s.evidence(override(c, m).getName()); // the method line itself, below any @Override
                     for (Value cp : classPaths) {
                         for (Value mp : mapping.paths()) {
                             Value path = Mappings.joinValues(contextPath, cp, mp);
                             for (String verb : mapping.methods()) {
-                                facts.add(new Fact.Endpoint(verb, path, s.evidence(m), "controller", handler));
+                                // evidence: the mapping annotation, not the first of possibly many annotations
+                                facts.add(new Fact.Endpoint(verb, path, s.evidence(mapping.annotation()), "controller", handler));
                             }
                         }
                     }
                 }
-                boolean unresolvedInterface = c.getImplementedTypes().stream()
-                        .anyMatch(t -> s.index().resolveType(t, c).isEmpty());
-                if (unresolvedInterface) missing.add(c);
+                var absent = c.getImplementedTypes().stream().filter(t -> s.index().resolveType(t, c).isEmpty())
+                        .map(t -> t.getName().getIdentifier()).toList();
+                if (!absent.isEmpty()) missing.put(c, absent);
             }
         }
-        if (!missing.isEmpty()) {
-            List<Fact.Endpoint> spec = OpenApiSpec.endpoints(s, contextPath);
+        var exposed = new java.util.HashSet<String>();
+        facts.forEach(f -> { if (f instanceof Fact.Endpoint e) exposed.add(e.method() + " " + e.path().text()); });
+        missing.forEach((c, names) -> {
+            // only the operations of the interfaces this controller implements, minus what controllers already expose
+            var spec = OpenApiSpec.endpoints(s, contextPath, java.util.Set.copyOf(names));
             if (spec.isEmpty()) {
-                for (var c : missing) {
-                    facts.add(new Fact.Problem("MISSING_INTERFACE", "controller " + c.getNameAsString()
-                            + " implements an interface not found in sources and no OpenAPI spec was found",
-                            s.evidence(c)));
-                }
+                facts.add(new Fact.Problem("MISSING_INTERFACE", "controller " + c.getNameAsString() + " implements "
+                        + String.join(", ", names) + ", which is not in sources, and no OpenAPI spec provides its operations",
+                        s.evidence(c)));
             }
-            facts.addAll(spec);
-        }
+            for (Fact.Endpoint e : spec) if (exposed.add(e.method() + " " + e.path().text())) facts.add(e);
+        });
         return facts;
     }
 

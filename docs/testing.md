@@ -63,7 +63,7 @@ All of them build their fake repos with `TempRepo`, a shared helper.
 
 ## Decisions made in review
 
-- **Evidence lines** point at the start of the declaration, i.e. its first annotation, for inbound and outbound alike.
+- **Evidence lines** pointed at the start of the declaration, i.e. its first annotation, for inbound and outbound alike. This was revised after the first field test: they now point at the mapping annotation itself, and endpoints also cite their handler method.
 - **Same-line methods:** two methods on one source line cannot be told apart by reach, because evidence has no column. This is documented as a shortcut in `ReachAnalysis`. It is not worth adding columns to every evidence entry.
 - **Untyped receivers:** an `Object`-typed receiver calling `.delete().uri(..)` is not an HTTP call.
 - **Class-level `@RequestMapping`** is resolved on the controller class across all of its interfaces, matching Spring. So `/api` from one interface applies to handlers declared in another.

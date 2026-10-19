@@ -24,7 +24,8 @@ public final class Main {
 
     private static final String USAGE = """
             usage: ssg scan --repos <dir>... [--profile <name>] [--aliases <aliases.yml>]
-                            [--config-repo <dir>] --out <dir>
+                            [--config-repo <dir>] [--link-base <url with {repo} {file} {line}>]
+                            [--sql-methods <method|Type.method>...] --out <dir>
                    ssg diff --base <dir|graph.json> --head <dir|graph.json> [--fail-on-breaking]
                             (Markdown impact report on stdout; exit 3 on breaking changes with the flag)
                    ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
@@ -84,11 +85,14 @@ public final class Main {
         Path out = Path.of(single(opts, "--out", null));
         String aliases = single(opts, "--aliases", "");
         String configRepo = single(opts, "--config-repo", "");
+        // --sql-methods a b or --sql-methods a,b
+        List<String> sqlMethods = opts.getOrDefault("--sql-methods", List.of()).stream()
+                .flatMap(v -> java.util.Arrays.stream(v.split(","))).map(String::strip).filter(v -> !v.isEmpty()).toList();
         var options = new Pipeline.Options(repos, single(opts, "--profile", "default"),
-                aliases.isEmpty() ? null : Path.of(aliases), configRepo.isEmpty() ? null : Path.of(configRepo));
+                aliases.isEmpty() ? null : Path.of(aliases), configRepo.isEmpty() ? null : Path.of(configRepo), sqlMethods);
         var result = Pipeline.scan(options);
         JsonOutput.write(result.graph(), out);
-        MarkdownOutput.write(result.graph(), result.repoRoots(), out);
+        MarkdownOutput.write(result.graph(), result.repoRoots(), out, single(opts, "--link-base", ""));
         DiagramOutput.write(result.graph(), out);
         var g = result.graph();
         System.out.printf("%d nodes, %d edges, %d findings -> %s%n", g.nodes().size(), g.edges().size(),
