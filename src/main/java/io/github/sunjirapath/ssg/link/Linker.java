@@ -49,6 +49,7 @@ public final class Linker {
     public static Graph link(List<ServiceFacts> all, Map<String, String> aliases, List<Finding> extraFindings) {
         var l = new Linker(aliases);
         l.findings.addAll(extraFindings);
+        all = singleOwners(all);
         all.forEach(l::addService);
         all.forEach(l::addFacts);
         var es = l.edges.values().stream().map(EdgeAcc::build)
@@ -60,6 +61,37 @@ public final class Linker {
                         .thenComparing(f -> f.evidence().toString()))
                 .toList();
         return new Graph(List.copyOf(l.nodes.values()), es, fs);
+    }
+
+    /**
+     * A table owned by several services (shared DDL) belongs to the one whose own module holds the entity, mapper or DDL;
+     * the rest only use it. With zero or several such services nothing changes.
+     */
+    static List<ServiceFacts> singleOwners(List<ServiceFacts> all) {
+        var owners = new HashMap<String, List<ServiceFacts>>();
+        for (var sf : all)
+            sf.facts().stream().filter(f -> f instanceof Fact.TableUse t && t.owns()).map(f -> ((Fact.TableUse) f).table().text())
+                    .distinct().forEach(t -> owners.computeIfAbsent(t, k -> new ArrayList<>()).add(sf));
+        var demote = new HashMap<String, java.util.Set<String>>(); // service -> tables it only uses
+        owners.forEach((table, list) -> {
+            if (list.size() < 2) return;
+            var own = list.stream().filter(sf -> sf.facts().stream().anyMatch(f -> f instanceof Fact.TableUse t
+                    && t.table().text().equals(table) && inModule(sf, t.evidence()))).toList();
+            if (own.size() != 1) return;
+            for (var sf : list) if (sf != own.get(0)) demote.computeIfAbsent(sf.service(), k -> new java.util.HashSet<>()).add(table);
+        });
+        if (demote.isEmpty()) return all;
+        return all.stream().map(sf -> {
+            var tables = demote.get(sf.service());
+            if (tables == null) return sf;
+            var facts = sf.facts().stream().map(f -> f instanceof Fact.TableUse t && t.owns() && tables.contains(t.table().text())
+                    ? (Fact) new Fact.TableUse(false, t.table(), t.store(), t.evidence(), t.via()) : f).toList();
+            return new ServiceFacts(sf.service(), sf.repo(), sf.path(), facts);
+        }).toList();
+    }
+
+    private static boolean inModule(ServiceFacts sf, Evidence e) {
+        return e.repo().equals(sf.repo()) && (sf.path().equals(".") || e.file().startsWith(sf.path() + "/"));
     }
 
     private void addService(ServiceFacts sf) {

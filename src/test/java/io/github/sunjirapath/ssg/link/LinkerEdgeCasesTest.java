@@ -296,6 +296,24 @@ class LinkerEdgeCasesTest {
                 Node.Endpoint.idOf("orders", "GET", "/health"), Node.Endpoint.idOf("billing", "GET", "/health"));
     }
 
+    @Test
+    void sharedDdlTableIsOwnedOnlyByTheServiceWhoseModuleHoldsIt() {
+        var ddl = table(true, "t_user", "sql", ev("common/sql/schema.sql", 1));
+        var a = new Linker.ServiceFacts("a", "repo", "a", List.of(ddl, table(false, "t_user", "sql", ev("a/src/User.java", 1))));
+        var b = new Linker.ServiceFacts("b", "repo", "b", List.of(ddl));
+        var c = new Linker.ServiceFacts("c", "repo", "c", List.of(ddl));
+        var kinds = Linker.link(List.of(a, b, c), Map.of(), List.of()).edges().stream()
+                .filter(e -> e.kind() == Edge.Kind.OWNS || e.kind() == Edge.Kind.USES).map(e -> e.kind() + e.from()).toList();
+
+        // a's module holds the entity -> a owns; b and c only use
+        assertThat(kinds).containsExactlyInAnyOrder("OWNS" + Node.Service.idOf("a"), "USES" + Node.Service.idOf("a"), "USES" + Node.Service.idOf("b"),
+                "USES" + Node.Service.idOf("c"));
+
+        var d = new Linker.ServiceFacts("d", "repo", "d", List.of(ddl, table(false, "t_user", "sql", ev("d/src/U.java", 1))));
+        var tie = Linker.link(List.of(a, d), Map.of(), List.of()).edges().stream().filter(e -> e.kind() == Edge.Kind.OWNS).toList();
+        assertThat(tie).hasSize(2); // two qualifying services: unchanged
+    }
+
     private static Graph link(Linker.ServiceFacts... services) {
         return link(Map.of(), services);
     }
