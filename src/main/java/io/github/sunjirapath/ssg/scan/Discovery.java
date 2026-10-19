@@ -49,17 +49,44 @@ public final class Discovery {
         var services = new ArrayList<Service>();
         var refs = new HashMap<CompilationUnit, List<TypeDeclaration<?>>>();
         Modules modules = Modules.read(index.repo());
+        var configs = new HashMap<Path, Config>();
+        var names = new HashMap<Path, String>();
+        var fallbacks = new HashMap<String, List<Path>>();
+        for (Path module : apps.keySet()) {
+            Config config = localConfig(index.repo(), module.resolve("src/main/resources"), profile);
+            configs.put(module, config);
+            Value name = config.valueOf("spring.application.name");
+            if (name.resolved()) names.put(module, name.text());
+            else fallbacks.computeIfAbsent(module.getFileName().toString(), k -> new ArrayList<>()).add(module);
+        }
+        fallbacks.forEach((folder, group) -> {
+            // Same folder name, no explicit name: prefix parent folders until the names differ (transport-http).
+            for (int k = 1; k <= 8; k++) {
+                int depth = k;
+                var uniq = new HashSet<String>();
+                group.forEach(m -> uniq.add(tail(m, depth)));
+                if (group.size() == 1 || uniq.size() == group.size() || k == 8) {
+                    group.forEach(m -> names.put(m, tail(m, depth)));
+                    return;
+                }
+            }
+        });
         for (Path module : apps.keySet()) {
             Set<Path> libraries = modules.all(module, apps.keySet());
             List<CompilationUnit> units = apps.size() == 1 ? index.units()
                     : used(index, module, libraries, modules.direct(module), apps.keySet(), refs);
-            Config config = localConfig(index.repo(), module.resolve("src/main/resources"), profile);
-            Value name = config.valueOf("spring.application.name");
-            String serviceName = name.resolved() ? name.text() : module.getFileName().toString();
+            Config config = configs.get(module);
+            String serviceName = names.get(module);
             if (configRepo != null) config.putAll(remoteConfig(Repo.of(configRepo), serviceName, profile));
             services.add(new Service(serviceName, index.repo(), module, config, index, units, List.copyOf(libraries)));
         }
         return services;
+    }
+
+    /** The last {@code n} path segments joined with '-'. */
+    private static String tail(Path p, int n) {
+        int c = p.getNameCount();
+        return p.subpath(Math.max(0, c - n), c).toString().replace('\\', '-').replace('/', '-');
     }
 
     private static boolean isApp(ClassOrInterfaceDeclaration c) {
