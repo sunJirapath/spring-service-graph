@@ -19,3 +19,44 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew build --console=plain
+
+  impact-action:
+    # end-to-end check of action.yml: a head checkout without AccountController must be reported as breaking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Base and head copies of the account repo
+        run: |
+          mkdir -p "$RUNNER_TEMP/base" "$RUNNER_TEMP/head"
+          cp -r src/test/resources/fleet/account "$RUNNER_TEMP/base/"
+          cp -r src/test/resources/fleet/account "$RUNNER_TEMP/head/"
+          rm "$RUNNER_TEMP/head/account/account-service/src/main/java/demo/account/web/AccountController.java"
+      - id: report
+        uses: ./
+        with:
+          base-path: ${{ runner.temp }}/base/account
+          head-path: ${{ runner.temp }}/head/account
+          fleet: |
+            src/test/resources/fleet/gateway
+            src/test/resources/fleet/notification
+          comment: 'false'
+      - name: Report lists the removed endpoints
+        env:
+          BREAKING: ${{ steps.report.outputs.breaking }}
+          REPORT: ${{ steps.report.outputs.report }}
+        run: |
+          test "$BREAKING" = true
+          grep -F 'Removed `account GET /api/accounts/{id}` is still called by gateway' "$REPORT"
+      - id: gate
+        uses: ./
+        continue-on-error: true
+        with:
+          base-path: ${{ runner.temp }}/base/account
+          head-path: ${{ runner.temp }}/head/account
+          fleet: src/test/resources/fleet/gateway
+          comment: 'false'
+          fail-on-breaking: 'true'
+      - name: The gate failed the step
+        env:
+          OUTCOME: ${{ steps.gate.outcome }}
+        run: test "$OUTCOME" = failure

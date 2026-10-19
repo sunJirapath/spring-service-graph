@@ -25,7 +25,8 @@ public final class Main {
     private static final String USAGE = """
             usage: ssg scan --repos <dir>... [--profile <name>] [--aliases <aliases.yml>]
                             [--config-repo <dir>] --out <dir>
-                   ssg diff --base <dir|graph.json> --head <dir|graph.json>   (Markdown impact report on stdout)
+                   ssg diff --base <dir|graph.json> --head <dir|graph.json> [--fail-on-breaking]
+                            (Markdown impact report on stdout; exit 3 on breaking changes with the flag)
                    ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
             """;
 
@@ -55,7 +56,13 @@ public final class Main {
             case "diff" -> {
                 var base = JsonOutput.read(Path.of(single(opts, "--base", null)));
                 var head = JsonOutput.read(Path.of(single(opts, "--head", null)));
-                utf8Stdout().print(GraphDiff.report(base, head));
+                boolean gate = flag(opts, "--fail-on-breaking");
+                var result = GraphDiff.compare(base, head);
+                utf8Stdout().print(result.markdown());
+                if (gate && !result.breaking().isEmpty()) {
+                    System.err.println("ssg diff: " + result.breaking().size() + " breaking change(s)");
+                    yield 3;
+                }
                 yield 0;
             }
             case "mcp" -> {
@@ -114,6 +121,12 @@ public final class Main {
         var v = opts.get(name);
         if (v == null || v.isEmpty()) throw new IllegalArgumentException(name + " is required");
         return v;
+    }
+
+    private static boolean flag(Map<String, List<String>> opts, String name) {
+        var v = opts.get(name);
+        if (v != null && !v.isEmpty()) throw new IllegalArgumentException(name + " takes no value");
+        return v != null;
     }
 
     private static String single(Map<String, List<String>> opts, String name, String dflt) {

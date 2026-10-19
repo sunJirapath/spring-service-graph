@@ -1,0 +1,105 @@
+name: spring-service-graph impact
+description: >
+  Merge-request impact report for a Spring Boot fleet: scans the fleet with the base and the head
+  checkout of the changed repo, posts the ssg diff report as a PR comment, and can fail on breaking changes.
+author: sunJirapath
+
+inputs:
+  base-path:
+    description: Checkout of the target (base) branch of the changed repo. Must have the same folder name as head-path.
+    required: true
+  head-path:
+    description: Checkout of the merge-request (head) commit of the changed repo.
+    required: true
+  fleet:
+    description: Other repo checkouts in the fleet, separated by spaces or newlines. Gives cross-service impact.
+    default: ''
+  profile:
+    description: Spring profile passed to ssg scan.
+    default: default
+  aliases:
+    description: Path to aliases.yml (host -> service or external name).
+    default: ''
+  config-repo:
+    description: Spring Cloud Config repo checkout.
+    default: ''
+  fail-on-breaking:
+    description: Fail the job when the report lists breaking changes.
+    default: 'false'
+  comment:
+    description: Post or update a PR comment with the report (pull_request events only).
+    default: 'true'
+  github-token:
+    description: Token used to post the PR comment (needs pull-requests write).
+    default: ${{ github.token }}
+
+outputs:
+  breaking:
+    description: '"true" when the report lists breaking changes.'
+    value: ${{ steps.impact.outputs.breaking }}
+  report:
+    description: Path to the Markdown report.
+    value: ${{ steps.impact.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: 21
+
+    - name: Build ssg
+      shell: bash
+      run: '"$GITHUB_ACTION_PATH/gradlew" -p "$GITHUB_ACTION_PATH" installDist -q --console=plain'
+
+    - name: Scan base and head, diff
+      id: impact
+      shell: bash
+      env:
+        SSG: ${{ github.action_path }}/build/install/ssg/bin/ssg
+        SSG_BASE: ${{ inputs.base-path }}
+        SSG_HEAD: ${{ inputs.head-path }}
+        SSG_FLEET: ${{ inputs.fleet }}
+        SSG_PROFILE: ${{ inputs.profile }}
+        SSG_ALIASES: ${{ inputs.aliases }}
+        SSG_CONFIG_REPO: ${{ inputs.config-repo }}
+        SSG_OUT: ${{ runner.temp }}/ssg-impact
+        SSG_FAIL_ON_BREAKING: 'false' # gate in the last step, after the comment is posted
+      run: |
+        bash "$GITHUB_ACTION_PATH/scripts/ssg-impact.sh"
+        echo "breaking=$(cat "$SSG_OUT/breaking")" >> "$GITHUB_OUTPUT"
+        echo "report=$SSG_OUT/impact.md" >> "$GITHUB_OUTPUT"
+        cat "$SSG_OUT/impact.md" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Post PR comment
+      if: inputs.comment == 'true' && github.event.pull_request.number
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        REPO: ${{ github.repository }}
+        PR: ${{ github.event.pull_request.number }}
+        REPORT: ${{ steps.impact.outputs.report }}
+      run: |
+        marker='<!-- ssg-impact -->'
+        body="$RUNNER_TEMP/ssg-impact/comment.md"
+        { echo "$marker"; cat "$REPORT"; } > "$body"
+        # GitHub caps comment bodies at 65536 characters; the full report is in the job summary
+        if [ "$(wc -c < "$body")" -gt 65000 ]; then
+          head -c 64000 "$body" > "$body.cut" && printf '\n\n_Report truncated; the full report is in the job summary._\n' >> "$body.cut" && mv "$body.cut" "$body"
+        fi
+        id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | tail -n 1)
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@"$body" > /dev/null \
+            || echo "::warning::could not update the ssg impact comment (fork pull requests get a read-only token)"
+        else
+          gh api -X POST "repos/$REPO/issues/$PR/comments" -F body=@"$body" > /dev/null \
+            || echo "::warning::could not post the ssg impact comment (fork pull requests get a read-only token)"
+        fi
+
+    - name: Fail on breaking changes
+      if: inputs.fail-on-breaking == 'true' && steps.impact.outputs.breaking == 'true'
+      shell: bash
+      run: |
+        echo "::error::ssg found breaking changes; see the impact report in the job summary"
+        exit 3

@@ -35,8 +35,15 @@ public final class GraphDiff {
         this.headNodes = head.nodes().stream().collect(Collectors.toMap(Node::id, Function.identity()));
     }
 
-    public static String report(Graph base, Graph head) {
+    /** The Markdown report plus its breaking changes, for callers that gate on them. */
+    public record Result(String markdown, List<String> breaking) {}
+
+    public static Result compare(Graph base, Graph head) {
         return new GraphDiff(base, head).render();
+    }
+
+    public static String report(Graph base, Graph head) {
+        return compare(base, head).markdown();
     }
 
     /** Identity of an edge across scans: everything but evidence, confidence and the reach chain. */
@@ -50,7 +57,7 @@ public final class GraphDiff {
         return f.kind() + "|" + f.service() + "|" + f.message();
     }
 
-    private String render() {
+    private Result render() {
         var baseEdges = index(base.edges(), GraphDiff::key);
         var headEdges = index(head.edges(), GraphDiff::key);
         var addedEdges = minus(headEdges, baseEdges);
@@ -70,7 +77,13 @@ public final class GraphDiff {
         md.append("| edges | ").append(base.edges().size()).append(" | ").append(head.edges().size()).append(" |\n");
         md.append("| findings | ").append(base.findings().size()).append(" | ").append(head.findings().size()).append(" |\n\n");
 
-        breaking(md, removedNodes, newFindings);
+        List<String> breaking = breaking(removedNodes, newFindings);
+        md.append("## Breaking changes\n\n");
+        if (breaking.isEmpty()) md.append("_None found._\n\n");
+        else {
+            breaking.forEach(l -> md.append("- ").append(l).append('\n'));
+            md.append('\n');
+        }
 
         nodes(md, "Endpoints added", addedNodes, Node.Endpoint.class, head);
         nodes(md, "Endpoints removed", removedNodes, Node.Endpoint.class, base);
@@ -92,12 +105,13 @@ public final class GraphDiff {
                 && newFindings.isEmpty() && fixedFindings.isEmpty() && !confidenceChanged) {
             md.append("No changes.\n");
         }
-        return md.toString();
+        return new Result(md.toString(), breaking);
     }
 
     // ---------------------------------------------------------------- breaking changes
 
-    private void breaking(StringBuilder md, Map<String, Node> removedNodes, Map<String, Finding> newFindings) {
+    /** Sorted, one line each: removed endpoints/services still called, orphaned topics, new contract drift. */
+    private List<String> breaking(Map<String, Node> removedNodes, Map<String, Finding> newFindings) {
         var lines = new ArrayList<String>();
         for (Node n : removedNodes.values()) {
             if (!(n instanceof Node.Endpoint) && !(n instanceof Node.Service)) continue;
@@ -120,10 +134,7 @@ public final class GraphDiff {
         for (Finding f : newFindings.values()) {
             if (f.kind() == Finding.Kind.CONTRACT_DRIFT) lines.add("New contract drift in " + f.service() + ": " + f.message() + " — " + ev(f.evidence()));
         }
-        md.append("## Breaking changes\n\n");
-        if (lines.isEmpty()) md.append("_None found._\n\n");
-        else lines.stream().sorted().forEach(l -> md.append("- ").append(l).append('\n'));
-        if (!lines.isEmpty()) md.append('\n');
+        return lines.stream().sorted().toList();
     }
 
     // ---------------------------------------------------------------- sections

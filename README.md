@@ -120,7 +120,9 @@ The report is Markdown on stdout. It opens with **Breaking changes**:
 - topics that lost their last producer but still have consumers
 - new contract drift
 
-Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported. The exit code is always 0.
+Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported. The exit code is 0, or 3 when `--fail-on-breaking` is given and there are breaking changes.
+
+To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
 
 ## MCP server
 
