@@ -142,11 +142,10 @@ public final class GatewayExtractor implements Extractor {
             boolean outermost = l.findAncestor(LambdaExpr.class).filter(p -> hasCall(p, "uri")).isEmpty();
             if (!outermost || !hasCall(l, "uri")) continue;
             var calls = l.findAll(MethodCallExpr.class);
-            Value uri = calls.stream().filter(c -> c.getNameAsString().equals("uri") && c.getArguments().size() == 1)
-                    .findFirst().map(c -> s.eval(c.getArgument(0))).orElse(Value.unresolved(l.toString()));
-            calls.stream().filter(c -> c.getNameAsString().equals("uri") && c.getArguments().size() == 1).findFirst()
-                    .filter(c -> !uri.resolved()).ifPresent(c -> facts.add(new Fact.Problem("UNRESOLVED",
-                            "gateway route uri not resolved statically (from `" + uri.raw() + "`)", s.evidence(c))));
+            var uriCall = calls.stream().filter(c -> c.getNameAsString().equals("uri") && c.getArguments().size() == 1).findFirst();
+            Value uri = uriCall.map(c -> s.eval(c.getArgument(0))).orElse(Value.unresolved(l.toString()));
+            uriCall.filter(c -> !uri.resolved()).ifPresent(c -> facts.add(new Fact.Problem("UNRESOLVED",
+                    "gateway route uri not resolved statically (from `" + uri.raw() + "`)", s.evidence(c))));
             var verbs = new ArrayList<String>(); // .method("POST") / .method(HttpMethod.POST), also after .and()
             for (MethodCallExpr c : calls) {
                 if (!c.getNameAsString().equals("method")) continue;
