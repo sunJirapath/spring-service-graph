@@ -15,6 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JdbcExtractorTest {
 
     @Test
+    void systemCatalogsAreNotTables() {
+        assertThat(JdbcExtractor.tables("select column_name from information_schema.columns join pg_tables on 1=1"
+                + " join pg_catalog.pg_class c on 1=1 join real_table r on 1=1")).containsExactly("real_table");
+    }
+
+    @Test
     void extractsEveryJdbcTemplateClientMethod(@TempDir Path tmp) {
         var facts = extract(tmp, "methods", """
                 package x;

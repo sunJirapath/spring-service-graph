@@ -126,6 +126,7 @@ public final class JdbcExtractor implements Extractor {
             + "|\\bfor\\s+update\\b|\\bon\\s+duplicate\\s+key\\s+update\\b|\\bdo\\s+update\\b");
     private static final Pattern CTE = Pattern.compile("(?i)(?:\\bwith\\s+(?:recursive\\s+)?|,\\s*)([A-Za-z_]\\w*)\\s+as\\s*\\(");
     private static final Pattern TABLE = Pattern.compile("(?i)\\b(?:from|join|into|update)\\s+([`\"\\[]?[A-Za-z_][\\w.$]*[`\"\\]]?)(?![\\w{])");
+    private static final Pattern SYSTEM = Pattern.compile("(?i)^[`\"\\[]?(?:information_schema|pg_catalog|pg_)");
     private static final Set<String> NOT_TABLES = Set.of("select", "set", "values", "where", "lateral", "unnest", "dual",
             "only", "table", "the");
 
@@ -140,9 +141,12 @@ public final class JdbcExtractor implements Extractor {
         while (c.find()) ctes.add(c.group(1).toLowerCase(Locale.ROOT));
         var out = new LinkedHashSet<String>();
         Matcher m = TABLE.matcher(code);
+        boolean catalog = code.toLowerCase(Locale.ROOT).contains("information_schema");
         while (m.find()) {
             String t = DataExtractor.normalize(m.group(1));
-            if (!t.isEmpty() && !NOT_TABLES.contains(t) && !ctes.contains(t)) out.add(t);
+            if (t.isEmpty() || NOT_TABLES.contains(t) || ctes.contains(t) || SYSTEM.matcher(m.group(1)).find()
+                    || catalog && (t.equals("columns") || t.equals("tables"))) continue; // system catalog, not a table
+            out.add(t);
         }
         return List.copyOf(out);
     }
