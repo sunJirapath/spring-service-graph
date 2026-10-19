@@ -14,12 +14,20 @@ import java.util.List;
  * One Spring Boot application: what extractors get to look at.
  *
  * @param units the Java sources attributed to this service
+ * @param libraries the sibling modules {@code moduleRoot} depends on in its build file, transitively; no app modules
  */
 public record Service(String name, Repo repo, Path moduleRoot, Config config, JavaIndex index,
-                      List<CompilationUnit> units) {
+                      List<CompilationUnit> units, List<Path> libraries) {
 
     public Path resources() {
         return moduleRoot.resolve("src/main/resources");
+    }
+
+    /** The service module followed by its {@link #libraries}. */
+    public List<Path> modules() {
+        var out = new ArrayList<Path>(List.of(moduleRoot));
+        out.addAll(libraries);
+        return out;
     }
 
     /** Module path relative to the repo root, "." for a single-module repo. */

@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -28,6 +29,9 @@ import java.util.TreeMap;
 public final class Discovery {
 
     private static final List<String> EXTENSIONS = List.of("properties", "yml", "yaml");
+    /** Library classes Spring instantiates in the service that depends on them. */
+    private static final String[] BEANS = {"Component", "Service", "Repository", "Configuration", "AutoConfiguration",
+            "Mapper", "ControllerAdvice", "RestControllerAdvice"};
 
     private Discovery() {}
 
@@ -44,15 +48,16 @@ public final class Discovery {
         }
         var services = new ArrayList<Service>();
         var refs = new HashMap<CompilationUnit, List<TypeDeclaration<?>>>();
+        Modules modules = Modules.read(index.repo());
         for (Path module : apps.keySet()) {
+            Set<Path> libraries = modules.all(module, apps.keySet());
             List<CompilationUnit> units = apps.size() == 1 ? index.units()
-                    : used(index, index.units().stream().filter(u -> index.moduleOf(index.fileOf(u)).equals(module)).toList(),
-                            apps.keySet(), refs);
+                    : used(index, module, libraries, modules.direct(module), apps.keySet(), refs);
             Config config = localConfig(index.repo(), module.resolve("src/main/resources"), profile);
             Value name = config.valueOf("spring.application.name");
             String serviceName = name.resolved() ? name.text() : module.getFileName().toString();
             if (configRepo != null) config.putAll(remoteConfig(Repo.of(configRepo), serviceName, profile));
-            services.add(new Service(serviceName, index.repo(), module, config, index, units));
+            services.add(new Service(serviceName, index.repo(), module, config, index, units, List.copyOf(libraries)));
         }
         return services;
     }
@@ -66,14 +71,26 @@ public final class Discovery {
     }
 
     /**
-     * {@code own} plus the library sources (in no app's module) it uses: the files declaring a type it
-     * references, directly or through other library files. A type the service implements or extends is
-     * left out, because a local implementation of a {@code @FeignClient} interface is the server, not a client.
+     * The service module's own sources, the beans of the library modules it depends on in its pom.xml or
+     * build.gradle (transitively; {@link #BEANS} classes, plus controllers from direct dependencies only), and
+     * the library sources (in no app's module) those use: the files declaring a type they reference, directly or
+     * through other library files. So a shared module's Feign clients and DB access count for every service
+     * that pulls them in, while its controllers count only where the launcher module depends on it, not in every
+     * service that reaches it through some starter. A type the service implements or extends is left out,
+     * because a local implementation of a {@code @FeignClient} interface is the server, not a client.
      */
-    // shortcut: usage only, so library beans the service never names (auto-configurations) stay unattributed;
-    // reading Maven/Gradle module dependencies would catch them.
-    private static List<CompilationUnit> used(JavaIndex index, List<CompilationUnit> own, java.util.Set<Path> appModules,
-                                              Map<CompilationUnit, List<TypeDeclaration<?>>> refs) {
+    // shortcut: every bean class in a dependency counts, whether or not component scanning or an
+    // auto-configuration import would load it; read spring.factories/AutoConfiguration.imports if that over-counts.
+    private static List<CompilationUnit> used(JavaIndex index, Path module, Set<Path> libraries, Set<Path> direct,
+                                              Set<Path> appModules, Map<CompilationUnit, List<TypeDeclaration<?>>> refs) {
+        var own = new ArrayList<CompilationUnit>();
+        var roots = new ArrayList<CompilationUnit>();
+        for (CompilationUnit cu : index.units()) {
+            Path m = index.moduleOf(index.fileOf(cu));
+            if (m.equals(module)) own.add(cu);
+            else if (libraries.contains(m) && cu.findAll(TypeDeclaration.class).stream().anyMatch(t ->
+                    Ann.has(t, BEANS) || direct.contains(m) && Ann.has(t, "RestController", "Controller"))) roots.add(cu);
+        }
         var implemented = new HashSet<TypeDeclaration<?>>();
         var supers = new ArrayDeque<TypeDeclaration<?>>();
         own.forEach(cu -> supers.addAll(cu.findAll(TypeDeclaration.class).stream().<TypeDeclaration<?>>map(t -> t).toList()));
@@ -81,9 +98,13 @@ public final class Discovery {
             for (TypeDeclaration<?> st : index.superTypes(supers.pop())) if (implemented.add(st)) supers.push(st);
         }
         var units = new LinkedHashSet<>(own);
-        var queue = new ArrayDeque<>(own);
+        units.addAll(roots);
+        var queue = new ArrayDeque<>(units);
+        var mine = new HashSet<>(libraries);
+        mine.add(module);
         while (!queue.isEmpty()) {
-            for (TypeDeclaration<?> t : refs.computeIfAbsent(queue.pop(), cu -> referencedTypes(index, cu))) {
+            for (TypeDeclaration<?> ref : refs.computeIfAbsent(queue.pop(), cu -> referencedTypes(index, cu))) {
+                TypeDeclaration<?> t = index.preferring(ref, mine); // a local-api interface, not its @FeignClient twin
                 if (implemented.contains(t)) continue;
                 CompilationUnit cu = t.findCompilationUnit().orElseThrow();
                 if (!appModules.contains(index.moduleOf(index.fileOf(cu))) && units.add(cu)) queue.push(cu);

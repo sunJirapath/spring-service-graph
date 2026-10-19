@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * All parsed Java sources of one repo, plus name lookup and constant folding.
@@ -174,6 +175,13 @@ public final class JavaIndex {
         if (all.size() == 1) return all.getFirst();
         Path module = moduleOfNode(context);
         return all.stream().filter(t -> module != null && module.equals(moduleOfNode(t))).findFirst().orElse(all.getFirst());
+    }
+
+    /** {@code t}, or a same-FQN copy of it declared in one of {@code modules} when {@code t} is not. */
+    public TypeDeclaration<?> preferring(TypeDeclaration<?> t, Set<Path> modules) {
+        var all = t.getFullyQualifiedName().map(typesByFqn::get).orElse(List.of());
+        if (all.size() < 2 || modules.contains(moduleOfNode(t))) return t;
+        return all.stream().filter(c -> modules.contains(moduleOfNode(c))).findFirst().orElse(t);
     }
 
     private Path moduleOfNode(Node n) {
