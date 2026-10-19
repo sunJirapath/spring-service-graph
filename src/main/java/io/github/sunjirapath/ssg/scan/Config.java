@@ -60,6 +60,19 @@ public final class Config {
         }
     }
 
+    /** Config text stored inside another file (a Nacos seed row): every key is attributed to that file and line. */
+    void addEmbedded(Repo repo, Path file, int line, boolean properties, String text, String profile) {
+        var inner = new Config();
+        try {
+            if (properties) inner.addProperties(repo, file, text);
+            else inner.addYaml(repo, file, text, profile);
+        } catch (IOException | RuntimeException e) {
+            System.err.println("warn: cannot read config embedded in " + file + ":" + line + ": " + e.getMessage());
+            return;
+        }
+        inner.entries.forEach((k, e) -> put(k, e.value(), repo.evidence(file, line)));
+    }
+
     /** UTF-8 without BOM; legacy files that are not valid UTF-8 are read as ISO-8859-1, as Spring does for .properties. */
     static String readText(Path file) throws IOException {
         byte[] bytes = Files.readAllBytes(file);
@@ -227,8 +240,48 @@ public final class Config {
     private static boolean activeFor(Map<String, Entry> doc, String profile) {
         Entry on = doc.getOrDefault("spring.config.activate.on-profile", doc.get("spring.profiles"));
         if (on == null || on.value() == null) return true;
-        // shortcut: profile expressions like "!dev" or "a & b" are not evaluated, only plain lists.
-        return Arrays.stream(on.value().split(",")).map(String::strip).anyMatch(p -> p.equals(profile));
+        return Arrays.stream(on.value().split(",")).anyMatch(e -> new Expr(e, profile).or());
+    }
+
+    /** A Spring profile expression ({@code !a}, {@code a & b}, {@code a | b}, parentheses) against one active profile. */
+    private static final class Expr {
+        private static final Pattern TOKEN = Pattern.compile("[()!&|]|[^()!&|\\s]+");
+        private final List<String> tokens = new ArrayList<>();
+        private final String profile;
+        private int pos;
+
+        Expr(String text, String profile) {
+            this.profile = profile;
+            TOKEN.matcher(text).results().forEach(r -> tokens.add(r.group()));
+        }
+
+        private boolean next(String t) {
+            boolean hit = pos < tokens.size() && tokens.get(pos).equals(t);
+            if (hit) pos++;
+            return hit;
+        }
+
+        boolean or() {
+            boolean v = and();
+            while (next("|")) v |= and(); // not short-circuited: the operand must be consumed
+            return v;
+        }
+
+        private boolean and() {
+            boolean v = not();
+            while (next("&")) v &= not();
+            return v;
+        }
+
+        private boolean not() {
+            if (next("!")) return !not();
+            if (next("(")) {
+                boolean v = or();
+                next(")");
+                return v;
+            }
+            return pos < tokens.size() && tokens.get(pos++).equals(profile);
+        }
     }
 
     private static void flatten(Repo repo, Path file, String prefix, org.yaml.snakeyaml.nodes.Node node,

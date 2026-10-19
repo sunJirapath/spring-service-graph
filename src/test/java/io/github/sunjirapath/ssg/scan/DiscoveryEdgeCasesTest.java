@@ -174,6 +174,159 @@ class DiscoveryEdgeCasesTest {
     }
 
     @Test
+    void configRepoPerAppFoldersAreReadWithAppSpecificOverApplicationAndProfileOverDefault() {
+        var repo = ordersAndServer("remote-folders", "");
+        var configRepo = TempRepo.at(tmp.resolve("folders-config"))
+                .file("orders/application.yml", "layer: folder-application\nonly-folder: yes\n")
+                .file("orders/orders.yml", "layer: folder-app\n")
+                .file("orders/orders-prod.yml", "layer: folder-app-profile\n");
+
+        var service = service(repo.services("prod", configRepo.root()), "orders");
+
+        assertThat(service.config().get("layer").value()).isEqualTo("folder-app-profile");
+        assertThat(service.config().get("only-folder").value()).isEqualTo("yes");
+    }
+
+    @Test
+    void configServerGitSearchPathsExpandApplicationPlaceholderAndGlobs() {
+        var repo = ordersAndServer("remote-git-paths", """
+                spring.cloud.config.server.git.search-paths: "{application}, config/*, ,{unresolved}"
+                """);
+        var configRepo = TempRepo.at(tmp.resolve("git-config"))
+                .file("orders/orders.yml", "from: placeholder\n")
+                .file("config/team-a/orders.yml", "glob: team-a\n")
+                .file("config/team-b/application.yml", "glob-b: team-b\n")
+                .file("config/readme.txt", "not a directory\n")
+                .file("other/orders.yml", "from: other\n");
+
+        var config = service(repo.services("default", configRepo.root()), "orders").config();
+
+        assertThat(config.get("from").value()).isEqualTo("placeholder");
+        assertThat(config.get("glob").value()).isEqualTo("team-a");
+        assertThat(config.get("glob-b").value()).isEqualTo("team-b");
+    }
+
+    @Test
+    void searchPathsWithLeadingSlashAndMissingGlobParentAreTolerated() {
+        var repo = ordersAndServer("remote-odd-paths", """
+                spring.cloud.config.server.git.searchPaths:
+                  - /orders
+                  - missing/*
+                """);
+        var configRepo = TempRepo.at(tmp.resolve("odd-config")).file("orders/orders.yml", "from: slash\n");
+
+        assertThat(service(repo.services("default", configRepo.root()), "orders").config().get("from").value())
+                .isEqualTo("slash");
+    }
+
+    @Test
+    void nativeClasspathSearchLocationsPickTheFoldersInsideTheConfigRepo() {
+        var repo = ordersAndServer("remote-native", """
+                spring.cloud.config.server.native.search-locations: classpath:/shared, file:///elsewhere
+                """);
+        var configRepo = TempRepo.at(tmp.resolve("native-config"))
+                .file("shared/orders.yml", "from: shared\n")
+                .file("orders.yml", "from: root\n");
+
+        assertThat(service(repo.services("default", configRepo.root()), "orders").config().get("from").value())
+                .isEqualTo("shared");
+    }
+
+    @Test
+    void configServerWithClasspathLocationsIsItsOwnConfigRepoWhenNoneIsGiven() {
+        var repo = ordersAndServer("remote-auto", """
+                spring.cloud.config.server.native.search-locations: classpath:/shared
+                """)
+                .file("server/src/main/resources/shared/application.yml", "layer: shared-application\n")
+                .file("server/src/main/resources/shared/orders.yml", "layer: shared-orders\nport: 8000\n");
+
+        var orders = service(repo.services(), "orders");
+
+        assertThat(orders.config().get("layer").value()).isEqualTo("shared-orders");
+        assertThat(orders.config().get("layer").evidence().file()).isEqualTo("server/src/main/resources/shared/orders.yml");
+        assertThat(orders.config().get("port").value()).isEqualTo("8000");
+    }
+
+    @Test
+    void configServerWithOnlyNonClasspathLocationsOrNoLocationsAddsNoRemoteConfig() {
+        var fileOnly = ordersAndServer("remote-file-only", """
+                spring.cloud.config.server.native.search-locations: file:///${GIT_REPO}
+                """)
+                .file("server/src/main/resources/shared/orders.yml", "from: shared\n");
+        var none = ordersAndServer("remote-none", "")
+                .file("server/src/main/resources/shared/orders.yml", "from: shared\n");
+
+        assertThat(service(fileOnly.services(), "orders").config().get("from")).isNull();
+        assertThat(service(none.services(), "orders").config().get("from")).isNull();
+    }
+
+    @Test
+    void nacosSeedRowsBecomeRemoteConfigWithEscapesSingleProfileAndPrecedence() {
+        var repo = repo("nacos").app()
+                .resource("application.yml", "spring.application.name: orders\nlayer: local\nlocal-only: yes\n")
+                .file("db/nacos_config.sql", """
+                        INSERT INTO `config_info` (`id`, `data_id`, `group_id`, `content`, `gmt_create`) VALUES
+                        (1, 'application-dev.yml', 'DEFAULT_GROUP', 'layer: nacos-application\\nsecret.password: \\'pw\\'\\n', NOW()),
+                        (2, 'orders-dev.yml', 'DEFAULT_GROUP', 'layer: nacos-app\\ntext: it''s\\ttab\\\\\\n', NOW());
+                        INSERT INTO other (a) VALUES (1);
+                        INSERT INTO config_info (id, group_id) VALUES (3, 'x');
+                        INSERT INTO config_info (data_id, content) VALUES ('orders-dev.properties', 'prop=value'), ('notes.txt', 'ignored'), ('short');
+                        """);
+
+        var service = repo.services().getFirst();
+
+        assertThat(service.config().get("layer").value()).isEqualTo("nacos-app");
+        assertThat(service.config().get("layer").evidence().file()).isEqualTo("db/nacos_config.sql");
+        assertThat(service.config().get("layer").evidence().line()).isEqualTo(3);
+        assertThat(service.config().get("text").value()).isEqualTo("it's\ttab\\");
+        assertThat(service.config().get("prop").value()).isEqualTo("value");
+        assertThat(service.config().get("local-only").value()).isEqualTo("yes");
+        assertThat(service.config().get("secret.password").value()).isNull();
+    }
+
+    @Test
+    void nacosSeedKeepsTheDefaultProfileWhenSeveralProfilesExistAndAppliesAnExplicitOne() {
+        var repo = repo("nacos-profiles").app()
+                .resource("application.yml", "spring.application.name: orders\n")
+                .file("nacos-config.sql", """
+                        INSERT INTO config_info (data_id, content) VALUES
+                        ('orders.yml', 'layer: base'), ('orders-dev.yml', 'layer: dev'), ('application-prod.yml', 'extra: prod'),
+                        ('orders-dev.yml.bak', 'layer: ignored'), ('application.yml', 'a: [');
+                        """);
+
+        assertThat(repo.services().getFirst().config().get("layer").value()).isEqualTo("base");
+        assertThat(repo.services().getFirst().config().get("extra")).isNull();
+        assertThat(repo.services("dev", null).getFirst().config().get("layer").value()).isEqualTo("dev");
+        assertThat(repo.services("prod", null).getFirst().config().get("extra").value()).isEqualTo("prod");
+    }
+
+    @Test
+    void nacosSeedParserHandlesUnterminatedInputAndNonSeedSqlFiles() {
+        var repo = repo("nacos-odd").app()
+                .resource("application.yml", "spring.application.name: orders\n")
+                .file("schema.sql", "INSERT INTO config_info (data_id, content) VALUES ('orders.yml', 'ignored: yes');\n")
+                .file("config-broken.sql", "INSERT INTO config_info (data_id, content) VALUES ('orders.yml', 'cut: off")
+                .file("config-raw.sql", "INSERT INTO config_info (data_id, content) VALUES (concat('a', ('b')), 'x: 1') ,")
+                .file("config-empty.sql", "INSERT INTO config_info (data_id, content) VALUES ");
+
+        assertThat(repo.services().getFirst().config().get("ignored")).isNull();
+        assertThat(repo.services().getFirst().config().get("cut").value()).isEqualTo("off");
+    }
+
+    private static Service service(java.util.List<Service> services, String name) {
+        return services.stream().filter(s -> s.name().equals(name)).findFirst().orElseThrow();
+    }
+
+    /** An {@code orders} app next to a config-server module whose own config is {@code serverYaml}. */
+    private TempRepo ordersAndServer(String name, String serverYaml) {
+        return repo(name)
+                .file("orders/src/main/java/orders/App.java", "package orders; @SpringBootApplication class App {}")
+                .file("orders/src/main/resources/application.properties", "spring.application.name=orders\n")
+                .file("server/src/main/java/server/App.java", "package server; @SpringBootApplication @EnableConfigServer class App {}")
+                .file("server/src/main/resources/application.yml", "spring.application.name: server\n" + serverYaml);
+    }
+
+    @Test
     void libraryModuleSourcesGoOnlyToServicesThatUseThemAndTheirConstantsResolve() {
         var repo = repo("library-attribution")
                 .file("app/src/main/java/app/App.java", """

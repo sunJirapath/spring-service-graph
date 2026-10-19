@@ -17,6 +17,7 @@ import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import io.github.sunjirapath.ssg.model.Value;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -64,9 +65,12 @@ public final class Discovery {
         var configs = new HashMap<Path, Config>();
         var names = new HashMap<Path, String>();
         var fallbacks = new HashMap<String, List<Path>>();
+        Path serverModule = null;
         for (Path module : apps.keySet()) {
             Config config = localConfig(index.repo(), module.resolve("src/main/resources"), profile);
             configs.put(module, config);
+            if (serverModule == null && apps.get(module).findAll(ClassOrInterfaceDeclaration.class).stream()
+                    .anyMatch(c -> Ann.has(c, "EnableConfigServer"))) serverModule = module;
             Value name = config.valueOf("spring.application.name");
             if (name.resolved()) names.put(module, name.text());
             else fallbacks.computeIfAbsent(module.getFileName().toString(), k -> new ArrayList<>()).add(module);
@@ -83,11 +87,26 @@ public final class Discovery {
                 }
             }
         });
+        // The config server's own config (if it is in this repo) says which folders of the config repo hold the files.
+        Config server = serverModule == null ? null : configs.get(serverModule);
+        List<String> gitPaths = server == null ? List.of() : locations(server, "git.searchpaths", false);
+        List<String> nativePaths = server == null ? List.of() : locations(server, "native.searchlocations", true);
+        Path remoteRoot = configRepo;
+        Repo remoteRepo = configRepo == null ? null : Repo.of(configRepo);
+        if (configRepo == null && !nativePaths.isEmpty()) { // a classpath: location of the scanned server is its own config repo
+            remoteRoot = serverModule.resolve("src/main/resources");
+            remoteRepo = index.repo();
+            gitPaths = List.of();
+        }
+        var remotePaths = new ArrayList<>(gitPaths);
+        remotePaths.addAll(nativePaths);
+        List<NacosSeed.Row> nacos = NacosSeed.read(index.repo());
         for (Path module : apps.keySet()) {
             Set<Path> libraries = modules.all(module, apps.keySet());
             Config config = configs.get(module);
             String serviceName = names.get(module);
-            if (configRepo != null) config.putAll(remoteConfig(Repo.of(configRepo), serviceName, profile));
+            if (!nacos.isEmpty()) config.putAll(NacosSeed.load(index.repo(), nacos, serviceName, profile));
+            if (remoteRoot != null) config.putAll(remoteConfig(remoteRepo, remoteRoot, remotePaths, serviceName, profile));
             List<CompilationUnit> units = apps.size() == 1 ? index.units()
                     : used(index, module, libraries, modules.direct(module), apps.keySet(), refs, config);
             services.add(new Service(serviceName, index.repo(), module, config, index, units, List.copyOf(libraries)));
@@ -296,13 +315,63 @@ public final class Discovery {
         return Config.load(repo, files, profile);
     }
 
-    // shortcut: only the config repo root is read, not per-app subfolders or search-locations.
-    private static Config remoteConfig(Repo repo, String app, String profile) {
+    /**
+     * The files of a config repo for {@code app}: {@code application*} then {@code <app>*}, profile files on top,
+     * each read from the repo root and its {@code <app>} subfolder, or from the server's search paths when given.
+     */
+    private static Config remoteConfig(Repo repo, Path root, List<String> searchPaths, String app, String profile) {
+        var dirs = new ArrayList<Path>();
+        if (searchPaths.isEmpty()) {
+            dirs.add(root);
+            dirs.add(root.resolve(app));
+        }
+        searchPaths.forEach(p -> dirs.addAll(expand(root, p.replace("{application}", app))));
         var files = new ArrayList<Path>();
         for (String base : List.of("application", app)) {
-            for (String ext : EXTENSIONS) files.add(repo.root().resolve(base + "." + ext));
-            for (String ext : EXTENSIONS) files.add(repo.root().resolve(base + "-" + profile + "." + ext));
+            for (String suffix : List.of("", "-" + profile)) {
+                for (Path dir : dirs) for (String ext : EXTENSIONS) files.add(dir.resolve(base + suffix + "." + ext));
+            }
         }
         return Config.load(repo, files, profile);
+    }
+
+    /**
+     * The values of a config server setting ({@code git.searchpaths}, {@code native.searchlocations}: lower case,
+     * no dashes), whatever the binding style (kebab, camel, list or comma separated). Values that do not resolve
+     * are dropped, and so are non-classpath native locations: they point outside the repo.
+     */
+    // shortcut: a config server in another scanned repo than its services is not consulted, upgrade by passing --config-repo.
+    private static List<String> locations(Config server, String key, boolean classpathOnly) {
+        String prefix = "spring.cloud.config.server.";
+        var out = new ArrayList<String>();
+        server.withPrefix(prefix).forEach((k, e) -> {
+            String norm = k.substring(prefix.length()).replaceAll("\\[\\d+]$", "").replaceAll("[-_]", "").toLowerCase();
+            if (!norm.equals(key) || e.value() == null) return;
+            for (String p : e.value().split(",")) {
+                Value v = server.resolve(p.strip());
+                String text = v.text().strip();
+                if (p.isBlank() || !v.resolved() || classpathOnly && !text.startsWith("classpath:")) continue;
+                out.add(classpathOnly ? text.substring("classpath:".length()) : text);
+            }
+        });
+        return out;
+    }
+
+    /** A search path under {@code root}: a leading '/' is dropped and {@code *} in the last segment matches folder names. */
+    private static List<Path> expand(Path root, String pattern) {
+        String rel = pattern.replaceAll("^/+", "");
+        int slash = rel.lastIndexOf('/');
+        String last = rel.substring(slash + 1); // resolved apart: Windows rejects '*' in a path
+        Path parent = slash < 0 ? root : root.resolve(rel.substring(0, slash));
+        if (!last.contains("*")) return List.of(parent.resolve(last));
+        var glob = Pattern.compile(Pattern.quote(last).replace("*", "\\E.*\\Q"));
+        try (var dirs = Files.newDirectoryStream(parent, Files::isDirectory)) {
+            var out = new ArrayList<Path>();
+            for (Path d : dirs) if (glob.matcher(d.getFileName().toString()).matches()) out.add(d);
+            out.sort(null);
+            return out;
+        } catch (IOException e) {
+            return List.of(); // no such folder
+        }
     }
 }
