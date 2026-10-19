@@ -430,6 +430,52 @@ class InboundHttpEdgeCasesTest {
         assertThat(endpoints).singleElement().satisfies(e -> assertThat(e.path().text()).isEqualTo("/from-spec/items"));
     }
 
+    @Test
+    void addPathPrefixAppliesFirstMatchingPredicate(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("add-prefix")).app()
+                .java("x/WebConfig.java", """
+                        package x;
+                        @Configuration class WebConfig implements WebMvcConfigurer {
+                            public void configurePathMatch(PathMatchConfigurer c) {
+                                c.addPathPrefix("/internal", HandlerTypePredicate.forBasePackage("x.internal"));
+                                c.addPathPrefix("/api", HandlerTypePredicate.forAnnotation(RestController.class));
+                            }
+                        }
+                        """)
+                .java("x/internal/A.java", "package x.internal; @RestController class A { @GetMapping(\"/a\") void a() {} }")
+                .java("x/B.java", "package x; @RestController class B { @GetMapping(\"/b\") void b() {} }")
+                .java("x/V.java", "package x; @Controller class V { @GetMapping(\"/v\") void v() {} }"));
+
+        assertThat(endpoints).extracting(e -> e.path().text()).containsExactlyInAnyOrder("/internal/a", "/api/b", "/v");
+    }
+
+    @Test
+    void setPathPrefixesFromPropertiesDefaultsMatchesAntPackages(@TempDir Path tmp) {
+        // yudao: WebProperties defaults feed a map that setPathPrefixes gets as a variable
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("set-prefixes")).app()
+                .java("x/WebProperties.java", """
+                        package x;
+                        @ConfigurationProperties(prefix = "yudao.web") class WebProperties {
+                            private Api adminApi = new Api("/admin-api", "**.controller.admin.**");
+                            private Api appApi = new Api("/app-api", "**.controller.app.**");
+                        }
+                        """)
+                .java("x/WebConfig.java", """
+                        package x;
+                        @Configuration class WebConfig {
+                            void configure(RequestMappingHandlerMapping m, Map<String, Predicate<Class<?>>> prefixes) {
+                                m.setPathPrefixes(prefixes);
+                            }
+                        }
+                        """)
+                .java("x/crm/controller/admin/A.java", "package x.crm.controller.admin; @RestController class A { @GetMapping(\"/a\") void a() {} }")
+                .java("x/crm/controller/app/user/B.java", "package x.crm.controller.app.user; @RestController class B { @GetMapping(\"/b\") void b() {} }")
+                .java("x/crm/controller/administer/C.java", "package x.crm.controller.administer; @RestController class C { @GetMapping(\"/c\") void c() {} }"));
+
+        assertThat(endpoints).extracting(e -> e.path().text()).containsExactlyInAnyOrder("/admin-api/a", "/app-api/b", "/c");
+        assertThat(InboundHttpExtractor.antPackage("**.controller.adm*").matcher(".x.controller.admin").matches()).isTrue();
+    }
+
     private static TempRepo missingInterfaceRepo(Path root) {
         return TempRepo.at(root).app().java("x/C.java", "package x; @RestController class C implements MissingApi {}");
     }

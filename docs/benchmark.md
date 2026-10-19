@@ -138,7 +138,7 @@ Time was measured at `-Xmx8g` on a 16-thread Windows machine. "Heap needed" is t
 
 | Code base | Commit | Main Java | Apps | Services | Endpoints | CALLS | Topics | Tables | Findings | Time | Heap needed |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3392 | 731 (479) | 3 (1) | 564 (547) | 36 CONTRACT_DRIFT, 18 (15) UNRESOLVED | 66 s (59 s) | 1.5 GB (OOM at 1 GB) |
+| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3449 | 3954 (479) | 3 (1) | 564 (547) | 7 CONTRACT_DRIFT, 18 (15) UNRESOLVED | 66 s (59 s) | 1.5 GB (OOM at 1 GB) |
 | apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 296 (86) | 0 | 16 s (14 s) | 384 MB (OOM at 256 MB) |
 | apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 3 | 2 | 2 | 304 (308) | 422 (425) UNRESOLVED | 14 s | 2 GB (OOM at 1.5 GB) |
 
@@ -184,7 +184,7 @@ The services are named from `spring.application.name`.
 | # | Code base | Symptom | Cause |
 |---|---|---|---|
 | 1 | yudao-cloud | **Fixed.** 0 of 47 Feign clients became CALLS, so the whole RPC graph between its 25 services is missing. | The clients live in shared `yudao-module-*-api` and `yudao-common` modules. Those have no app, and the services pull them in as Maven dependencies. ssg attributes code to a service only by module folder. |
-| 2 | yudao-cloud | 36/36 CONTRACT_DRIFT findings are false positives, for example `/admin-api/crm/**` matches nothing on crm-server. | A starter adds `/admin-api` and `/app-api` in code, with `RequestMappingHandlerMapping.setPathPrefixes`, keyed by controller package. ssg sees only the annotation paths. |
+| 2 | yudao-cloud | **Fixed.** 36/36 CONTRACT_DRIFT findings are false positives, for example `/admin-api/crm/**` matches nothing on crm-server. | A starter adds `/admin-api` and `/app-api` in code, with `RequestMappingHandlerMapping.setPathPrefixes`, keyed by controller package. ssg sees only the annotation paths. |
 | 3 | yudao-cloud, dolphinscheduler | No tables at all. | They use MyBatis-Plus (`@TableName` entities, `BaseMapper<T>` mappers) instead of JPA or Spring Data. |
 | 4 | yudao-cloud, dolphinscheduler | **Fixed** for dolphinscheduler: 296 OWNS. Still open for yudao-cloud. No OWNS, although 1,200+ `CREATE TABLE` statements exist. | The DDL lives outside every service module: in the root `sql/` folder, or in a shared `-dao` module. This has the same root cause as #1. |
 | 5 | fineract | The whole repo is dropped, with one `warn: no @SpringBootApplication`. | It boots through `SpringApplicationBuilder` with an `@EnableAutoConfiguration`-style configuration class. Even with that fixed, its 170 JAX-RS resources would give no endpoints. |
@@ -209,6 +209,13 @@ Tests are in `ModuleDependencyTest`: `controllersCountOnlyFromModulesTheLauncher
 - dolphinscheduler: OWNS 0 → 296 (gap #4).
 - Still open: DDL in a root `sql/` or `db/` folder that is no module (yudao-cloud's 863, and mall-swarm, pig and jeecgboot below). Nothing decides which one service owns a shared schema either: every dependent gets OWNS.
 - Not read: Gradle `projectDir` remaps, Maven profiles, and exclusions that apply to the whole closure rather than one edge.
+
+**Gap #2 is fixed.** Controllers get Spring MVC path prefixes, applied after the context path, and the first prefix whose predicate matches wins (`InboundHttpExtractor.pathPrefixes`).
+- `PathMatchConfigurer.addPathPrefix(prefix, predicate)` and `setPathPrefixes(Map.of(...))`: `HandlerTypePredicate.forAnnotation(X.class)` or `isAnnotationPresent(X.class)` selects by annotation, and `forBasePackage("p")` selects by package. Any other predicate matches every controller.
+- `setPathPrefixes` with a map built elsewhere, as in yudao: each `new X("/prefix", "**.ant.package.**")` in the sources gives a prefix for the `@RestController`s whose package matches the Ant pattern. Only those constructor defaults are read, not `yudao.web.*.prefix` overrides in config. No yudao config sets them.
+- Tests `addPathPrefixAppliesFirstMatchingPredicate` and `setPathPrefixesFromPropertiesDefaultsMatchesAntPackages`.
+- yudao-cloud: CONTRACT_DRIFT 36 → 7. Endpoints 3392 → 3449, because admin and app controllers with the same path no longer merge into one node. CALLS 731 → 3954: the gateway's 29 matching routes now link to the 3265 endpoints under them.
+- The 7 left are routes to endpoints that only library code serves: Spring Boot Admin `/admin/**`, the `/infra/ws/**` websocket, JimuReport `/drag`, `/jimubi` and `/jmreport`, and Spring AI MCP `/sse` and `/mcp/message`. They are true from the sources' point of view.
 
 **Gaps #3, #5 and #7 are fixed.**
 - #3: `@TableName` classes are tables, named by the annotation or else in snake case, as MyBatis-Plus does. Interfaces extending `BaseMapper<T>` or `MPJBaseMapper<T>`, directly or through base interfaces in sources such as yudao's `BaseMapperX<T>`, are treated as Spring Data repositories. They give USES edges, and REACHES from endpoints whose handlers call them. A `*Mapper` with any other base, such as a MapStruct `EntityMapper<D, E>`, is not a repository. dolphinscheduler's tables need gap #1's fix as well: without it they are 0, because its entities and mappers live in the shared `-dao` module.

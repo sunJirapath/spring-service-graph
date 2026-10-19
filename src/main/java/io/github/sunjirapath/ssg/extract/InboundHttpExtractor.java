@@ -4,14 +4,21 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
 import io.github.sunjirapath.ssg.scan.Ann;
+import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * {@code @RestController}/{@code @Controller} endpoints, including mappings declared only on
@@ -24,17 +31,19 @@ public final class InboundHttpExtractor implements Extractor {
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
         Value contextPath = contextPath(s);
+        List<Prefix> prefixes = pathPrefixes(s);
         var missing = new java.util.LinkedHashMap<ClassOrInterfaceDeclaration, List<String>>(); // controller -> absent interfaces
         for (CompilationUnit cu : s.units()) {
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
+                Value prefix = prefixes.stream().filter(p -> p.applies().test(c)).map(Prefix::path).findFirst().orElse(Value.exact(""));
                 List<Value> classPaths = classPaths(c, s);
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
                     var handler = s.evidence(override(c, m).getName()); // the method line itself, below any @Override
                     for (Value cp : classPaths) {
                         for (Value mp : mapping.paths()) {
-                            Value path = Mappings.joinValues(contextPath, cp, mp);
+                            Value path = Mappings.joinValues(contextPath, prefix, cp, mp);
                             for (String verb : mapping.methods()) {
                                 // evidence: the mapping annotation, not the first of possibly many annotations
                                 facts.add(new Fact.Endpoint(verb, path, s.evidence(mapping.annotation()), "controller", handler));
@@ -93,5 +102,90 @@ public final class InboundHttpExtractor implements Extractor {
             if (s.config().get(key) != null) return s.config().valueOf(key);
         }
         return Value.exact("");
+    }
+
+    /** A Spring MVC path prefix and the controllers it applies to. */
+    record Prefix(Value path, Predicate<ClassOrInterfaceDeclaration> applies) {}
+
+    /** An Ant package pattern with a wildcard, such as {@code **.controller.admin.**}. */
+    private static final Pattern ANT_PACKAGE = Pattern.compile("(?=.*\\*)[\\w*]+(?:\\.[\\w*]+)+");
+
+    /**
+     * {@code PathMatchConfigurer.addPathPrefix(prefix, predicate)} and {@code setPathPrefixes(Map.of(prefix, predicate, ...))},
+     * in call order, since Spring applies the first prefix whose predicate matches. When {@code setPathPrefixes} gets a
+     * map built elsewhere, the prefixes come from {@link #packagePrefixes}.
+     */
+    static List<Prefix> pathPrefixes(Service s) {
+        var out = new ArrayList<Prefix>();
+        boolean opaque = false;
+        for (CompilationUnit cu : s.units()) {
+            for (MethodCallExpr call : cu.findAll(MethodCallExpr.class)) {
+                var args = call.getArguments();
+                if (call.getNameAsString().equals("addPathPrefix") && args.size() == 2) {
+                    out.add(new Prefix(s.eval(args.get(0)), handlerTypes(args.get(1))));
+                } else if (call.getNameAsString().equals("setPathPrefixes") && args.size() == 1) {
+                    if (args.get(0) instanceof MethodCallExpr map && map.getNameAsString().equals("of")) {
+                        for (int i = 0; i + 1 < map.getArguments().size(); i += 2) {
+                            out.add(new Prefix(s.eval(map.getArgument(i)), handlerTypes(map.getArgument(i + 1))));
+                        }
+                    } else {
+                        opaque = true;
+                    }
+                }
+            }
+        }
+        if (opaque) out.addAll(packagePrefixes(s));
+        return out;
+    }
+
+    /**
+     * The controllers a {@code HandlerTypePredicate} or lambda selects: by the annotation classes given to
+     * {@code forAnnotation}/{@code isAnnotationPresent} and the packages given to {@code forBasePackage}. Any other
+     * predicate is taken to match every controller.
+     */
+    private static Predicate<ClassOrInterfaceDeclaration> handlerTypes(Expression e) {
+        var calls = e.findAll(MethodCallExpr.class);
+        String[] annotations = calls.stream().filter(m -> m.getNameAsString().matches("forAnnotation|isAnnotationPresent"))
+                .flatMap(m -> m.getArguments().stream()).filter(Expression::isClassExpr)
+                .map(a -> JavaIndex.simpleName(a.asClassExpr().getType())).toArray(String[]::new);
+        List<String> packages = calls.stream().filter(m -> m.getNameAsString().equals("forBasePackage"))
+                .flatMap(m -> m.getArguments().stream()).filter(Expression::isStringLiteralExpr)
+                .map(a -> a.asStringLiteralExpr().getValue()).toList();
+        return c -> (annotations.length == 0 || Ann.has(c, annotations))
+                && (packages.isEmpty() || packages.stream().anyMatch(p -> packageOf(c).equals(p) || packageOf(c).startsWith(p + ".")));
+    }
+
+    /**
+     * yudao's {@code setPathPrefixes}, built from {@code @ConfigurationProperties} defaults such as
+     * {@code new Api("/admin-api", "**.controller.admin.**")}: a prefix for the {@code @RestController}s in packages
+     * matching an Ant pattern with "." separators.
+     */
+    // shortcut: reads the constructor defaults only, not yudao.web.*.prefix overrides in config; read those if a fork sets them.
+    private static List<Prefix> packagePrefixes(Service s) {
+        var out = new ArrayList<Prefix>();
+        for (CompilationUnit cu : s.units()) {
+            for (ObjectCreationExpr o : cu.findAll(ObjectCreationExpr.class)) {
+                var a = o.getArguments();
+                if (a.size() == 2 && a.get(0) instanceof StringLiteralExpr p && p.getValue().startsWith("/")
+                        && a.get(1) instanceof StringLiteralExpr pkg && ANT_PACKAGE.matcher(pkg.getValue()).matches()) {
+                    Pattern packages = antPackage(pkg.getValue());
+                    out.add(new Prefix(s.eval(p), c -> Ann.has(c, "RestController") && packages.matcher("." + packageOf(c)).matches()));
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Matches "." + package name: {@code **} is any number of segments, {@code *} part of one. */
+    static Pattern antPackage(String ant) {
+        var re = new StringBuilder();
+        for (String seg : ant.split("\\.")) {
+            re.append(seg.equals("**") ? "(?:\\.[^.]+)*" : "\\." + Pattern.quote(seg).replace("*", "\\E[^.]*\\Q"));
+        }
+        return Pattern.compile(re.toString());
+    }
+
+    private static String packageOf(ClassOrInterfaceDeclaration c) {
+        return c.findCompilationUnit().flatMap(CompilationUnit::getPackageDeclaration).map(p -> p.getNameAsString()).orElse("");
     }
 }
