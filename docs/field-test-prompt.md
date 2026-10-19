@@ -25,15 +25,15 @@ Every edge carries file:line evidence and a confidence: `EXACT` (a literal), `RE
 
 Option A, the snapshot file (if it is reachable from your machine):
 ```bash
-unzip <PATH_TO>/ssg-0.1.0-SNAPSHOT-56e97fa.zip -d <SCRATCH_DIR>/tool
-sha256sum <PATH_TO>/ssg-0.1.0-SNAPSHOT-56e97fa.zip   # expect 7e9a154537ebd729ee2c454643d1a0c591930699447ff260b9a4734f75058155
-SSG=<SCRATCH_DIR>/tool/ssg-0.1.0-SNAPSHOT-56e97fa/bin/ssg     # bin\ssg.bat on Windows
+unzip <PATH_TO>/ssg-0.1.0-SNAPSHOT-aa937cf.zip -d <SCRATCH_DIR>/tool
+sha256sum <PATH_TO>/ssg-0.1.0-SNAPSHOT-aa937cf.zip   # expect 97464296a8f25f76ccb01e4ac0e43d9890be506679abd17bec872b2012fd3c21
+SSG=<SCRATCH_DIR>/tool/ssg-0.1.0-SNAPSHOT-aa937cf/bin/ssg     # bin\ssg.bat on Windows
 ```
 
 Option B, build the same commit from source (needs internet):
 ```bash
 git clone https://github.com/sunJirapath/spring-service-graph <SCRATCH_DIR>/ssg-src
-git -C <SCRATCH_DIR>/ssg-src checkout 56e97fac5998e72a255f677979fc52b7fdba49ce
+git -C <SCRATCH_DIR>/ssg-src checkout aa937cfbe5bce224c2a66ce2128c59315d40968e
 <SCRATCH_DIR>/ssg-src/gradlew -p <SCRATCH_DIR>/ssg-src installDist
 SSG=<SCRATCH_DIR>/ssg-src/build/install/ssg/bin/ssg
 ```
@@ -44,9 +44,12 @@ Check it works: `$SSG --help`. Then read `README.md` and `docs/research.md` from
 
 ```bash
 $SSG scan --repos <FLEET_ROOT>/* --profile <PROFILE_OR_default> \
-    [--aliases <ALIASES_YML>] [--config-repo <CONFIG_REPO_CHECKOUT>] --out <SCRATCH_DIR>/out
+    [--aliases <ALIASES_YML>] [--config-repo <CONFIG_REPO_CHECKOUT>] \
+    [--sql-methods <Wrapper.method>...] [--link-base '<https://your-git/{repo}/blob/<branch>/{file}#L{line}>'] \
+    --out <SCRATCH_DIR>/out
 ```
 
+- **JDBC wrappers:** if the code runs SQL through in-house wrapper methods, run once without `--sql-methods`. ssg reports `UNRESOLVED` findings naming the wrappers to list. Then run again with them listed, and report both runs.
 - **Timing and stderr:** time it (wall clock and peak memory if you can) and keep stderr; warnings matter.
 - **Aliases:** if hosts in this fleet are Kubernetes names, gateways or external systems that are not equal to a `spring.application.name`, write a small `aliases.yml` (a flat `host: target` map) and run again. Report how many aliases were needed.
 - **Determinism:** run the same scan twice into two folders and diff them byte for byte. Any difference is a bug.
@@ -111,6 +114,15 @@ For each item, give a status (works / partial / missing / wrong), counts, and an
 22. Onboarding: is one service page enough for a newcomer?
 23. Contract drift: are the `CONTRACT_DRIFT` findings real?
 
+**Added after field test 1** (check that these work here too):
+
+24. JDBC: tables in SQL passed to `JdbcTemplate`, `NamedParameterJdbcTemplate`, `JdbcOperations`, `JdbcClient` or a `--sql-methods` wrapper become `USES` edges. Endpoints `REACHES` those tables.
+25. Nested checkouts (folders with their own `.git`, such as agent worktrees or submodules) are skipped. Two apps sharing a name give a `DUPLICATE_SERVICE` finding.
+26. The OpenAPI fallback adds only the operations of the generated interfaces that are missing, with no duplicates of controller endpoints.
+27. Evidence points at the mapping annotation, and endpoints also cite their handler method.
+28. MCP accepts concrete paths and any `{var}` names (`GET /orders/123` finds `GET /orders/{orderId}`).
+29. `--link-base` makes page links independent of where the fleet is checked out.
+
 **Known pitfalls** (each should be handled):
 - controllers whose annotations live only on a generated interface
 - a class-level `@RequestMapping` without a leading slash
@@ -152,7 +164,7 @@ Write it to `<SCRATCH_DIR>/ssg-field-report.md` with exactly these sections:
    - scan time and memory
    - the ssg version printed by `mcp`'s `initialize`, or the snapshot name
    - aliases needed
-3. **Spec checklist**: a table with items 1–23 from section 3, showing status, counts and notes.
+3. **Spec checklist**: a table with items 1–29 from section 3, showing status, counts and notes.
 4. **Precision and recall**: the tables from section 4.
 5. **Findings review**: drift (true/false counts) and the `UNRESOLVED` groups with counts.
 6. **Missed patterns**: each with a minimal synthetic Java repro, the expected graph edge, and what ssg produced. Order them by frequency in the fleet.
