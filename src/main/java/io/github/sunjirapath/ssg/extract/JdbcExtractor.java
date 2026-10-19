@@ -4,12 +4,15 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.CastExpr;
+import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ThisExpr;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
+import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Service;
 
 import java.util.ArrayList;
@@ -50,7 +53,9 @@ public final class JdbcExtractor implements Extractor {
                 boolean wrapper = !client && isWrapperCall(s, call);
                 if ((!client && !wrapper) || call.getArguments().isEmpty()) continue;
                 if (client) {
-                    sql(s, call, call.getArgument(0), s.eval(call.getArgument(0)), facts);
+                    Expression arg = call.getArgument(0);
+                    if (call.getNameAsString().equals("execute") && isConnectionCallback(s, arg)) continue;
+                    sql(s, call, arg, s.eval(arg), facts);
                     continue;
                 }
                 // a wrapper's SQL is whichever argument looks like SQL; the others are bind values
@@ -91,6 +96,15 @@ public final class JdbcExtractor implements Extractor {
     private static boolean isClientCall(Service s, MethodCallExpr call) {
         return CLIENT_METHODS.contains(call.getNameAsString()) && call.getScope().isPresent()
                 && Receivers.isReceiver(s, call.getScope().get(), CLIENT_TYPES, "jdbc");
+    }
+
+    private static boolean isConnectionCallback(Service s, Expression arg) {
+        return switch (arg) {
+            case CastExpr c -> JavaIndex.simpleName(c.getType()).equals("ConnectionCallback");
+            case EnclosedExpr e -> isConnectionCallback(s, e.getInner());
+            case NameExpr n -> s.index().declaredType(n.getNameAsString(), n).filter("ConnectionCallback"::equals).isPresent();
+            default -> false;
+        };
     }
 
     private boolean isWrapperCall(Service s, MethodCallExpr call) {

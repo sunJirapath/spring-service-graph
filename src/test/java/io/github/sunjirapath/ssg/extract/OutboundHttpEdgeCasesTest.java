@@ -3,6 +3,7 @@ package io.github.sunjirapath.ssg.extract;
 import io.github.sunjirapath.ssg.TempRepo;
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Fact;
+import io.github.sunjirapath.ssg.model.Finding;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -227,6 +228,50 @@ class OutboundHttpEdgeCasesTest {
 
         assertThat(calls).extracting(OutboundHttpEdgeCasesTest::methodAndUrl)
                 .containsExactlyInAnyOrder("GET http://api/get", "* http://api/dynamic");
+    }
+
+    @Test
+    void restTemplateUnresolvedLambdaUrlNamesLambdaParameter(@TempDir Path tmp) {
+        var repo = restRepo(tmp.resolve("lambda-url"), """
+                class Calls {
+                    RestTemplate restTemplate;
+                    void call(String url) {
+                        Action action = (u, body) -> restTemplate.exchange(u, HttpMethod.GET, body, Object.class);
+                        retry(url, action);
+                        restTemplate.getForObject(url, Object.class);
+                    }
+                    void retry(String url, Action action) { action.execute(url, null); }
+                    interface Action { Object execute(String url, Object body); }
+                }
+                """);
+
+        assertThat(calls(repo)).hasSize(2).allSatisfy(c -> {
+            assertThat(c.url().text()).isEqualTo("{?}");
+            assertThat(c.url().confidence()).isEqualTo(Confidence.UNRESOLVED);
+        });
+        assertThat(TempRepo.scan(repo).findings()).filteredOn(f -> f.kind() == Finding.Kind.UNRESOLVED)
+                .extracting(Finding::message).containsExactlyInAnyOrder(
+                        "rest-template call GET {?} (from `lambda parameter 'u'`)",
+                        "rest-template call GET {?} (from `url`)");
+    }
+
+    @Test
+    void restTemplateResolvesCapturedUrlInsideLambda(@TempDir Path tmp) {
+        var calls = calls(restRepo(tmp.resolve("captured-url"), """
+                class Calls {
+                    RestTemplate restTemplate;
+                    void call() {
+                        String url = "http://api/items";
+                        Action action = u -> restTemplate.getForObject(url, Object.class);
+                    }
+                }
+                """));
+
+        assertThat(calls).singleElement().satisfies(c -> {
+            assertThat(c.url().text()).isEqualTo("http://api/items");
+            assertThat(c.url().confidence()).isEqualTo(Confidence.RESOLVED);
+            assertThat(c.url().raw()).isEqualTo("url");
+        });
     }
 
     @Test
