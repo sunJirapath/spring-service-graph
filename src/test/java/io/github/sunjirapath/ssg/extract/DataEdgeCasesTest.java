@@ -67,6 +67,17 @@ class DataEdgeCasesTest {
     }
 
     @Test
+    void elasticsearchDocumentIsNotAMongoCollection(@TempDir Path tmp) {
+        var facts = repo(tmp, """
+                package x;
+                import org.springframework.data.elasticsearch.annotations.Document;
+                @Document(indexName = "pms") class EsProduct {}
+                """).facts(new DataExtractor());
+
+        assertThat(tableUses(facts)).isEmpty();
+    }
+
+    @Test
     void allStandardSpringDataRepositoryKindsMapTheirEntity(@TempDir Path tmp) {
         var facts = repo(tmp, """
                 package x;

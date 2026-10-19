@@ -127,6 +127,14 @@ class LinkerEdgeCasesTest {
     }
 
     @Test
+    void literalEndpointBeatsTemplateSibling() {
+        Graph graph = link(service("caller", call("feign", "GET", exact("lb://brand/brand/listAll"), ev(1))),
+                service("brand", endpoint("GET", "/brand/listAll", ev(2)), endpoint("GET", "/brand/{id}", ev(3))));
+
+        assertThat(calls(graph)).extracting(Edge::to).containsExactly(Node.Endpoint.idOf("brand", "GET", "/brand/listAll"));
+    }
+
+    @Test
     void wildcardMethodOnEitherSideMatches() {
         Graph graph = link(service("caller",
                         call("gateway", "*", exact("lb://orders/orders"), ev("Routes.java", 1)),

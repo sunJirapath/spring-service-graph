@@ -65,12 +65,17 @@ public final class DataExtractor implements Extractor {
             return Optional.of(new Mapped(normalized(name), "sql", "TableName"));
         }
         var doc = Ann.find(c, "Document");
-        if (doc.isPresent()) {
+        if (doc.isPresent() && !elastic(c)) { // an Elasticsearch @Document is an index, not a collection
             Value name = Ann.attr(doc.get(), "collection", "value").map(s::eval)
                     .orElse(Value.exact(Character.toLowerCase(c.getNameAsString().charAt(0)) + c.getNameAsString().substring(1)));
             return Optional.of(new Mapped(name, "mongo", "Document"));
         }
         return Optional.empty();
+    }
+
+    private static boolean elastic(TypeDeclaration<?> c) {
+        return c.findCompilationUnit().map(cu -> cu.getImports().stream()
+                .anyMatch(i -> i.getNameAsString().startsWith("org.springframework.data.elasticsearch"))).orElse(false);
     }
 
     private static void repository(Service s, ClassOrInterfaceDeclaration c, List<Fact> facts) {
@@ -87,6 +92,7 @@ public final class DataExtractor implements Extractor {
             var mapped = type.flatMap(t -> table(s, t));
             if (mapped.isEmpty() && type.isPresent() && base.get().endsWith("BaseMapper")) // MyBatis-Plus needs no @TableName
                 mapped = Optional.of(new Mapped(Value.exact(snake(type.get().getNameAsString())), "sql", "BaseMapper"));
+            if (mapped.isEmpty() && type.isPresent() && Ann.has(type.get(), "Document") && elastic(type.get())) continue;
             if (mapped.isPresent()) {
                 facts.add(new Fact.TableUse(false, mapped.get().name, mapped.get().store, s.evidence(c),
                         "repository " + c.getNameAsString()));

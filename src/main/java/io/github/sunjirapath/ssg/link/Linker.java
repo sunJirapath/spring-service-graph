@@ -142,6 +142,8 @@ public final class Linker {
         var matched = endpoints.getOrDefault(target, List.of()).stream()
                 .filter(e -> methodMatches(c.method(), e.method()) && PathMatch.matches(url.path(), e.path()))
                 .toList();
+        if (matched.stream().anyMatch(e -> e.path().equals(url.path()))) // an exact literal beats a template sibling
+            matched = matched.stream().filter(e -> e.path().equals(url.path())).toList();
         for (EndpointRef e : matched) edge(Edge.Kind.CALLS, from, e.id(), c.url(), c.evidence(), attrs);
         if (!matched.isEmpty()) return matched.stream().map(EndpointRef::id).toList();
         edge(Edge.Kind.CALLS, from, Node.Service.idOf(target), c.url(), c.evidence(), attrs);
