@@ -119,17 +119,36 @@ public final class OutboundHttpExtractor implements Extractor {
         boolean gatewayDsl = call.findAncestor(MethodDeclaration.class)
                 .filter(md -> md.getType().asString().endsWith("RouteLocator")).isPresent();
         if (gatewayDsl) return Optional.empty(); // route DSL .method("GET").uri(..) belongs to GatewayExtractor
-        String chain = verbCall.toString().toLowerCase();
-        String client = chain.contains("webclient") ? "webclient" : chain.contains("restclient") ? "restclient" : "http-client";
+        String client = clientKind(s, verbCall);
+        if (client == null) return Optional.empty(); // e.g. optional.get().uri(..) is not an HTTP client
         Expression arg = call.getArgument(0);
         Value url = arg instanceof LambdaExpr l ? uriBuilderPath(s, l) : s.eval(arg);
         return Optional.of(new Fact.Call(client, verb, withBaseUrl(s, call, url), s.evidence(call)));
     }
 
     /** {@code uri(b -> b.path("/x").queryParam(..).build())}: only the path segments are kept. */
+    /**
+     * "webclient" or "restclient" from the receiver's declared type, else from the chain text
+     * ({@code webClientBuilder.build()}, {@code RestClient.create()}); null when neither says so.
+     */
+    private static String clientKind(Service s, MethodCallExpr verbCall) {
+        Expression root = verbCall;
+        while (root instanceof MethodCallExpr m && m.getScope().isPresent()) root = m.getScope().get();
+        String name = switch (root) {
+            case NameExpr n -> n.getNameAsString();
+            case FieldAccessExpr f -> f.getNameAsString();
+            default -> null;
+        };
+        String type = name == null ? "" : s.index().declaredType(name, root).orElse("");
+        String text = (type + " " + verbCall.getScope().map(Object::toString).orElse("")).toLowerCase();
+        return text.contains("webclient") ? "webclient" : text.contains("restclient") ? "restclient" : null;
+    }
+
     private static Value uriBuilderPath(Service s, LambdaExpr l) {
         var parts = l.findAll(MethodCallExpr.class).stream()
                 .filter(m -> m.getNameAsString().equals("path") && m.getArguments().size() == 1)
+                // findAll walks a chain outermost-first; chained calls all begin at the receiver, so order by end
+                .sorted(java.util.Comparator.comparing(m -> m.getEnd().orElseThrow()))
                 .map(m -> s.eval(m.getArgument(0))).toList();
         if (parts.isEmpty()) return Value.unresolved(l.toString());
         return Mappings.joinValues(parts.toArray(Value[]::new));

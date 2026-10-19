@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: events-svc
+  cloud:
+    stream:
+      bindings:
+        orders-in-0:
+          destination: ${topics.orders:orders.changed}
+        orders-out-0:
+          destination: ${topics.orders:orders.changed}
+        fanout-out-0:
+          destination: audit.events, orphan.produced
+        fanout-in-0:
+          destination: audit.events, orphan.consumed
+        legacyBinding:
+          destination: direction.unknown
+topics:
+  orders: orders.changed
+security:
+  api-token: fake-password-123

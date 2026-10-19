@@ -23,8 +23,15 @@ final class PathMatch {
     }
 
     private static boolean match(String[] a, int i, String[] b, int j) {
-        if (i < a.length && a[i].equals("**")) return true;
-        if (j < b.length && b[j].equals("**")) return true;
+        // ** swallows zero or more segments; whatever follows it must still match
+        if (i < a.length && a[i].equals("**")) {
+            for (int k = j; k <= b.length; k++) if (match(a, i + 1, b, k)) return true;
+            return false;
+        }
+        if (j < b.length && b[j].equals("**")) {
+            for (int k = i; k <= a.length; k++) if (match(a, k, b, j + 1)) return true;
+            return false;
+        }
         if (i == a.length || j == b.length) return i == a.length && j == b.length;
         if (a[i].equals(Value.UNKNOWN) && i == a.length - 1) return true;
         return segment(a[i], b[j]) && match(a, i + 1, b, j + 1);
@@ -33,10 +40,22 @@ final class PathMatch {
     private static boolean segment(String x, String y) {
         boolean xv = x.contains("{") || x.contains("*");
         boolean yv = y.contains("{") || y.contains("*");
-        if (xv && yv) return true;
+        if (xv && yv) { // both templated: their literal prefixes and suffixes must not contradict
+            String px = prefix(x), py = prefix(y), sx = suffix(x), sy = suffix(y);
+            return (px.startsWith(py) || py.startsWith(px)) && (sx.endsWith(sy) || sy.endsWith(sx));
+        }
         if (xv) return regex(x).matcher(y).matches();
         if (yv) return regex(y).matcher(x).matches();
         return x.equals(y);
+    }
+
+    private static String prefix(String template) {
+        return template.split("[{*]", 2)[0];
+    }
+
+    private static String suffix(String template) {
+        int i = Math.max(template.lastIndexOf('}'), template.lastIndexOf('*'));
+        return template.substring(i + 1);
     }
 
     /** {@code acc-{id}} -> {@code \Qacc-\E[^/]*}; {@code *} -> any. */

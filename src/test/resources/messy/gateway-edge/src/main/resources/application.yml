@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: legacy-long-form
+              uri: lb://legacy-api
+              predicates:
+                - name: Path
+                  args:
+                    pattern: /edge/legacy/**
+              filters:
+                - name: StripPrefix
+                  args:
+                    parts: 1
+            - id: external-rewrite
+              uri: https://api.example.test
+              predicates:
+                - name: Path
+                  args:
+                    pattern: /third-party/**
+              filters:
+                - name: RewritePath
+                  args:
+                    regexp: /third-party/(?<segment>.*)
+                    replacement: /api/$\{segment}

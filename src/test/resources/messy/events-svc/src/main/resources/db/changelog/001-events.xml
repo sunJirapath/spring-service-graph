@@ -1,0 +1,8 @@
+<databaseChangeLog>
+  <changeSet id="1" author="messy">
+    <createTable
+        tableName="event_outbox">
+      <column name="id" type="bigint"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

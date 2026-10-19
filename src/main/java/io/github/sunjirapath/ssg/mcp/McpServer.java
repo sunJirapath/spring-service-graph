@@ -54,6 +54,7 @@ public final class McpServer {
         } catch (IOException e) {
             return error(null, -32700, "parse error: " + e.getMessage().lines().findFirst().orElse(""));
         }
+        if (!req.isObject()) return error(null, -32600, "invalid request: expected one JSON object (batches are not supported)");
         JsonNode id = req.get("id");
         String method = req.path("method").asText("");
         if (id == null || id.isNull()) return null; // notification, e.g. notifications/initialized

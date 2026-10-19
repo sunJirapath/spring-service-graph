@@ -61,7 +61,7 @@ public final class GatewayExtractor implements Extractor {
 
     private static void route(Service s, Map<String, Config.Entry> route, List<Fact> facts) {
         Config.Entry uriEntry = route.get("uri");
-        if (uriEntry == null || uriEntry.value() == null) return;
+        if (uriEntry == null || uriEntry.value() == null || uriEntry.value().isBlank()) return; // invalid route
         Value uri = s.config().resolve(uriEntry.value()).withConfidence(Confidence.EXACT, uriEntry.evidence());
         var predicates = defs(s, route, "predicates");
         var filters = defs(s, route, "filters");
@@ -72,7 +72,7 @@ public final class GatewayExtractor implements Extractor {
             for (String pattern : p.args) {
                 Value inbound = Value.exact(Mappings.join(pattern));
                 for (String verb : methods) facts.add(new Fact.Endpoint(verb, inbound, p.evidence, "gateway-route", null));
-                if (!uri.text().contains("://")) continue; // forward:, no:// are local
+                if (!remote(uri)) continue;
                 Value target = OutboundHttpExtractor.url(uri, rewrite(pattern, filters));
                 for (String verb : methods) facts.add(new Fact.Call("gateway", verb, target, uriEntry.evidence()));
             }
@@ -161,12 +161,17 @@ public final class GatewayExtractor implements Extractor {
                     Value pattern = s.eval(arg);
                     var ev = s.evidence(c);
                     facts.add(new Fact.Endpoint("*", Mappings.joinValues(pattern), ev, "gateway-route", null));
-                    if (!uri.text().contains("://")) continue;
+                    if (!remote(uri)) continue;
                     Value path = pattern.resolved() ? rewrite(pattern.text(), filters) : pattern;
                     facts.add(new Fact.Call("gateway", "*", OutboundHttpExtractor.url(uri, path), ev));
                 }
             }
         }
+    }
+
+    /** forward:/x and no://op are handled inside the gateway itself, so they are not outbound calls. */
+    private static boolean remote(Value uri) {
+        return uri.text().contains("://") && !uri.text().startsWith("no://");
     }
 
     private static boolean hasCall(LambdaExpr l, String name) {

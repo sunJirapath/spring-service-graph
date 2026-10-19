@@ -69,10 +69,13 @@ public final class DataExtractor implements Extractor {
     }
 
     private static void repository(Service s, ClassOrInterfaceDeclaration c, List<Fact> facts) {
+        if (Ann.has(c, "NoRepositoryBean")) return;
+        var typeParameters = c.getTypeParameters().stream().map(p -> p.getNameAsString()).toList();
         for (ClassOrInterfaceType st : c.getExtendedTypes()) {
-            if (!st.getNameAsString().endsWith("Repository") || st.getTypeArguments().map(a -> a.isEmpty()).orElse(true)) continue;
+            if (st.getTypeArguments().map(a -> a.isEmpty()).orElse(true) || !isRepository(s, st, c, 0)) continue;
             var arg = st.getTypeArguments().get().get(0);
             String entity = arg instanceof ClassOrInterfaceType t ? t.getNameWithScope() : arg.asString();
+            if (typeParameters.contains(entity)) continue; // a generic base like BaseRepo<T, ID>: its subtypes name the entity
             var mapped = s.index().resolveType(entity, c).flatMap(t -> table(s, t));
             if (mapped.isPresent()) {
                 facts.add(new Fact.TableUse(false, mapped.get().name, mapped.get().store, s.evidence(c),
@@ -84,6 +87,15 @@ public final class DataExtractor implements Extractor {
         }
     }
 
+    /** A Spring Data *Repository, directly or through custom base interfaces found in sources. */
+    private static boolean isRepository(Service s, ClassOrInterfaceType t, com.github.javaparser.ast.Node context, int depth) {
+        if (t.getNameAsString().endsWith("Repository")) return true;
+        if (depth > 64) return false; // only a guard against illegal cyclic extends in broken code
+        return s.index().resolveType(t, context).filter(ClassOrInterfaceDeclaration.class::isInstance)
+                .map(d -> ((ClassOrInterfaceDeclaration) d).getExtendedTypes().stream().anyMatch(x -> isRepository(s, x, d, depth + 1)))
+                .orElse(false);
+    }
+
     // ---------------------------------------------------------------- migrations
 
     private static void migrations(Service s, List<Fact> facts) {
@@ -91,12 +103,16 @@ public final class DataExtractor implements Extractor {
         try (Stream<Path> walk = Files.walk(s.resources())) {
             for (Path f : walk.filter(Files::isRegularFile).sorted().toList()) {
                 String name = f.getFileName().toString().toLowerCase(Locale.ROOT);
-                if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
-                else if (name.endsWith(".xml")) xml(s, f, Files.readString(f), facts);
-                else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
+                try { // one unreadable or malformed file must not hide the others
+                    if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
+                    else if (name.endsWith(".xml")) xml(s, f, Files.readString(f), facts);
+                    else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
+                } catch (IOException | RuntimeException e) {
+                    System.err.println("warn: cannot read " + f + ": " + e.getMessage());
+                }
             }
-        } catch (IOException | RuntimeException e) {
-            System.err.println("warn: cannot read migrations in " + s.resources() + ": " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("warn: cannot list " + s.resources() + ": " + e.getMessage());
         }
     }
 
@@ -107,8 +123,19 @@ public final class DataExtractor implements Extractor {
     }
 
     private static void sql(Service s, Path f, String text, List<Fact> facts) {
-        Matcher m = CREATE_TABLE.matcher(text);
-        while (m.find()) facts.add(own(s, f, text, m.start(), m.group(1), via(s, f)));
+        String code = blankComments(text);
+        Matcher m = CREATE_TABLE.matcher(code);
+        while (m.find()) facts.add(own(s, f, code, m.start(), m.group(1), via(s, f)));
+    }
+
+    private static final Pattern SQL_COMMENT = Pattern.compile("--[^\\n]*|/\\*.*?\\*/", Pattern.DOTALL);
+
+    /** Replaces SQL comments with spaces, keeping newlines so offsets still map to the right lines. */
+    static String blankComments(String sql) {
+        Matcher m = SQL_COMMENT.matcher(sql);
+        var sb = new StringBuilder();
+        while (m.find()) m.appendReplacement(sb, Matcher.quoteReplacement(m.group().replaceAll("[^\\n]", " ")));
+        return m.appendTail(sb).toString();
     }
 
     private static void xml(Service s, Path f, String text, List<Fact> facts) {

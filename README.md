@@ -193,6 +193,8 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 
 ## Testing and benchmark
 
+There are about 550 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 95%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
+
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 
 ```

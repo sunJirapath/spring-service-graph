@@ -104,6 +104,7 @@ public final class ReachAnalysis {
     /** Methods {@code call} may dispatch to, by name and arity. */
     private List<MethodDeclaration> targets(MethodCallExpr call) {
         Optional<TypeDeclaration<?>> type = call.getScope().isEmpty() || call.getScope().get() instanceof ThisExpr
+                || call.getScope().get() instanceof com.github.javaparser.ast.expr.SuperExpr // super.m(): enclosing type and its supers
                 ? call.findAncestor(TypeDeclaration.class).map(t -> (TypeDeclaration<?>) t)
                 : scopeType(call);
         if (type.isEmpty()) return List.of();
@@ -114,7 +115,7 @@ public final class ReachAnalysis {
 
     private void collect(TypeDeclaration<?> t, String name, int arity, List<MethodDeclaration> out,
                          Set<TypeDeclaration<?>> visiting, int depth) {
-        if (depth > 8 || visiting.contains(t)) return;
+        if (depth > 64 || visiting.contains(t)) return;
         var path = Stream.concat(visiting.stream(), Stream.of(t)).collect(java.util.stream.Collectors.toSet());
         t.getMethodsByName(name).stream().filter(m -> m.getParameters().size() == arity).forEach(out::add);
         for (var st : s.index().superTypes(t)) collect(st, name, arity, out, path, depth + 1);

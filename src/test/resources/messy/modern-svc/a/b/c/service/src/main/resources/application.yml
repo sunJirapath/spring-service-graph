@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: modern-svc
+  datasource:
+    password: fake-password-123
+topics:
+  orders: orders.changed
+modern:
+  region: ap-southeast-1
+  retries: 3

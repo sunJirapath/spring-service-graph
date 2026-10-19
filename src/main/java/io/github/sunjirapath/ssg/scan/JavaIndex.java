@@ -180,14 +180,24 @@ public final class JavaIndex {
 
     /** The local variable, parameter or field that {@code name} refers to at {@code context}. */
     public Optional<Node> declarationOf(String name, Node context) {
+        var use = context.getBegin().orElse(null);
         for (Node n = context; n != null; n = n.getParentNode().orElse(null)) {
             switch (n) {
                 case BlockStmt b -> {
                     for (var st : b.getStatements()) {
-                        if (st instanceof ExpressionStmt es && es.getExpression() instanceof VariableDeclarationExpr v) {
+                        // a local is only in scope after its declaration
+                        boolean before = use == null || st.getEnd().map(end -> end.isBefore(use)).orElse(true);
+                        if (before && st instanceof ExpressionStmt es && es.getExpression() instanceof VariableDeclarationExpr v) {
                             var hit = v.getVariables().stream().filter(d -> d.getNameAsString().equals(name)).findFirst();
                             if (hit.isPresent()) return Optional.of(hit.get());
                         }
+                    }
+                }
+                case com.github.javaparser.ast.stmt.ForStmt f -> {
+                    for (var init : f.getInitialization()) {
+                        if (!(init instanceof VariableDeclarationExpr v)) continue;
+                        var hit = v.getVariables().stream().filter(d -> d.getNameAsString().equals(name)).findFirst();
+                        if (hit.isPresent()) return Optional.of(hit.get());
                     }
                 }
                 case CallableDeclaration<?> c -> {
@@ -217,7 +227,7 @@ public final class JavaIndex {
         for (FieldDeclaration f : t.getFields()) {
             for (VariableDeclarator v : f.getVariables()) if (v.getNameAsString().equals(name)) return Optional.of(v);
         }
-        if (depth > MAX_DEPTH) return Optional.empty();
+        if (depth > 64) return Optional.empty(); // guard against cyclic extends in broken code
         for (var st : superTypes(t)) {
             var hit = fieldOf(st, name, depth + 1);
             if (hit.isPresent()) return hit;
@@ -260,10 +270,11 @@ public final class JavaIndex {
             case IntegerLiteralExpr i -> Value.exact(i.getValue());
             case LongLiteralExpr l -> Value.exact(l.getValue().replaceAll("[lL]$", ""));
             case BooleanLiteralExpr b -> Value.exact(b.getValue() + "");
-            case EnclosedExpr en -> eval(en.getInner(), depth + 1);
-            case CastExpr c -> eval(c.getExpression(), depth + 1);
+            // syntactic nesting is finite, so only name and call hops count against MAX_DEPTH (cycle guard)
+            case EnclosedExpr en -> eval(en.getInner(), depth);
+            case CastExpr c -> eval(c.getExpression(), depth);
             case BinaryExpr b when b.getOperator() == BinaryExpr.Operator.PLUS ->
-                    raw(eval(b.getLeft(), depth + 1).concat(eval(b.getRight(), depth + 1), b.toString()), e);
+                    raw(eval(b.getLeft(), depth).concat(eval(b.getRight(), depth), b.toString()), e);
             case NameExpr n -> evalDeclaration(declarationOf(n.getNameAsString(), n), n, depth)
                     .orElseGet(() -> staticImport(n, depth));
             case FieldAccessExpr f -> evalFieldAccess(f, depth);
@@ -346,7 +357,9 @@ public final class JavaIndex {
         }
         if (m.getScope().isPresent() && m.getArguments().isEmpty()
                 && List.of("toString", "trim", "strip", "toURI", "toUriString").contains(name)) {
-            return raw(eval(m.getScope().get(), depth + 1), m);
+            Value v = eval(m.getScope().get(), depth + 1);
+            String text = !v.resolved() ? v.text() : name.equals("trim") ? v.text().trim() : name.equals("strip") ? v.text().strip() : v.text();
+            return new Value(text, v.confidence(), m.toString(), v.via());
         }
         if (m.getScope().map(Object::toString).orElse("").equals("String") && name.equals("valueOf")
                 && m.getArguments().size() == 1) {

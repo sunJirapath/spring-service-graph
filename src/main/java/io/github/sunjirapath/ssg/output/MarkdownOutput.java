@@ -8,6 +8,7 @@ import io.github.sunjirapath.ssg.model.Node;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,7 +81,7 @@ public final class MarkdownOutput {
                     .collect(Collectors.joining(", "));
             String reaches = g.from(e.to(), Edge.Kind.REACHES).stream().map(r -> g.label(r.to())).distinct().sorted()
                     .map(MarkdownOutput::code).collect(Collectors.joining("<br>"));
-            return List.of(ep.method(), code(ep.path()), callers.isEmpty() ? "-" : callers, reaches.isEmpty() ? "-" : reaches,
+            return Arrays.asList(ep.method(), code(ep.path()), callers.isEmpty() ? "-" : callers, reaches.isEmpty() ? "-" : reaches,
                     e.attrs().get("source"), e.confidence().name(), evidence(dir, e.evidence()));
         });
 
@@ -89,24 +90,24 @@ public final class MarkdownOutput {
             Node target = g.nodes.get(e.to());
             String matched = target instanceof Node.Endpoint ep ? code(ep.method() + " " + ep.path())
                     : target instanceof Node.Service ? "**no matching endpoint**" : "-";
-            return List.of(g.owner(e.to()), e.attrs().get("method"), code(e.attrs().get("path")), e.attrs().get("client"),
+            return Arrays.asList(g.owner(e.to()), e.attrs().get("method"), code(e.attrs().get("path")), e.attrs().get("client"),
                     matched, e.confidence().name(), evidence(dir, e.evidence()));
         });
 
         md.append("## Publishes\n\n");
-        table(md, List.of("Topic", "Consumers", "Via", "Confidence", "Evidence"), produces, e -> List.of(
+        table(md, List.of("Topic", "Consumers", "Via", "Confidence", "Evidence"), produces, e -> Arrays.asList(
                 code(g.label(e.to())), others(e.to(), Edge.Kind.CONSUMES), e.attrs().get("via"), e.confidence().name(),
                 evidence(dir, e.evidence())));
 
         md.append("## Consumes\n\n");
-        table(md, List.of("Topic", "Producers", "Via", "Confidence", "Evidence"), consumes, e -> List.of(
+        table(md, List.of("Topic", "Producers", "Via", "Confidence", "Evidence"), consumes, e -> Arrays.asList(
                 code(g.label(e.to())), others(e.to(), Edge.Kind.PRODUCES), e.attrs().get("via"), e.confidence().name(),
                 evidence(dir, e.evidence())));
 
         md.append("## Data\n\n");
         table(md, List.of("Table", "Store", "Relation", "Confidence", "Evidence"), data, e -> {
             var t = (Node.Table) g.nodes.get(e.to());
-            return List.of(code(t.name()), t.store(), e.kind().name().toLowerCase(), e.confidence().name(),
+            return Arrays.asList(code(t.name()), t.store(), e.kind().name().toLowerCase(), e.confidence().name(),
                     evidence(dir, e.evidence()));
         });
 
@@ -138,7 +139,7 @@ public final class MarkdownOutput {
                 .append(g.graph.findings().size()).append(" findings.\n\n");
 
         md.append("## Services\n\n");
-        table(md, List.of("Service", "Repo", "Module", "Exposes", "Calls", "Publishes", "Consumes", "Findings"), services, s -> List.of(
+        table(md, List.of("Service", "Repo", "Module", "Exposes", "Calls", "Publishes", "Consumes", "Findings"), services, s -> Arrays.asList(
                 "[" + s.name() + "](services/" + GraphView.fileName(s.name()) + ".md)", s.repo(), code(s.path()),
                 count(s.id(), Edge.Kind.EXPOSES), count(s.id(), Edge.Kind.CALLS), count(s.id(), Edge.Kind.PRODUCES),
                 count(s.id(), Edge.Kind.CONSUMES),
@@ -150,16 +151,16 @@ public final class MarkdownOutput {
             if (e.kind() != Edge.Kind.CALLS) continue;
             deps.computeIfAbsent(g.owner(e.from()) + " → " + g.owner(e.to()), k -> new TreeSet<>()).add(e.attrs().get("client"));
         }
-        table(md, List.of("From → To", "Clients"), List.copyOf(deps.entrySet()), d -> List.of(d.getKey(), String.join(", ", d.getValue())));
+        table(md, List.of("From → To", "Clients"), List.copyOf(deps.entrySet()), d -> Arrays.asList(d.getKey(), String.join(", ", d.getValue())));
 
         md.append("## Topics\n\n");
         var topicNodes = g.graph.nodes().stream().filter(Node.Topic.class::isInstance).toList();
-        table(md, List.of("Topic", "Producers", "Consumers"), topicNodes, t -> List.of(code(g.label(t.id())),
+        table(md, List.of("Topic", "Producers", "Consumers"), topicNodes, t -> Arrays.asList(code(g.label(t.id())),
                 others(t.id(), Edge.Kind.PRODUCES), others(t.id(), Edge.Kind.CONSUMES)));
 
         md.append("## Findings\n\n");
         var byKind = g.graph.findings().stream().collect(Collectors.groupingBy(Finding::kind, TreeMap::new, Collectors.counting()));
-        table(md, List.of("Kind", "Count"), List.copyOf(byKind.entrySet()), k -> List.of(k.getKey().name(), k.getValue().toString()));
+        table(md, List.of("Kind", "Count"), List.copyOf(byKind.entrySet()), k -> Arrays.asList(k.getKey().name(), k.getValue().toString()));
         for (Finding f : g.graph.findings()) {
             md.append("- **").append(f.kind()).append("** `").append(f.service()).append("`: ").append(escape(f.message()))
                     .append(" — ").append(evidence(dir, f.evidence())).append('\n');
@@ -193,8 +194,12 @@ public final class MarkdownOutput {
             Path root = repoRoots.get(e.repo());
             String text = e.repo() + "/" + e.file() + ":" + e.line();
             if (root == null) return "`" + text + "`";
-            String rel = fromDir.relativize(root.resolve(e.file())).toString().replace('\\', '/');
-            return "[" + text + "](" + rel.replace(" ", "%20") + "#L" + e.line() + ")";
+            Path target = root.resolve(e.file());
+            // no relative path exists across drives (C: vs E:), so link the absolute file URI there
+            String link = target.getRoot() != null && target.getRoot().equals(fromDir.getRoot())
+                    ? fromDir.relativize(target).toString().replace('\\', '/').replace(" ", "%20")
+                    : target.toUri().toString();
+            return "[" + text + "](" + link + "#L" + e.line() + ")";
         }).collect(Collectors.joining("<br>"));
     }
 

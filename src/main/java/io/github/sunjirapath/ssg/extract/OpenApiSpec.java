@@ -33,16 +33,20 @@ final class OpenApiSpec {
         var out = new ArrayList<Fact.Endpoint>();
         try (Stream<Path> walk = Files.walk(s.moduleRoot())) {
             for (Path f : walk.filter(f -> candidate(s, f)).sorted().toList()) {
-                String text = Files.readString(f);
-                if (!text.contains("openapi") && !text.contains("swagger")) continue;
-                for (Node doc : Config.composeAll(new StringReader(text))) {
-                    if (doc instanceof MappingNode root && (get(root, "openapi").isPresent() || get(root, "swagger").isPresent())) {
-                        read(s, f, root, contextPath, out);
+                try { // one broken file must not hide the others
+                    String text = Files.readString(f);
+                    if (!text.contains("openapi") && !text.contains("swagger")) continue;
+                    for (Node doc : Config.composeAll(new StringReader(text))) {
+                        if (doc instanceof MappingNode root && (get(root, "openapi").isPresent() || get(root, "swagger").isPresent())) {
+                            read(s, f, root, contextPath, out);
+                        }
                     }
+                } catch (IOException | RuntimeException e) {
+                    System.err.println("warn: cannot read OpenAPI spec " + f + ": " + e.getMessage());
                 }
             }
-        } catch (IOException | RuntimeException e) {
-            System.err.println("warn: cannot read OpenAPI specs in " + s.moduleRoot() + ": " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("warn: cannot list " + s.moduleRoot() + ": " + e.getMessage());
         }
         return out;
     }

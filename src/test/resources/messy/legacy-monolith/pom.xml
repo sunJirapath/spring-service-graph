@@ -1,0 +1,12 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>example.messy</groupId>
+  <artifactId>legacy-parent</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>shared-lib</module>
+    <module>legacy-api</module>
+    <module>legacy-admin</module>
+  </modules>
+</project>

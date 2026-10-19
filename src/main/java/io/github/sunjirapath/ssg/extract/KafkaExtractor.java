@@ -104,7 +104,8 @@ public final class KafkaExtractor implements Extractor {
                         + "' has no -in-N/-out-N suffix, so its direction is unknown", e.evidence()));
                 continue;
             }
-            Value dest = s.config().valueOf(entry.getKey());
+            // the evidence is the config line itself, so a literal destination stays EXACT
+            Value dest = e.value() == null || e.value().isBlank() ? Value.unresolved(entry.getKey()) : s.config().resolve(e.value());
             for (String d : dest.text().split(",")) {
                 facts.add(new Fact.TopicUse(produce.get(), new Value(d.strip(), dest.confidence(), dest.raw(), dest.via()),
                         e.evidence(), "cloud-stream:" + binding));

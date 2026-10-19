@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: broken-svc
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+broken:
+  marker: active
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+broken:
+  marker: inactive

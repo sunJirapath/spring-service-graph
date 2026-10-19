@@ -45,7 +45,7 @@ final class Mappings {
             String verb = kinds.get(a.getName().getIdentifier());
             if (verb == null) continue;
             List<String> methods = verb.equals("*")
-                    ? Ann.attr(a, "method").map(Mappings::enumNames).orElse(List.of("*"))
+                    ? Ann.attr(a, "method").map(Mappings::enumNames).filter(l -> !l.isEmpty()).orElse(List.of("*")) // method = {} means any
                     : List.of(verb);
             List<Value> paths = Ann.attr(a, pathAttrs).map(s::evalAll).orElse(List.of(Value.exact("")));
             return Optional.of(new Mapping(methods, paths.isEmpty() ? List.of(Value.exact("")) : paths, a));
@@ -78,7 +78,7 @@ final class Mappings {
     private static void collect(TypeDeclaration<?> type, Service s, java.util.function.Predicate<MethodDeclaration> mapped,
                                 List<MethodDeclaration> out, java.util.Set<String> seen,
                                 java.util.Set<TypeDeclaration<?>> visited, int depth) {
-        if (depth > 8 || !visited.add(type)) return;
+        if (!visited.add(type)) return; // the visited set already stops cycles
         for (MethodDeclaration m : type.getMethods()) {
             String sig = signature(m);
             if (mapped.test(m) && seen.add(sig)) out.add(m);

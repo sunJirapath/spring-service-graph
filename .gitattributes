@@ -2,3 +2,5 @@
 * text=auto eol=lf
 *.bat text eol=crlf
 *.jar binary
+# messy fixtures must keep their exact bytes (CRLF, BOM, binary)
+src/test/resources/messy/** -text

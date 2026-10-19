@@ -1,5 +1,6 @@
 plugins {
     application
+    jacoco // core Gradle plugin; coverage report via ./gradlew test jacocoTestReport
 }
 
 group = "io.github.sunjirapath"
@@ -30,6 +31,10 @@ application {
 
 tasks.jar {
     manifest { attributes("Implementation-Version" to project.version) }
+}
+
+tasks.jacocoTestReport {
+    reports { xml.required = true; html.required = true }
 }
 
 tasks.test {

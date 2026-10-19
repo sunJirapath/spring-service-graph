@@ -13,7 +13,6 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -52,15 +51,25 @@ public final class Config {
     public void addFile(Repo repo, Path file, String profile) {
         if (!Files.isRegularFile(file)) return;
         try {
-            String text = Files.readString(file);
+            String text = readText(file);
             if (file.toString().endsWith(".properties")) addProperties(repo, file, text);
             else addYaml(repo, file, text, profile);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             // A malformed config file must not stop the scan; its keys are simply absent.
             System.err.println("warn: cannot read " + file + ": " + e.getMessage());
         }
+    }
+
+    /** UTF-8 without BOM; legacy files that are not valid UTF-8 are read as ISO-8859-1, as Spring does for .properties. */
+    static String readText(Path file) throws IOException {
+        byte[] bytes = Files.readAllBytes(file);
+        String text;
+        try {
+            text = java.nio.charset.StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString();
+        } catch (java.nio.charset.CharacterCodingException e) {
+            text = new String(bytes, java.nio.charset.StandardCharsets.ISO_8859_1);
+        }
+        return text.startsWith("﻿") ? text.substring(1) : text;
     }
 
     public void putAll(Config other) {
@@ -83,11 +92,15 @@ public final class Config {
         return resolve(text, 0);
     }
 
-    /** Resolves a config key's own value; evidence of the key is added to {@code via}. */
+    /**
+     * A config key's value, as code that reads the property sees it: at best RESOLVED (it came from a
+     * property), with the key's file:line added to {@code via}.
+     */
     public Value valueOf(String key) {
         Entry e = entries.get(key);
         if (e == null || e.value() == null) return Value.unresolved("${" + key + "}");
-        return resolve(e.value());
+        Value v = resolve(e.value()).withConfidence(Confidence.RESOLVED, e.evidence());
+        return new Value(v.text(), v.confidence(), "${" + key + "}", v.via());
     }
 
     private Value resolve(String text, int depth) {
@@ -169,6 +182,7 @@ public final class Config {
     private void addYaml(Repo repo, Path file, String text, String profile) {
         var yaml = new Yaml(new LoaderOptions());
         for (var doc : yaml.composeAll(new StringReader(text))) {
+            if (doc == null) continue; // empty document between --- separators
             var flat = new LinkedHashMap<String, Entry>();
             flatten(repo, file, "", doc, flat);
             if (!activeFor(flat, profile)) continue;
@@ -188,8 +202,15 @@ public final class Config {
         int line = node.getStartMark().getLine() + 1;
         switch (node) {
             case MappingNode m -> {
+                // merge keys (<<: *defaults) first, so keys written explicitly in this mapping override them
                 for (NodeTuple t : m.getValue()) {
-                    if (!(t.getKeyNode() instanceof ScalarNode k)) continue;
+                    if (t.getKeyNode() instanceof ScalarNode k && k.getValue().equals("<<")) {
+                        var merged = t.getValueNode() instanceof SequenceNode s ? s.getValue() : List.of(t.getValueNode());
+                        merged.forEach(n -> flatten(repo, file, prefix, n, out));
+                    }
+                }
+                for (NodeTuple t : m.getValue()) {
+                    if (!(t.getKeyNode() instanceof ScalarNode k) || k.getValue().equals("<<")) continue;
                     flatten(repo, file, prefix.isEmpty() ? k.getValue() : prefix + "." + k.getValue(),
                             t.getValueNode(), out);
                 }

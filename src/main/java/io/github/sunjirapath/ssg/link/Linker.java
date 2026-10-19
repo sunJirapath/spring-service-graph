@@ -127,6 +127,7 @@ public final class Linker {
 
         String target = url.host() == null ? null : resolveHost(url.host());
         if (target == null) {
+            attrs.put("raw", c.url().raw()); // without a target, the source expression is all a reader has
             nodes.putIfAbsent(UNRESOLVED_TARGET, new Node.External(UNRESOLVED_TARGET, "unresolved"));
             edge(Edge.Kind.CALLS, from, UNRESOLVED_TARGET, c.url(), c.evidence(), attrs);
             return List.of(UNRESOLVED_TARGET);
