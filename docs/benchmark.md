@@ -138,12 +138,12 @@ Time was measured at `-Xmx8g` on a 16-thread Windows machine. "Heap needed" is t
 
 | Code base | Commit | Main Java | Apps | Services | Endpoints | CALLS | Topics | Tables | Findings | Time | Heap needed |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3392 | 61 | 1 | 0 | 36 CONTRACT_DRIFT, 15 UNRESOLVED | 31 s | 1.5 GB (OOM at 1 GB) |
-| apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 0 | 1 MISSING_INTERFACE | 6 s | 384 MB (OOM at 256 MB) |
-| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 0 | 0 | 0 | 0 | 0 | 0 (one stderr warning) | 12 s | over 1 GB (peak 1.9 GB) |
+| YunaiV/yudao-cloud | `0757f05` | 21 MB | 25 | 25 | 3392 | 479 | 1 | 547 | 36 CONTRACT_DRIFT, 15 UNRESOLVED | 31 s | 1.5 GB (OOM at 1 GB) |
+| apache/dolphinscheduler | `c70003c` | 7 MB | 8 in 6 modules | 6 | 239 | 0 | 0 | 43 | 0 | 6 s | 384 MB (OOM at 256 MB) |
+| apache/fineract | `71681f2` | 28 MB | 1, no `@SpringBootApplication` | 1 | 3 | 2 | 2 | 308 | 425 UNRESOLVED | 14 s | 2 GB (OOM at 1.5 GB) |
 
 Notes on the counts:
-- yudao-cloud's 61 CALLS are 36 gateway routes and 25 calls from HTTP clients.
+- yudao-cloud's 479 CALLS are 418 Feign calls, 36 gateway routes and 25 calls from HTTP clients. Before gap #1 was fixed there were 61, with no Feign calls.
 - Its one topic is produced from `config.getTopic()`, so it is UNRESOLVED.
 
 ### Recall against grep
@@ -152,14 +152,14 @@ These counts are of files under `src/main/java`.
 
 | Construct | yudao-cloud | dolphinscheduler | fineract |
 |---|---|---|---|
-| Controller classes → endpoints | 657 → 3392 endpoints in 24/25 services | 35 → 239 | 3 + 170 JAX-RS `@Path` → 0 |
-| `@FeignClient` → CALLS | **47 → 0** | — | — |
-| `@TableName` (MyBatis-Plus) → tables | **547 → 0** | **48 → 0** | — |
-| `@Entity` / `extends *Repository<` → tables | — | — | 254 / 200 → 0 |
-| `JdbcTemplate` / `JdbcClient` | 3 → 1 UNRESOLVED (a `--sql-methods` hint) | — | 203 → 0 |
+| Controller classes → endpoints | 657 → 3392 endpoints in 24/25 services | 35 → 239 | 3 + 170 JAX-RS `@Path` → 3 (JAX-RS is not read) |
+| `@FeignClient` → CALLS | 47 → 418 CALLS from 23 services, all RESOLVED (was 0, gap #1) | — | — |
+| `@TableName` (MyBatis-Plus) → tables | 547 → 547, used by 22 services, 8021 REACHES (was 0, gap #3) | 48 → 43 in 4 services (was 0, gap #3; needs gap #1, since the mappers live in `-dao`) | — |
+| `@Entity` / `extends *Repository<` → tables | — | — | 254 / 200 → 308 tables, 277 USES, 58 REACHES (was 0, gap #5) |
+| `JdbcTemplate` / `JdbcClient` | 3 → 1 UNRESOLVED (a `--sql-methods` hint) | — | 203 → 425 UNRESOLVED, mostly SQL not resolved statically |
 | `KafkaTemplate` / `@KafkaListener` | 6 → 1 PRODUCES | — | 4 → 0 |
 | `RestTemplate` / `WebClient` / `RestClient` | 34 → 25 CALLS | — | 4 → 0 |
-| `CREATE TABLE` / `createTable` | 863 in root `sql/` → 0 | 378 in `dolphinscheduler-dao` → 0 | 741 + 320 Liquibase → 0 |
+| `CREATE TABLE` / `createTable` | 863 in root `sql/` → 0 | 378 in `dolphinscheduler-dao` → 0 | 741 + 320 Liquibase → 244 OWNS |
 
 The services are named from `spring.application.name`.
 
@@ -191,4 +191,85 @@ The services are named from `spring.application.name`.
 | 7 | dolphinscheduler | 1 noisy MISSING_INTERFACE finding. | The controller implements Spring Boot's own `ErrorController`. Framework interfaces carry no mappings and should not be reported. |
 | 8 | all | 50–70 MB of heap per MB of Java. Fineract runs out of memory at 1 GB although it yields no service. | Every source file is parsed before discovery, so even a repo with no app gets fully parsed. This adds to the open memory item from field test 1. |
 
-The JDBC support from field test 1 was barely exercised. Fineract would have exercised it with 203 `JdbcTemplate` files, but gap #5 hides it.
+**Gap #1 is fixed.** A service in a multi-app repo now also gets the library sources it uses. A library source is one in a module with no app, and it counts as used when the service's own code names one of its types. That includes `@EnableFeignClients(clients = X.class)`. The rule is applied again through the library files it pulls in. A type that the service implements or extends is left out, because a server's `*ApiImpl` is the implementation, not a client. Evidence still points at the interface in its `-api` module.
+- yudao-cloud: 44 of the 47 Feign interfaces are attributed. They give 418 CALLS, every one linked to a real endpoint, and there are no self-calls.
+- The other 3 (`ApiAccessLogCommonApi`, `ApiErrorLogCommonApi`, `TenantCommonApi`) are used only from starter auto-configurations, which no service names. Reading the Maven module dependencies would catch them. This is still open.
+- Shared Java such as dolphinscheduler-dao's entities and mappers now reaches the services that use it. Gap #4's DDL is still unattributed, because resources are not followed and nothing decides which service owns a shared schema.
+- The three public fleets above gave the same counts as before.
+
+**Gaps #3, #5 and #7 are fixed.**
+- #3: `@TableName` classes are tables, named by the annotation or else in snake case, as MyBatis-Plus does. Interfaces extending `BaseMapper<T>` or `MPJBaseMapper<T>`, directly or through base interfaces in sources such as yudao's `BaseMapperX<T>`, are treated as Spring Data repositories. They give USES edges, and REACHES from endpoints whose handlers call them. A `*Mapper` with any other base, such as a MapStruct `EntityMapper<D, E>`, is not a repository. dolphinscheduler's tables need gap #1's fix as well: without it they are 0, because its entities and mappers live in the shared `-dao` module.
+- #5: a module is also an app when a static `main` method calls `SpringApplication.run`, or creates a `SpringApplication` or a `SpringApplicationBuilder`. Fineract now gives one service. Its endpoints are still 3, because the 170 JAX-RS resources are not read.
+- #7: MISSING_INTERFACE skips interfaces imported from `org.springframework`, `java`, `javax` and `jakarta`, such as `ErrorController`. dolphinscheduler has no findings now.
+
+The JDBC support from field test 1 is now exercised by fineract. Its 203 `JdbcTemplate` files give 425 UNRESOLVED findings: 386 are SQL that cannot be resolved statically, and 6 are `--sql-methods` hints.
+
+## Eight more messy code bases (2026-10-19)
+
+These are eight more public code bases, cloned by `scripts/bench-clone.sh` and scanned the same way, one at a time. Each was scanned twice:
+- **Before**: with the committed ssg at `dcc9f22`.
+- **After**: with the fixes for gaps #1, #3, #5 and #7 above.
+
+"Heap needed" is the smallest `-Xmx` that worked with the before build; 256 MB was the smallest size tried. Time is from the after run at `-Xmx6g`. A count that changed shows the before value in brackets.
+
+| Code base | Commit | Main Java | Apps | Services | Endpoints | CALLS | Topics | Tables | Findings | Time | Heap needed |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| macrozheng/mall-swarm | `04c442f` | 2.9 MB | 7 | 7 | 250 | 253 | 0 | 3 | 1 UNRESOLVED | 5 s | 256 MB |
+| paascloud/paascloud-master | `781281a` | 1.6 MB | 10 | 10 | 189 | 43 (0) | 0 | 4 | 0 | 4 s | 256 MB |
+| pig-mesh/pig | `a0d273a` | 1.6 MB | 8 | 8 (7) | 288 | 13 (0) | 0 | 17 (0) | 21 UNRESOLVED (0) | 3 s | 256 MB |
+| microservices-patterns/ftgo-application | `558dfc5` | 0.3 MB | 8 | 7 (6) | 19 (16) | 1 | 0 | 9 (6) | 1 UNRESOLVED, 1 DUPLICATE_SERVICE (was 1 UNRESOLVED) | 3 s | 256 MB |
+| shopizer-ecommerce/shopizer | `6a4a0a6` | 3.5 MB | 1 | 1 | 321 | 0 | 0 | 81 | 0 | 62 s | 256 MB |
+| jeecgboot/JeecgBoot | `4998e64` | 4.8 MB | 11 | 11 (10) | 74 | 2 | 0 | 40 | 0 | 6 s | 384 MB |
+| metersphere/metersphere | `53df526` | 12.1 MB | 1 | 1 | 1053 | 2 | 5 | 0 | 2 UNRESOLVED (was also 1 MISSING_INTERFACE) | 15 s | 1 GB |
+| thingsboard/thingsboard | `4dc9403` | 21.8 MB | 25 | 21 (16) | 850 (0) | 26 (3) | 0 | 33 (6) | 46 UNRESOLVED, 3 DUPLICATE_SERVICE (11, 1) | 50 s | 2 GB |
+
+Notes on the counts:
+- mall-swarm's 253 CALLS are 245 gateway routes and 8 Feign calls.
+- paascloud's 43 new CALLS are EXACT. They come from Feign clients in its shared `-provider-api` modules, which gap #1's fix now attributes.
+- pig's 13 new CALLS are RESOLVED: 11 go to `pig-upms-biz` and 2 to `pig-auth`. Its new service is `pig-register` (gap #5).
+- ftgo's 8th app is not a separate service: the delivery service sets `spring.application.name=ftgo-order-service`, so the 2 merge and give a correct DUPLICATE_SERVICE finding.
+- In thingsboard, `application` now gives 849 endpoints. It boots through `@SpringBootConfiguration` with a `main` method (gap #5).
+
+### Recall against grep
+
+These counts are of files under `src/main/java`.
+
+| Construct | mall-swarm | paascloud | pig | ftgo | shopizer | jeecgboot | metersphere | thingsboard |
+|---|---|---|---|---|---|---|---|---|
+| Endpoints | 250 | 189, 39 of them inherited from `-api` Feign interfaces | 288 | 13 of 13 controller, plus 3 from the gateway DSL | 321 | 74; 80 of 100 controllers are in modules with no app | 1053, an exact match | 0 → 850 (gap #5) |
+| `@FeignClient` → CALLS | 8 | 20 in `-api` → 0 → 43 (gap #1) | 10 in `-upms-api` → 0 → 13 (gap #1) | — | — | 6 → 2 | — | — |
+| MyBatis-Plus `@TableName` / `BaseMapper` | — | — | 16 / 37 → 0 → 17 USES (gap #3) | — | — | 50 / 65 → 0 (gaps #1 and #3, see below) | — | — |
+| `@Entity` → tables | 3 | 4 | — | 6 → 9 | 81 → 81 | — | — | 118 in `dao/` → 6 → 33 |
+| `CREATE TABLE` outside services (gap #4) | 76 in `mall.sql` | — | 60 in `db/` | — | — | 143 in the root `db/` | 156 Flyway tables in `framework/domain` | — |
+| RabbitMQ, RocketMQ, Redis or other messaging (gap #6) | RabbitMQ | RocketMQ | — | 95 files of Eventuate Tram | — | — | — | TbQueue, 7 RabbitMQ files |
+
+### What worked
+
+- None of the 16 scans crashed.
+- metersphere's 1053 endpoints match grep exactly, and its 5 Kafka topics are right.
+- Endpoints that a controller inherits from a Feign interface in a sibling `-api` module were found in paascloud (39 of them).
+- shopizer's 81 entities became 81 tables, one USES edge each, with no extra edges from repositories.
+- Spot checks (5 to 7 endpoints, and every CALLS edge up to 5, per repo) were all right, except for the template match in gap 11 below.
+- Gap #1's fix gave 56 new CALLS edges with no self-calls. Gap #5's fix found 7 more services.
+
+### Gaps, by impact
+
+Rows 1–8 are the gaps listed above, as they show up in these repos. Rows 9 and up are new.
+
+| # | Code base | Symptom | Cause |
+|---|---|---|---|
+| 1 | jeecgboot | `jeecg-system-start` has 0 endpoints, even after the fix. 80 of 100 controllers are in `jeecg-system-biz` and other modules with no app. | The launcher names no type from `jeecg-system-biz`. The only link is the Maven dependency in its `pom.xml`, which gap #1's fix does not read. |
+| 3 | pig | 21 UNRESOLVED of the form "repository SysJobMapper: entity SysJob not found in sources" after the fix. | The entity is in the sources (`SysJob.java:41`, `extends Model<SysJob>`), but it has no `@TableName`. MyBatis-Plus maps it to the snake-case table `sys_job`, and ssg does not, so the message is also wrong. |
+| 4 | mall-swarm, pig, jeecgboot, metersphere | No OWNS for 76, 60, 143 and 156 tables. | The DDL is in a root `sql/`/`db/` folder or a shared Flyway module. |
+| 5 | jeecgboot | The bundled Nacos server `JeecgNacosApplication` is missed. | It boots through `SpringApplicationBuilder` outside a static `main`. |
+| 6 | mall-swarm, paascloud, ftgo, thingsboard | Services that talk only through messaging show no edges. | RabbitMQ, RocketMQ, Redis pub/sub, Eventuate Tram and thingsboard's TbQueue are not read. |
+| 9 | paascloud, pig, jeecgboot | A whole `application.yml` is dropped with a stderr warning: 17 of 17 files in paascloud and pig, 5 in jeecgboot. Service names fall back to folder names, and pig's gateway routes are lost. | Maven resource filtering placeholders such as `@pom.artifactId@` or `@config.server-addr@` are not valid YAML. |
+| 10 | shopizer | 62–91 s for 3.5 MB. 4808 REACHES edges, a median of 18 tables per endpoint and a maximum of 37 where about 4 are real. | `ReachAnalysis.collect` goes up to a supertype and then adds the same-name method of every implementation, including siblings. A `populate` call fans out to all 25 populators. jstack shows about 78% of the time in `ReachAnalysis.analyze`. |
+| 11 | mall-swarm | `GET /brand/listAll` is also linked to `GET /brand/{id}` (`FeignAdminService.java:19`). | A template endpoint matches a call to a literal sibling path. A literal match should win. |
+| 12 | paascloud, jeecgboot, metersphere | Tables are missing for tk.mybatis `@Table` entities without `@Entity` (`MdcAddress.java:27`) and for plain MyBatis mappers with XML (230 files in mall-mbg, 237 in metersphere). | Only JPA, Spring Data and MyBatis-Plus are read. |
+| 13 | thingsboard | The tables `columns` and `pg_tables`. | System-catalog queries (`SqlPartitionService.java:53`) are read as tables. |
+| 14 | thingsboard | `coap`, `http` and `mqtt` are each 2 apps (integration and transport), merged into one service with DUPLICATE_SERVICE. | Both modules have the same folder name and no `spring.application.name`. |
+| 15 | thingsboard, metersphere | False UNRESOLVED findings: 2 from `ConnectionCallback` lambdas over `LargeObject` (`PostgresService.java:27`), and 2 from a URL that is a lambda parameter (`TaskRunnerClient.java:53`). | Lambda parameters are not traced. The `ConnectionCallback` cases make no SQL or HTTP call at all. |
+| 16 | ftgo | The gateway's 3 routes have method `*`, and a route whose URI comes from a getter is silently dropped. | `.method("POST")` predicates in the Java route DSL are ignored (`GatewayExtractor.java:166`). A non-constant URI gives no CALLS and no finding. |
+| 17 | ftgo | A WebFlux `RouterFunctions.route(GET("/orders/{orderId}"))` endpoint is missed (`OrderConfiguration.java:36`). | Functional routes are not read. |
+| 18 | mall-swarm | The Elasticsearch `@Document` class `EsProduct` gets the store `mongo` (`EsProduct.java:17`). | `@Document` is treated as MongoDB without checking the import. |
