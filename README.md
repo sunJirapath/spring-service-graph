@@ -67,7 +67,7 @@ A service is a module with a `@SpringBootApplication` class, or with a `main` me
 | `@KafkaListener` | Consumes. |
 | `@SendTo`, `KafkaTemplate.send` / `sendDefault`, `StreamBridge.send` | Produces. |
 | Spring Cloud Stream `bindings.*.destination` | Produces or consumes. |
-| `@RabbitListener(queues)`; `RabbitTemplate` / `AmqpTemplate` `convertAndSend` / `send` | Consumes the queue; produces to the routing key. They link only when the routing key equals the queue name; `Binding` beans are not read. |
+| `@RabbitListener(queues)`; `RabbitTemplate` / `AmqpTemplate` `convertAndSend` / `send` | Consumes the queue; produces to the queue that `@Bean Binding` methods bind the (exchange, routing key) to, plus the queue a bound queue dead-letters to (`x-dead-letter-*`). Without a binding it produces to the routing key, so key == queue still links. Wildcard keys, keyless bindings and bindings declared in another service are not read. |
 | `@RocketMQMessageListener(topic)`, `DefaultMQPushConsumer.subscribe`; `RocketMQTemplate` sends, `new Message(topic, ...)` | Consumes or produces; a `topic:tag` destination is the topic. |
 
 **Data**
