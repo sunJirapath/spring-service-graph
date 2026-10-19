@@ -79,6 +79,34 @@ class DataExtractorTest {
     }
 
     @Test
+    void readsTablesFromMyBatisMapperXml(@TempDir Path repo) throws IOException {
+        var facts = extract(repo, "package x; class Empty {}", "mapper/UserMapper.xml", """
+                <mapper namespace="x.UserMapper">
+                  <select id="find" resultType="x.User">
+                    select * from users u
+                    <where><if test="id != null">u.id = #{id}</if></where>
+                  </select>
+                  <update id="touch">update audit set n = 1</update>
+                </mapper>
+                """);
+
+        assertThat(facts).filteredOn(Fact.TableUse.class::isInstance)
+                .extracting(f -> {
+                    var t = (Fact.TableUse) f;
+                    return t.owns() + " " + t.table().text() + " " + t.via() + " " + t.evidence().line();
+                })
+                .containsExactlyInAnyOrder("false users mybatis-xml 2", "false audit mybatis-xml 6");
+    }
+
+    @Test
+    void readsTableAnnotationWithoutEntity(@TempDir Path repo) throws IOException {
+        var facts = extract(repo, "package x; @Table(name = \"mdc_address\") class MdcAddress {}");
+
+        assertThat(facts).singleElement().isInstanceOfSatisfying(Fact.TableUse.class,
+                t -> assertThat(t.table().text()).isEqualTo("mdc_address"));
+    }
+
+    @Test
     void reportsRepositoryEntityMissingFromSources(@TempDir Path repo) throws IOException {
         var facts = extract(repo, "package x; interface Ghosts extends JpaRepository<Ghost, Long> {}");
 
