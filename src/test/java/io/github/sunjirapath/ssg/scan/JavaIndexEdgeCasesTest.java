@@ -13,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,6 +55,29 @@ class JavaIndexEdgeCasesTest {
 
         assertThat(ctor.text()).isEqualTo("sms-topic");
         assertThat(lombok.text()).isEqualTo("key");
+    }
+
+    @Test
+    void leavesEnumGetterUnresolvedWhenNoConstructorArgumentFeedsTheField() {
+        String[] cases = {
+                // constructors that never assign the field from a parameter, or take another arity
+                """
+                enum T { A("a"); T() {} T(String t) { this.topic = t.trim(); arr[0] = t; topic = other; String x = t; } String topic, other; String[] arr; }
+                class Use { void m() { use(T.A.getTopic()); } }
+                """,
+                // Lombok order: missing field, or argument count not matching the instance fields
+                "@Getter enum T { A(\"a\"); static String S; String other; } class Use { void m() { use(T.A.getTopic()); } }",
+                "@Getter enum T { A(\"a\"); String topic; String other; } class Use { void m() { use(T.A.getTopic()); } }",
+                "@Getter enum T { A(\"a\", \"b\", \"c\"); String other; String topic; } class Use { void m() { use(T.A.getTopic()); } }",
+                // not an enum, an unknown constant, or a getter on a plain name
+                "class T { static Object A; } class Use { void m() { use(T.A.getTopic()); } }",
+                "enum T { A } class Use { void m() { use(T.B.getTopic()); } }",
+                "class Use { void m(Object t) { use(t.getTopic()); } }",
+        };
+        for (int i = 0; i < cases.length; i++) {
+            assertThat(fold(repo("enum-miss-" + i).java("x/Use.java", "package x;\n" + cases[i])).confidence())
+                    .as(cases[i]).isEqualTo(Confidence.UNRESOLVED);
+        }
     }
 
     @Test
@@ -1058,6 +1082,36 @@ class JavaIndexEdgeCasesTest {
             assertThat(evidence.file()).isEqualTo("src/main/java/x/Use.java");
             assertThat(evidence.line()).isEqualTo(4);
         });
+    }
+
+    @Test
+    void staticImportSkipsPlainAndMismatchedImportsBeforeTheWildcard() {
+        var value = fold(repo("static-wildcard").java("x/Use.java", """
+                package x;
+                import java.util.List;
+                import static x.K.V;
+                import static x.K.OTHER;
+                import static x.C.*;
+                class C { static final String V = "v"; }
+                class K { static final String OTHER = "o"; }
+                class Use { void m() { use(V); } }
+                """));
+
+        assertThat(value.text()).isEqualTo("v");
+    }
+
+    @Test
+    void helpersAndGettersThatDoNotFitStayUnresolved() {
+        for (String body : List.of(
+                "String get() { int a = 1; return \"x\"; } void m() { use(get()); }",
+                "String get(int a) { return \"x\"; } void m() { use(get()); }",
+                "void m() { use(E.A.get()); }",
+                "void m(Object o) { use(o.getTopic()); }")) {
+            var value = fold(repo("helper-" + Math.abs(body.hashCode())).java("x/Use.java",
+                    "package x; enum E { A } class Use { " + body + " }"));
+
+            assertThat(value.confidence()).as(body).isEqualTo(Confidence.UNRESOLVED);
+        }
     }
 
     private TempRepo repo(String name) {

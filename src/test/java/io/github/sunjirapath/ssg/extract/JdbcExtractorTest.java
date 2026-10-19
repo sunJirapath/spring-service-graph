@@ -437,6 +437,40 @@ class JdbcExtractorTest {
         assertThat(tableNames(facts)).containsExactly("t_order", "t_item");
     }
 
+    @Test
+    void edgeCallsAddNoTablesOrProblems(@TempDir Path tmp) {
+        var facts = extract(tmp, "edge-calls", """
+                package x;
+                interface Repo {
+                    @Query(nativeQuery = true) List<Object> noValue();
+                }
+                class Db { void exec(Object a, int b) {} void other(String s) {} }
+                class Queries {
+                    JdbcTemplate jdbc; Db db;
+                    void run(ConnectionCallback<String> callback) {
+                        jdbc.execute((callback));
+                        db.exec("not sql", 1);
+                        db.other("SELECT * FROM unlisted");
+                    }
+                }
+                """, Set.of("Db.exec"));
+
+        assertThat(facts).isEmpty();
+    }
+
+    @Test
+    void sqlParameterOutsideAMethodStillReportsTheProblem(@TempDir Path tmp) {
+        var facts = extract(tmp, "lambda-param", """
+                package x;
+                class Queries {
+                    JdbcTemplate jdbc;
+                    java.util.function.Consumer<String> run = sql -> jdbc.query(sql);
+                }
+                """, Set.of("Queries.run"));
+
+        assertThat(facts).singleElement().isInstanceOf(Fact.Problem.class);
+    }
+
     private static List<Fact> extract(Path tmp, String name, String source) {
         return extract(tmp, name, source, Set.of());
     }

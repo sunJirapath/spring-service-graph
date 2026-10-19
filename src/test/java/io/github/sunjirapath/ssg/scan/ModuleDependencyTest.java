@@ -138,6 +138,32 @@ class ModuleDependencyTest {
                 .containsExactly(root.resolve("libs/biz"), root.resolve("libs/core"));
     }
 
+    @Test
+    void selfReferencesCyclicParentsAndUnknownArtifactsDoNotLoop() {
+        var repo = TempRepo.at(tmp.resolve("odd"))
+                .file("a/pom.xml", """
+                        <project><parent><artifactId>b</artifactId></parent><artifactId>a</artifactId><dependencies>
+                        <dependency><artifactId>a</artifactId></dependency>
+                        <dependency><artifactId>c</artifactId><exclusions>
+                          <exclusion><artifactId>zzz</artifactId></exclusion><exclusion><artifactId>d</artifactId></exclusion>
+                        </exclusions></dependency>
+                        </dependencies></project>
+                        """)
+                .file("b/pom.xml", "<project><parent><artifactId>a</artifactId></parent><artifactId>b</artifactId>"
+                        + "<dependencies><dependency><artifactId>c</artifactId></dependency></dependencies></project>")
+                .file("c/pom.xml", pom("c", "d", "a"))
+                .file("d/pom.xml", pom("d"))
+                .file("e/build.gradle.kts", "dependencies { implementation(project(\":e\")); implementation(project(\":c\")) }")
+                .file("f/pom.xml", "<project><parent><artifactId>nope</artifactId></parent><artifactId>f</artifactId></project>");
+        Path root = repo.root().toAbsolutePath().normalize();
+        var modules = Modules.read(Repo.of(root));
+
+        assertThat(modules.all(root.resolve("a"), java.util.Set.of())).containsExactly(root.resolve("c"));
+        assertThat(modules.all(root.resolve("e"), java.util.Set.of()))
+                .containsExactlyInAnyOrder(root.resolve("c"), root.resolve("d"), root.resolve("a"));
+        assertThat(modules.direct(root.resolve("f"))).isEmpty();
+    }
+
     /** Two apps, so attribution goes through the module walk rather than "one app gets everything". */
     private TempRepo twoApps(String name) {
         return TempRepo.at(tmp.resolve(name))

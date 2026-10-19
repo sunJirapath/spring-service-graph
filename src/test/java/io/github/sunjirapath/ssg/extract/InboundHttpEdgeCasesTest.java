@@ -623,6 +623,72 @@ class InboundHttpEdgeCasesTest {
                 .extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactly("GET /beta");
     }
 
+    @Test
+    void skipsRoutePredicatesThatAreNotOnePathAndOneVerb(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("odd-predicates")).app().java("x/Routes.java", """
+                package x;
+                import java.util.List;
+                import static java.util.Objects.requireNonNull;
+                import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+                import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+                @Configuration class Routes {
+                    Object handle(ServerRequest r) { return null; }
+                    @Bean RouterFunction routes(Object accept, Object x) {
+                        return route((GET("/enclosed")), this::handle)
+                                .andRoute(accept, this::handle)
+                                .andRoute(GET("/a", "b"), this::handle)
+                                .andRoute(other.GET("/scoped"), this::handle)
+                                .andRoute(path("/p").and(path("/q")), this::handle)
+                                .andRoute(path("/p").and(x), this::handle)
+                                .andRoute(path("/p").and(method(HttpMethod.GET), x), this::handle)
+                                .andRoute(other.path("/p").and(method(HttpMethod.GET)), this::handle)
+                                .andRoute(path("/p").and(other.method(HttpMethod.GET)), this::handle)
+                                .andRoute(path("/p", "q").and(method(HttpMethod.GET)), this::handle)
+                                .andRoute(path("/p").and(method()), this::handle)
+                                .andRoute(path("/p").and(method(HttpMethod.TRACE)), this::handle)
+                                .andRoute(path("/p").and(method(HttpMethod.GET, HttpMethod.POST)), this::handle)
+                                .andRoute(accept(JSON).and(path("/p")), this::handle)
+                                .GET("/not-a-builder", this::handle)
+                                .filter(x, x);
+                    }
+                    @Bean RouterFunction builder() { return route().filter(this::handle, x).GET("/built", Missing::handle).build(); }
+                }
+                """));
+
+        assertThat(endpoints).extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactlyInAnyOrder("GET /enclosed", "GET /built");
+        assertThat(endpoints).extracting(e -> e.handler() == null ? null : e.handler().line()).containsExactly(7, null); // this:: vs unknown type
+    }
+
+    @Test
+    void setPathPrefixesWithInlineMapAndOddArguments(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("inline-prefixes")).app()
+                .java("x/WebConfig.java", """
+                        package x;
+                        @Configuration class WebConfig {
+                            void configure(PathMatchConfigurer c, Object m) {
+                                c.setPathPrefixes(Map.of("/api", HandlerTypePredicate.forAnnotation(RestController.class), "/odd"));
+                                c.addPathPrefix("/one-arg");
+                                c.setPathPrefixes(m, m);
+                                c.setPathPrefixes(prefixes());
+                                c.setPathPrefixes(Map.copyOf(m));
+                            }
+                        }
+                        """)
+                .java("x/Defaults.java", """
+                        package x;
+                        class Defaults {
+                            Object a = new Api("no-slash", "**.controller.**");
+                            Object b = new Api("/plain", "x.controller");
+                            Object c = new Api("/num", 1);
+                            Object d = new Api(x, "**.controller.**");
+                            Object e = new Api("/three", "**.controller.**", 3);
+                        }
+                        """)
+                .java("x/controller/A.java", "package x.controller; @RestController class A { @GetMapping(\"/a\") void a() {} }"));
+
+        assertThat(endpoints).extracting(e -> e.path().text()).containsExactly("/api/a");
+    }
+
     private static TempRepo missingInterfaceRepo(Path root) {
         return TempRepo.at(root).app().java("x/C.java", "package x; @RestController class C implements MissingApi {}");
     }

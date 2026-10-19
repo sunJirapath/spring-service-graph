@@ -7,11 +7,11 @@ Codex (`gpt-5.6-sol`, high or medium effort) wrote the tests, split into seven w
 
 Run everything with `./gradlew test`. Add `jacocoTestReport` for coverage; the report lands in `build/reports/jacoco/test/html`.
 
-| | Before | After |
-|---|---|---|
-| Tests | 70 | 547 |
-| Line coverage | 87.3% | 98.3% |
-| Branch coverage | 70.3% | 95.2% |
+| | Before | After | Now (after field tests) |
+|---|---|---|---|
+| Tests | 70 | 547 | 684 |
+| Line coverage | 87.3% | 98.3% | 98.2% |
+| Branch coverage | 70.3% | 95.2% | 95.0% |
 
 ## Workstreams
 

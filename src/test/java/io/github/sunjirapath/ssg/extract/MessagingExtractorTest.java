@@ -56,6 +56,28 @@ class MessagingExtractorTest {
         assertThat(topics(facts, true)).containsExactlyInAnyOrder("order", "sms");
     }
 
+    @Test
+    void amqpTemplateSendsButOddCallsAndSpringMessagesAreIgnored(@TempDir Path tmp) {
+        var facts = repo(tmp, """
+                package x;
+                class P {
+                    AmqpTemplate amqp; RocketMQTemplate rocket; DefaultMQPushConsumer consumer; Object other;
+                    void send(String dynamic) {
+                        amqp.convertAndSend("ex", "billing.key", "m");
+                        rocket.syncSend(dynamic, "m");
+                        rocket.syncSend("plain", "m");
+                        new Message("spring", "payload");
+                        new Message("one");
+                        consumer.subscribe("only-topic");
+                        other.subscribe("a", "b");
+                    }
+                }
+                """).facts(new MessagingExtractor());
+
+        assertThat(topics(facts, true)).containsExactly("billing.key", "{?}", "plain");
+        assertThat(topics(facts, false)).isEmpty();
+    }
+
     private static TempRepo repo(Path tmp, String source) {
         return TempRepo.at(tmp.resolve("repo")).app().java("x/Messaging.java", source);
     }

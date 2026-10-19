@@ -537,6 +537,23 @@ class ConfigEdgeCasesTest {
         assertThat(config.get("server.port").value()).isEqualTo("9999");
     }
 
+    @Test
+    void placeholderKeyMayItselfBeAPlaceholder() {
+        assertThat(new Config().resolve("${${k:z}:d}").text()).isEqualTo("d");
+    }
+
+    @Test
+    void mavenTokensWithoutAModulePomOrArtifactIdStayUnresolved() {
+        var noPom = loadResource(repo("no-pom").resource("application.yml", "a: @artifactId@\nb: @pom.artifactId@\n"),
+                "application.yml", "default");
+        var emptyPom = loadResource(repo("empty-pom").file("pom.xml", "<project/>")
+                .resource("application.yml", "a: @artifactId@\n"), "application.yml", "default");
+
+        assertThat(noPom.get("a").value()).isEqualTo("${artifactId}");
+        assertThat(noPom.get("b").value()).isEqualTo("${pom.artifactId}");
+        assertThat(emptyPom.get("a").value()).isEqualTo("${artifactId}");
+    }
+
     private TempRepo repo(String name) {
         return TempRepo.at(tmp.resolve(name));
     }
