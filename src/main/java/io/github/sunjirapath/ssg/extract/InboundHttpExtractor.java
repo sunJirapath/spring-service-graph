@@ -6,8 +6,10 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.MethodReferenceExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
 import io.github.sunjirapath.ssg.scan.Ann;
@@ -17,15 +19,19 @@ import io.github.sunjirapath.ssg.scan.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
- * {@code @RestController}/{@code @Controller} endpoints, including mappings declared only on
+ * WebFlux router beans and {@code @RestController}/{@code @Controller} endpoints, including mappings declared only on
  * implemented interfaces (openapi-generator {@code interfaceOnly}). When such an interface is
  * not in the checkout (an unbuilt repo), endpoints come from the OpenAPI spec instead.
  */
 public final class InboundHttpExtractor implements Extractor {
+
+    private static final String WEBFLUX = "org.springframework.web.reactive.function.server.";
+    private static final Set<String> HTTP_METHODS = Set.of("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS");
 
     @Override
     public List<Fact> extract(Service s) {
@@ -34,6 +40,9 @@ public final class InboundHttpExtractor implements Extractor {
         List<Prefix> prefixes = pathPrefixes(s);
         var missing = new java.util.LinkedHashMap<ClassOrInterfaceDeclaration, List<String>>(); // controller -> absent interfaces
         for (CompilationUnit cu : s.units()) {
+            for (var m : cu.findAll(MethodDeclaration.class)) {
+                if (Ann.has(m, "Bean")) functionalRoutes(m, s, contextPath, facts);
+            }
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
                 Value prefix = prefixes.stream().filter(p -> p.applies().test(c)).map(Prefix::path).findFirst().orElse(Value.exact(""));
@@ -69,6 +78,75 @@ public final class InboundHttpExtractor implements Extractor {
             for (Fact.Endpoint e : spec) if (exposed.add(e.method() + " " + e.path().text())) facts.add(e);
         });
         return facts;
+    }
+
+    private record Route(String method, Value path) {}
+
+    /** Inline RouterFunctions.route/andRoute predicates and route().GET(path, handler) builder chains. */
+    private static void functionalRoutes(MethodDeclaration bean, Service s, Value contextPath, List<Fact> facts) {
+        for (var call : bean.findAll(MethodCallExpr.class)) {
+            MethodCallExpr root = routerRoot(call).orElse(null);
+            if (root == null || call.getArguments().size() < 2) continue;
+            Route route;
+            if (call == root || call.getNameAsString().equals("andRoute")) {
+                route = routePredicate(call.getArgument(0), s).orElse(null);
+            } else if (root.getArguments().isEmpty() && HTTP_METHODS.contains(call.getNameAsString())) {
+                route = new Route(call.getNameAsString(), s.eval(call.getArgument(0)));
+            } else {
+                continue;
+            }
+            if (route != null) facts.add(new Fact.Endpoint(route.method(), Mappings.joinValues(contextPath, route.path()),
+                    s.evidence(call.getName()), "router", routeHandler(call.getArgument(call.getArguments().size() - 1), bean, s)));
+        }
+    }
+
+    private static Optional<MethodCallExpr> routerRoot(MethodCallExpr call) {
+        if (call.getNameAsString().equals("route") && staticCall(call, WEBFLUX + "RouterFunctions")) return Optional.of(call);
+        return call.getScope().filter(Expression::isMethodCallExpr).map(Expression::asMethodCallExpr)
+                .flatMap(InboundHttpExtractor::routerRoot);
+    }
+
+    private static boolean staticCall(MethodCallExpr call, String owner) {
+        if (call.getScope().isPresent()) {
+            String scope = call.getScope().get().toString();
+            return scope.equals(owner) || scope.equals(owner.substring(owner.lastIndexOf('.') + 1));
+        }
+        return call.findCompilationUnit().stream().flatMap(cu -> cu.getImports().stream()).anyMatch(i -> i.isStatic()
+                && (i.isAsterisk() ? i.getNameAsString().equals(owner) : i.getNameAsString().equals(owner + "." + call.getNameAsString())));
+    }
+
+    private static Optional<Route> routePredicate(Expression e, Service s) {
+        if (e.isEnclosedExpr()) return routePredicate(e.asEnclosedExpr().getInner(), s);
+        if (!(e instanceof MethodCallExpr call)) return Optional.empty();
+        if (HTTP_METHODS.contains(call.getNameAsString()) && call.getArguments().size() == 1
+                && staticCall(call, WEBFLUX + "RequestPredicates")) {
+            return Optional.of(new Route(call.getNameAsString(), s.eval(call.getArgument(0))));
+        }
+        if (call.getNameAsString().equals("and") && call.getArguments().size() == 1
+                && call.getScope().orElse(null) instanceof MethodCallExpr left && call.getArgument(0) instanceof MethodCallExpr right) {
+            MethodCallExpr path = left.getNameAsString().equals("path") ? left : right;
+            MethodCallExpr method = path == left ? right : left;
+            if (path.getNameAsString().equals("path") && method.getNameAsString().equals("method")
+                    && path.getArguments().size() == 1 && method.getArguments().size() == 1
+                    && staticCall(path, WEBFLUX + "RequestPredicates") && staticCall(method, WEBFLUX + "RequestPredicates")) {
+                var verbs = Mappings.enumNames(method.getArgument(0));
+                if (verbs.size() == 1 && HTTP_METHODS.contains(verbs.getFirst())) {
+                    return Optional.of(new Route(verbs.getFirst(), s.eval(path.getArgument(0))));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private static Evidence routeHandler(Expression e, MethodDeclaration bean, Service s) {
+        if (!(e instanceof MethodReferenceExpr ref)) return null;
+        String scope = ref.getScope().toString();
+        Optional<TypeDeclaration<?>> type = scope.equals("this")
+                ? bean.findAncestor(TypeDeclaration.class).map(t -> (TypeDeclaration<?>) t)
+                : s.index().resolveType(s.index().declaredType(scope, ref).orElse(scope), ref);
+        var methods = type.stream().flatMap(t -> t.getMethodsByName(ref.getIdentifier()).stream())
+                .filter(m -> m.getParameters().size() == 1).toList();
+        return methods.size() == 1 ? s.evidence(methods.getFirst().getName()) : null;
     }
 
     /** Spring and JDK interfaces such as {@code ErrorController} carry no mappings of the app's own. */

@@ -476,6 +476,83 @@ class InboundHttpEdgeCasesTest {
         assertThat(InboundHttpExtractor.antPackage("**.controller.adm*").matcher(".x.controller.admin").matches()).isTrue();
     }
 
+    @Test
+    void extractsWebFluxFunctionalRoutesAndBuilderChains(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("functional-routes")).app()
+                .resource("application.yml", "spring.webflux.base-path: /reactive")
+                .java("x/Paths.java", "package x; class Paths { static final String ORDERS = \"/orders\"; }")
+                .java("x/Handlers.java", """
+                        package x;
+                        class Handlers {
+                            Object handle(ServerRequest request) { return null; }
+                        }
+                        """)
+                .java("x/Routes.java", """
+                        package x;
+                        import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+                        import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+                        @Configuration class Routes {
+                            @Bean RouterFunction routes(Handlers handler) {
+                                return RouterFunctions.route(GET(Paths.ORDERS + "/{id}"), handler::handle)
+                                        .andRoute(RequestPredicates.POST(Paths.ORDERS), handler::handle)
+                                        .andRoute(PUT("/put"), handler::handle)
+                                        .andRoute(DELETE("/delete"), handler::handle)
+                                        .andRoute(PATCH("/patch"), handler::handle);
+                            }
+                            @Bean RouterFunction builder(Handlers handler) {
+                                return route().GET("/builder", handler::handle)
+                                        .POST(Paths.ORDERS, handler::handle)
+                                        .PUT("/builder", handler::handle)
+                                        .DELETE("/builder", handler::handle)
+                                        .PATCH("/builder", request -> ServerResponse.ok().build()).build();
+                            }
+                        }
+                        """));
+
+        assertThat(endpoints).extracting(InboundHttpEdgeCasesTest::methodAndPath).containsExactlyInAnyOrder(
+                "GET /reactive/orders/{id}", "POST /reactive/orders", "PUT /reactive/put",
+                "DELETE /reactive/delete", "PATCH /reactive/patch", "GET /reactive/builder",
+                "POST /reactive/orders", "PUT /reactive/builder", "DELETE /reactive/builder", "PATCH /reactive/builder");
+        assertThat(endpoints).filteredOn(e -> e.path().text().equals("/reactive/orders/{id}")).singleElement().satisfies(e -> {
+            assertThat(e.path().confidence()).isEqualTo(Confidence.RESOLVED);
+            assertThat(e.path().via()).anySatisfy(v -> assertThat(v.file()).endsWith("Paths.java"));
+            assertThat(e.evidence().file()).endsWith("Routes.java");
+            assertThat(e.evidence().line()).isEqualTo(6);
+            assertThat(e.handler().file()).endsWith("Handlers.java");
+            assertThat(e.handler().line()).isEqualTo(3);
+        });
+        assertThat(endpoints).filteredOn(e -> e.method().equals("POST"))
+                .extracting(e -> e.evidence().line()).containsExactlyInAnyOrder(7, 14);
+        assertThat(endpoints).filteredOn(e -> methodAndPath(e).equals("PATCH /reactive/builder"))
+                .singleElement().satisfies(e -> assertThat(e.handler()).isNull());
+    }
+
+    @Test
+    void extractsTrivialWebFluxPathAndMethodPredicatesOnlyInRouteBeans(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("route-predicates")).app().java("x/Routes.java", """
+                package x;
+                import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+                @Configuration class Routes {
+                    @Bean RouterFunction routes(Handlers handler) {
+                        return org.springframework.web.reactive.function.server.RouterFunctions.route(
+                                path("/composed").and(method(HttpMethod.GET)), handler::handle)
+                                .andRoute(RequestPredicates.method(HttpMethod.POST).and(RequestPredicates.path("/reverse")), handler::handle);
+                    }
+                    RouterFunction notABean(Handlers handler) {
+                        return RouterFunctions.route(GET("/not-a-bean"), handler::handle);
+                    }
+                    @Bean Object unrelated(Handlers handler) {
+                        other.route(GET("/not-a-router"), handler::handle);
+                        other.GET("/not-a-builder", handler::handle);
+                        return GET("/predicate-only");
+                    }
+                }
+                """));
+
+        assertThat(endpoints).extracting(InboundHttpEdgeCasesTest::methodAndPath)
+                .containsExactlyInAnyOrder("GET /composed", "POST /reverse");
+    }
+
     private static TempRepo missingInterfaceRepo(Path root) {
         return TempRepo.at(root).app().java("x/C.java", "package x; @RestController class C implements MissingApi {}");
     }
