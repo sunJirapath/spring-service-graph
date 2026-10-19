@@ -506,6 +506,37 @@ class ConfigEdgeCasesTest {
         assertThat(config.withPrefix("clients.orders.").get("clients.orders.token").value()).isNull();
     }
 
+    @Test
+    void mavenFilteredYamlIsReadWithTheModuleArtifactIdAndOtherTokensUnresolved() {
+        var repo = repo("filtered")
+                .file("pom.xml", """
+                        <project>
+                          <parent><artifactId>parent-pom</artifactId></parent>
+                          <!-- <artifactId>commented</artifactId> -->
+                          <artifactId>pig-gateway</artifactId>
+                        </project>
+                        """)
+                .resource("application.yml", """
+                        spring:
+                          application:
+                            name: @project.artifactId@
+                          cloud:
+                            nacos:
+                              server-addr: @config.server-addr@
+                          config:
+                            import:
+                              - optional:nacos:application-@profiles.active@.yml
+                        server:
+                          port: 9999
+                        """);
+        var config = loadResource(repo, "application.yml", "default");
+
+        assertThat(config.valueOf("spring.application.name").text()).isEqualTo("pig-gateway");
+        assertThat(config.valueOf("spring.cloud.nacos.server-addr").resolved()).isFalse();
+        assertThat(config.get("spring.config.import[0]").value()).isEqualTo("optional:nacos:application-${profiles.active}.yml");
+        assertThat(config.get("server.port").value()).isEqualTo("9999");
+    }
+
     private TempRepo repo(String name) {
         return TempRepo.at(tmp.resolve(name));
     }

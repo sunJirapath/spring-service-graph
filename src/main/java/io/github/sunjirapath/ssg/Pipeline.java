@@ -51,7 +51,7 @@ public final class Pipeline {
             roots.put(repo.name(), repo.root());
             JavaIndex index = JavaIndex.build(repo);
             List<Service> services = Discovery.discover(index, o.profile(), o.configRepo());
-            if (services.isEmpty()) System.err.println("warn: no @SpringBootApplication in " + repo.root());
+            if (services.isEmpty()) System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
             for (Service s : services) {
                 String prev = seen.put(s.name(), repo.name() + "/" + s.path());
                 if (prev != null) {

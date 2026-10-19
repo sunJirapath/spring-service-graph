@@ -40,6 +40,28 @@ class ReachEdgeCasesTest {
     }
 
     @Test
+    void concreteReceiverDoesNotFanOutToSiblingImplementations(@TempDir Path tmp) {
+        var reaches = reaches(repo(tmp, """
+                package x;
+                @RestController class C {
+                    AProducer a; Producer any;
+                    @GetMapping("/a") void a() { a.send(); }
+                    @GetMapping("/any") void any() { any.send(); }
+                }
+                interface Producer { void send(); }
+                abstract class BaseProducer implements Producer {}
+                class AProducer extends BaseProducer { KafkaTemplate kafkaTemplate; public void send() { kafkaTemplate.send("a", "x"); } }
+                class BProducer extends BaseProducer { KafkaTemplate kafkaTemplate; public void send() { kafkaTemplate.send("b", "x"); } }
+                """));
+
+        assertThat(reaches).filteredOn(r -> r.path().equals("/a")).singleElement()
+                .satisfies(r -> assertThat(r.chain()).contains("AProducer.send"));
+        // an interface receiver still dispatches to every implementation, through the abstract class
+        assertThat(reaches).filteredOn(r -> r.path().equals("/any")).extracting(Fact.Reach::chain)
+                .anyMatch(c -> c.contains("AProducer.send")).anyMatch(c -> c.contains("BProducer.send"));
+    }
+
+    @Test
     void reachesSinkThroughGenericServiceField(@TempDir Path tmp) {
         var reaches = reaches(repo(tmp, """
                 package x;

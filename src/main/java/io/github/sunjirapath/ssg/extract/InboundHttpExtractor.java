@@ -42,7 +42,7 @@ public final class InboundHttpExtractor implements Extractor {
                         }
                     }
                 }
-                var absent = c.getImplementedTypes().stream().filter(t -> s.index().resolveType(t, c).isEmpty())
+                var absent = c.getImplementedTypes().stream().filter(t -> s.index().resolveType(t, c).isEmpty() && !framework(t, c))
                         .map(t -> t.getName().getIdentifier()).toList();
                 if (!absent.isEmpty()) missing.put(c, absent);
             }
@@ -60,6 +60,15 @@ public final class InboundHttpExtractor implements Extractor {
             for (Fact.Endpoint e : spec) if (exposed.add(e.method() + " " + e.path().text())) facts.add(e);
         });
         return facts;
+    }
+
+    /** Spring and JDK interfaces such as {@code ErrorController} carry no mappings of the app's own. */
+    private static boolean framework(com.github.javaparser.ast.type.ClassOrInterfaceType t, ClassOrInterfaceDeclaration c) {
+        String name = t.getNameWithScope();
+        String fqn = c.findCompilationUnit().flatMap(cu -> cu.getImports().stream()
+                        .filter(i -> !i.isStatic() && !i.isAsterisk() && i.getName().getIdentifier().equals(name)).findFirst())
+                .map(i -> i.getNameAsString()).orElse(name);
+        return fqn.matches("(org\\.springframework|javax?|jakarta)\\..*");
     }
 
     /** The controller's own method overriding {@code m} (same name and parameter types), else {@code m}. */

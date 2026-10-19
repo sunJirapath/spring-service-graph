@@ -84,7 +84,7 @@ class MainCoverageTest {
 
         var captured = captureStderr(() -> Pipeline.scan(new Pipeline.Options(List.of(repo), "default", null, null)));
 
-        assertThat(captured).contains("warn: no @SpringBootApplication in", repo.toString());
+        assertThat(captured).contains("warn: no Spring Boot app", repo.toString());
     }
 
     @Test

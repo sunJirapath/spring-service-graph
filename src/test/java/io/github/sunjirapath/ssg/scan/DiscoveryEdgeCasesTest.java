@@ -3,6 +3,7 @@ package io.github.sunjirapath.ssg.scan;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import io.github.sunjirapath.ssg.TempRepo;
 import io.github.sunjirapath.ssg.model.Confidence;
+import io.github.sunjirapath.ssg.model.Edge;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -162,7 +163,7 @@ class DiscoveryEdgeCasesTest {
     }
 
     @Test
-    void knownLimitLibraryModuleHasNoServiceAttributionButItsConstantsStillResolve() {
+    void libraryModuleSourcesGoOnlyToServicesThatUseThemAndTheirConstantsResolve() {
         var repo = repo("library-attribution")
                 .file("app/src/main/java/app/App.java", """
                         package app;
@@ -173,21 +174,61 @@ class DiscoveryEdgeCasesTest {
                 .file("app/src/main/resources/application.properties", "spring.application.name=app\n")
                 .file("library/src/main/java/common/Names.java", """
                         package common;
-                        public class Names { public static final String PATH = "/from-library"; }
+                        public class Names { public static final String PATH = "/from-library"; Helper h; }
                         """)
+                .file("library/src/main/java/common/Helper.java", "package common; public class Helper {}")
+                .file("library/src/main/java/common/Unused.java", "package common; public class Unused {}")
                 .file("other/src/main/java/other/App.java", "package other; @SpringBootApplication class App {}")
                 .file("other/src/main/resources/application.properties", "spring.application.name=other\n");
 
-        var service = repo.services().stream().filter(s -> s.name().equals("app")).findFirst().orElseThrow();
+        var service = repo.service("app");
         var path = service.units().stream().flatMap(cu -> cu.findAll(VariableDeclarator.class).stream())
                 .filter(v -> v.getNameAsString().equals("PATH")).findFirst().orElseThrow();
 
-        // repo-relative: the temp repo itself is named "library-attribution"
-        assertThat(service.units()).noneMatch(cu -> service.repo().relative(service.index().fileOf(cu)).startsWith("library/"));
+        // Names directly, Helper through Names; nobody uses Unused
+        assertThat(service.units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
+                .containsExactlyInAnyOrder("App.java", "Names.java", "Helper.java");
+        assertThat(repo.service("other").units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
+                .containsExactly("App.java");
         assertThat(service.eval(path.getInitializer().orElseThrow())).satisfies(value -> {
             assertThat(value.text()).isEqualTo("/from-library");
             assertThat(value.confidence()).isEqualTo(Confidence.RESOLVED);
             assertThat(value.via()).anyMatch(e -> e.file().endsWith("library/src/main/java/common/Names.java"));
+        });
+    }
+
+    @Test
+    void feignClientInSharedApiModuleCallsFromItsUsersNotFromItsImplementer() {
+        var repo = repo("shared-api")
+                .file("users-api/src/main/java/api/UserApi.java", """
+                        package api;
+                        @FeignClient(name = "users")
+                        public interface UserApi { @GetMapping("/rpc/users/{id}") String get(@PathVariable long id); }
+                        """)
+                .file("users/src/main/java/users/App.java", "package users; @SpringBootApplication class App {}")
+                .file("users/src/main/java/users/UserApiImpl.java", """
+                        package users;
+                        import api.UserApi;
+                        @RestController class UserApiImpl implements UserApi { public String get(long id) { return ""; } }
+                        class Self { UserApi local; } // the local bean, not a remote call
+                        """)
+                .file("users/src/main/resources/application.properties", "spring.application.name=users\n")
+                .file("orders/src/main/java/orders/App.java", """
+                        package orders;
+                        import api.UserApi;
+                        @SpringBootApplication @EnableFeignClients(clients = UserApi.class) class App {}
+                        """)
+                .file("orders/src/main/resources/application.properties", "spring.application.name=orders\n")
+                .file("billing/src/main/java/billing/App.java", "package billing; @SpringBootApplication class App {}")
+                .file("billing/src/main/resources/application.properties", "spring.application.name=billing\n");
+
+        var calls = TempRepo.scan(repo).edges().stream().filter(e -> e.kind() == Edge.Kind.CALLS).toList();
+
+        assertThat(calls).singleElement().satisfies(e -> {
+            assertThat(e.from()).isEqualTo("service:orders");
+            assertThat(e.to()).isEqualTo("endpoint:users:GET /rpc/users/{id}");
+            assertThat(e.evidence().getFirst().file()).isEqualTo("users-api/src/main/java/api/UserApi.java");
+            assertThat(e.evidence().getFirst().line()).isEqualTo(3);
         });
     }
 

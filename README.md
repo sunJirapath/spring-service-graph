@@ -30,7 +30,7 @@ Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`
 | `--link-base <url>` | no | URL template for evidence links in the Markdown, e.g. `https://git.example/{repo}/blob/main/{file}#L{line}`. Without it, links are relative paths to the local checkout. |
 | `--out <dir>` | yes | Output directory. |
 
-A service is a module with a `@SpringBootApplication` class. Its name is `spring.application.name`, falling back to the module directory name.
+A service is a module with a `@SpringBootApplication` class, or with a `main` method that starts Spring through `SpringApplication` or `SpringApplicationBuilder`. Its name is `spring.application.name`, falling back to the module directory name.
 
 ## What is detected
 
@@ -70,8 +70,8 @@ A service is a module with a `@SpringBootApplication` class. Its name is `spring
 
 | Source | Notes |
 |---|---|
-| `@Entity` / `@Table`, `@Document` (Mongo) | Service USES the table or collection. |
-| Spring Data repositories | Taken from the `<Entity, ID>` type argument only; derived query methods are not interpreted. |
+| `@Entity` / `@Table`, MyBatis-Plus `@TableName`, `@Document` (Mongo) | Service USES the table or collection. |
+| Spring Data repositories, MyBatis-Plus `BaseMapper<T>` mappers | Taken from the entity type argument only; derived query methods are not interpreted. |
 | Liquibase `createTable`, Flyway migrations, `schema.sql` | Service OWNS the table. |
 | SQL passed to `JdbcTemplate`, `NamedParameterJdbcTemplate`, `JdbcOperations`, `JdbcClient` or a `--sql-methods` wrapper | Service USES each table after `FROM`/`JOIN`/`INTO`/`UPDATE`. The SQL is folded through constants and text blocks; CTEs, comments, literals, `FOR UPDATE` and `EXTRACT(.. FROM ..)` are not mistaken for tables. |
 

@@ -27,8 +27,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Tables and collections: {@code @Entity}/{@code @Table}, {@code @Document}, Spring Data
- * repositories (via their entity type argument; derived query methods are not needed), and
+ * Tables and collections: {@code @Entity}/{@code @Table}, MyBatis-Plus {@code @TableName}, {@code @Document},
+ * Spring Data repositories and MyBatis-Plus {@code BaseMapper}s (via their entity type argument;
+ * derived query methods are not needed), and
  * ownership from migrations: Liquibase {@code createTable}, Flyway and {@code schema.sql}.
  */
 public final class DataExtractor implements Extractor {
@@ -58,6 +59,11 @@ public final class DataExtractor implements Extractor {
                     .orElse(Value.exact(snake(c.getNameAsString())));
             return Optional.of(new Mapped(normalized(name), "sql", "Entity"));
         }
+        var tableName = Ann.find(c, "TableName"); // MyBatis-Plus; its default naming is snake case too
+        if (tableName.isPresent()) {
+            Value name = Ann.attr(tableName.get(), "value").map(s::eval).orElse(Value.exact(snake(c.getNameAsString())));
+            return Optional.of(new Mapped(normalized(name), "sql", "TableName"));
+        }
         var doc = Ann.find(c, "Document");
         if (doc.isPresent()) {
             Value name = Ann.attr(doc.get(), "collection", "value").map(s::eval)
@@ -71,11 +77,16 @@ public final class DataExtractor implements Extractor {
         if (Ann.has(c, "NoRepositoryBean")) return;
         var typeParameters = c.getTypeParameters().stream().map(p -> p.getNameAsString()).toList();
         for (ClassOrInterfaceType st : c.getExtendedTypes()) {
-            if (st.getTypeArguments().map(a -> a.isEmpty()).orElse(true) || !isRepository(s, st, c, 0)) continue;
+            if (st.getTypeArguments().map(a -> a.isEmpty()).orElse(true)) continue;
+            var base = repositoryBase(s, st, c, 0);
+            if (base.isEmpty()) continue;
             var arg = st.getTypeArguments().get().get(0);
             String entity = arg instanceof ClassOrInterfaceType t ? t.getNameWithScope() : arg.asString();
             if (typeParameters.contains(entity)) continue; // a generic base like BaseRepo<T, ID>: its subtypes name the entity
-            var mapped = s.index().resolveType(entity, c).flatMap(t -> table(s, t));
+            var type = s.index().resolveType(entity, c);
+            var mapped = type.flatMap(t -> table(s, t));
+            if (mapped.isEmpty() && type.isPresent() && base.get().endsWith("BaseMapper")) // MyBatis-Plus needs no @TableName
+                mapped = Optional.of(new Mapped(Value.exact(snake(type.get().getNameAsString())), "sql", "BaseMapper"));
             if (mapped.isPresent()) {
                 facts.add(new Fact.TableUse(false, mapped.get().name, mapped.get().store, s.evidence(c),
                         "repository " + c.getNameAsString()));
@@ -86,13 +97,17 @@ public final class DataExtractor implements Extractor {
         }
     }
 
-    /** A Spring Data *Repository, directly or through custom base interfaces found in sources. */
-    private static boolean isRepository(Service s, ClassOrInterfaceType t, com.github.javaparser.ast.Node context, int depth) {
-        if (t.getNameAsString().endsWith("Repository")) return true;
-        if (depth > 64) return false; // only a guard against illegal cyclic extends in broken code
+    /**
+     * A Spring Data *Repository or a MyBatis-Plus BaseMapper (MPJBaseMapper from mybatis-plus-join), directly or
+     * through custom base interfaces found in sources, such as yudao's BaseMapperX. Returns that framework base's name.
+     */
+    private static Optional<String> repositoryBase(Service s, ClassOrInterfaceType t, com.github.javaparser.ast.Node context, int depth) {
+        String name = t.getNameAsString();
+        if (name.endsWith("Repository") || name.equals("BaseMapper") || name.equals("MPJBaseMapper")) return Optional.of(name);
+        if (depth > 64) return Optional.empty(); // only a guard against illegal cyclic extends in broken code
         return s.index().resolveType(t, context).filter(ClassOrInterfaceDeclaration.class::isInstance)
-                .map(d -> ((ClassOrInterfaceDeclaration) d).getExtendedTypes().stream().anyMatch(x -> isRepository(s, x, d, depth + 1)))
-                .orElse(false);
+                .flatMap(d -> ((ClassOrInterfaceDeclaration) d).getExtendedTypes().stream()
+                        .flatMap(x -> repositoryBase(s, x, d, depth + 1).stream()).findFirst());
     }
 
     // ---------------------------------------------------------------- migrations

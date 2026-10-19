@@ -181,13 +181,47 @@ public final class Config {
 
     private void addYaml(Repo repo, Path file, String text, String profile) {
         var yaml = new Yaml(new LoaderOptions());
-        for (var doc : yaml.composeAll(new StringReader(text))) {
+        for (var doc : yaml.composeAll(new StringReader(unfiltered(repo, file, text)))) {
             if (doc == null) continue; // empty document between --- separators
             var flat = new LinkedHashMap<String, Entry>();
             flatten(repo, file, "", doc, flat);
             if (!activeFor(flat, profile)) continue;
             flat.forEach((k, v) -> put(k, v.value(), v.evidence()));
         }
+    }
+
+    private static final Pattern MAVEN_TOKEN = Pattern.compile("@([A-Za-z][\\w.-]*)@");
+    private static final Pattern POM_PARENT = Pattern.compile("(?s)<!--.*?-->|<parent>.*?</parent>");
+    private static final Pattern POM_ARTIFACT = Pattern.compile("<artifactId>\\s*([^<\\s]+)\\s*</artifactId>");
+
+    /**
+     * Maven resource filtering tokens ({@code @pom.artifactId@}) are not valid YAML where a value starts with
+     * {@code @}. The module's own artifactId is substituted; any other token becomes an unresolved {@code ${...}}.
+     */
+    static String unfiltered(Repo repo, Path file, String text) {
+        if (!MAVEN_TOKEN.matcher(text).find()) return text;
+        String artifactId = artifactId(repo, file);
+        return MAVEN_TOKEN.matcher(text).replaceAll(m -> {
+            String key = m.group(1);
+            boolean isArtifact = key.equals("artifactId") || key.equals("project.artifactId") || key.equals("pom.artifactId");
+            return java.util.regex.Matcher.quoteReplacement(isArtifact && artifactId != null ? artifactId : "${" + key + "}");
+        });
+    }
+
+    /** The artifactId of the nearest pom.xml above {@code file} (inside the repo), or null. */
+    private static String artifactId(Repo repo, Path file) {
+        Path root = repo.root().toAbsolutePath().normalize();
+        for (Path dir = file.toAbsolutePath().normalize().getParent(); dir != null && dir.startsWith(root); dir = dir.getParent()) {
+            Path pom = dir.resolve("pom.xml");
+            if (!Files.isRegularFile(pom)) continue;
+            try {
+                var m = POM_ARTIFACT.matcher(POM_PARENT.matcher(readText(pom)).replaceAll(""));
+                return m.find() ? m.group(1) : null;
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static boolean activeFor(Map<String, Entry> doc, String profile) {

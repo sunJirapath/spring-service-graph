@@ -30,9 +30,9 @@ import java.util.stream.Stream;
  * method calls (so Spring Data's synthesized methods like {@code findByEmail} count too).
  *
  * <p>Calls are resolved without a symbol solver: {@code this}/unqualified calls to the enclosing type,
- * {@code field.m()} through the field's declared type, {@code Type.m()} statically, and interfaces
- * to their implementations in the service. Calls on chains, lambdas and method references are not
- * followed.
+ * {@code field.m()} through the field's declared type, {@code Type.m()} statically, and interface or
+ * abstract receivers to their implementations in the service (a concrete receiver resolves only to its
+ * own type and supertypes). Calls on chains, lambdas and method references are not followed.
  *
  * <p>shortcut: sinks are matched to methods by file and line (evidence has no column), so two methods
  * declared on the same source line cannot be told apart; add columns to Evidence if that ever matters.
@@ -125,8 +125,30 @@ public final class ReachAnalysis {
                 ? call.findAncestor(TypeDeclaration.class).map(t -> (TypeDeclaration<?>) t)
                 : scopeType(call);
         if (type.isEmpty()) return List.of();
+        String name = call.getNameAsString();
+        int arity = call.getArguments().size();
         var out = new ArrayList<MethodDeclaration>();
-        collect(type.get(), call.getNameAsString(), call.getArguments().size(), out, Set.of(), 0);
+        collect(type.get(), name, arity, out, Set.of(), 0);
+        // dispatch to implementations only from an interface or abstract receiver: fanning out from a concrete
+        // class's supertypes added every sibling (one shopizer populate() reached all 25 populators)
+        if (type.get() instanceof ClassOrInterfaceDeclaration c && (c.isInterface() || c.isAbstract())) {
+            for (var impl : subtypes(c)) {
+                impl.getMethodsByName(name).stream().filter(m -> m.getParameters().size() == arity && !out.contains(m)).forEach(out::add);
+            }
+        }
+        return out;
+    }
+
+    /** Every type in this service that extends or implements {@code t}, directly or not. */
+    private List<TypeDeclaration<?>> subtypes(TypeDeclaration<?> t) {
+        var seen = new IdentityHashMap<TypeDeclaration<?>, Boolean>();
+        var out = new ArrayList<TypeDeclaration<?>>();
+        var queue = new ArrayDeque<TypeDeclaration<?>>(List.of(t));
+        while (!queue.isEmpty()) {
+            for (var impl : implementations.getOrDefault(queue.poll(), List.of())) {
+                if (seen.put(impl, true) == null) { out.add(impl); queue.add(impl); }
+            }
+        }
         return out;
     }
 
@@ -136,10 +158,6 @@ public final class ReachAnalysis {
         var path = Stream.concat(visiting.stream(), Stream.of(t)).collect(java.util.stream.Collectors.toSet());
         t.getMethodsByName(name).stream().filter(m -> m.getParameters().size() == arity).forEach(out::add);
         for (var st : s.index().superTypes(t)) collect(st, name, arity, out, path, depth + 1);
-        // dispatch from an interface or abstract class to its implementations in this service
-        for (var impl : implementations.getOrDefault(t, List.of())) {
-            impl.getMethodsByName(name).stream().filter(m -> m.getParameters().size() == arity && !out.contains(m)).forEach(out::add);
-        }
     }
 
     /** The declared type of the call's receiver, when it is a field/variable or a type name. */
