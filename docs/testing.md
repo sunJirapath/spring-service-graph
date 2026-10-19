@@ -20,7 +20,7 @@ Run everything with `./gradlew test`. Add `jacocoTestReport` for coverage; the r
 | A: config, discovery | `ConfigEdgeCasesTest`, `DiscoveryEdgeCasesTest` |
 | B: indexing, folding, parsing | `JavaIndexEdgeCasesTest`, `AnnTest` |
 | C: inbound and outbound HTTP | `InboundHttpEdgeCasesTest`, `OutboundHttpEdgeCasesTest` |
-| D: Kafka, data, gateway, reach | `KafkaEdgeCasesTest`, `DataEdgeCasesTest`, `GatewayEdgeCasesTest`, `ReachEdgeCasesTest` |
+| D: messaging, data, gateway, reach | `KafkaEdgeCasesTest`, `MessagingExtractorTest`, `DataEdgeCasesTest`, `GatewayEdgeCasesTest`, `ReachEdgeCasesTest` |
 | E: linker, outputs, diff, MCP, CLI | `LinkerEdgeCasesTest`, `PathMatchEdgeCasesTest`, `OutputEdgeCasesTest`, `GraphDiffEdgeCasesTest`, `McpEdgeCasesTest`, `MainTest` |
 | F: messy fleet, end to end | `MessyFleetTest` over `src/test/resources/messy/`. This is 5 ugly repos: a broken Java file, BOM, CRLF, a Kotlin file, invalid YAML, a binary resource, `node_modules`, test-only apps, deep modules, and cross-repo links. |
 | G: coverage gaps | `*CoverageTest` in each package |

@@ -17,7 +17,7 @@ public interface Extractor {
 
     /** @param sqlMethods in-house wrapper methods that take SQL, for {@link JdbcExtractor} */
     static List<Extractor> all(Set<String> sqlMethods) {
-        return List.of(new InboundHttpExtractor(), new OutboundHttpExtractor(), new KafkaExtractor(),
+        return List.of(new InboundHttpExtractor(), new OutboundHttpExtractor(), new KafkaExtractor(), new MessagingExtractor(),
                 new DataExtractor(), new GatewayExtractor(), new JdbcExtractor(sqlMethods));
     }
 }

@@ -422,6 +422,21 @@ class JdbcExtractorTest {
         assertThat(facts).isEmpty();
     }
 
+    @Test
+    void nativeQueryAnnotationNamesTablesButJpqlIsSkipped(@TempDir Path tmp) {
+        var facts = extract(tmp, "query", """
+                package x;
+                interface Repo {
+                    String SQL = "select * from t_order o join t_item i on o.id = i.order_id";
+                    @Query(value = SQL, nativeQuery = true) List<Object> all();
+                    @Query("select o from Order o") List<Object> jpql();
+                    @Query(value = "update t_stock set n = 0", nativeQuery = false) void notNative();
+                }
+                """);
+
+        assertThat(tableNames(facts)).containsExactly("t_order", "t_item");
+    }
+
     private static List<Fact> extract(Path tmp, String name, String source) {
         return extract(tmp, name, source, Set.of());
     }

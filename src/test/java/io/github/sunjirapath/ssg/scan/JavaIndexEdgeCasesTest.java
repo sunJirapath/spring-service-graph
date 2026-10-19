@@ -39,6 +39,24 @@ class JavaIndexEdgeCasesTest {
     }
 
     @Test
+    void foldsEnumConstantGetterThroughConstructorOrLombokFieldOrder() {
+        var ctor = fold(repo("enum-ctor").java("x/Use.java", """
+                package x;
+                enum Topic { SMS("sms-topic", "Send SMS"); Topic(String t, String n) { this.topic = t; name = n; }
+                    String topic; String name; String getTopic() { return topic; } }
+                class Use { void m() { use(Topic.SMS.getTopic()); } }
+                """));
+        var lombok = fold(repo("enum-lombok").java("x/Use.java", """
+                package x;
+                @Getter enum Queue { CANCEL("ex", "order.cancel", "key"); private String exchange; private String name; private String routeKey; }
+                class Use { void m() { use(Queue.CANCEL.getRouteKey()); } }
+                """));
+
+        assertThat(ctor.text()).isEqualTo("sms-topic");
+        assertThat(lombok.text()).isEqualTo("key");
+    }
+
+    @Test
     void decodesEscapesAndUnicodeEscapesInStringLiterals() {
         var value = fold(repo("escapes").java("x/Use.java", """
                 package x;

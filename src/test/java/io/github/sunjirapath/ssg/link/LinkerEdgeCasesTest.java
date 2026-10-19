@@ -314,6 +314,19 @@ class LinkerEdgeCasesTest {
         assertThat(tie).hasSize(2); // two qualifying services: unchanged
     }
 
+    @Test
+    void tableOwnedByTwoServicesIsReportedAsShared() {
+        var findings = link(service("a", table(true, "orders", "sql", ev("a/V1.sql", 1))),
+                service("b", table(true, "orders", "sql", ev("b/V1.sql", 1))),
+                service("c", table(true, "items", "sql", ev("c/V1.sql", 1)))).findings().stream()
+                .filter(f -> f.kind() == Finding.Kind.SHARED_TABLE).toList();
+
+        assertThat(findings).singleElement().satisfies(f -> {
+            assertThat(f.message()).isEqualTo("table `orders` is owned by 2 services: a, b");
+            assertThat(f.evidence()).hasSize(2);
+        });
+    }
+
     private static Graph link(Linker.ServiceFacts... services) {
         return link(Map.of(), services);
     }

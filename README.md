@@ -1,6 +1,6 @@
 # spring-service-graph (ssg)
 
-`ssg` is a Java 21 CLI that statically scans a fleet of Spring Boot microservice repositories and writes a cross-service dependency graph: which service exposes which endpoints, who calls them, which Kafka topics are produced and consumed, and which tables each service owns or uses. Every edge carries `file:line` evidence and a confidence level (`EXACT`, `RESOLVED` or `UNRESOLVED`). Use it for impact analysis ("what breaks if I change this endpoint?"), for generated onboarding pages per service, and to catch contract drift (a client calling a path that no service exposes).
+`ssg` is a Java 21 CLI that statically scans a fleet of Spring Boot microservice repositories and writes a cross-service dependency graph: which service exposes which endpoints, who calls them, which Kafka, RabbitMQ and RocketMQ topics are produced and consumed, and which tables each service owns or uses. Every edge carries `file:line` evidence and a confidence level (`EXACT`, `RESOLVED` or `UNRESOLVED`). Use it for impact analysis ("what breaks if I change this endpoint?"), for generated onboarding pages per service, and to catch contract drift (a client calling a path that no service exposes).
 
 It never needs a build or a classpath. Sources are parsed with JavaParser (parse only, no symbol solver) and constants are folded by ssg's own index, so unbuilt checkouts work. Only Java sources are read.
 
@@ -39,6 +39,8 @@ A service is a module with a `@SpringBootApplication` class, or with a `main` me
 | Source | Notes |
 |---|---|
 | `@RestController` / `@Controller` with `@RequestMapping`, `@GetMapping` etc. | Class and method paths are joined; `server.servlet.context-path` is applied. |
+| JAX-RS `@Path` resources with `@GET`, `@POST` etc. | `@ApplicationPath` and the context path are prepended. |
+| WebFlux `RouterFunction` beans | `RouterFunctions.route(GET("/x"), h)`, `.andRoute(...)` and `route().GET("/x", h)` builders. |
 | Mappings on implemented interfaces | openapi-generator `interfaceOnly` interfaces, including `target/` and `build/generated-sources`. |
 | OpenAPI 3 / Swagger 2 spec in the module (YAML or JSON) | Fallback when the generated interface is not in the checkout. If no spec exists either, a `MISSING_INTERFACE` finding is raised. |
 
@@ -58,13 +60,15 @@ A service is a module with a `@SpringBootApplication` class, or with a `main` me
 | Config keys `spring.cloud.gateway.routes`, `...server.webflux.routes`, `...server.webmvc.routes`, `...mvc.routes` | YAML or properties. `Path` predicates and path-rewriting filters give an endpoint on the gateway and a call to the route URI. |
 | Java `RouteLocator` DSL | Best effort. |
 
-**Kafka**
+**Messaging**
 
 | Source | Notes |
 |---|---|
 | `@KafkaListener` | Consumes. |
 | `@SendTo`, `KafkaTemplate.send` / `sendDefault`, `StreamBridge.send` | Produces. |
 | Spring Cloud Stream `bindings.*.destination` | Produces or consumes. |
+| `@RabbitListener(queues)`; `RabbitTemplate` / `AmqpTemplate` `convertAndSend` / `send` | Consumes the queue; produces to the routing key. They link only when the routing key equals the queue name; `Binding` beans are not read. |
+| `@RocketMQMessageListener(topic)`, `DefaultMQPushConsumer.subscribe`; `RocketMQTemplate` sends, `new Message(topic, ...)` | Consumes or produces; a `topic:tag` destination is the topic. |
 
 **Data**
 
@@ -73,6 +77,7 @@ A service is a module with a `@SpringBootApplication` class, or with a `main` me
 | `@Entity` / `@Table`, MyBatis-Plus `@TableName`, `@Document` (Mongo) | Service USES the table or collection. |
 | Spring Data repositories, MyBatis-Plus `BaseMapper<T>` mappers | Taken from the entity type argument only; derived query methods are not interpreted. |
 | Liquibase `createTable`, Flyway migrations, `schema.sql` | Service OWNS the table. |
+| `@Query(value = "...", nativeQuery = true)` | Service USES each table in the SQL. JPQL queries are skipped (they name entities). |
 | SQL passed to `JdbcTemplate`, `NamedParameterJdbcTemplate`, `JdbcOperations`, `JdbcClient` or a `--sql-methods` wrapper | Service USES each table after `FROM`/`JOIN`/`INTO`/`UPDATE`. The SQL is folded through constants and text blocks; CTEs, comments, literals, `FOR UPDATE` and `EXTRACT(.. FROM ..)` are not mistaken for tables. |
 
 `@LoadBalanced` bean definitions are not calls; only call sites produce edges.
@@ -109,7 +114,7 @@ Calls are resolved without a symbol solver:
 
 A repository counts as soon as the walk calls any method on it, so Spring Data's synthesized methods such as `findByEmail` are covered. Each edge carries the call chain, for example `AccountController.create → AccountService.create → AccountEvents.accountCreated`.
 
-Not followed: calls on method chains, lambdas, method references and `@Async` or event listeners. A repository maps only to its entity's table, even when a custom `@Query` reads other tables.
+Not followed: calls on method chains, lambdas, method references and `@Async` or event listeners. A repository maps only to its entity's table, even when a custom `@Query` reads other tables (those still give the service a USES edge, but no reach).
 
 ## Diff: merge-request impact
 
@@ -166,7 +171,7 @@ out/
   diagrams/<service>.mmd  Mermaid diagram per service
 ```
 
-Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`.
+Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services).
 
 A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):
 
@@ -188,7 +193,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 ## Known limits
 
 - Tables are scoped per service: two services using the same table name get separate nodes.
-- In a repo with several Spring Boot apps, library modules (no `@SpringBootApplication`) are attributed to no service; their constants and interfaces are still visible to the index.
+- In a repo with several Spring Boot apps, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively; Gradle `projectDir` remaps and Maven profiles are not read.
 - Profile expressions such as `!dev` or `a & b` are not evaluated, only plain profile lists.
 - Config repo: only the repo root is read, not per-app subfolders or custom search locations.
 - A non-final field or local variable that is reassigned later still folds to its initializer.

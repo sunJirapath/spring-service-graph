@@ -50,6 +50,7 @@ public final class Linker {
         var l = new Linker(aliases);
         l.findings.addAll(extraFindings);
         all = singleOwners(all);
+        l.sharedTables(all);
         all.forEach(l::addService);
         all.forEach(l::addFacts);
         var es = l.edges.values().stream().map(EdgeAcc::build)
@@ -88,6 +89,24 @@ public final class Linker {
                     ? (Fact) new Fact.TableUse(false, t.table(), t.store(), t.evidence(), t.via()) : f).toList();
             return new ServiceFacts(sf.service(), sf.repo(), sf.path(), facts);
         }).toList();
+    }
+
+    /** A table still owned by several services after {@link #singleOwners}: a shared schema couples their releases. */
+    private void sharedTables(List<ServiceFacts> all) {
+        var owners = new TreeMap<String, java.util.TreeSet<String>>();
+        var evidence = new HashMap<String, List<Evidence>>();
+        for (var sf : all)
+            for (Fact f : sf.facts())
+                if (f instanceof Fact.TableUse t && t.owns() && t.table().resolved()) {
+                    String key = t.store() + ":" + t.table().text();
+                    if (owners.computeIfAbsent(key, k -> new java.util.TreeSet<>()).add(sf.service()))
+                        evidence.computeIfAbsent(key, k -> new ArrayList<>()).add(t.evidence());
+                }
+        owners.forEach((key, services) -> {
+            if (services.size() < 2) return;
+            findings.add(new Finding(Finding.Kind.SHARED_TABLE, services.first(), "table `" + key.substring(key.indexOf(':') + 1)
+                    + "` is owned by " + services.size() + " services: " + String.join(", ", services), evidence.get(key)));
+        });
     }
 
     private static boolean inModule(ServiceFacts sf, Evidence e) {

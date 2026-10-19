@@ -8,6 +8,9 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.CallableDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.RecordDeclaration;
@@ -393,10 +396,41 @@ public final class JavaIndex {
             String text = !v.resolved() ? v.text() : name.equals("trim") ? v.text().trim() : name.equals("strip") ? v.text().strip() : v.text();
             return new Value(text, v.confidence(), m.toString(), v.via());
         }
+        // Enum.CONST.getTopic(): the constant's constructor argument that the getter's field is assigned from
+        if (m.getArguments().isEmpty() && name.length() > 3 && name.startsWith("get")
+                && m.getScope().orElse(null) instanceof FieldAccessExpr f) {
+            String field = Character.toLowerCase(name.charAt(3)) + name.substring(4);
+            var arg = resolveType(f.getScope().toString(), m)
+                    .filter(EnumDeclaration.class::isInstance).map(EnumDeclaration.class::cast)
+                    .flatMap(en -> en.getEntries().stream().filter(c -> c.getNameAsString().equals(f.getNameAsString())).findFirst()
+                            .flatMap(c -> enumArg(en, c, field)));
+            if (arg.isPresent()) return raw(eval(arg.get(), depth + 1).withConfidence(Confidence.RESOLVED, evidence(arg.get())), m);
+        }
         if (m.getScope().map(Object::toString).orElse("").equals("String") && name.equals("valueOf")
                 && m.getArguments().size() == 1) {
             return raw(eval(m.getArgument(0), depth + 1), m);
         }
         return Value.unresolved(m.toString());
+    }
+
+    private static Optional<Expression> enumArg(EnumDeclaration en, EnumConstantDeclaration c, String field) {
+        int n = c.getArguments().size();
+        for (ConstructorDeclaration ctor : en.getConstructors()) {
+            if (ctor.getParameters().size() != n) continue;
+            for (AssignExpr a : ctor.findAll(AssignExpr.class)) {
+                var target = a.getTarget();
+                String t = target instanceof FieldAccessExpr fa ? fa.getNameAsString() : target instanceof NameExpr ne ? ne.getNameAsString() : null;
+                if (!field.equals(t) || !(a.getValue() instanceof NameExpr p)) continue;
+                for (int i = 0; i < n; i++) {
+                    if (ctor.getParameter(i).getNameAsString().equals(p.getNameAsString())) return Optional.of(c.getArgument(i));
+                }
+            }
+        }
+        if (!en.getConstructors().isEmpty()) return Optional.empty();
+        // Lombok @AllArgsConstructor: arguments follow the instance fields in declaration order
+        var fields = en.getFields().stream().filter(fd -> !fd.isStatic()).flatMap(fd -> fd.getVariables().stream())
+                .map(VariableDeclarator::getNameAsString).toList();
+        int i = fields.indexOf(field);
+        return i >= 0 && i < n && fields.size() == n ? Optional.of(c.getArgument(i)) : Optional.empty();
     }
 }

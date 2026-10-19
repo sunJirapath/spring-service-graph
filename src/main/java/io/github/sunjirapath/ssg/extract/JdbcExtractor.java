@@ -12,6 +12,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ThisExpr;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
+import io.github.sunjirapath.ssg.scan.Ann;
 import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Service;
 
@@ -48,6 +49,7 @@ public final class JdbcExtractor implements Extractor {
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
         for (CompilationUnit cu : s.units()) {
+            for (MethodDeclaration m : cu.findAll(MethodDeclaration.class)) nativeQuery(s, m, facts);
             for (MethodCallExpr call : cu.findAll(MethodCallExpr.class)) {
                 boolean client = isClientCall(s, call);
                 boolean wrapper = !client && isWrapperCall(s, call);
@@ -90,6 +92,19 @@ public final class JdbcExtractor implements Extractor {
                     + "; list it in --sql-methods so the SQL at its call sites is read", s.evidence(call)));
         } else {
             facts.add(new Fact.Problem("UNRESOLVED", "SQL not resolved statically (from `" + sql.raw() + "`)", s.evidence(call)));
+        }
+    }
+
+    /** Spring Data {@code @Query(value = "...", nativeQuery = true)}: the SQL names tables directly. */
+    // shortcut: JPQL @Query names entities, whose tables the entity extractor already reports; read it if fleets use JPQL-only repositories
+    private static void nativeQuery(Service s, MethodDeclaration m, List<Fact> facts) {
+        var q = Ann.find(m, "Query");
+        if (q.isEmpty() || !Ann.attr(q.get(), "nativeQuery").map(e -> e.toString().equals("true")).orElse(false)) return;
+        var sqlExpr = Ann.attr(q.get(), "value");
+        if (sqlExpr.isEmpty()) return;
+        Value sql = s.eval(sqlExpr.get());
+        for (String t : tables(sql.text())) {
+            facts.add(new Fact.TableUse(false, new Value(t, sql.confidence(), sql.raw(), sql.via()), "sql", s.evidence(m), "@Query"));
         }
     }
 
