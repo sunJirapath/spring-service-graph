@@ -256,6 +256,24 @@ class OutboundHttpEdgeCasesTest {
     }
 
     @Test
+    void restTemplateLambdaParameterBindsToTheHelperCallSiteArgument(@TempDir Path tmp) {
+        var calls = calls(restRepo(tmp.resolve("lambda-helper"), """
+                class Calls {
+                    RestTemplate rest;
+                    Object items() { return call(u -> rest.getForObject(u, Object.class)); }
+                    Object orders() { return this.send("x", (body, u) -> rest.postForObject(u, body, Object.class)); }
+                    Object other() { return client.call(u -> rest.getForObject(u, Object.class)); }
+                    Object call(String a, Function<String, Object> f) { return f.apply("http://wrong-arity"); }
+                    Object call(Function<String, Object> f) { log.info("http://not-f"); init(); return f.apply("http://api/items"); }
+                    Object send(String x, BiFunction<String, String, Object> f) { f.andThen(null); return f.apply(x, "http://api/orders"); }
+                }
+                """));
+
+        assertThat(calls).extracting(OutboundHttpEdgeCasesTest::methodAndUrl)
+                .containsExactlyInAnyOrder("GET http://api/items", "POST http://api/orders", "GET {?}");
+    }
+
+    @Test
     void restTemplateResolvesCapturedUrlInsideLambda(@TempDir Path tmp) {
         var calls = calls(restRepo(tmp.resolve("captured-url"), """
                 class Calls {

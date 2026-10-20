@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,6 +58,7 @@ public final class JavaIndex {
     private final Map<String, List<TypeDeclaration<?>>> typesByFqn = new HashMap<>(); // same FQN may live in several modules
     private final Map<CompilationUnit, Path> files = new HashMap<>();
     private final List<Problem> problems = new ArrayList<>();
+    private final Map<VariableDeclarator, Boolean> singleValued = new IdentityHashMap<>(); // nodes compare by structure
 
     private JavaIndex(Repo repo) {
         this.repo = repo;
@@ -178,7 +180,7 @@ public final class JavaIndex {
 
     public Evidence evidence(Node n) {
         CompilationUnit cu = n.findCompilationUnit().orElseThrow();
-        return repo.evidence(files.get(cu), n.getBegin().map(p -> p.line).orElse(1));
+        return repo.evidence(files.get(cu), n.getBegin().map(p -> p.line).orElse(1), n.getBegin().map(p -> p.column).orElse(0));
     }
 
     public boolean isGenerated(CompilationUnit cu) {
@@ -387,10 +389,62 @@ public final class JavaIndex {
             if (v.isPresent()) return Optional.of(raw(eval(v.get(), depth + 1).withConfidence(Confidence.RESOLVED, at), use));
         }
         if (d instanceof VariableDeclarator v && v.getInitializer().isPresent()) {
-            // shortcut: a non-final field or local reassigned later still folds to its initializer.
+            // past MAX_DEPTH the initializer does not fold anyway; skipping the check there stops a = b; b = a recursing
+            if (depth < MAX_DEPTH && !singleValued.computeIfAbsent(v, this::singleValued)) return Optional.of(Value.unresolved(use.toString()));
             return Optional.of(raw(eval(v.getInitializer().get(), depth + 1).withConfidence(Confidence.RESOLVED, at), use));
         }
         return Optional.of(Value.unresolved(use.toString()));
+    }
+
+    /**
+     * True when {@code v} is final or every other assignment to it (in its class for a field, its method for a local)
+     * stores the same literal as its initializer; a {@link Value} has no alternatives, so anything else is unresolved.
+     * shortcut: ++/-- and assignments from other classes are not seen, fine while folded values are strings.
+     */
+    private boolean singleValued(VariableDeclarator v) {
+        Node parent = v.getParentNode().orElse(null);
+        boolean field = parent instanceof FieldDeclaration;
+        if (field ? ((FieldDeclaration) parent).isFinal()
+                : parent instanceof VariableDeclarationExpr x && x.isFinal()) return true;
+        Node scope = field ? parent.getParentNode().orElse(parent)
+                : v.findAncestor(CallableDeclaration.class).map(Node.class::cast).or(() -> v.findAncestor(TypeDeclaration.class)).orElse(v);
+        String name = v.getNameAsString();
+        String initial = eval(v.getInitializer().orElseThrow(), MAX_DEPTH).text();
+        for (AssignExpr a : scope.findAll(AssignExpr.class)) {
+            boolean target = switch (a.getTarget()) {
+                case NameExpr n -> n.getNameAsString().equals(name) && declarationOf(name, n).orElse(null) == v;
+                case FieldAccessExpr f -> field && f.getScope() instanceof ThisExpr && f.getNameAsString().equals(name)
+                        && f.findAncestor(TypeDeclaration.class).orElse(null) == scope;
+                default -> false;
+            };
+            if (!target || suffixAppend(a, name, initial)) continue;
+            // only a literal counts as the same value; MAX_DEPTH stops the fold at the first name hop
+            Value assigned = eval(a.getValue(), MAX_DEPTH);
+            if (a.getOperator() != AssignExpr.Operator.ASSIGN || assigned.confidence() == Confidence.UNRESOLVED
+                    || !assigned.text().equals(initial)) return false;
+        }
+        return true;
+    }
+
+    /**
+     * {@code url += "?a=" + a}, {@code url = url + "&b=" + b}, or any append once the initial value holds a {@code ?}:
+     * query params do not change the path a call is matched on. {@code sql += " WHERE ..."}, or any append once the
+     * initial value holds a space: SQL clauses keep the tables already named (a URL path never holds a space).
+     * shortcut: the folded value drops the appended text, so a JOINed table is missed; fold branches if that matters.
+     */
+    private static boolean suffixAppend(AssignExpr a, String name, String initial) {
+        Expression first = a.getValue();
+        if (a.getOperator() == AssignExpr.Operator.ASSIGN) {
+            BinaryExpr self = null; // url = url + ...: the innermost left operand is the variable itself
+            while (first instanceof BinaryExpr b) { self = b; first = b.getLeft(); }
+            if (self == null || self.getOperator() != BinaryExpr.Operator.PLUS
+                    || !(first instanceof NameExpr n && n.getNameAsString().equals(name))) return false;
+            first = self.getRight();
+        } else if (a.getOperator() != AssignExpr.Operator.PLUS) return false;
+        while (first instanceof BinaryExpr b) first = b.getLeft();
+        String known = initial.replace(Value.UNKNOWN, "");
+        return known.contains("?") || known.contains(" ")
+                || first instanceof StringLiteralExpr s && (s.getValue().startsWith("?") || s.getValue().startsWith("&") || s.getValue().startsWith(" "));
     }
 
     private Value staticImport(NameExpr n, int depth) {

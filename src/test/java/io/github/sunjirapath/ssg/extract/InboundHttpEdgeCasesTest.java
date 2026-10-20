@@ -184,7 +184,7 @@ class InboundHttpEdgeCasesTest {
 
         assertThat(endpoints).singleElement().satisfies(e -> {
             assertThat(e.path().text()).isEqualTo("/health");
-            assertThat(e.handler()).isEqualTo(e.evidence());
+            assertThat(e.handler()).isEqualByComparingTo(e.evidence()); // same line; the handler cites the method name's column
         });
     }
 
@@ -415,11 +415,46 @@ class InboundHttpEdgeCasesTest {
     }
 
     @Test
-    void knownLimitOpenApiBasePathPropertyOverrideIsNotApplied(@TempDir Path tmp) {
-        var endpoints = endpoints(missingInterfaceRepo(tmp.resolve("openapi-known-limit"))
-                .resource("application.properties", "openapi.demo.base-path=/configured\n")
+    void openApiBasePathPropertyOverridesTheSpecServerPath(@TempDir Path tmp) {
+        var endpoints = endpoints(missingInterfaceRepo(tmp.resolve("openapi-base-path"))
+                .resource("application.properties", "openapi.demo.base-path=/configured\nopenapi.base-path=/ignored\n")
                 .resource("openapi.yaml", """
                         openapi: 3.0.0
+                        servers:
+                          - url: /from-spec
+                        paths:
+                          /items:
+                            get: {}
+                        """));
+
+        assertThat(endpoints).singleElement().satisfies(e -> assertThat(e.path().text()).isEqualTo("/configured/items"));
+    }
+
+    @Test
+    void openApiBasePathPropertyIsPickedByTheSpecTitleWhenSeveralAreSet(@TempDir Path tmp) {
+        var endpoints = endpoints(missingInterfaceRepo(tmp.resolve("openapi-base-path-title"))
+                .resource("application.properties", "openapi.other.base-path=/other\nopenapi.petStore.base-path=/pets-v2\n")
+                .resource("openapi.yaml", """
+                        openapi: 3.0.0
+                        info:
+                          title: Pet Store
+                        servers:
+                          - url: /from-spec
+                        paths:
+                          /items:
+                            get: {}
+                        """));
+
+        assertThat(endpoints).singleElement().satisfies(e -> assertThat(e.path().text()).isEqualTo("/pets-v2/items"));
+    }
+
+    @Test
+    void openApiBasePathPropertiesThatNameNoSpecAreIgnored(@TempDir Path tmp) {
+        var endpoints = endpoints(missingInterfaceRepo(tmp.resolve("openapi-base-path-ambiguous"))
+                .resource("application.properties", "openapi.a.base-path=/a\nopenapi.b.base-path=/b\n")
+                .resource("openapi.yaml", """
+                        openapi: 3.0.0
+                        info: plain
                         servers:
                           - url: /from-spec
                         paths:
@@ -474,6 +509,33 @@ class InboundHttpEdgeCasesTest {
 
         assertThat(endpoints).extracting(e -> e.path().text()).containsExactlyInAnyOrder("/admin-api/a", "/app-api/b", "/c");
         assertThat(InboundHttpExtractor.antPackage("**.controller.adm*").matcher(".x.controller.admin").matches()).isTrue();
+    }
+
+    @Test
+    void setPathPrefixesConfigOverrideReplacesTheConstructorDefault(@TempDir Path tmp) {
+        var endpoints = endpoints(TempRepo.at(tmp.resolve("set-prefixes-override")).app()
+                .resource("application.yml", "yudao.web.admin-api.prefix: /console")
+                .java("x/WebProperties.java", """
+                        package x;
+                        @ConfigurationProperties(prefix = "yudao.web") class WebProperties {
+                            private Api adminApi = new Api("/admin-api", "**.controller.admin.**");
+                            private Api appApi = new Api("/app-api", "**.controller.app.**");
+                        }
+                        """)
+                .java("x/Other.java", "package x; class Other { Object api; Other() { api = new Api(\"/other\", \"**.controller.other.**\"); } }")
+                .java("x/WebConfig.java", """
+                        package x;
+                        @Configuration class WebConfig {
+                            void configure(RequestMappingHandlerMapping m, Map<String, Predicate<Class<?>>> prefixes) {
+                                m.setPathPrefixes(prefixes);
+                            }
+                        }
+                        """)
+                .java("x/crm/controller/admin/A.java", "package x.crm.controller.admin; @RestController class A { @GetMapping(\"/a\") void a() {} }")
+                .java("x/crm/controller/other/O.java", "package x.crm.controller.other; @RestController class O { @GetMapping(\"/o\") void o() {} }")
+                .java("x/crm/controller/app/B.java", "package x.crm.controller.app; @RestController class B { @GetMapping(\"/b\") void b() {} }"));
+
+        assertThat(endpoints).extracting(e -> e.path().text()).containsExactlyInAnyOrder("/console/a", "/app-api/b", "/other/o");
     }
 
     @Test

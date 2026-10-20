@@ -4,7 +4,7 @@ class DynamicCalls {
     WebClient webClient;
     String legacyHost = "http://legacy-api";
 
-    Object resolvedDespiteMutableField() {
+    Object reassignedFieldHost() {
         return webClient.get().uri(legacyHost + "/legacy/orders/42").retrieve();
     }
 
