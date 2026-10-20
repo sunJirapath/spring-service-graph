@@ -417,13 +417,24 @@ public final class JavaIndex {
                         && f.findAncestor(TypeDeclaration.class).orElse(null) == scope;
                 default -> false;
             };
-            if (!target || suffixAppend(a, name, initial)) continue;
+            if (!target || suffixAppend(a, name, initial) || field && injected(a)) continue;
             // only a literal counts as the same value; MAX_DEPTH stops the fold at the first name hop
             Value assigned = eval(a.getValue(), MAX_DEPTH);
             if (a.getOperator() != AssignExpr.Operator.ASSIGN || assigned.confidence() == Confidence.UNRESOLVED
                     || !assigned.text().equals(initial)) return false;
         }
         return true;
+    }
+
+    /**
+     * {@code this.host = host} from a setter or constructor parameter: the declared default stays the static guess.
+     * shortcut: an injected override is not seen, read the caller's argument if a fleet relies on it.
+     */
+    private static boolean injected(AssignExpr a) {
+        return a.getOperator() == AssignExpr.Operator.ASSIGN && a.getValue() instanceof NameExpr n
+                && a.findAncestor(CallableDeclaration.class)
+                        .map(c -> c.getParameters().stream().anyMatch(p -> ((Parameter) p).getNameAsString().equals(n.getNameAsString())))
+                        .orElse(false);
     }
 
     /**

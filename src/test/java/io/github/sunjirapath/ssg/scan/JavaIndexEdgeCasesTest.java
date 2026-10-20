@@ -317,6 +317,22 @@ class JavaIndexEdgeCasesTest {
     }
 
     @Test
+    void fieldSetFromASetterParameterKeepsItsDefault() {
+        var value = fold(repo("reassigned-setter").java("x/Use.java", """
+                package x;
+                class Use {
+                    String host = "http://visits/";
+                    Use(String host) { this.host = host; }
+                    void setHost(String host) { this.host = host; }
+                    void m() { use(host); }
+                }
+                """));
+
+        assertThat(value.text()).isEqualTo("http://visits/");
+        assertThat(value.confidence()).isEqualTo(Confidence.RESOLVED);
+    }
+
+    @Test
     void reassignmentToTheSameConstantOrOfAShadowingLocalStillFolds() {
         var value = fold(repo("reassigned-same").java("x/Use.java", """
                 package x;
