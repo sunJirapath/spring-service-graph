@@ -1,9 +1,0 @@
-{
-  "mode": "baseline",
-  "passed": true,
-  "source_error_line": 5,
-  "evidence_line": 1,
-  "retained_parse_errors": 1,
-  "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
-  "graph_sha256": "bf8824a87adaf05211487cc8dc0d36b545247019e64a1fe898a190d43228ffbc"
-}

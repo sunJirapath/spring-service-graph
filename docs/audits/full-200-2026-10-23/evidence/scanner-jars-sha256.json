@@ -1,8 +1,0 @@
-{
-  "jackson-annotations-2.22.jar": "21ddb598807d3a51a876704eb979d9296e1c6a6f47ab1826ff88c6d6a127a2d0",
-  "jackson-core-2.22.4.jar": "2d30c375cddea9657a1e1ef97547a2694b663b355facb4de53a097782b312d1a",
-  "jackson-databind-2.22.4.jar": "d4cbf8947087f305869826801913abdc50735a1fab2074a1993e7bc67ca974a3",
-  "javaparser-core-3.28.2.jar": "b5499a3b1c40b16c0671fabe478c9aafeab38160c6fde74a6c13f42d86716ecd",
-  "snakeyaml-2.7.jar": "2e194eba45a67dee19a4e272f4a04b18de8054e9f598b094382f6dae0b0e4b5e",
-  "spring-service-graph-0.1.0-SNAPSHOT.jar": "3a6448851936edfd488b5cf98d093047f4bdea1207c9cbe2d321c47e94abdaf9"
-}

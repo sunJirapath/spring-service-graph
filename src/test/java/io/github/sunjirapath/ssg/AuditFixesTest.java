@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Regressions for the eight independently reproduced public-corpus audit findings. */
 class AuditFixesTest {
-    private static final Path FIXTURES = Path.of("docs/audits/github40-2026-10-23/fixtures");
+    private static final Path FIXTURES = Path.of("src/test/resources/audit-fixtures");
 
     @TempDir Path tmp;
 
