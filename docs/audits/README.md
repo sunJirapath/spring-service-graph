@@ -1,5 +1,6 @@
 # Public source audits
 
+- [Final scanner: full 200-repository rerun and Feign package correction](full-200-2026-10-23/report.md)
 - [Remaining bugs fixed: 764 tests and targeted public regressions](remaining-fixes-2026-10-23/report.md)
 - [Extension to 200 unique repositories and two additional fixes](extension-200-2026-10-23/report.md)
 - [Combined 200-repository pinned catalog](extension-200-2026-10-23/catalog-200.json)

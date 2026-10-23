@@ -1,0 +1,14 @@
+{
+  "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+  "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+  "scanner_source_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+  "completed_repositories": 25,
+  "expected_repositories": 200,
+  "source_scans_in_completed_results": 50,
+  "passes": 25,
+  "unexpected_failures": 0,
+  "status": "stopped_for_additional_confirmed_diagnostic_fix",
+  "incomplete_repository_output_not_counted": true,
+  "source_inventory": "docs/audits/full-200-2026-10-23/evidence/intermediate-scanner-source-sha256.json",
+  "graph_archive_sha256": "9cd05bc91e7484c6646b1c3527b84877b03bc05c6ad91d6c2cb1bec23be51bdf"
+}

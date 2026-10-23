@@ -1,0 +1,2769 @@
+[
+  {
+    "repository": "aboullaite/fhemni",
+    "commit": "556a0f2a413203547fb462a31f4ec52b89ef691b",
+    "tier": "medium",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 198,
+    "source_checkout": "build/full200/repos/aboullaite--fhemni",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:35:54.908706+00:00",
+    "finished_at": "2026-10-23T13:36:05.898298+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:35:54.908706+00:00",
+        "seconds": 4.141,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "3ece40bc0c8c9cbe170f385e2ede51b248d9cbddd0826400838670ef7b32d640"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:35:59.071706+00:00",
+        "seconds": 4.453,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "3ece40bc0c8c9cbe170f385e2ede51b248d9cbddd0826400838670ef7b32d640"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fhemni.mmd": "7d0b8855160e341ea217cd1cc99d07d193e96f99f28b2458d4d20691c783186e",
+      "diagrams/fleet.puml": "969759d30cf55c7959fe4df66bb6b9095133aa72d3e477f647d88178c5d8ac80",
+      "graph.json": "105428172784ff0c4cd2041d56c3fc7c12451ee22490771265f61b58124d25cf",
+      "index.md": "4a6a28f40ba7867620d7e9dbc1a415a2acc9e6fb845044a4e9f1130fa4293d7b",
+      "services/fhemni.md": "4e1bf75a0f420cf44f6725fd18d5f14b4b148cc1e16a72d22a318f0cb593366a"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 118,
+      "nodes": 165,
+      "edges": 764,
+      "findings": 25,
+      "evidence_locations_checked": 1704,
+      "source_files_line_counted": 74
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:04.905635+00:00",
+      "seconds": 0.469,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:05.391437+00:00",
+      "seconds": 0.5,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aboullaite--fhemni-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:fhemni:DELETE /api/admin/civic-priority-shares/{token}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "fhemni"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/aboullaite--fhemni.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/aboullaite--fhemni",
+      "build/full200/runs/4430237fd3b2e6a2/run2/aboullaite--fhemni"
+    ]
+  },
+  {
+    "repository": "aerospike/spring-data-aerospike-starters",
+    "commit": "7d2dc52269f9c9a9f654033e4e6a656c2b8c27df",
+    "tier": "small",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 28,
+    "source_checkout": "build/full200/repos/aerospike--spring-data-aerospike-starters",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:35:51.531243+00:00",
+    "finished_at": "2026-10-23T13:35:54.744888+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:35:51.531243+00:00",
+        "seconds": 1.219,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-run1.stdout.log",
+        "run": 1,
+        "output_files": 11,
+        "output_tree_sha256": "752b7babc0216d00e1069a3bde7cfc57655557f512530dfe20e9d28ef1c103ff"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:35:52.771426+00:00",
+        "seconds": 1.188,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-run2.stdout.log",
+        "run": 2,
+        "output_files": 11,
+        "output_tree_sha256": "752b7babc0216d00e1069a3bde7cfc57655557f512530dfe20e9d28ef1c103ff"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "27c9a6c9bee0b2ad8d7a2d2616757b1f620596753e2f1cf68956379793cf1abb",
+      "diagrams/starter-example-client-reactive.mmd": "392d868577de087deb600207ec9a4c2dd579909fa4025d7c63fe115e425b646a",
+      "diagrams/starter-example-client.mmd": "cfd1732f7dd21b42855eb2045914f6643174072c96cf18d336685aff9cb672fa",
+      "diagrams/starter-example-data-reactive.mmd": "7112de295cfacdf92fba1326606a7c3edada9c1d8bd03139a10d6d0f5c9fc1da",
+      "diagrams/starter-example-data.mmd": "7cdf129b9f849f44dbc8e592c3176739aa30d9f1fd54c166b2bdbe47bab19050",
+      "graph.json": "6361f3d98bf53e2275dffb06428d08766cc302d34769a83365f2b05966fb6c20",
+      "index.md": "941146403ecdfc8e81ade5aff13caf93d2e06a15273d80885db9aa8fa7793977",
+      "services/starter-example-client-reactive.md": "d63e761ec84580316d4175aa747cb8b49e60482747c17f2833a4e5f9b5dfb8e7",
+      "services/starter-example-client.md": "42a74754ab8d535da4f294dc5b49126d62d3ba2a913c6fbf0aad17331832f9df",
+      "services/starter-example-data-reactive.md": "2ad2e572c792c8b63939dcc5894b0e9ac705cbbe1f99341d08efed67afbf069e",
+      "services/starter-example-data.md": "1f98665a4fae50f7c900dbb4e8e47b8066e51858baaf4a31458d20f69f295df2"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 4,
+      "endpoints": 14,
+      "nodes": 18,
+      "edges": 14,
+      "findings": 2,
+      "evidence_locations_checked": 30,
+      "source_files_line_counted": 4
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:35:54.015564+00:00",
+      "seconds": 0.407,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:35:54.425790+00:00",
+      "seconds": 0.312,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aerospike--spring-data-aerospike-starters-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:starter-example-data-reactive:DELETE /reactive/customer/{id}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "starter-example-client"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/aerospike--spring-data-aerospike-starters.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/aerospike--spring-data-aerospike-starters",
+      "build/full200/runs/4430237fd3b2e6a2/run2/aerospike--spring-data-aerospike-starters"
+    ]
+  },
+  {
+    "repository": "AET-DevOps26/team-bnd",
+    "commit": "b35f1aac6d85c13f1f80a130f28a8fb315157651",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.1.0",
+    "java_files": 92,
+    "source_checkout": "build/full200/repos/AET-DevOps26--team-bnd",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:36:09.914220+00:00",
+    "finished_at": "2026-10-23T13:36:14.451559+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:09.914220+00:00",
+        "seconds": 1.75,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-run1.stdout.log",
+        "run": 1,
+        "output_files": 9,
+        "output_tree_sha256": "f80bf365f5690ee38baf8a6beaa486d77791f08cfdc445693ec75cb5d45deb2b"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:11.673689+00:00",
+        "seconds": 1.796,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-run2.stdout.log",
+        "run": 2,
+        "output_files": 9,
+        "output_tree_sha256": "f80bf365f5690ee38baf8a6beaa486d77791f08cfdc445693ec75cb5d45deb2b"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/alexandria-knowledgebase.mmd": "1d5999d6a0ca6f62f6ed071f78aac70e13e804320c15d2c3041d8355f9f42deb",
+      "diagrams/alexandria-qa.mmd": "2765b024af2ee9b44fcb4f3de9b1f61361d785dce1c517c4dbf2150b01df9b99",
+      "diagrams/alexandria-user.mmd": "3fac58f21743f087359ac2e8bc558a597b44b0b264e6094c8194603d0df56a7e",
+      "diagrams/fleet.puml": "ad18c7045101f9d61e18851bba9b114e387e3694826d08ee0e3e212e111c2f77",
+      "graph.json": "7bb070661d1eb6d38e9801412fd6391f498f468d78a24b5da143ceea6206c16a",
+      "index.md": "f2c0994454974d6dc7b8bd94bc6ac2a8f3dcea8cc75bc043827ab7695d8137ee",
+      "services/alexandria-knowledgebase.md": "8d6ba002d31275e72dec56614d227d5f25574ce264286d03dd04d48e8d08575a",
+      "services/alexandria-qa.md": "5fc615508180b5cfe9fbddf452d37c5675d6ec7cec5e5b83a77aa0b192ec1a5b",
+      "services/alexandria-user.md": "439d0e9e31bc36e15309076cad67862116d25f9d2bbd9e8aa700eb0d0d0b5437"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 3,
+      "endpoints": 32,
+      "nodes": 47,
+      "edges": 101,
+      "findings": 0,
+      "evidence_locations_checked": 201,
+      "source_files_line_counted": 31
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:13.639804+00:00",
+      "seconds": 0.406,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:14.047403+00:00",
+      "seconds": 0.39,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AET-DevOps26--team-bnd-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:alexandria-knowledgebase:DELETE /api/v1/knowledgebase/documents/{documentId}/tags/{tagId}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "alexandria-knowledgebase"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/AET-DevOps26--team-bnd.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/AET-DevOps26--team-bnd",
+      "build/full200/runs/4430237fd3b2e6a2/run2/AET-DevOps26--team-bnd"
+    ]
+  },
+  {
+    "repository": "AFaria20s/TeamSync-Backend",
+    "commit": "14cadde83691b6ecee6428a9712fdad0286c54f4",
+    "tier": "medium",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 73,
+    "source_checkout": "build/full200/repos/AFaria20s--TeamSync-Backend",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:36:06.077051+00:00",
+    "finished_at": "2026-10-23T13:36:09.757981+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:06.077051+00:00",
+        "seconds": 1.266,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "00ed39718ef7693a180a1124f48fd802aba92f0cfcc795ab031a11c35af61000"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:07.340417+00:00",
+        "seconds": 1.375,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "00ed39718ef7693a180a1124f48fd802aba92f0cfcc795ab031a11c35af61000"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "b79831d9fe39e6ee15b7a7d583c9aa6e9fd86deb093d45159e39774d30cfeb0e",
+      "diagrams/teamsync.mmd": "3d28997278f680cb66e3e3e7218834c991616a92b9951ca7f303abc86183fd96",
+      "graph.json": "ae6448ae62600faafc7199b215f5823777b0ebb3e4b5b431521d329de6fb8c4f",
+      "index.md": "b3eb585781668ec00b09a3a34af2e673c56489930a855a346b9fa32e0c793d8a",
+      "services/teamsync.md": "14f72a26fbd80d89d1f8d1f6f62628df48fd2dae107cb9388ead183a86447eaf"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 49,
+      "nodes": 63,
+      "edges": 115,
+      "findings": 2,
+      "evidence_locations_checked": 228,
+      "source_files_line_counted": 35
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:08.903348+00:00",
+      "seconds": 0.438,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:09.333094+00:00",
+      "seconds": 0.422,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/AFaria20s--TeamSync-Backend-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:teamsync:DELETE /api/addresses/{id}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "teamsync"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/AFaria20s--TeamSync-Backend.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/AFaria20s--TeamSync-Backend",
+      "build/full200/runs/4430237fd3b2e6a2/run2/AFaria20s--TeamSync-Backend"
+    ]
+  },
+  {
+    "repository": "alibaba/nacos",
+    "commit": "ef52650006d1086bb1007a223e35875cb63ec146",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": null,
+    "java_files": 3039,
+    "source_checkout": "build/full200/repos/alibaba--nacos",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:36:25.063890+00:00",
+    "finished_at": "2026-10-23T13:37:04.946326+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:25.063890+00:00",
+        "seconds": 18.906,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-run1.stdout.log",
+        "run": 1,
+        "output_files": 23,
+        "output_tree_sha256": "175a2761efa7637d035b6844f966cb9ffd7a3b1552b66fbb0073e17f18be3439"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:44.002682+00:00",
+        "seconds": 19.078,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-run2.stdout.log",
+        "run": 2,
+        "output_files": 23,
+        "output_tree_sha256": "175a2761efa7637d035b6844f966cb9ffd7a3b1552b66fbb0073e17f18be3439"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/address.mmd": "615c6da36fb0f53d0b3b0a0e6929779b7f552fa826e987fd4675ef7cf235c1b5",
+      "diagrams/ai-registry-adaptor.mmd": "c96ba65ce3f57d137d48fd1436057e0c8c011f612a0eff99c68845436cf48a77",
+      "diagrams/bootstrap.mmd": "99d8a768ac66e665255549796d1383f77e45080c5add54103effe16c6214a757",
+      "diagrams/cmdb.mmd": "461990005fb466f50bc6181855616d7ab325283a85565dec8ac9f0fda0fc487a",
+      "diagrams/config.mmd": "9f2eb9d33a3add52c9048a1f8ebf8a4a745eba387910e6d2471bc9678224ccf0",
+      "diagrams/console.mmd": "9de315d6f7f4dd91651244cd269fb59bb550c340ec4fff333ec4165f50e2b749",
+      "diagrams/fleet.puml": "f8d9c9b45b19f16b23e320b79349cb7679787744446f51f0ded7ed68a7506c75",
+      "diagrams/istio.mmd": "0fc9f1ecd5880de6c65cc059582268ed3a0e17e1fce1fce98758e697429d6e4c",
+      "diagrams/naming.mmd": "0083d7596365d9c868fc8911ffb2bde0c3ea9f1727e1c3fadc71175ed60ffc1a",
+      "diagrams/prometheus.mmd": "c7249dddc7843609a40bc37e4810c277fbc94c9bca9b7698e76074a6a2f389da",
+      "diagrams/server.mmd": "969e2578137c955a684d93301fbc370493434aba1d3021abd2eb3580d65b13b9",
+      "graph.json": "108b0c8ee79d45ebd229dd044226a4a677c1a84cd3bbb431849d4409191880cc",
+      "index.md": "65d95cb36767b5f3c7f971f485a07d1844bb6f9c7b4ee6f8d7531566a853b76f",
+      "services/address.md": "8d3710942922ed8bae31febf92eebfc0d40f758a6bb9604492cf0a8502df96f9",
+      "services/ai-registry-adaptor.md": "07abe55327b87af15098b5742caffe5f7f6df04e52140d3ddd4f2bd71a545bf5",
+      "services/bootstrap.md": "ff1f8bacf388f0c5d2cfd37a537fb7a9372a991c8182b4813a50d2382f5ad792",
+      "services/cmdb.md": "1b04ff12008d9f0545a9366d5a3189891116ad2d0c571bf80e6c00396f3dc3d8",
+      "services/config.md": "76c34acb15a80853233622560304f55661ebeb3d3f9794cbbba72c400e1b34cb",
+      "services/console.md": "604a276dcfb830e7b6d55c1ade91498a0c8b70fcd3a033dbf3515aef497befae",
+      "services/istio.md": "678e07f13358d7240a80b604cbc5dc125e479de0c2a31076297039cc6e2916d4",
+      "services/naming.md": "bda217aec397bbe7a1048863f5a50b49300836f745d3ef3a48cc033b20bd21f9",
+      "services/prometheus.md": "18fe71ecd37b48f15a5501409794e09e5046a89abb2dfe6c16b7a4b0b4eaa600",
+      "services/server.md": "5bb05dbf6594bb62f8a07e2abf6ac93fc81e41adef96df8237e5fe3f85d6afdd"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 10,
+      "endpoints": 374,
+      "nodes": 430,
+      "edges": 474,
+      "findings": 132,
+      "evidence_locations_checked": 1742,
+      "source_files_line_counted": 83
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:04.155256+00:00",
+      "seconds": 0.391,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:04.554981+00:00",
+      "seconds": 0.39,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alibaba--nacos-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:address:DELETE /nacos/v1/as/nodes",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "address"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/alibaba--nacos.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/alibaba--nacos",
+      "build/full200/runs/4430237fd3b2e6a2/run2/alibaba--nacos"
+    ]
+  },
+  {
+    "repository": "alpha3166/charana",
+    "commit": "f92420f470855a6f8987dea4f4660e9de5c5eba9",
+    "tier": "small",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 14,
+    "source_checkout": "build/full200/repos/alpha3166--charana",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:36:14.606287+00:00",
+    "finished_at": "2026-10-23T13:36:17.136423+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:14.606287+00:00",
+        "seconds": 0.922,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "6b3a13d79cb846d562d1fdbd4f1a43bfa1bfb3df10c5e9b28e1729806960ab20"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:15.535246+00:00",
+        "seconds": 0.859,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "6b3a13d79cb846d562d1fdbd4f1a43bfa1bfb3df10c5e9b28e1729806960ab20"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/charana-web.mmd": "df10eb495601d3293eb69109a6063173ae5622d5ef45a8eb4178431eb8bbdbdc",
+      "diagrams/fleet.puml": "9df9a6af4d615e31c755c81e1d7cbae00d6d312c20697ab691fe8aa43a302b0d",
+      "graph.json": "58706bb8a7c71ac2ca20b260bd7001187a082b655727a294f1ba90c6992b236e",
+      "index.md": "b33e2eb0d381c7fd2213e1646d08844df1d1bdaf90ac0977d198d614e7214d51",
+      "services/charana-web.md": "f524a84d113cb6b05dd9be61da50091fdf881415aed0b41c69aff4c8de282687"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 8,
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0,
+      "evidence_locations_checked": 16,
+      "source_files_line_counted": 2
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:16.419807+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:16.766409+00:00",
+      "seconds": 0.36,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/alpha3166--charana-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:charana-web:GET /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "charana-web"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/alpha3166--charana.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/alpha3166--charana",
+      "build/full200/runs/4430237fd3b2e6a2/run2/alpha3166--charana"
+    ]
+  },
+  {
+    "repository": "Amir-UL-Islam/core-services",
+    "commit": "53cdba814c807be0118cd39ac8d995e9dc1aa5bc",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.1.0",
+    "java_files": 237,
+    "source_checkout": "build/full200/repos/Amir-UL-Islam--core-services",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:36:17.297109+00:00",
+    "finished_at": "2026-10-23T13:36:24.861228+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:17.297109+00:00",
+        "seconds": 3.187,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-run1.stdout.log",
+        "run": 1,
+        "output_files": 19,
+        "output_tree_sha256": "5285e0feb860f354bdb8f7c58609a5a3b5398bb2d14525d81ac4387c4fc999c5"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:36:20.524533+00:00",
+        "seconds": 3.063,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-run2.stdout.log",
+        "run": 2,
+        "output_files": 19,
+        "output_tree_sha256": "5285e0feb860f354bdb8f7c58609a5a3b5398bb2d14525d81ac4387c4fc999c5"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/api-gatekeeper.mmd": "7b93127cb3b87c26a02da80fe9d41eb4f8f23c66301cc1374b1f17b1ba1eebed",
+      "diagrams/core-auth-server.mmd": "c7c2081e93755737922df634c83ba17358e03f7d1da155b49638b74319aa035e",
+      "diagrams/fleet.puml": "cfc550e45d95f0a68f23d9830ffff73f8d84e9f3a3dcbc673b67210b3d6807b6",
+      "diagrams/inventory-service.mmd": "d96241410a0d1abf009d1010d406512ae6a4b94ae3dca3dfabbde8da4a80feec",
+      "diagrams/order-service.mmd": "d3cc905d503644a4d279888ae76aa4d97848145032a011ede008764b29b656a8",
+      "diagrams/product-command-service.mmd": "a36fe7cbd39693e7ae5cc9ec9373e18173642b90d3c39b7ca4060c3f6f5698cf",
+      "diagrams/product-query-service.mmd": "88c32a7c2e20890ff26e6c0d732fd88d637e34cb0c9ba26f5c41468778ef5f41",
+      "diagrams/request-response.mmd": "4c89754b33b011b21aa2188f215e2248410b3f16a8898bbeb44095c935baf184",
+      "diagrams/server-location.mmd": "0574d56c118368906eb5a9c9f5dae239deb3b18fd7c09972b5c853efa5500b58",
+      "graph.json": "38c4704b80f74487ae485c6788f910955e0d8bcf72e056f526639bd3bb127fdb",
+      "index.md": "aba3d377ba6143422ad05ab51ba933251ffed0bdf19a2e212f1e86ae9f3ed389",
+      "services/api-gatekeeper.md": "aeb484ce6d6ec58fe498aceb80e38c26560426ebe9ad34c0cae1c14370b3d418",
+      "services/core-auth-server.md": "37033e80b65067318ed9b20ad9361b374c77af8e868d51a848f61cfedb199fd7",
+      "services/inventory-service.md": "ce5138f7ca451f20950210ba2fc17030927fc6de08bbd9f2a4d953e5ce2a697f",
+      "services/order-service.md": "6d71acf7dc646ac8e4df5dd7f988ec6f29a0fcfe42cf73b7da47ff4560b8f7fc",
+      "services/product-command-service.md": "bd4e7e4e37f8d4b72e13ea94eba5ddef864944545c19911fa7ed3f69899036a8",
+      "services/product-query-service.md": "1695b5ed86ba1579e22897482806ecd46b2a9162115d4d5f13729e2c59c95bea",
+      "services/request-response.md": "092cd0eb9f749f5db42d2f3f9bc15b2763417e476746207473de94046f12ccfc",
+      "services/server-location.md": "3941fd4de18631d45a598efaf1e98882233da825e4a0823272ec1a06df185b77"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 8,
+      "endpoints": 76,
+      "nodes": 105,
+      "edges": 227,
+      "findings": 1,
+      "evidence_locations_checked": 458,
+      "source_files_line_counted": 53
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:24.012653+00:00",
+      "seconds": 0.422,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:36:24.425730+00:00",
+      "seconds": 0.437,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/Amir-UL-Islam--core-services-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:inventory-service:GET /api/v3/check-is-in-stock",
+      "incoming_edges_verified": 2,
+      "impact_depth": 1,
+      "impact_rows_verified": 2,
+      "service_card_verified": "api-gatekeeper"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/Amir-UL-Islam--core-services.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/Amir-UL-Islam--core-services",
+      "build/full200/runs/4430237fd3b2e6a2/run2/Amir-UL-Islam--core-services"
+    ]
+  },
+  {
+    "repository": "andresmontoyat/spring-boot-hexagonal-architecture",
+    "commit": "1ddc307962aa0d3e922b77a9ce49ba320552e543",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.0.8",
+    "java_files": 60,
+    "source_checkout": "build/full200/repos/andresmontoyat--spring-boot-hexagonal-architecture",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:37:05.107560+00:00",
+    "finished_at": "2026-10-23T13:37:08.227471+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:05.107560+00:00",
+        "seconds": 1.063,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "4414ac0f66e8342e4699f5cb050fb6e03cd71f6e7282bfca01120e397859d237"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:06.171313+00:00",
+        "seconds": 1.296,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "4414ac0f66e8342e4699f5cb050fb6e03cd71f6e7282bfca01120e397859d237"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/custom-service.mmd": "b9a885940727dc52886f665508cfe9a08b2dea9f768e14d78ee204d529d4e71b",
+      "diagrams/fleet.puml": "b6131e0435654d80e0bff918ae61e072a13038855265c7162ac7f1b4979863b3",
+      "graph.json": "ff1a9e0742b1d2ac6525c2954087537b0ce69eb33fc2813365df84b4e5a1819d",
+      "index.md": "45288b5099fb1b275db38efa9cd6964ad21f6ef02e0679810705701e38ea5aec",
+      "services/custom-service.md": "5c70db793e6d3eeea40d55285b882aa6e3ce788e5f9ce711f6c8b15ebf972e78"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 5,
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0,
+      "evidence_locations_checked": 32,
+      "source_files_line_counted": 5
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:07.513425+00:00",
+      "seconds": 0.375,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:07.885915+00:00",
+      "seconds": 0.343,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/andresmontoyat--spring-boot-hexagonal-architecture-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:custom-service:DELETE /custom-service/api/v1/customs/{id}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "custom-service"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/andresmontoyat--spring-boot-hexagonal-architecture.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/andresmontoyat--spring-boot-hexagonal-architecture",
+      "build/full200/runs/4430237fd3b2e6a2/run2/andresmontoyat--spring-boot-hexagonal-architecture"
+    ]
+  },
+  {
+    "repository": "anfega154/Realtime-Learning",
+    "commit": "38ebf179376a1bc483fbf96af702c490abb8a43a",
+    "tier": "small",
+    "tool": "gradle",
+    "boot_version": "4.0.2",
+    "java_files": 2,
+    "source_checkout": "build/full200/repos/anfega154--Realtime-Learning",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:37:08.357197+00:00",
+    "finished_at": "2026-10-23T13:37:10.047856+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:08.357197+00:00",
+        "seconds": 0.547,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "9f71f4b86aeb0454a85716e7fb2b0fbcfd48f75fdf3f1c5b6ea12cb6a60fe37e"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:08.908847+00:00",
+        "seconds": 0.516,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "9f71f4b86aeb0454a85716e7fb2b0fbcfd48f75fdf3f1c5b6ea12cb6a60fe37e"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "53215e4cdf1aff04d61d4b4de270ca84153d567fd334e79336941670ea39de16",
+      "diagrams/realtime-learning.mmd": "252cbc11f2497a4c69ca7749654f8862918a2691a427d1eead743b11abbc0d9a",
+      "graph.json": "950f80ddbfb29c6dc9dce3acd15d9aff8c420ae9323b183f8257726096bfd8bd",
+      "index.md": "3f4b55aa0e7dfae41c718952f12b470777d9bbcd94d6f172c05cbaa3fcac83d4",
+      "services/realtime-learning.md": "e3b96065db7388e7373cc9333177a9eca2ca16fe0ccb8d2ecd4fe62b2001f420"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 0,
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0,
+      "evidence_locations_checked": 0,
+      "source_files_line_counted": 0
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:09.434204+00:00",
+      "seconds": 0.312,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:09.738741+00:00",
+      "seconds": 0.313,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/anfega154--Realtime-Learning-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "service:realtime-learning",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "realtime-learning"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/anfega154--Realtime-Learning.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/anfega154--Realtime-Learning",
+      "build/full200/runs/4430237fd3b2e6a2/run2/anfega154--Realtime-Learning"
+    ]
+  },
+  {
+    "repository": "apache/dolphinscheduler",
+    "commit": "c70003c2aa325a143e033e6b753ac7de30ec31a9",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": null,
+    "java_files": 1959,
+    "source_checkout": "build/full200/repos/apache--dolphinscheduler",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:37:10.223056+00:00",
+    "finished_at": "2026-10-23T13:37:33.473681+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:10.223056+00:00",
+        "seconds": 9.829,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-run1.stdout.log",
+        "run": 1,
+        "output_files": 15,
+        "output_tree_sha256": "1302b7090d105707f56bcfdbe2b66407e6d88f892e2649de71d90ca5abfff2df"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:20.082757+00:00",
+        "seconds": 9.719,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-run2.stdout.log",
+        "run": 2,
+        "output_files": 15,
+        "output_tree_sha256": "1302b7090d105707f56bcfdbe2b66407e6d88f892e2649de71d90ca5abfff2df"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/alert-server.mmd": "4ee326c13ba7f1e9b688762629fc4170234c0b29cd96d9875a63531bbc0769d5",
+      "diagrams/api-server.mmd": "f97b06fe923d04ce91103781b05aec90e7b1e240c0514bd3a19ba5968fcdc4f9",
+      "diagrams/dolphinscheduler-tools.mmd": "3e3aab3f256b6703a94d6bb19acfb7909b005117efdd251f931518f22081d50f",
+      "diagrams/fleet.puml": "d3c93cac8a86190d2efff588e59494709d55122a93376651143033597126fc32",
+      "diagrams/master-server.mmd": "ea363bf36e570887e416ebcfc5d9ec7560c8b02b3193cd373337bf9625cce1b9",
+      "diagrams/standalone-server.mmd": "284a6978a276dc715304552025e155ff16408c99f5c0907fc95a07f4673b1be9",
+      "diagrams/worker-server.mmd": "63756fdb887deb564a0b522e318916a6d02db040424180151b00070195b22aad",
+      "graph.json": "1c99b34a40d8699a06669b1021a2574845a502e412313bf45999ca6b3cc04294",
+      "index.md": "1e29e8351232e4e62a8ea463a288cab795764e24d87f157212d2f02e93fc5c01",
+      "services/alert-server.md": "2e6fdaab30af6c9cceae04d09dae62ebc9390ea34f7a2cce610e17252fb8b212",
+      "services/api-server.md": "c1997edfb89d42e5cdb0aea3fe631bb033b599fc3ff62dc551eef2c6def323e9",
+      "services/dolphinscheduler-tools.md": "05ca05991ad097df3d4576486c0add5ab15ab903afbfcbfa3b204eb32fc64588",
+      "services/master-server.md": "69f97a36a392a926f21fa54a046da29741ce3f2d22f3dc5a67d5ae2ad04bcfb9",
+      "services/standalone-server.md": "a629d059655d84ebfd01da59cea35968119d3c9e89e283cdf358fdf9e67d80c8",
+      "services/worker-server.md": "63c03dc0cb6ebf49bb5de8a8eb4e6dae36f9548fa5324cafa87ae31e7c8768b3"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 6,
+      "endpoints": 239,
+      "nodes": 541,
+      "edges": 861,
+      "findings": 73,
+      "evidence_locations_checked": 4131,
+      "source_files_line_counted": 186
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:32.581121+00:00",
+      "seconds": 0.422,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:37:33.027354+00:00",
+      "seconds": 0.453,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--dolphinscheduler-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:api-server:* /dolphinscheduler/error",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "alert-server"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/apache--dolphinscheduler.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/apache--dolphinscheduler",
+      "build/full200/runs/4430237fd3b2e6a2/run2/apache--dolphinscheduler"
+    ]
+  },
+  {
+    "repository": "apache/fineract",
+    "commit": "71681f2d8828f377e7a5b93dba3721384db1daaf",
+    "tier": "huge",
+    "tool": "gradle",
+    "boot_version": null,
+    "java_files": 5488,
+    "source_checkout": "build/full200/repos/apache--fineract",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:37:33.752613+00:00",
+    "finished_at": "2026-10-23T13:38:52.638849+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:37:33.752613+00:00",
+        "seconds": 32.765,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "bc2e6c2b0141c686f4f36c60282a313f59f570928ed6460a84fca4268187289f"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:38:06.543177+00:00",
+        "seconds": 31.031,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "bc2e6c2b0141c686f4f36c60282a313f59f570928ed6460a84fca4268187289f"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fineract-provider.mmd": "2ed4837ff6a55390a069bcfd5cb58342402c3c263cc9f056c3ec243c201b6e95",
+      "diagrams/fleet.puml": "f0d915bc19e0c9f08d3449ed0f3904ddbca786c6286cad561c24750ad0ee650c",
+      "graph.json": "cf8c417b440c8c4db72709010132a74191db699c2d58a8817338c99840cc0d9f",
+      "index.md": "776e1b3817ae19850203b1b6b24eb2f09e3a977e4cacdb4951018c380f674a64",
+      "services/fineract-provider.md": "931c41ba7edde6f5de5d7f38b88d8a5ca5a2d36172b9dc6eba77339818a73012"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 968,
+      "nodes": 1276,
+      "edges": 7406,
+      "findings": 428,
+      "evidence_locations_checked": 17232,
+      "source_files_line_counted": 798
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:38:50.774080+00:00",
+      "seconds": 0.61,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:38:51.993354+00:00",
+      "seconds": 0.641,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--fineract-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:fineract-provider:DELETE /fineract-provider/api/v1/accountingrules/{accountingRuleId}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "fineract-provider"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/apache--fineract.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/apache--fineract",
+      "build/full200/runs/4430237fd3b2e6a2/run2/apache--fineract"
+    ]
+  },
+  {
+    "repository": "apache/streampipes",
+    "commit": "c4fd92635236427ed96b3aa7ce9f98bb36a07b64",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": "4.0.2",
+    "java_files": 2216,
+    "source_checkout": "build/full200/repos/apache--streampipes",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:38:53.353871+00:00",
+    "finished_at": "2026-10-23T13:39:09.355306+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:38:53.353871+00:00",
+        "seconds": 7.547,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "0e7ff900779f16ca76ab78d1ad2f922460a807967fbbeee24e1b675e88cf7f96"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:00.901340+00:00",
+        "seconds": 7.25,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "0e7ff900779f16ca76ab78d1ad2f922460a807967fbbeee24e1b675e88cf7f96"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "a248e905f218092b8a370cc9307ebce001436c5a1d33964cc0e17afaa74d549e",
+      "diagrams/streampipes-extensions-all-iiot.mmd": "194a5d8df1d5469b142436575cec4a81bb1f6f176218dd0319c93858ef366c8f",
+      "graph.json": "f5616a8f8d8283708f9513fed89ed4764ceb6e96424cfb287016b6caf71fb992",
+      "index.md": "c6c5bd321dffcf0ff7d27a8ec5b963fa2270596c9c5ab264bbcbe959099f27b1",
+      "services/streampipes-extensions-all-iiot.md": "fd430d09019e7af58d191efd97dbf0e3e6c4de6be9268ec3d3cf6a47c5b062a4"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 308,
+      "nodes": 309,
+      "edges": 308,
+      "findings": 0,
+      "evidence_locations_checked": 640,
+      "source_files_line_counted": 91
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:08.604415+00:00",
+      "seconds": 0.375,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:08.987269+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--streampipes-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:streampipes-extensions-all-iiot:* /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "streampipes-extensions-all-iiot"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/apache--streampipes.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/apache--streampipes",
+      "build/full200/runs/4430237fd3b2e6a2/run2/apache--streampipes"
+    ]
+  },
+  {
+    "repository": "apache/syncope",
+    "commit": "4fe42f66662edaff45ccb29575f703622baf766e",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 2939,
+    "source_checkout": "build/full200/repos/apache--syncope",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:39:27.157196+00:00",
+    "finished_at": "2026-10-23T13:39:51.378193+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:27.157196+00:00",
+        "seconds": 11.437,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-run1.stdout.log",
+        "run": 1,
+        "output_files": 15,
+        "output_tree_sha256": "95cbd9f34840c0b1c1c7ca0a85dcda2a6f4be6eb54a9b977ced045b71b68dbfa"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:38.624490+00:00",
+        "seconds": 11.5,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-run2.stdout.log",
+        "run": 2,
+        "output_files": 15,
+        "output_tree_sha256": "95cbd9f34840c0b1c1c7ca0a85dcda2a6f4be6eb54a9b977ced045b71b68dbfa"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/build-tools.mmd": "ea48c43a735fc643ea229dcb8852879c2d76e86178ea7e5e11ebd916dbd25a63",
+      "diagrams/console.mmd": "bb79b1586c4e8115f641e73af6861a0fa1d961da90941883c5fc16930efb2164",
+      "diagrams/core-starter.mmd": "86b13cd9879d854ba13aba30412c0f77b52802bc09f11a69143535e8885c11a2",
+      "diagrams/enduser.mmd": "2e0ebbd8b631d8977d2556f83f3030158c76d984a74ab9efdee899096c045d5d",
+      "diagrams/fleet.puml": "74beed4309fa18d0d7dc97eeabc5f8731706381b9082fa878b36edb28e2f5810",
+      "diagrams/sra.mmd": "64245c584434be633b00f747aaf77a9ba7b4390dff542acb504552ed517613e0",
+      "diagrams/wa-starter.mmd": "405de26f817c73951aff8ef3f012bbe3fd2c6f4c012a022e9c54d02125f30815",
+      "graph.json": "57e41a9b7971f2d9d2ecfc5dcb6c65f134a0d465cd20c8212048a0d11e8f8a37",
+      "index.md": "49e9c9f6ec559fcf9afedc04c58d7a7b3afa2f566cf77310182374a37c92c7b6",
+      "services/build-tools.md": "a11d21e22318d81b825a28b6edb52e40f440df4008915e8c6856f86dabecbd78",
+      "services/console.md": "d7a9513b9e9149970d271a4042c3910a890280c6a50f7ab618113c07d205d89b",
+      "services/core-starter.md": "964d31646ee2a656fd7d9c51a457c5cbd796ed4e1b4f9dedd795238057ebdc25",
+      "services/enduser.md": "ecd77fe200de2e88ad202f14b7efe76b93405aee427bcd9bcbb918aa0935bff0",
+      "services/sra.md": "f1e56391d131eeaa9add9273e38f108d340a584ebdbd7d2d4dead9af9b86c9c7",
+      "services/wa-starter.md": "28e4926000459f274d99e7a2ba2c807c03424bfce79347e3eef0f11385f49ae4"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 6,
+      "endpoints": 12,
+      "nodes": 105,
+      "edges": 99,
+      "findings": 6,
+      "evidence_locations_checked": 236,
+      "source_files_line_counted": 123
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:50.347136+00:00",
+      "seconds": 0.532,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:50.881666+00:00",
+      "seconds": 0.5,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apache--syncope-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:build-tools:DELETE /users/{key}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "build-tools"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/apache--syncope.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/apache--syncope",
+      "build/full200/runs/4430237fd3b2e6a2/run2/apache--syncope"
+    ]
+  },
+  {
+    "repository": "apolloconfig/apollo",
+    "commit": "ea356770c6393deccd1dbfb18e5a7607e71f2f9e",
+    "tier": "large",
+    "tool": "maven",
+    "boot_version": null,
+    "java_files": 529,
+    "source_checkout": "build/full200/repos/apolloconfig--apollo",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:39:09.530589+00:00",
+    "finished_at": "2026-10-23T13:39:22.266007+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:09.530589+00:00",
+        "seconds": 5.312,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-run1.stdout.log",
+        "run": 1,
+        "output_files": 11,
+        "output_tree_sha256": "ec66be3d1c60e637af567eae4ee3a6020dfd4ef97b360382720d0e1d5af8655c"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:14.872867+00:00",
+        "seconds": 5.203,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-run2.stdout.log",
+        "run": 2,
+        "output_files": 11,
+        "output_tree_sha256": "ec66be3d1c60e637af567eae4ee3a6020dfd4ef97b360382720d0e1d5af8655c"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/apollo-adminservice.mmd": "ee5f88264f977ed17f66dcf72530f6fd4e4de4ba6a8e4c9547f8c71aa271c570",
+      "diagrams/apollo-assembly.mmd": "2da5e18b618878ca028ca5f363df9bc988bb1959067f39e3af026a40ddfc54ba",
+      "diagrams/apollo-configservice.mmd": "4ba55074106b9fef57a8c77c6b3d5a1a190e9e580961f7ed3fa7e61bf0a9849c",
+      "diagrams/apollo-portal.mmd": "8f94ca524539e30c1bb30d7e9f4d5dbe5839fb68717727f84fd51eb8ff1d4be3",
+      "diagrams/fleet.puml": "1518e8d4b12b4c5463fcefb5e614ccd2c397d425fe94fc1e89f5ebc382474214",
+      "graph.json": "d85308060bf3db5e56dba351dd1dde88d8b0d38307ddc814ba7429fbcb107675",
+      "index.md": "0ede6cb5d24337b12547731e97ed2188f6056f4e9b7fd990a32cce84d6940c2f",
+      "services/apollo-adminservice.md": "a36889e06af248628dcb56d19e2ce2adbcf7174101bb45a922a84864c2c80768",
+      "services/apollo-assembly.md": "ef9a0e8359aa9bb83f06a31582fb4accdf33ae440f5461d002001fc1c7a0319d",
+      "services/apollo-configservice.md": "fda07e7c3639be5a39d8ff891ea8192449e6bfaaf1fb67e6b578963d3a30ce2e",
+      "services/apollo-portal.md": "cf2776d959aea2c12d1a96580a15bd246662c11e259c1b40891178dfa7dc42b2"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 4,
+      "endpoints": 236,
+      "nodes": 299,
+      "edges": 867,
+      "findings": 38,
+      "evidence_locations_checked": 1792,
+      "source_files_line_counted": 138
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:21.304821+00:00",
+      "seconds": 0.484,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:21.813094+00:00",
+      "seconds": 0.438,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/apolloconfig--apollo-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:apollo-adminservice:DELETE /apps/{appId:.+}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "apollo-adminservice"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/apolloconfig--apollo.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/apolloconfig--apollo",
+      "build/full200/runs/4430237fd3b2e6a2/run2/apolloconfig--apollo"
+    ]
+  },
+  {
+    "repository": "ARUNSANKARB/MEDI-STOCK",
+    "commit": "c40e2dbe32915650dfbedb10f271dfa910d031ad",
+    "tier": "medium",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 114,
+    "source_checkout": "build/full200/repos/ARUNSANKARB--MEDI-STOCK",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:39:22.455367+00:00",
+    "finished_at": "2026-10-23T13:39:26.970849+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:22.455367+00:00",
+        "seconds": 1.734,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-run1.stdout.log",
+        "run": 1,
+        "output_files": 7,
+        "output_tree_sha256": "e0f9c4ed43e8c6f0843b63345d937697b5aae1315b0e8edbdd82bdcb5d49b238"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:24.206163+00:00",
+        "seconds": 1.797,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-run2.stdout.log",
+        "run": 2,
+        "output_files": 7,
+        "output_tree_sha256": "e0f9c4ed43e8c6f0843b63345d937697b5aae1315b0e8edbdd82bdcb5d49b238"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "a197b0117734385a2c657ffef7ea950ac522aac3462219a967c1506e027834e5",
+      "diagrams/Medical-Inventory.mmd": "9e6c3d7d7dd1c7a84f7498e060781525cfbe86b176bd4694db88743d25e25c91",
+      "diagrams/medistock-backend.mmd": "7b593f62cae82f04e43c68403a71aec5640452e337b73a236d90131bb07b1a0d",
+      "graph.json": "7a5a2d9eedc4fc5aa3422cd53e7402088c4b0805f76253292ce16fe60049d358",
+      "index.md": "f008598e65ce86442346b3dbb23d6911a4cba53532e5aef1d9fed47db9c87c3f",
+      "services/Medical-Inventory.md": "17964033f6c21a6775c16584b54cf578e0ad0ac158c7111dfc3b8bc79d1aba8e",
+      "services/medistock-backend.md": "563f1b88ce5b8960c7cbfe952dc31bd6eaa515099475971eae227e9b1a7de181"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 2,
+      "endpoints": 73,
+      "nodes": 89,
+      "edges": 208,
+      "findings": 0,
+      "evidence_locations_checked": 414,
+      "source_files_line_counted": 45
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:26.267286+00:00",
+      "seconds": 0.344,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:26.615316+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/ARUNSANKARB--MEDI-STOCK-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:Medical-Inventory:DELETE /api/medicines/{id}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "Medical-Inventory"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/ARUNSANKARB--MEDI-STOCK.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/ARUNSANKARB--MEDI-STOCK",
+      "build/full200/runs/4430237fd3b2e6a2/run2/ARUNSANKARB--MEDI-STOCK"
+    ]
+  },
+  {
+    "repository": "arunstiwari/2026-batch1-week2",
+    "commit": "12823703369c1c57546399d56e1c6341ddc7d46f",
+    "tier": "medium",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 62,
+    "source_checkout": "build/full200/repos/arunstiwari--2026-batch1-week2",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:39:51.520157+00:00",
+    "finished_at": "2026-10-23T13:39:54.362913+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:51.520157+00:00",
+        "seconds": 1.0,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "0dd939711f365ebff1c36137822f0b08ff286c6d95832a8244ba8ac23f8863d8"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:52.525630+00:00",
+        "seconds": 1.094,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "0dd939711f365ebff1c36137822f0b08ff286c6d95832a8244ba8ac23f8863d8"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "777bad72df9ea5dcc45b6639c040b39917a844f269d39ec33175079c4f947f57",
+      "diagrams/onboarding-service.mmd": "9bea4ec3da0e26fcaba86af4de421986599877f3ddbcf50c846664e784e20d76",
+      "graph.json": "5decba80e721871addb6db1b16446b4112874270e7783f8813fd04106db39bac",
+      "index.md": "788fe8c36e7b406d1cdb0f8951db30c873117763f7f1b0ce53a1f658cf730830",
+      "services/onboarding-service.md": "3ab6a9c39d6e276d7032ef93473de54b912496e2e94a2cf5f24d1e8902b13573"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 13,
+      "nodes": 17,
+      "edges": 32,
+      "findings": 0,
+      "evidence_locations_checked": 64,
+      "source_files_line_counted": 9
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:53.663624+00:00",
+      "seconds": 0.344,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:39:54.005883+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/arunstiwari--2026-batch1-week2-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:onboarding-service:GET /customers",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "onboarding-service"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/arunstiwari--2026-batch1-week2.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/arunstiwari--2026-batch1-week2",
+      "build/full200/runs/4430237fd3b2e6a2/run2/arunstiwari--2026-batch1-week2"
+    ]
+  },
+  {
+    "repository": "aurix-core-banking/aurix-backend",
+    "commit": "9bef8a4a4d694d3aeb8fd12c03d141179b391900",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": "4.1.0",
+    "java_files": 1384,
+    "source_checkout": "build/full200/repos/aurix-core-banking--aurix-backend",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:39:54.508926+00:00",
+    "finished_at": "2026-10-23T13:40:38.601184+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:39:54.508926+00:00",
+        "seconds": 14.718,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-run1.stdout.log",
+        "run": 1,
+        "output_files": 47,
+        "output_tree_sha256": "daf9b1b6405002a661cd40dbb345fb3aad3eb9a3993a0b2c0bfcf6b12852b419"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:09.299947+00:00",
+        "seconds": 14.734,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-run2.stdout.log",
+        "run": 2,
+        "output_files": 47,
+        "output_tree_sha256": "daf9b1b6405002a661cd40dbb345fb3aad3eb9a3993a0b2c0bfcf6b12852b419"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/aurix-gateway.mmd": "53cfb96557dce9dfb7afcad5701f7f67774362239794ad5764bda4c23dffd36c",
+      "diagrams/fleet.puml": "d70ebcb75483ca15211d4ea446c4713e4e046910992d9cf00df8e7d7e8d2c895",
+      "diagrams/svc-accounts.mmd": "8120a65fdc3a9eb9df9b2c201977e4fdbdfe47e417561619a1d540019f0908f3",
+      "diagrams/svc-ai.mmd": "980a3c5f25b31bcde02b4f65d5a4fbebce14eb0ca8f8d9a9641c1e62f52eaa52",
+      "diagrams/svc-banking.mmd": "cd47a7319548fbc05cffb98c07e66f2bdef39ba297b7251b014375404145d4b3",
+      "diagrams/svc-cambio.mmd": "d1e238e10f6280281219a16e65d096156323bfbe7fc6015ea684a150b9bbfbcc",
+      "diagrams/svc-cards.mmd": "300330db1be2e0392cdc6cedc95a533b21fdc09c4d86dd82df1cfab5631ef85d",
+      "diagrams/svc-compliance.mmd": "38780c40ac51479b92601dd37614225161180678bd7b94b533574093ffb873e0",
+      "diagrams/svc-contracts.mmd": "99cefd991d0c17aa387f33d4ed73624005c4c95206c419a4a842e36bc0104981",
+      "diagrams/svc-credit.mmd": "890a36ccdf02913b4202887051063edf826b4383cb10f3e68d9007c7d38f36cd",
+      "diagrams/svc-customer.mmd": "313dfc2ed73140700f5c41a81128b86aa81286240d966f4b2c8dcb43c09dcb3e",
+      "diagrams/svc-finance-mgmt.mmd": "37706a257ebe0cacf9fe58cf485ba799fde58068a48e97f8b2c6762b97097d7c",
+      "diagrams/svc-fraud.mmd": "ef8995b20f2c6cad41111418f548126da7777ca60133ed6fb07b83f80da58e02",
+      "diagrams/svc-intelligence.mmd": "ae9de114a0222cdcb31546839c1ec6b215f5a37d650e0db06ab4da7d45d8bbdd",
+      "diagrams/svc-investimentos.mmd": "861f9d5a8061628c1f8fe2c92e5261395c08b687dbeb612268bd8380482a7dc5",
+      "diagrams/svc-payments.mmd": "1c93c21e44bc702e8a9dd0a5343d8fec7444d78cea1d04293b11421b4d4577fd",
+      "diagrams/svc-platform.mmd": "c86bb325aa7d5474374a46f3b583a6a48d3b7c50dd629c1aac5cbd1cf2acac82",
+      "diagrams/svc-products.mmd": "c5fd1e1c63a4a7a5eddd13c981edb9629af9b0ed187af2844be8901242a34af5",
+      "diagrams/svc-salary.mmd": "d6e5707dd517077881792eff2863eca8664e6faccfd4092b30ba69f9846805dc",
+      "diagrams/svc-savings.mmd": "96ecccc01cdf21c8b5efd82cb3e3a711bea25866940337a338d44ab969245553",
+      "diagrams/svc-seguros.mmd": "164b1d0d4eb48e2844ec78d0fae9f99c503cddfbfccbfa695e62d6aed213d706",
+      "diagrams/svc-settlement.mmd": "1feba48cd52a94ff7639b1672d24d7d840bc2678d805459821aabd2b0d32ee0b",
+      "diagrams/svc-transactions.mmd": "b7be3c83bf19b2a264dc96421576d7226557056c2d5740a9bdeb137d317a2c6c",
+      "graph.json": "2f6644e1de5598636b20cedcdea2fda6db6e7240e8447d7187c1cbef9f7cd439",
+      "index.md": "818c729c5d0ac5a66c31636b0035b96dffa92227ee46767764c51610a0ae55dd",
+      "services/aurix-gateway.md": "bdf1eb8ea3766e79c8b034bf845d4e8fc70be9d8a44dcacc0578f089daa6cd8c",
+      "services/svc-accounts.md": "88fd0502e4b6dd04aecf6b835099b45d3439db54e7bf73e943c72b9b3cbc5583",
+      "services/svc-ai.md": "1c1c40f6782fc04d96d76e136d42588da98f8393f9134947c136ff38b6624de3",
+      "services/svc-banking.md": "0f41b913c468e224fdb77d637db62be412fcda77a6e758d9f6591f5663eb9ac3",
+      "services/svc-cambio.md": "635cd8ba865c146869505f84b432f56f132e5f923aec271b4f44036d1da5c2fa",
+      "services/svc-cards.md": "1c0460f4508f558d2b3ae5d47c49b0c6831fa0a567a84a25ddd1f9deda3e97e4",
+      "services/svc-compliance.md": "b64219a5a66b60a7d1f55a6586e95e0201fe07465e8c02dfeb9bee022841176e",
+      "services/svc-contracts.md": "09ff9be7d41ca93081e511e9218e2e32820ed4ac8820628acfb3dae71abc4f1d",
+      "services/svc-credit.md": "32affa19fe65423960dacfd639d6e405724bf2037a499f8b36b87074a8e0b200",
+      "services/svc-customer.md": "3fe26561166a42b35c16eb3ac7234631007a3835332eae9fce9e4bdcf955015b",
+      "services/svc-finance-mgmt.md": "72fc7dc82030de44def6c9e9d93a4f3ed92fc41019195bcb5d3e1c1c2d89fed3",
+      "services/svc-fraud.md": "39907b80e5e2266dd6414c83a4edc77fb938d7c80a42ccb8828a46caef6e3e42",
+      "services/svc-intelligence.md": "5b96f459fc4a997db6468138b8a133912a11546630eda50b0c02e4e18d9c8119",
+      "services/svc-investimentos.md": "a0c68637d1afe0252a0ba6bf2f363078e4614e4a26596cf24f6818acb782ade5",
+      "services/svc-payments.md": "6bd4b51cf66ca9a9dd630861f3dca4bebb8e143ef0e8d7e6982d4d64d15643d3",
+      "services/svc-platform.md": "cd4a0fe60aabb0fe3cdd8f928adf63591adcf7d1ea3f6bc5654360028ac902c0",
+      "services/svc-products.md": "e60fcf9beeb03cffe4957398dc05c06d3669c8440ed2d7ba217b5373a30843b3",
+      "services/svc-salary.md": "eed08ac84025259263897cab07fc8bc3853c6f8cf68dc2f76c5f1e3294043e15",
+      "services/svc-savings.md": "68ff9cab8f4e35da438cbb149c97868f9100d72636f5e0d4ed9945d14e557225",
+      "services/svc-seguros.md": "57431e7b10ac5be112445c2182fe2e9844977eff5904b4e0c0ec32ed0164d778",
+      "services/svc-settlement.md": "57d4df05ca5d61781f340d22980f196268b033625a74d0cd00f8b7e20003fa27",
+      "services/svc-transactions.md": "d3f140a841e9f3cc5938e45e28151b9b2c52da5cba29f600cc93898eea063724"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 22,
+      "endpoints": 1396,
+      "nodes": 5895,
+      "edges": 8916,
+      "findings": 188,
+      "evidence_locations_checked": 16801,
+      "source_files_line_counted": 715
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:36.089997+00:00",
+      "seconds": 0.656,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:38.026281+00:00",
+      "seconds": 0.578,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/aurix-core-banking--aurix-backend-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:aurix-gateway:* /api/accounting/**",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "aurix-gateway"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/aurix-core-banking--aurix-backend.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/aurix-core-banking--aurix-backend",
+      "build/full200/runs/4430237fd3b2e6a2/run2/aurix-core-banking--aurix-backend"
+    ]
+  },
+  {
+    "repository": "autark-labs/autark-os",
+    "commit": "c19e27373bc6bd3c920ff389d21d7ae86404d592",
+    "tier": "large",
+    "tool": "gradle",
+    "boot_version": "4.1.0",
+    "java_files": 383,
+    "source_checkout": "build/full200/repos/autark-labs--autark-os",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:40:38.983244+00:00",
+    "finished_at": "2026-10-23T13:40:48.975805+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:38.983244+00:00",
+        "seconds": 4.204,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "0976fccc4e91d7d8dab591e9077817af052da1467a2bc1c0eda40734ad6fe7f1"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:43.185210+00:00",
+        "seconds": 4.437,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "0976fccc4e91d7d8dab591e9077817af052da1467a2bc1c0eda40734ad6fe7f1"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/autark-os-backend.mmd": "7ce8cd27076763625599970edc830f2271952655c343a27481fa83ff90a2ed3e",
+      "diagrams/fleet.puml": "27b9ee54bffed5028e4b3882a226d0751c86d6c6df66ebad1d03c432b3585425",
+      "graph.json": "d99b6376b67441a022ca44e7f2ca27f9e91c0a929e3b632042fd70a4cfaf5a74",
+      "index.md": "4c2c7a7135bcaabb131d31705d3638916e02f6cb4c96cc61f875db8e44bfb3ea",
+      "services/autark-os-backend.md": "abac8b6cea4d075af0917a1b770822ef63ee35b28e7625548c72ee57d22210ab"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 102,
+      "nodes": 133,
+      "edges": 457,
+      "findings": 0,
+      "evidence_locations_checked": 912,
+      "source_files_line_counted": 63
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:48.203423+00:00",
+      "seconds": 0.375,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:48.590089+00:00",
+      "seconds": 0.39,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/autark-labs--autark-os-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:autark-os-backend:GET /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "autark-os-backend"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/autark-labs--autark-os.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/autark-labs--autark-os",
+      "build/full200/runs/4430237fd3b2e6a2/run2/autark-labs--autark-os"
+    ]
+  },
+  {
+    "repository": "bancolombia/async-dataflow",
+    "commit": "1aa432f2269fdb811f65ca97bf096737b5c2b304",
+    "tier": "small",
+    "tool": "gradle",
+    "boot_version": "4.0.2",
+    "java_files": 20,
+    "source_checkout": "build/full200/repos/bancolombia--async-dataflow",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:40:49.136520+00:00",
+    "finished_at": "2026-10-23T13:40:51.510422+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:49.136520+00:00",
+        "seconds": 0.812,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "8c066f517fa64419c006a39c1d41abe5d709607dec9444b331888def300758f3"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:49.950451+00:00",
+        "seconds": 0.86,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "8c066f517fa64419c006a39c1d41abe5d709607dec9444b331888def300758f3"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/back-async.mmd": "bd094c67c86f1e4e44bec65c5975a9f22fb41870b1c56668c08661638da1391e",
+      "diagrams/fleet.puml": "8718d0b0fd5f2845b8d94b14fdd4b65ee7dad6122dc2884152adf2aa050d11ba",
+      "graph.json": "1823bcc75c97fdb8d20a5882142873c40c1efd4c646c655b9aebfb0863030384",
+      "index.md": "ff560348d2ded0b1fcdcdedf9acf079c8d567f78a4943f491a096cd5e1b8e95f",
+      "services/back-async.md": "3e89738c7adf087525788954055ebb91f49d2ef1baa8d1c5a2239236e8e68c62"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 2,
+      "nodes": 4,
+      "edges": 8,
+      "findings": 3,
+      "evidence_locations_checked": 16,
+      "source_files_line_counted": 4
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:50.815014+00:00",
+      "seconds": 0.328,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:51.152478+00:00",
+      "seconds": 0.36,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bancolombia--async-dataflow-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:back-async:GET /api/business",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "back-async"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/bancolombia--async-dataflow.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/bancolombia--async-dataflow",
+      "build/full200/runs/4430237fd3b2e6a2/run2/bancolombia--async-dataflow"
+    ]
+  },
+  {
+    "repository": "battcn/wemirr-platform",
+    "commit": "0618bbd51e65bafb293282af497ab9e4a1c64564",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": "4.0.3",
+    "java_files": 1293,
+    "source_checkout": "build/full200/repos/battcn--wemirr-platform",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:40:55.779654+00:00",
+    "finished_at": "2026-10-23T13:41:11.367833+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:55.779654+00:00",
+        "seconds": 7.11,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-run1.stdout.log",
+        "run": 1,
+        "output_files": 19,
+        "output_tree_sha256": "2b557741986db170cc7fece50b4c568b3f3e445c7aaaedbe2be46ce9350067c6"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:02.912113+00:00",
+        "seconds": 6.187,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-run2.stdout.log",
+        "run": 2,
+        "output_files": 19,
+        "output_tree_sha256": "2b557741986db170cc7fece50b4c568b3f3e445c7aaaedbe2be46ce9350067c6"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "035f2a59fb97d866b2a2cc6285688a1b94cc778874f2a1225e232ef6abb968eb",
+      "diagrams/wemirr-platform-ai.mmd": "e3a72132125adf42168fae26bfa3f99475045ab8e060c90b2091acafdd9eecd6",
+      "diagrams/wemirr-platform-gateway.mmd": "f99b668b230576f5234b713f43816f230462da672b523234a090ac946d18bc00",
+      "diagrams/wemirr-platform-iam.mmd": "fde94ff70f5c84782782aa17948a24f2aa0076a574a55c3a43e6f423d3bd1c1b",
+      "diagrams/wemirr-platform-monitor.mmd": "b6b8e90b1b1e360abc1564ee57e1df38c0ed6a083e8d520d0106151692aa072a",
+      "diagrams/wemirr-platform-suite.mmd": "cae8bd714212b2b737cf5fe33bf805cb9bc92ff57c73d08717c532fa1832891f",
+      "diagrams/wemirr-platform-tms.mmd": "0fb5f06a28cf20bb5fa7e00d8d08b2792f371a60b70123a46a02015d4cbebf83",
+      "diagrams/wemirr-platform-wms.mmd": "b648eaa7943a126d3cc4f9fb042222e94cae5aad2a222b4d4fe786ed19b94a08",
+      "diagrams/wemirr-platform-workflow.mmd": "019b9ec77bcf2fd281f9b9caa9650d1e16cb7bd49e6b3c40941a25d9eb203f2f",
+      "graph.json": "57860ff426466d17a29ee7212b4ff74bbbb0bf9ef3ff70292441b022d4f371f0",
+      "index.md": "bb641cc03cc420cb0bc3053bee52163762ae484d11f07e088c30b898dd96e0b9",
+      "services/wemirr-platform-ai.md": "fc979c4341c6be514ef9eddc0e12948bec5ee89f2ea458bcd721d8b22c6a6db6",
+      "services/wemirr-platform-gateway.md": "2c319b333eef9ba324187edf82a9d62411917d66618e63a271c4a01442b34033",
+      "services/wemirr-platform-iam.md": "dad909c57ea3c4c73f7eb03bf88bc9062295d8b747bc3343adfa633f61baa3a1",
+      "services/wemirr-platform-monitor.md": "85f0397ac993edc5818b4b608d5f23ed385a0415033f7046e370ea3b83f52095",
+      "services/wemirr-platform-suite.md": "3bff33de9ef270be2143b1a50bbc712191c2051269f8a0d64ba4a2c8f00c6713",
+      "services/wemirr-platform-tms.md": "9e4ffde43007c02e74691f7f93a1d26223fe7494e6a70d67a8eb0844cffdbd90",
+      "services/wemirr-platform-wms.md": "07ccf6bca3330eebc0a1402445ae966865a1cbc8f31cbea4b894a35d1870d553",
+      "services/wemirr-platform-workflow.md": "1a701f24053a5491537d276723b7688be3169ed7730cd767ed827229a3f722d7"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 8,
+      "endpoints": 501,
+      "nodes": 617,
+      "edges": 910,
+      "findings": 20,
+      "evidence_locations_checked": 1779,
+      "source_files_line_counted": 313
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:10.479522+00:00",
+      "seconds": 0.454,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:10.965860+00:00",
+      "seconds": 0.406,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/battcn--wemirr-platform-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:wemirr-platform-iam:GET /third-auth/{type}",
+      "incoming_edges_verified": 7,
+      "impact_depth": 1,
+      "impact_rows_verified": 7,
+      "service_card_verified": "wemirr-platform-ai"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/battcn--wemirr-platform.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/battcn--wemirr-platform",
+      "build/full200/runs/4430237fd3b2e6a2/run2/battcn--wemirr-platform"
+    ]
+  },
+  {
+    "repository": "bitpay/java-kiosk-demo-springboot",
+    "commit": "a855ea25fb3264aa608cdffc2bb557c73fb0ffe8",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.1.1",
+    "java_files": 158,
+    "source_checkout": "build/full200/repos/bitpay--java-kiosk-demo-springboot",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:40:51.642316+00:00",
+    "finished_at": "2026-10-23T13:40:55.613900+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:51.642316+00:00",
+        "seconds": 1.672,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "92d4e51722dbb875eb0225ab17bebbde450a55aadcd77dec5d88c06f246df0e2"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:40:53.328929+00:00",
+        "seconds": 1.547,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "92d4e51722dbb875eb0225ab17bebbde450a55aadcd77dec5d88c06f246df0e2"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/bitpay--java-kiosk-demo-springboot.mmd": "41feecf07d631b0b3fbe07293bc8494ee28f73c27599fb83a95eeb7fb482e362",
+      "diagrams/fleet.puml": "f1a0e90a8d0b807bddd16ba8fd7b8241ee095ab5fc286d167481a92591c75e2d",
+      "graph.json": "b68b3d0e906446f1470bc83b4a4e9037d4415d41443f46f26208c577c17d399a",
+      "index.md": "34d33f92e5c09a2c3dd3ae81f98d29d8834315ef42decf91a4f4783b8de3a286",
+      "services/bitpay--java-kiosk-demo-springboot.md": "d4289b294e3db8005d41a77af866972dd56235d0457f21aa55aca09b60c301e0"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 6,
+      "nodes": 21,
+      "edges": 20,
+      "findings": 1,
+      "evidence_locations_checked": 29,
+      "source_files_line_counted": 9
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:54.917105+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:40:55.272229+00:00",
+      "seconds": 0.344,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bitpay--java-kiosk-demo-springboot-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:bitpay--java-kiosk-demo-springboot:GET /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "bitpay--java-kiosk-demo-springboot"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/bitpay--java-kiosk-demo-springboot.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/bitpay--java-kiosk-demo-springboot",
+      "build/full200/runs/4430237fd3b2e6a2/run2/bitpay--java-kiosk-demo-springboot"
+    ]
+  },
+  {
+    "repository": "bochkov/tasks",
+    "commit": "e98ccd9074bc0e5919e82abe1fbfd88801726547",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.1.0",
+    "java_files": 60,
+    "source_checkout": "build/full200/repos/bochkov--tasks",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:41:11.530073+00:00",
+    "finished_at": "2026-10-23T13:41:14.927852+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:11.530073+00:00",
+        "seconds": 1.344,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "e005ae0872f106a187c6c95f1e4e0665228d8884b56a21769860a5e62ea67a64"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:12.879119+00:00",
+        "seconds": 1.297,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "e005ae0872f106a187c6c95f1e4e0665228d8884b56a21769860a5e62ea67a64"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "05a801fb700ab0f4e3514e83875c2433344d7716719c3a7acf791fa6e8da6d93",
+      "diagrams/tasks.mmd": "26cbde701587771773d2b220640c305d076941cfb3fc371b0d456e7f044cdb07",
+      "graph.json": "102a02dc718a4a205ac8877aad076431ca770965d28935fb3669186fa2eb7202",
+      "index.md": "158f0de527d4576362d4cf4c568d4f537abc7eb42bc8716677de1c7a383c9ee2",
+      "services/tasks.md": "c6738e5e4c45fd25a7ba5f5e30667b1dbfda8e421242f5bbc547fe2139fcfddd"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 6,
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0,
+      "evidence_locations_checked": 28,
+      "source_files_line_counted": 6
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:14.206779+00:00",
+      "seconds": 0.359,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:14.565483+00:00",
+      "seconds": 0.36,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bochkov--tasks-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:tasks:GET /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "tasks"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/bochkov--tasks.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/bochkov--tasks",
+      "build/full200/runs/4430237fd3b2e6a2/run2/bochkov--tasks"
+    ]
+  },
+  {
+    "repository": "bootify-io/spring-boot-jte-example",
+    "commit": "f502ba816adc1b24519888bca724d2a26de10ce8",
+    "tier": "small",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 15,
+    "source_checkout": "build/full200/repos/bootify-io--spring-boot-jte-example",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:41:15.061992+00:00",
+    "finished_at": "2026-10-23T13:41:17.428939+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:15.061992+00:00",
+        "seconds": 0.75,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "dd406fe0a2c1192a866f8b61cf7b433db07df9d671e5ce8733e713d5c63f34a1"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:15.822611+00:00",
+        "seconds": 0.797,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "dd406fe0a2c1192a866f8b61cf7b433db07df9d671e5ce8733e713d5c63f34a1"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "7f0a7c27f0921fed0fd8a7b7b60b2a6a236de596b2f9d74e20cd033874f17d44",
+      "diagrams/jte.mmd": "8f76f504bc01828863b19933515f09dc45ad0185da02f0913acbcde59ae8659c",
+      "graph.json": "448027096ff53bcf50d01084d22f85e5aae656041ebe1f4c1d78b2f6aba32abc",
+      "index.md": "e36b39a2112556cc3e816ef170180fc514a1a4490b122d926c5b105faeba5603",
+      "services/jte.md": "64b0ba8331df7e4185547096070b98753c32fafb7a2681330a1678869ac956cc"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 7,
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0,
+      "evidence_locations_checked": 26,
+      "source_files_line_counted": 4
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:16.636033+00:00",
+      "seconds": 0.375,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:17.011796+00:00",
+      "seconds": 0.422,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/bootify-io--spring-boot-jte-example-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:jte:GET /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "jte"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/bootify-io--spring-boot-jte-example.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/bootify-io--spring-boot-jte-example",
+      "build/full200/runs/4430237fd3b2e6a2/run2/bootify-io--spring-boot-jte-example"
+    ]
+  },
+  {
+    "repository": "buildbasekit/AuthKit-Lite",
+    "commit": "b8700ef191991de264483782dd4450c0fa7c80dd",
+    "tier": "small",
+    "tool": "maven",
+    "boot_version": "4.1.1",
+    "java_files": 36,
+    "source_checkout": "build/full200/repos/buildbasekit--AuthKit-Lite",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:41:17.594211+00:00",
+    "finished_at": "2026-10-23T13:41:20.057530+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:17.594211+00:00",
+        "seconds": 0.954,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "c57618f1a444bfefdc40ac111e21d9986b73bc62ed8fb1f4198ac0a391e5553f"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:18.553804+00:00",
+        "seconds": 0.828,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "c57618f1a444bfefdc40ac111e21d9986b73bc62ed8fb1f4198ac0a391e5553f"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/AuthKit-Lite.mmd": "91f7674d19e3c63a2e8b3040b42112307222771ad97d1f6ff8ed3b6eeb549377",
+      "diagrams/fleet.puml": "9b069e4a986085a065d62ce7ff98c8f7a998d83fbc49dd715e3806dfe99929f2",
+      "graph.json": "c482282dad25abc665d262554c4434d0ce7f692bcaf7d8940177bade55cc5adb",
+      "index.md": "b5903d3db7cdcd0a0faeb3a487c26435c09c122b870093c542fe13d9d9ff4add",
+      "services/AuthKit-Lite.md": "ff547357c17311befad39fbf1c82d7467d1e88c54620ead301ff1771c789f82f"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 9,
+      "nodes": 16,
+      "edges": 30,
+      "findings": 0,
+      "evidence_locations_checked": 57,
+      "source_files_line_counted": 13
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:19.425732+00:00",
+      "seconds": 0.296,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:19.730556+00:00",
+      "seconds": 0.329,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/buildbasekit--AuthKit-Lite-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:AuthKit-Lite:GET /api-test",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "AuthKit-Lite"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/buildbasekit--AuthKit-Lite.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/buildbasekit--AuthKit-Lite",
+      "build/full200/runs/4430237fd3b2e6a2/run2/buildbasekit--AuthKit-Lite"
+    ]
+  },
+  {
+    "repository": "codecentric/spring-boot-admin",
+    "commit": "8562dbace417b31f9f6209dd4410b0f81bf549c0",
+    "tier": "medium",
+    "tool": "maven",
+    "boot_version": null,
+    "java_files": 244,
+    "source_checkout": "build/full200/repos/codecentric--spring-boot-admin",
+    "scanner_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
+    "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee",
+    "distribution_sha256": "4430237fd3b2e6a2884d5e8ded012ea8c2a1e23df62d02d7faa36ca2b1a5ed45",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T13:41:20.193711+00:00",
+    "finished_at": "2026-10-23T13:41:27.044015+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:20.193711+00:00",
+        "seconds": 2.766,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-run1.stdout.log",
+        "run": 1,
+        "output_files": 21,
+        "output_tree_sha256": "faa869d6f827d8304c873934c151dcd81bd1765be5f290f8919b67ad67114aad"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T13:41:22.986723+00:00",
+        "seconds": 3.047,
+        "exit_code": 0,
+        "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-run2.stdout.log",
+        "run": 2,
+        "output_files": 21,
+        "output_tree_sha256": "faa869d6f827d8304c873934c151dcd81bd1765be5f290f8919b67ad67114aad"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/consul-example.mmd": "6bd3cedf0fe91f131f41ee2ce5b624b8a29b011707c1e62de1035cede7d05422",
+      "diagrams/fleet.puml": "abfc2a42178e2db182ea6f54cab7c35c7b341fe3b4683cae37a530ea0a0c1b94",
+      "diagrams/spring-boot-admin-3-graalvm.mmd": "ae9330d498fc0fd99fb82a246231c118ab2e16611ad05301aafc1ecb6456d7c0",
+      "diagrams/spring-boot-admin-sample-eureka.mmd": "5d2b1493d4951e4b1af97c8571861785169fa8b69bfc77c0448c8513333b5d72",
+      "diagrams/spring-boot-admin-sample-hazelcast.mmd": "daa3d65c29ba50d48b5b5084b98c858016035b315ab75ede2312f157dde31a82",
+      "diagrams/spring-boot-admin-sample-mcp.mmd": "852efcf7f48ba1dc12bfce16fd02fecafdba7bf7e6ff30d390d972a2e22c3e9f",
+      "diagrams/spring-boot-admin-sample-reactive.mmd": "9d807cd4dcc1c9e85c21b0ff14504d4fd24b85db945acd99ec732acd7746e25c",
+      "diagrams/spring-boot-admin-sample-servlet.mmd": "33b1eb851f12b6e9d7c14e7c6e2d3394f4315a2381e4b81670843a841c259d50",
+      "diagrams/spring-boot-admin-sample-war.mmd": "757b6bde09d8db2a6464d079084f63e19de9df113034635c4b5b671e3a5e8410",
+      "diagrams/zookeeper-example.mmd": "0d4d92dbed5ec96b9ab0970dd369317e31f2403e52020729e2fe7c96ae2e7532",
+      "graph.json": "6ff7c0ffac48e5174058e4e05b4301c4db6736de333299edf232e48b2e10882e",
+      "index.md": "7ee8ea74657d57b7f2293348d357f00dc937a0e10a2eb20e06942b38b788bd7e",
+      "services/consul-example.md": "a73fc34d857a3e51004154e7e228ce81a46a9f2b2a4b37fc40421193ae259bab",
+      "services/spring-boot-admin-3-graalvm.md": "a1610069f548cf1325937aca86a0115a572b201060904706e3cbe9eaf4991863",
+      "services/spring-boot-admin-sample-eureka.md": "22330b88815bf7b01920b1493f69be429a7ae24eaf56f77802d3bbbd3f35f01f",
+      "services/spring-boot-admin-sample-hazelcast.md": "92027a009970942813e4c2371ac4d61a0f4d4411c7c0c6841bf628a2b7720b8e",
+      "services/spring-boot-admin-sample-mcp.md": "3ec69d0e826eb772b3768811ef6938d3d4591b43436460bb41d551634c60a12c",
+      "services/spring-boot-admin-sample-reactive.md": "fabdcbfc44f208dc7aed0285951383a16c4b3c5cdf5c65e8f9697d95d11fd443",
+      "services/spring-boot-admin-sample-servlet.md": "802753ae68438ca4e6c26106131ecc7731e8d2b07e00c3f27464726ec7161926",
+      "services/spring-boot-admin-sample-war.md": "063fc0d4f9a20cd87a53daf34fb55d002b1d69702247c58ba13a46188cd6344c",
+      "services/zookeeper-example.md": "0d11000e16d566ea6d2392d1e6ad10a93ee74f006df4cd6950cb3bd0a61a8c10"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 9,
+      "endpoints": 0,
+      "nodes": 10,
+      "edges": 149,
+      "findings": 178,
+      "evidence_locations_checked": 437,
+      "source_files_line_counted": 21
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:26.310868+00:00",
+      "seconds": 0.39,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T13:41:26.701507+00:00",
+      "seconds": 0.344,
+      "exit_code": 0,
+      "stderr_log": "build/full200/runs/4430237fd3b2e6a2/logs/codecentric--spring-boot-admin-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "service:consul-example",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "consul-example"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/full200/runs/4430237fd3b2e6a2/results/codecentric--spring-boot-admin.json",
+    "output_directories": [
+      "build/full200/runs/4430237fd3b2e6a2/run1/codecentric--spring-boot-admin",
+      "build/full200/runs/4430237fd3b2e6a2/run2/codecentric--spring-boot-admin"
+    ]
+  }
+]

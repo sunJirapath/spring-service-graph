@@ -1,7 +1,7 @@
 # Extension to 200 public repositories
 
-> Historical build results. Three further diagnostic/discovery bugs are fixed in the
-> [764-test follow-up](../remaining-fixes-2026-10-23/report.md); its latest-build field coverage is stated separately.
+> Historical build results. See the [full 200-repository follow-up](../full-200-2026-10-23/report.md)
+> for complete current-build coverage and subsequent corrections.
 
 The combined audit now covers **200 unique public repositories**. This extension adds
 **90 new Spring Boot 4+ projects: 45 Maven and 45 Gradle**, containing 14,489 tracked

@@ -495,13 +495,13 @@ def append_registry(row, result, scanner_hash, distribution_hash, scanner_commit
     registry.setdefault("schema_version", 1)
     registry.setdefault("runs", [])
     key = (row["repository"], row["commit"], scanner_hash, distribution_hash,
-           "default", None, None, "source_sparse")
+           "default", None, None, "source_sparse", SUITE)
     for prior in registry["runs"]:
         prior_key = (
             prior.get("repository"), prior.get("source_commit"),
             prior.get("scanner_jar_sha256"), prior.get("distribution_sha256"),
             prior.get("profile", "default"),
-            prior.get("aliases"), prior.get("config_repo"), prior.get("scan_mode", "source"),
+            prior.get("aliases"), prior.get("config_repo"), prior.get("scan_mode", "source"), prior.get("suite"),
         )
         if prior_key == key:
             return
@@ -514,7 +514,7 @@ def append_registry(row, result, scanner_hash, distribution_hash, scanner_commit
         "started_at": started,
         "finished_at": result.get("finished_at"),
         "spring_boot_version": row.get("boot_version"),
-        "build_system": [row["tool"].capitalize()],
+        "build_system": row.get("build_systems", [row["tool"].capitalize()]),
         "java_files": row.get("measured_java_files", row.get("java_files")),
         "tier": row["tier"],
         "scanner_commit": scanner_commit,

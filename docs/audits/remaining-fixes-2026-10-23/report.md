@@ -1,5 +1,8 @@
 # Remaining audit bugs: fixed
 
+> Historical build results. The [full 200-repository follow-up](../full-200-2026-10-23/report.md)
+> includes further diagnostic and Feign configuration corrections and complete current-build coverage.
+
 All **13 confirmed scanner defects** identified across the audit and this reconciliation
 now have fixes and regression coverage. This follow-up closes three remaining gaps;
 the earlier [eight fixes](../boot4-80-2026-10-23/fixes.md) and

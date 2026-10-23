@@ -1,0 +1,19 @@
+{
+  "scanner_jar_sha256": "3a6448851936edfd488b5cf98d093047f4bdea1207c9cbe2d321c47e94abdaf9",
+  "distribution_sha256": "313f4172f17aaca473be2ab4a7f3a79d09f9bbab594c24af1e2024bb2c8ebcf1",
+  "source_commit": "84831f02916e3090a031b6e0433927e05f72f67a",
+  "source_inventory": "docs/audits/full-200-2026-10-23/evidence/scanner-source-sha256.json",
+  "cases_passed": 8,
+  "graph_sha256": {
+    "duplicate-evidence": "6454ed46b176fbaf35efcffe3f11c4e12a99b58b082db141cd1012badfa2da4a",
+    "elasticsearch-index": "43044993a99875827a2878e5493c59ed830921ad07415a00dac3c0f587f8d6c0",
+    "feign-package": "5f442fa810f9e1ea3e84e6e186898303bb6d40d2167bd4a05ede74d93bc6636a",
+    "mongo-default": "b930e556289ab6365d1ae8682f2c1e5ea1859a3119f97b0bfc990a34e6f92e3b",
+    "openapi-control": "790d0d2bdd576a915516d41582e43e0f977de57b019c1a8ae0caa1ba3c901c4e",
+    "openapi-framework-prefix": "790d0d2bdd576a915516d41582e43e0f977de57b019c1a8ae0caa1ba3c901c4e",
+    "rabbit-overload": "5e3cd5445ffda0a7d3eb732af3fcffe121b9139ecfd07c75a145ecae29d15e5c",
+    "retirement-base": "7a927d2fbb9338563fa346c4e41cec8f301ee89ab2073f2e7c470fe327837c47",
+    "retirement-head": "91c739165eb46a15d9a58906f6781acd03f511b1fe3dde2ab854b9770b419c69",
+    "url-query": "2ebb1ceaa1ff26710ffe2adff35248a0b53b9100a09ea1b13be6277484124474"
+  }
+}

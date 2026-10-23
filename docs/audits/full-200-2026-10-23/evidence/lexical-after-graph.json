@@ -1,0 +1,26 @@
+{
+  "nodes" : [
+    {
+      "kind" : "service",
+      "id" : "service:repo",
+      "name" : "repo",
+      "repo" : "repo",
+      "path" : "."
+    }
+  ],
+  "edges" : [ ],
+  "findings" : [
+    {
+      "kind" : "PARSE_ERROR",
+      "service" : "repo",
+      "message" : "Lexical error at line 5, column 17.  Encountered: \":\" (58), after : \"\\\"\\\\\"",
+      "evidence" : [
+        {
+          "repo" : "repo",
+          "file" : "src/main/java/app/Broken.java",
+          "line" : 5
+        }
+      ]
+    }
+  ]
+}

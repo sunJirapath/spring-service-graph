@@ -15,10 +15,12 @@ the original evidence remains a record of the old scanner's behavior.
 | Enabled Feign clients in dependency modules disappear | Component roots omitted Feign-specific registration | Load eligible declared clients using Feign package/class roots separately from component roots | Maven/Gradle layouts, explicit clients, marker classes, composed aliases and unscanned/imported configuration |
 | Duplicate-name evidence points to directories | Finding evidence used the module path | Use the name's config entry or owning launcher declaration, retaining both sources | Explicit and inferred names, actual regular files and positive lines |
 
-The Feign review also caught alias-group and activation mistakes before the final
-scanner build: `EnableFeignClients.value` and `basePackages` replace each other,
-annotation declarations do not register beans themselves, and an unscanned
-configuration does not activate a package scan.
+The Feign activation checks ensure annotation declarations do not register beans
+themselves and an unscanned configuration does not activate a package scan.
+The original implementation incorrectly treated `EnableFeignClients.value` and
+`basePackages` as a replacement group. The [full-corpus follow-up](../full-200-2026-10-23/report.md)
+corrects this: Feign unions both independent arrays, and a composed override replaces
+only its actual target attribute.
 
 Three related edge cases were fixed while validating these changes:
 

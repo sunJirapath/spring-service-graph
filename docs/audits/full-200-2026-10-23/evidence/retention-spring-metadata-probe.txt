@@ -1,0 +1,4 @@
+SourceUse reflection=false asmMeta=false asmMerged=false
+ClassUse reflection=false asmMeta=false asmMerged=false
+DefaultUse reflection=false asmMeta=false asmMerged=false
+RuntimeUse reflection=true asmMeta=true asmMerged=true

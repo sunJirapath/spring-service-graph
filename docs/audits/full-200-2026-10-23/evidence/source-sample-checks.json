@@ -1,0 +1,566 @@
+{
+  "distribution": "313f4172f17aaca4",
+  "scanner_jar_sha256": "3a6448851936edfd488b5cf98d093047f4bdea1207c9cbe2d321c47e94abdaf9",
+  "source_commit": "84831f02916e3090a031b6e0433927e05f72f67a",
+  "checked_facts": 12,
+  "counts": {
+    "verified": 11,
+    "miss": 0,
+    "unsupported": 1
+  },
+  "all_source_pins_match": true,
+  "checks": [
+    {
+      "repository": "futomaru/todo-app-java",
+      "commit_sha": "d6e1a1446b66c3cea4f1c8630a126551d557a43a",
+      "source_pin_match": true,
+      "source_path": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+      "source_line": 37,
+      "source_excerpt": "@GetMapping",
+      "expected_fact": "Controller exposes GET /api/v1/todos (class mapping line 28 plus @GetMapping line 37).",
+      "graph_hashes": {
+        "run1": "550eab7ef9109f41dc4f93839b773370f44907a38f62ef9ac3e00950a305086e",
+        "run2": "550eab7ef9109f41dc4f93839b773370f44907a38f62ef9ac3e00950a305086e"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found EXPOSES service:todoapp -> endpoint:todoapp:GET /api/v1/todos.",
+          "evidence": [
+            {
+              "file": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+              "line": 37
+            },
+            {
+              "file": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+              "line": 38
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found EXPOSES service:todoapp -> endpoint:todoapp:GET /api/v1/todos.",
+          "evidence": [
+            {
+              "file": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+              "line": 37
+            },
+            {
+              "file": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+              "line": 38
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "futomaru/todo-app-java",
+      "commit_sha": "d6e1a1446b66c3cea4f1c8630a126551d557a43a",
+      "source_pin_match": true,
+      "source_path": "src/main/resources/schema.sql",
+      "source_line": 1,
+      "source_excerpt": "CREATE TABLE IF NOT EXISTS todos (",
+      "expected_fact": "SQL schema declares table todos.",
+      "graph_hashes": {
+        "run1": "550eab7ef9109f41dc4f93839b773370f44907a38f62ef9ac3e00950a305086e",
+        "run2": "550eab7ef9109f41dc4f93839b773370f44907a38f62ef9ac3e00950a305086e"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found OWNS service:todoapp -> table:todoapp/todos.",
+          "evidence": [
+            {
+              "file": "src/main/resources/schema.sql",
+              "line": 1
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found OWNS service:todoapp -> table:todoapp/todos.",
+          "evidence": [
+            {
+              "file": "src/main/resources/schema.sql",
+              "line": 1
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "ganeshalamuru/authservice",
+      "commit_sha": "3c11195499e2c59789c485d9cd19b6b0b56397bc",
+      "source_pin_match": true,
+      "source_path": "src/main/java/com/gan/authservice/controller/UserController.java",
+      "source_line": 29,
+      "source_excerpt": "@GetMapping(version = \"1\")",
+      "expected_fact": "GET /api/users listing invokes UserService.getAllUsers(), which calls UserRepository.findAll() and reads app_user.",
+      "graph_hashes": {
+        "run1": "83a73303798bdb629290e88e4b08f727cdd4a83c3f6cd4222517ea322d4d41f0",
+        "run2": "83a73303798bdb629290e88e4b08f727cdd4a83c3f6cd4222517ea322d4d41f0"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found REACHES endpoint:authservice:GET /api/users -> table:authservice/app_user.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/gan/authservice/repository/UserRepository.java",
+              "line": 8
+            },
+            {
+              "file": "src/main/java/com/gan/authservice/controller/UserController.java",
+              "line": 31
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found REACHES endpoint:authservice:GET /api/users -> table:authservice/app_user.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/gan/authservice/repository/UserRepository.java",
+              "line": 8
+            },
+            {
+              "file": "src/main/java/com/gan/authservice/controller/UserController.java",
+              "line": 31
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "meryemarroussi/trading-assistant",
+      "commit_sha": "6e5c8ee152e9aebd1a70eca20f4e6e9a7c8d69f4",
+      "source_pin_match": true,
+      "source_path": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+      "source_line": 38,
+      "source_excerpt": "String raw = restClient.get()",
+      "expected_fact": "RestClient GET to /api/v3/klines uses configured Binance base URL https://api.binance.com.",
+      "graph_hashes": {
+        "run1": "5f7624f746d291f0b77e5343afca4c6dd5f00878503edc3727209ca566176c3f",
+        "run2": "5f7624f746d291f0b77e5343afca4c6dd5f00878503edc3727209ca566176c3f"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found CALLS service:assistant -> external:api.binance.com.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 38
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 74
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 86
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found CALLS service:assistant -> external:api.binance.com.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 38
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 74
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 86
+            },
+            {
+              "file": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+              "line": 23
+            },
+            {
+              "file": "src/main/resources/application.properties",
+              "line": 14
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/fhir-gateway",
+      "commit_sha": "119e22e380c7839028d877d2ad50000701140c22",
+      "source_pin_match": true,
+      "source_path": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+      "source_line": 58,
+      "source_excerpt": "@PostMapping",
+      "expected_fact": "POST /fhir is exposed using class @RequestMapping(value=\"/fhir\") and method @PostMapping.",
+      "graph_hashes": {
+        "run1": "33ee6ea373c53bb7397aa79e6c1aec3fdb9d6344f93de705fc60c08b93b689dc",
+        "run2": "33ee6ea373c53bb7397aa79e6c1aec3fdb9d6344f93de705fc60c08b93b689dc"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found EXPOSES service:fhir-gateway -> endpoint:fhir-gateway:POST /fhir.",
+          "evidence": [
+            {
+              "file": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+              "line": 58
+            },
+            {
+              "file": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+              "line": 59
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found EXPOSES service:fhir-gateway -> endpoint:fhir-gateway:POST /fhir.",
+          "evidence": [
+            {
+              "file": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+              "line": 58
+            },
+            {
+              "file": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+              "line": 59
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/fhir-gateway",
+      "commit_sha": "119e22e380c7839028d877d2ad50000701140c22",
+      "source_pin_match": true,
+      "source_path": "src/main/resources/application.yml",
+      "source_line": 77,
+      "source_excerpt": "destination: ${KAFKA_INPUT_TOPICS:fhir.all}",
+      "expected_fact": "Cloud Stream process-in-0 consumes topic fhir.all (default of KAFKA_INPUT_TOPICS).",
+      "graph_hashes": {
+        "run1": "33ee6ea373c53bb7397aa79e6c1aec3fdb9d6344f93de705fc60c08b93b689dc",
+        "run2": "33ee6ea373c53bb7397aa79e6c1aec3fdb9d6344f93de705fc60c08b93b689dc"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found CONSUMES service:fhir-gateway -> topic:fhir.all.",
+          "evidence": [
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 77
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found CONSUMES service:fhir-gateway -> topic:fhir.all.",
+          "evidence": [
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 77
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/kafka-fhir-to-server",
+      "commit_sha": "057a17e21c844aba288c1e8a7018156bedf38208",
+      "source_pin_match": true,
+      "source_path": "src/main/resources/application.yml",
+      "source_line": 39,
+      "source_excerpt": "destination: ${TOPIC:fhir-msg}",
+      "expected_fact": "Configured function binding consumes topic fhir-msg (TOPIC default).",
+      "graph_hashes": {
+        "run1": "704b25457a50cf5c222b4a8f6cbd865b90acc572e0fd74e2a36b70ff6369f47c",
+        "run2": "704b25457a50cf5c222b4a8f6cbd865b90acc572e0fd74e2a36b70ff6369f47c"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found CONSUMES service:fhir-to-server -> topic:fhir-msg.",
+          "evidence": [
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 49
+            },
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 39
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found CONSUMES service:fhir-to-server -> topic:fhir-msg.",
+          "evidence": [
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 49
+            },
+            {
+              "file": "src/main/resources/application.yml",
+              "line": 39
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "SilverNine/spring-boot-jwt-tutorial",
+      "commit_sha": "999bac637e02a355dd24ef14398243a70c03211a",
+      "source_pin_match": true,
+      "source_path": "src/main/java/me/silvernine/tutorial/controller/UserController.java",
+      "source_line": 25,
+      "source_excerpt": "@PostMapping(\"/signup\")",
+      "expected_fact": "POST /api/signup invokes signup service and persists User through UserRepository.save.",
+      "graph_hashes": {
+        "run1": "4f6190f485347b3511bb8e7d0e0d48ac1e0a20b46e57af935bbe191c18678cd1",
+        "run2": "4f6190f485347b3511bb8e7d0e0d48ac1e0a20b46e57af935bbe191c18678cd1"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found REACHES endpoint:SilverNine--spring-boot-jwt-tutorial:POST /api/signup -> table:SilverNine--spring-boot-jwt-tutorial/user.",
+          "evidence": [
+            {
+              "file": "src/main/java/me/silvernine/tutorial/repository/UserRepository.java",
+              "line": 9
+            },
+            {
+              "file": "src/main/java/me/silvernine/tutorial/controller/UserController.java",
+              "line": 26
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found REACHES endpoint:SilverNine--spring-boot-jwt-tutorial:POST /api/signup -> table:SilverNine--spring-boot-jwt-tutorial/user.",
+          "evidence": [
+            {
+              "file": "src/main/java/me/silvernine/tutorial/repository/UserRepository.java",
+              "line": 9
+            },
+            {
+              "file": "src/main/java/me/silvernine/tutorial/controller/UserController.java",
+              "line": 26
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "sivaprasadreddy/spring-cloud-aws-demo",
+      "commit_sha": "50d559a6efcb19501a60525a1fbc832b4a272c29",
+      "source_pin_match": true,
+      "source_path": "src/main/java/dev/sivalabs/demo/MessageSender.java",
+      "source_line": 16,
+      "source_excerpt": "sqsTemplate.send(to -> to.queue(queueName).payload(message));",
+      "expected_fact": "SqsTemplate.send publishes the message to the configured SQS queue; graph would need a queue/message edge to represent this call.",
+      "graph_hashes": {
+        "run1": "910da85310d50c7a00e303e5b035598a2c9b53ea931753f7d02da88d3b144575",
+        "run2": "910da85310d50c7a00e303e5b035598a2c9b53ea931753f7d02da88d3b144575"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "No SQS queue/message edge is emitted for the SqsTemplate.send call; SQS remains unsupported.",
+          "evidence": []
+        },
+        "run2": {
+          "matched": true,
+          "result": "No SQS queue/message edge is emitted for the SqsTemplate.send call; SQS remains unsupported.",
+          "evidence": []
+        }
+      },
+      "status": "unsupported"
+    },
+    {
+      "repository": "wilfredkimura/scentcepts2.0",
+      "commit_sha": "17e451fe8dc32498281f56d95821982565f7b4bf",
+      "source_pin_match": true,
+      "source_path": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+      "source_line": 87,
+      "source_excerpt": "ResponseEntity<JsonNode> response = restTemplate.postForEntity(",
+      "expected_fact": "RestTemplate POST to Safaricom Daraja STK push URL calls external host sandbox.safaricom.co.ke and path /mpesa/stkpush/v1/processrequest.",
+      "graph_hashes": {
+        "run1": "4a7b6a16a619e587fa61592d8893106d81c751cbc5a1891329d4fe2ff24eb707",
+        "run2": "4a7b6a16a619e587fa61592d8893106d81c751cbc5a1891329d4fe2ff24eb707"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found CALLS service:scentcepts -> external:sandbox.safaricom.co.ke.",
+          "evidence": [
+            {
+              "file": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+              "line": 132
+            },
+            {
+              "file": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+              "line": 87
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found CALLS service:scentcepts -> external:sandbox.safaricom.co.ke.",
+          "evidence": [
+            {
+              "file": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+              "line": 132
+            },
+            {
+              "file": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+              "line": 87
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "kylehoehns/dugout",
+      "commit_sha": "187afc91e3461d6bc2c26c6bd859fb9236f8b1b3",
+      "source_pin_match": true,
+      "source_path": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+      "source_line": 13,
+      "source_excerpt": "@GetMapping",
+      "expected_fact": "Controller exposes GET /api/players (class @RequestMapping plus @GetMapping).",
+      "graph_hashes": {
+        "run1": "71c08e7b33134d481604b0187f70416fb0882adc64f98446690c42532ccac22c",
+        "run2": "71c08e7b33134d481604b0187f70416fb0882adc64f98446690c42532ccac22c"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found EXPOSES service:dugout -> endpoint:dugout:GET /api/players.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+              "line": 13
+            },
+            {
+              "file": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+              "line": 14
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found EXPOSES service:dugout -> endpoint:dugout:GET /api/players.",
+          "evidence": [
+            {
+              "file": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+              "line": 13
+            },
+            {
+              "file": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+              "line": 14
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    },
+    {
+      "repository": "robalexlimas/franquicias-api",
+      "commit_sha": "ee0c6206a3da054041aa8d67f78c9cae2a03af1e",
+      "source_pin_match": true,
+      "source_path": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/RouterRest.java",
+      "source_line": 193,
+      "source_excerpt": "public RouterFunction<ServerResponse> routerFunction(Handler handler) {",
+      "expected_fact": "Router is nested under path(\"/api\"); GET /franchises/{franchiseId}/top-products therefore resolves as /api/franchises/{franchiseId}/top-products.",
+      "graph_hashes": {
+        "run1": "5ad6ae024c78d49d3811afe976552d2ac0c8f623bb9ea39942557da99ec64b50",
+        "run2": "5ad6ae024c78d49d3811afe976552d2ac0c8f623bb9ea39942557da99ec64b50"
+      },
+      "run_results": {
+        "run1": {
+          "matched": true,
+          "result": "Found EXPOSES service:FranquiciasApi -> endpoint:FranquiciasApi:GET /api/franchises/{franchiseId}/top-products.",
+          "evidence": [
+            {
+              "file": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/RouterRest.java",
+              "line": 203
+            },
+            {
+              "file": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/Handler.java",
+              "line": 126
+            }
+          ]
+        },
+        "run2": {
+          "matched": true,
+          "result": "Found EXPOSES service:FranquiciasApi -> endpoint:FranquiciasApi:GET /api/franchises/{franchiseId}/top-products.",
+          "evidence": [
+            {
+              "file": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/RouterRest.java",
+              "line": 203
+            },
+            {
+              "file": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/Handler.java",
+              "line": 126
+            }
+          ]
+        }
+      },
+      "status": "verified"
+    }
+  ],
+  "validation_errors": [],
+  "distribution_sha256": "313f4172f17aaca473be2ab4a7f3a79d09f9bbab594c24af1e2024bb2c8ebcf1"
+}
