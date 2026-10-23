@@ -1,9 +1,0 @@
-{
-  "tests": 767,
-  "failures": 0,
-  "errors": 0,
-  "skipped": 0,
-  "suites": 52,
-  "scanner_source_commit": "cc66f80483b05052f8df44cfa399d6132ef37ef6",
-  "scanner_jar_sha256": "37d09c791d9b38e5a7d40c606abd88b7abfb5b6e8a805b411d99d20e41749eee"
-}
