@@ -59,7 +59,7 @@ public final class Discovery {
         for (CompilationUnit cu : index.units()) {
             if (index.isGenerated(cu)) continue;
             boolean app = cu.findAll(ClassOrInterfaceDeclaration.class).stream()
-                    .anyMatch(Discovery::isApp);
+                    .anyMatch(c -> isApp(index, c));
             if (app) apps.putIfAbsent(index.moduleOf(index.fileOf(cu)), cu);
         }
         var services = new ArrayList<Service>();
@@ -123,12 +123,29 @@ public final class Discovery {
         return p.subpath(Math.max(0, c - n), c).toString().replace('\\', '-').replace('/', '-');
     }
 
-    static boolean isApp(ClassOrInterfaceDeclaration c) {
-        if (Ann.has(c, "SpringBootApplication")) return true;
+    static boolean isApp(JavaIndex index, ClassOrInterfaceDeclaration c) {
+        if (hasSpringBootApplication(index, c)) return true;
         return c.getMethodsByName("main").stream().filter(m -> m.isStatic()).flatMap(m -> m.getBody().stream()).anyMatch(b ->
                 b.findAll(ObjectCreationExpr.class).stream().anyMatch(o -> o.getType().getNameAsString().startsWith("SpringApplication"))
                 || b.findAll(MethodCallExpr.class).stream().anyMatch(call -> call.getNameAsString().equals("run")
                         && call.getScope().map(Object::toString).filter(x -> x.endsWith("SpringApplication")).isPresent()));
+    }
+
+    /** Recognize Spring Boot's annotation directly or through source-local composed annotations. */
+    private static boolean hasSpringBootApplication(JavaIndex index, ClassOrInterfaceDeclaration c) {
+        var pending = new ArrayDeque<AnnotationExpr>(c.getAnnotations());
+        var seen = new HashSet<TypeDeclaration<?>>();
+        while (!pending.isEmpty()) {
+            AnnotationExpr annotation = pending.pop();
+            if (annotation.getName().getIdentifier().equals("SpringBootApplication")) return true;
+            index.resolveType(annotation.getNameAsString(), annotation)
+                    .filter(declaration -> declaration instanceof AnnotationDeclaration && seen.add(declaration))
+                    .filter(declaration -> Ann.find(declaration, "Retention").flatMap(a -> Ann.attr(a, "value"))
+                            .map(value -> value.toString().equals("RUNTIME") || value.toString().endsWith(".RUNTIME"))
+                            .orElse(false))
+                    .ifPresent(declaration -> ((AnnotationDeclaration) declaration).getAnnotations().forEach(pending::add));
+        }
+        return false;
     }
 
     /**
@@ -197,7 +214,7 @@ public final class Discovery {
         var named = new HashSet<String>();
         libraries.forEach(lib -> named.addAll(autoConfigs(lib)));
         var pending = new ArrayDeque<TypeDeclaration<?>>();
-        own.forEach(cu -> types(cu).stream().filter(t -> t instanceof ClassOrInterfaceDeclaration c && isApp(c))
+        own.forEach(cu -> types(cu).stream().filter(t -> t instanceof ClassOrInterfaceDeclaration c && isApp(index, c))
                 .forEach(pending::add));
         var candidates = new ArrayList<>(own);
         candidates.addAll(library);

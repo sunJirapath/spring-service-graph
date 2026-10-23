@@ -1,0 +1,92 @@
+[
+  {
+    "repository": "team-project-final/synapse-platform-svc",
+    "commit": "4a530a1017c223d1dfdbaa4d63e909a7183381bf",
+    "nodes_unchanged": true,
+    "edges_unchanged": true,
+    "non_parse_findings_unchanged": true,
+    "false_parse_errors_removed": [
+      {
+        "kind": "PARSE_ERROR",
+        "service": "platform-svc",
+        "message": "Incorrect component accessor return type. Expected: 'List<FeatureFlagUpdate>', found: 'List<FeatureFlagUpdate>'.",
+        "evidence": [
+          {
+            "repo": "team-project-final--synapse-platform-svc",
+            "file": "src/main/java/com/synapse/platform/admin/dto/AdminSettingsUpdateRequest.java",
+            "line": 10
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "repository": "apache/streampipes",
+    "commit": "c4fd92635236427ed96b3aa7ce9f98bb36a07b64",
+    "nodes_unchanged": true,
+    "edges_unchanged": true,
+    "non_parse_findings_unchanged": true,
+    "false_parse_errors_removed": [
+      {
+        "kind": "PARSE_ERROR",
+        "service": "apache--streampipes",
+        "message": "Lexical error at line 18, column 1.  Encountered: \"#\" (35), after : \"\"",
+        "evidence": [
+          {
+            "repo": "apache--streampipes",
+            "file": "archetypes/streampipes-archetype-extensions-jvm/src/main/resources/archetype-resources/src/main/java/pe/__packageName__/__classNamePrefix__DataProcessor.java",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "kind": "PARSE_ERROR",
+        "service": "apache--streampipes",
+        "message": "Lexical error at line 18, column 1.  Encountered: \"#\" (35), after : \"\"",
+        "evidence": [
+          {
+            "repo": "apache--streampipes",
+            "file": "archetypes/streampipes-archetype-extensions-jvm/src/main/resources/archetype-resources/src/main/java/pe/__packageName__/__classNamePrefix__DataSink.java",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "kind": "PARSE_ERROR",
+        "service": "apache--streampipes",
+        "message": "Lexical error at line 19, column 1.  Encountered: \"#\" (35), after : \"\"",
+        "evidence": [
+          {
+            "repo": "apache--streampipes",
+            "file": "archetypes/streampipes-archetype-extensions-jvm/src/main/resources/archetype-resources/src/main/java/Init.java",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "kind": "PARSE_ERROR",
+        "service": "apache--streampipes",
+        "message": "Lexical error at line 19, column 1.  Encountered: \"#\" (35), after : \"\"",
+        "evidence": [
+          {
+            "repo": "apache--streampipes",
+            "file": "archetypes/streampipes-archetype-extensions-jvm/src/main/resources/archetype-resources/src/main/java/pe/__packageName__/__classNamePrefix__GenericAdapter.java",
+            "line": 1
+          }
+        ]
+      },
+      {
+        "kind": "PARSE_ERROR",
+        "service": "apache--streampipes",
+        "message": "Lexical error at line 19, column 1.  Encountered: \"#\" (35), after : \"\"",
+        "evidence": [
+          {
+            "repo": "apache--streampipes",
+            "file": "archetypes/streampipes-archetype-extensions-jvm/src/main/resources/archetype-resources/src/main/java/pe/__packageName__/__classNamePrefix__SpecificAdapter.java",
+            "line": 1
+          }
+        ]
+      }
+    ]
+  }
+]

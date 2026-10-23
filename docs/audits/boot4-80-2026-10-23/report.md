@@ -1,5 +1,8 @@
 # Spring Boot 4+ post-fix validation: 80 public repositories
 
+> Historical build results. The record-annotation false diagnostic and archetype-template
+> source selection were subsequently fixed; see the [remaining-fixes report](../remaining-fixes-2026-10-23/report.md).
+
 All eight findings from the [original 40-repository audit](../github40-2026-10-23/report.md)
 are fixed, with retained regressions. The fixed library passed **751 tests**
 and all **8 CLI reproductions**. The new corpus contains **80 distinct pinned public

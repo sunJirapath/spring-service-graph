@@ -1,0 +1,7 @@
+{
+  "intermediate_jar": "cc8caf431186ce0fc202b63c4b9d138578c9dbe1a37e9302c71cef3c5e0c0153",
+  "tests": 1,
+  "failures": 1,
+  "test": "composedApplicationAnnotationsMustBeRetainedAtRuntime()",
+  "message": "java.lang.AssertionError: \r\nExpecting empty but was: [Service[name=not-runtime-0, repo=Repo[name=not-runtime-0, root=build/final-bugs/tmp/junit-955106211700342231/not-runtime-0], moduleRoot=build/final-bugs/tmp/junit-955106211700342231/not-runtime-0, config=io.github.sunjirapath.ssg.scan.Config@281b2dfd, index=io.github.sunjirapath.ssg.scan.JavaIndex@492be039, units=[package app;\n\nimport java.lang.annotation.*;\n\n@SpringBootApplication\n@interface Marker {\n}\n\n@Marker\nclass NotAnApplication {\n}\n], libraries=[]]]"
+}

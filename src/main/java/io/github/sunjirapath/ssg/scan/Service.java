@@ -46,7 +46,7 @@ public record Service(String name, Repo repo, Path moduleRoot, Config config, Ja
         Config.Entry entry = config.get("spring.application.name");
         if (entry != null && name.equals(config.valueOf("spring.application.name").text())) return entry.evidence();
         return units.stream().filter(cu -> index.moduleOf(index.fileOf(cu)).equals(moduleRoot))
-                .flatMap(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).stream()).filter(Discovery::isApp)
+                .flatMap(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).stream()).filter(c -> Discovery.isApp(index, c))
                 .map(c -> Ann.find(c, "SpringBootApplication").map(this::evidence).orElseGet(() -> evidence(c.getName())))
                 .findFirst().orElseGet(() -> evidence(units.getFirst()));
     }

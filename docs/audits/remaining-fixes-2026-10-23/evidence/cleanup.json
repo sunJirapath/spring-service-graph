@@ -1,0 +1,39 @@
+{
+  "status": "completed",
+  "completed_at": "2026-10-23T10:21:14.2937946+00:00",
+  "task_clone_directories_removed": 2,
+  "removed_targets": [
+    {
+      "path": "build/final-bugs",
+      "files": 3398,
+      "bytes": 24715326.0
+    },
+    {
+      "path": "build/github40-reproductions",
+      "files": 74,
+      "bytes": 29296.0
+    },
+    {
+      "path": "docs/audits/boot4-80-2026-10-23/__pycache__",
+      "files": 2,
+      "bytes": 55994.0
+    },
+    {
+      "path": "bench/boot4-audit",
+      "files": 0,
+      "bytes": 0
+    },
+    {
+      "path": "build/fix-audit",
+      "files": 0,
+      "bytes": 0
+    }
+  ],
+  "preexisting_benchmark_directories_preserved": 15,
+  "private_history_retained": true,
+  "private_history_unique_repositories": 200,
+  "private_history_records": 396,
+  "global_temp_settings_changed": false,
+  "public_evidence_retained": true,
+  "standard_project_build_outputs_retained": true
+}

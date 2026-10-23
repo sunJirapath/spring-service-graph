@@ -1,0 +1,212 @@
+[
+  {
+    "repository": "team-project-final/synapse-platform-svc",
+    "commit": "4a530a1017c223d1dfdbaa4d63e909a7183381bf",
+    "tier": "medium",
+    "tool": "gradle",
+    "boot_version": "4.0.0",
+    "java_files": 241,
+    "source_checkout": "build/final-bugs/repos/team-project-final--synapse-platform-svc",
+    "scanner_commit": "de7682c676ab08e3db62c7bfa762761f69417df8",
+    "scanner_jar_sha256": "cc8caf431186ce0fc202b63c4b9d138578c9dbe1a37e9302c71cef3c5e0c0153",
+    "distribution_sha256": "c75d891b0c5b7a0f9f274a18d28adc583f662cc4a53727f95bd5121f42d3baa4",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T10:07:58.947397+00:00",
+    "finished_at": "2026-10-23T10:08:04.189562+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T10:07:58.947397+00:00",
+        "seconds": 1.61,
+        "exit_code": 0,
+        "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "5e6593e9ef3875ac6d54b5b236ed9c1cca04f9de0539f0139ee156b68c59c639"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T10:08:00.566213+00:00",
+        "seconds": 1.594,
+        "exit_code": 0,
+        "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "5e6593e9ef3875ac6d54b5b236ed9c1cca04f9de0539f0139ee156b68c59c639"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "87a97e75e445893f3f42c44d29a56848b4e4710de09a480c14450418859365c0",
+      "diagrams/platform-svc.mmd": "fad181ffc658e3badbf828a54124981130dc46c4f55a6d41836401c61531a78b",
+      "graph.json": "85c1c05ac0c2460b59b2ffe96aa170089f201d8fc4e089049efcc46cb78717f0",
+      "index.md": "a8063321a179efe9430aba8b424a5ca26b79172ad3b76a4f05fa9ac8b07fa4b1",
+      "services/platform-svc.md": "632a469152a7bcd3995f09eac69e27df07dfc85c36163775f6f4d9f1337be3df"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 50,
+      "nodes": 82,
+      "edges": 219,
+      "findings": 10,
+      "evidence_locations_checked": 434,
+      "source_files_line_counted": 78
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T10:08:03.552264+00:00",
+      "seconds": 0.312,
+      "exit_code": 0,
+      "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T10:08:03.870914+00:00",
+      "seconds": 0.328,
+      "exit_code": 0,
+      "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/team-project-final--synapse-platform-svc-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:platform-svc:DELETE /api/v1/admin/users/{id}",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "platform-svc"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/final-bugs/runs/c75d891b0c5b7a0f/results/team-project-final--synapse-platform-svc.json",
+    "output_directories": [
+      "build/final-bugs/runs/c75d891b0c5b7a0f/run1/team-project-final--synapse-platform-svc",
+      "build/final-bugs/runs/c75d891b0c5b7a0f/run2/team-project-final--synapse-platform-svc"
+    ]
+  },
+  {
+    "repository": "apache/streampipes",
+    "commit": "c4fd92635236427ed96b3aa7ce9f98bb36a07b64",
+    "tier": "huge",
+    "tool": "maven",
+    "boot_version": "4.0.2",
+    "java_files": 2216,
+    "source_checkout": "build/final-bugs/repos/apache--streampipes",
+    "scanner_commit": "de7682c676ab08e3db62c7bfa762761f69417df8",
+    "scanner_jar_sha256": "cc8caf431186ce0fc202b63c4b9d138578c9dbe1a37e9302c71cef3c5e0c0153",
+    "distribution_sha256": "c75d891b0c5b7a0f9f274a18d28adc583f662cc4a53727f95bd5121f42d3baa4",
+    "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+    "scanner_jars": [
+      "jackson-annotations-2.22.jar",
+      "jackson-core-2.22.4.jar",
+      "jackson-databind-2.22.4.jar",
+      "javaparser-core-3.28.2.jar",
+      "snakeyaml-2.7.jar",
+      "spring-service-graph-0.1.0-SNAPSHOT.jar"
+    ],
+    "profile": "default",
+    "scan_mode": "source_sparse",
+    "started_at": "2026-10-23T10:08:04.371110+00:00",
+    "finished_at": "2026-10-23T10:08:19.698592+00:00",
+    "scans": [
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T10:08:04.371110+00:00",
+        "seconds": 6.094,
+        "exit_code": 0,
+        "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-run1.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-run1.stdout.log",
+        "run": 1,
+        "output_files": 5,
+        "output_tree_sha256": "0e7ff900779f16ca76ab78d1ad2f922460a807967fbbeee24e1b675e88cf7f96"
+      },
+      {
+        "status": "passed",
+        "started_at": "2026-10-23T10:08:10.476798+00:00",
+        "seconds": 6.454,
+        "exit_code": 0,
+        "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-run2.stderr.log",
+        "stderr_bytes": 0,
+        "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-run2.stdout.log",
+        "run": 2,
+        "output_files": 5,
+        "output_tree_sha256": "0e7ff900779f16ca76ab78d1ad2f922460a807967fbbeee24e1b675e88cf7f96"
+      }
+    ],
+    "deterministic_output": true,
+    "execution_status": "passed",
+    "extraction_status": "passed",
+    "output_file_sha256": {
+      "diagrams/fleet.puml": "a248e905f218092b8a370cc9307ebce001436c5a1d33964cc0e17afaa74d549e",
+      "diagrams/streampipes-extensions-all-iiot.mmd": "194a5d8df1d5469b142436575cec4a81bb1f6f176218dd0319c93858ef366c8f",
+      "graph.json": "f5616a8f8d8283708f9513fed89ed4764ceb6e96424cfb287016b6caf71fb992",
+      "index.md": "c6c5bd321dffcf0ff7d27a8ec5b963fa2270596c9c5ab264bbcbe959099f27b1",
+      "services/streampipes-extensions-all-iiot.md": "fd430d09019e7af58d191efd97dbf0e3e6c4de6be9268ec3d3cf6a47c5b062a4"
+    },
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 308,
+      "nodes": 309,
+      "edges": 308,
+      "findings": 0,
+      "evidence_locations_checked": 640,
+      "source_files_line_counted": 91
+    },
+    "diff_identical": {
+      "status": "passed",
+      "started_at": "2026-10-23T10:08:19.048522+00:00",
+      "seconds": 0.312,
+      "exit_code": 0,
+      "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-diff-identical.stderr.log",
+      "stderr_bytes": 0,
+      "stdout_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-diff-identical.stdout.log"
+    },
+    "mcp": {
+      "status": "passed",
+      "started_at": "2026-10-23T10:08:19.377964+00:00",
+      "seconds": 0.312,
+      "exit_code": 0,
+      "stderr_log": "build/final-bugs/runs/c75d891b0c5b7a0f/logs/apache--streampipes-mcp.stderr.log",
+      "tool_names": [
+        "impact_of",
+        "service_card",
+        "who_calls"
+      ],
+      "target": "endpoint:streampipes-extensions-all-iiot:* /",
+      "incoming_edges_verified": 0,
+      "impact_depth": 1,
+      "impact_rows_verified": 0,
+      "service_card_verified": "streampipes-extensions-all-iiot"
+    },
+    "status": "passed",
+    "errors": [],
+    "result_file": "build/final-bugs/runs/c75d891b0c5b7a0f/results/apache--streampipes.json",
+    "output_directories": [
+      "build/final-bugs/runs/c75d891b0c5b7a0f/run1/apache--streampipes",
+      "build/final-bugs/runs/c75d891b0c5b7a0f/run2/apache--streampipes"
+    ]
+  }
+]

@@ -24,6 +24,8 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.validator.ProblemReporter;
+import com.github.javaparser.ast.validator.language_level_validations.chunks.RecordDeclarationValidator;
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Value;
@@ -74,7 +76,8 @@ public final class JavaIndex {
         try {
             for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
                 var result = parser.parse(f);
-                result.getProblems().forEach(p -> idx.problems.add(new Problem(f,
+                result.getProblems().stream().filter(p -> result.getResult()
+                        .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
                         p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
                         p.getMessage().lines().findFirst().orElse("parse error"))));
                 result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
@@ -85,12 +88,27 @@ public final class JavaIndex {
         return idx;
     }
 
+    /** Recheck JavaParser's annotation-sensitive accessor comparison without changing the indexed AST. */
+    private static boolean recordAnnotationProblem(com.github.javaparser.Problem problem, CompilationUnit cu) {
+        if (!problem.getMessage().startsWith("Incorrect component accessor return type.")) return false;
+        for (var record : cu.findAll(RecordDeclaration.class)) {
+            if (record.getTokenRange().isEmpty() || !record.getTokenRange().equals(problem.getLocation())) continue;
+            var normalized = record.clone();
+            normalized.findAll(AnnotationExpr.class).forEach(Node::remove);
+            var remaining = new ArrayList<com.github.javaparser.Problem>();
+            new RecordDeclarationValidator().accept(normalized, new ProblemReporter(remaining::add));
+            return remaining.stream().noneMatch(p -> p.getMessage().equals(problem.getMessage()));
+        }
+        return false;
+    }
+
     /** Main sources and generated sources (openapi-generator output); never tests. */
     private boolean isMainSource(Path f) {
         String p = rel(f);
         int main = p.indexOf("/src/main/java/");
-        String layout = main < 0 ? p : p.substring(0, main);
-        if (!p.endsWith(".java") || layout.contains("/.git/") || layout.contains("/node_modules/") || layout.contains("/src/test/")) {
+        String layout = main < 0 ? p : p.substring(0, main + 1);
+        if (!p.endsWith(".java") || layout.contains("/.git/") || layout.contains("/node_modules/")
+                || layout.contains("/src/test/") || layout.contains("/src/main/resources/")) {
             return false;
         }
         // Package segments such as com.target are inside the source root, not build directories.
