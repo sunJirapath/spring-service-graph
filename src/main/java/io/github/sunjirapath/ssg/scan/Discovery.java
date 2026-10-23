@@ -140,12 +140,16 @@ public final class Discovery {
             if (annotation.getName().getIdentifier().equals("SpringBootApplication")) return true;
             index.resolveType(annotation.getNameAsString(), annotation)
                     .filter(declaration -> declaration instanceof AnnotationDeclaration && seen.add(declaration))
-                    .filter(declaration -> Ann.find(declaration, "Retention").flatMap(a -> Ann.attr(a, "value"))
-                            .map(value -> value.toString().equals("RUNTIME") || value.toString().endsWith(".RUNTIME"))
-                            .orElse(false))
+                    .filter(Discovery::runtimeRetention)
                     .ifPresent(declaration -> ((AnnotationDeclaration) declaration).getAnnotations().forEach(pending::add));
         }
         return false;
+    }
+
+    private static boolean runtimeRetention(TypeDeclaration<?> declaration) {
+        return Ann.find(declaration, "Retention").flatMap(a -> Ann.attr(a, "value"))
+                .map(value -> value.toString().equals("RUNTIME") || value.toString().endsWith(".RUNTIME"))
+                .orElse(false);
     }
 
     /**
@@ -284,6 +288,7 @@ public final class Discovery {
                 continue;
             } else {
                 index.resolveType(a.getNameAsString(), a).filter(d -> d instanceof AnnotationDeclaration && seen.add(d))
+                        .filter(Discovery::runtimeRetention)
                         .ifPresent(d -> d.getAnnotations().forEach(meta ->
                                 queue.add(feignAnnotation(index, a, (AnnotationDeclaration) d, meta))));
                 continue;

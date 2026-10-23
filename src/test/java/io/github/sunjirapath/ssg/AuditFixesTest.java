@@ -147,6 +147,8 @@ class AuditFixesTest {
         var repo = clientFleet(false, "@RemoteClients(basePackages = \"clients\")")
                 .file("orders/src/main/java/app/RemoteClients.java", """
                         package app;
+                        import java.lang.annotation.*;
+                        @Retention(RetentionPolicy.RUNTIME)
                         @EnableFeignClients(basePackages="wrong")
                         @interface RemoteClients {
                             @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
@@ -166,6 +168,8 @@ class AuditFixesTest {
         var repo = clientFleet(false, "@RemoteClients(basePackages = \"unused\")")
                 .file("orders/src/main/java/app/RemoteClients.java", """
                         package app;
+                        import java.lang.annotation.*;
+                        @Retention(RetentionPolicy.RUNTIME)
                         @EnableFeignClients("clients")
                         @interface RemoteClients {
                             @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
@@ -197,6 +201,40 @@ class AuditFixesTest {
             assertThat(TempRepo.scan(repo).edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS)
                     .extracting(Edge::to).containsExactly("endpoint:users:GET /users/{id}");
         }
+    }
+
+    @Test
+    void composedFeignRegistrationRequiresRuntimeRetention() {
+        for (String retention : List.of("", "@Retention(RetentionPolicy.CLASS)",
+                "@Retention(RetentionPolicy.SOURCE)")) {
+            var repo = clientFleet(false, "@RemoteClients(basePackages = \"clients\")")
+                    .file("orders/src/main/java/app/RemoteClients.java", """
+                            package app;
+                            import java.lang.annotation.*;
+                            %s
+                            @EnableFeignClients
+                            @interface RemoteClients {
+                                @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
+                                String[] basePackages() default {};
+                            }
+                            """.formatted(retention));
+
+            assertThat(TempRepo.scan(repo).edges()).noneMatch(e -> e.kind() == Edge.Kind.CALLS);
+        }
+
+        var runtime = clientFleet(false, "@RemoteClients(basePackages = \"clients\")")
+                .file("orders/src/main/java/app/RemoteClients.java", """
+                        package app;
+                        import java.lang.annotation.*;
+                        @Retention(RetentionPolicy.RUNTIME)
+                        @EnableFeignClients
+                        @interface RemoteClients {
+                            @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
+                            String[] basePackages() default {};
+                        }
+                        """);
+        assertThat(TempRepo.scan(runtime).edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS)
+                .extracting(Edge::to).containsExactly("endpoint:users:GET /users/{id}");
     }
 
     @Test
