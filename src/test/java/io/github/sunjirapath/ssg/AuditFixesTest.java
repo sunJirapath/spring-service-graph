@@ -147,7 +147,7 @@ class AuditFixesTest {
         var repo = clientFleet(false, "@RemoteClients(basePackages = \"clients\")")
                 .file("orders/src/main/java/app/RemoteClients.java", """
                         package app;
-                        @EnableFeignClients("wrong")
+                        @EnableFeignClients(basePackages="wrong")
                         @interface RemoteClients {
                             @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
                             String[] basePackages() default {"unused"};
@@ -159,6 +159,44 @@ class AuditFixesTest {
                         """);
         assertThat(TempRepo.scan(repo).edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS)
                 .extracting(Edge::to).containsExactly("endpoint:users:GET /users/{id}");
+    }
+
+    @Test
+    void composedFeignAliasesPreserveIndependentMetaPackages() {
+        var repo = clientFleet(false, "@RemoteClients(basePackages = \"unused\")")
+                .file("orders/src/main/java/app/RemoteClients.java", """
+                        package app;
+                        @EnableFeignClients("clients")
+                        @interface RemoteClients {
+                            @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
+                            String[] basePackages() default {};
+                        }
+                        """);
+        assertThat(TempRepo.scan(repo).edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS)
+                .extracting(Edge::to).containsExactly("endpoint:users:GET /users/{id}");
+    }
+
+    @Test
+    void pairedComposedFeignAliasesKeepTheExplicitValueAndBasePackages() {
+        for (String usage : List.of("@RemoteClients(value = \"clients\")",
+                "@RemoteClients(basePackages = \"clients\")")) {
+            var repo = clientFleet(false, usage)
+                    .file("orders/src/main/java/app/RemoteClients.java", """
+                            package app;
+                            import java.lang.annotation.*;
+                            @Retention(RetentionPolicy.RUNTIME)
+                            @EnableFeignClients
+                            @interface RemoteClients {
+                                @AliasFor(annotation=EnableFeignClients.class, attribute="value")
+                                String[] value() default {};
+                                @AliasFor(annotation=EnableFeignClients.class, attribute="basePackages")
+                                String[] basePackages() default {};
+                            }
+                            """);
+
+            assertThat(TempRepo.scan(repo).edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS)
+                    .extracting(Edge::to).containsExactly("endpoint:users:GET /users/{id}");
+        }
     }
 
     @Test

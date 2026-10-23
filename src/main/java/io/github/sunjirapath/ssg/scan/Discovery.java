@@ -318,10 +318,8 @@ public final class Discovery {
                     index.resolveType(type, use).flatMap(TypeDeclaration::getFullyQualifiedName)
                             .ifPresent(fqn -> literal.setType(com.github.javaparser.StaticJavaParser.parseType(fqn)));
             }
-            // EnableFeignClients.value and basePackages are the same Spring alias group.
-            effective.getPairs().removeIf(p -> p.getNameAsString().equals(target)
-                    || (target.equals("value") || target.equals("basePackages"))
-                    && (p.getNameAsString().equals("value") || p.getNameAsString().equals("basePackages")));
+            // FeignClientsRegistrar unions value and basePackages; an override replaces only its target.
+            effective.getPairs().removeIf(p -> p.getNameAsString().equals(target));
             effective.addPair(target, copy);
         }
         return effective;
