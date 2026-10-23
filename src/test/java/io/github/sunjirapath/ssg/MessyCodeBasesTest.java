@@ -57,11 +57,11 @@ class MessyCodeBasesTest {
         var facts = repo.facts(new DataExtractor());
 
         assertThat(facts).filteredOn(Fact.TableUse.class::isInstance).map(Fact.TableUse.class::cast)
-                .extracting(t -> t.table().text() + " " + t.via()).containsExactly("sys_job repository SysJobMapper");
+                .extracting(t -> t.table().text() + " " + t.via()).containsExactlyInAnyOrder(
+                        "sys_job repository SysJobMapper", "doc repository DocRepository");
         assertThat(facts).filteredOn(Fact.Problem.class::isInstance).map(Fact.Problem.class::cast)
                 .extracting(Fact.Problem::message).containsExactlyInAnyOrder(
-                        "repository GoneMapper: entity Gone not found in sources",
-                        "repository DocRepository: entity Doc not found in sources");
+                        "repository GoneMapper: entity Gone not found in sources");
     }
 
     @Test

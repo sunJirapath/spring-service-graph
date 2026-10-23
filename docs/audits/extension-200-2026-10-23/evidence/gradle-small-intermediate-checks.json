@@ -1,0 +1,184 @@
+{
+  "run_id": "27f560cb4c6332c9",
+  "checked_facts": 12,
+  "counts": {
+    "verified": 11,
+    "miss": 0,
+    "unsupported": 1
+  },
+  "checks": [
+    {
+      "repository": "futomaru/todo-app-java",
+      "commit_sha": "d6e1a1446b66c3cea4f1c8630a126551d557a43a",
+      "source_path": "src/main/java/io/github/futomaru/todoapp/controller/TodoController.java",
+      "source_line": 37,
+      "expected_fact": "Controller exposes GET /api/v1/todos (class mapping line 28 plus @GetMapping line 37).",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains EXPOSES service:todoapp -> endpoint:todoapp:GET /api/v1/todos with evidence at controller lines 37-38.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/futomaru--todo-app-java/graph.json",
+      "graph_evidence": [
+        "TodoController.java:37",
+        "TodoController.java:38"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "futomaru/todo-app-java",
+      "commit_sha": "d6e1a1446b66c3cea4f1c8630a126551d557a43a",
+      "source_path": "src/main/resources/schema.sql",
+      "source_line": 1,
+      "expected_fact": "SQL schema declares table todos.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains OWNS service:todoapp -> table:todoapp/todos with schema.sql line 1 evidence.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/futomaru--todo-app-java/graph.json",
+      "graph_evidence": [
+        "schema.sql:1"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "ganeshalamuru/authservice",
+      "commit_sha": "3c11195499e2c59789c485d9cd19b6b0b56397bc",
+      "source_path": "src/main/java/com/gan/authservice/controller/UserController.java",
+      "source_line": 29,
+      "expected_fact": "GET /api/users listing invokes UserService.getAllUsers(), which calls UserRepository.findAll() and reads app_user.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph has GET /api/users -> app_user REACHES edge; controller evidence line 31 and repository evidence line 8. Pinned UserService.getAllUsers() calls userRepository.findAll() at line 24.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/ganeshalamuru--authservice/graph.json",
+      "graph_evidence": [
+        "UserController.java:31",
+        "UserRepository.java:8"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "meryemarroussi/trading-assistant",
+      "commit_sha": "6e5c8ee152e9aebd1a70eca20f4e6e9a7c8d69f4",
+      "source_path": "src/main/java/com/crypto/assistant/binance/BinanceClient.java",
+      "source_line": 38,
+      "expected_fact": "RestClient GET to /api/v3/klines uses configured Binance base URL https://api.binance.com.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains CALLS service:assistant -> external:api.binance.com; evidence at BinanceClient.java:38 and :23 plus application.properties:14.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/meryemarroussi--trading-assistant/graph.json",
+      "graph_evidence": [
+        "BinanceClient.java:38",
+        "BinanceClient.java:23",
+        "application.properties:14"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/fhir-gateway",
+      "commit_sha": "119e22e380c7839028d877d2ad50000701140c22",
+      "source_path": "src/main/java/org/miracum/etl/fhirgateway/controllers/FhirController.java",
+      "source_line": 58,
+      "expected_fact": "POST /fhir is exposed using class @RequestMapping(value=\"/fhir\") and method @PostMapping.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains EXPOSES service:fhir-gateway -> endpoint:fhir-gateway:POST /fhir with evidence at FhirController.java:58-59.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/miracum--fhir-gateway/graph.json",
+      "graph_evidence": [
+        "FhirController.java:58",
+        "FhirController.java:59"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/fhir-gateway",
+      "commit_sha": "119e22e380c7839028d877d2ad50000701140c22",
+      "source_path": "src/main/resources/application.yml",
+      "source_line": 77,
+      "expected_fact": "Cloud Stream process-in-0 consumes topic fhir.all (default of KAFKA_INPUT_TOPICS).",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains CONSUMES service:fhir-gateway -> topic:fhir.all, via cloud-stream:process-in-0, with application.yml line 77 evidence.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/miracum--fhir-gateway/graph.json",
+      "graph_evidence": [
+        "application.yml:77"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "miracum/kafka-fhir-to-server",
+      "commit_sha": "057a17e21c844aba288c1e8a7018156bedf38208",
+      "source_path": "src/main/resources/application.yml",
+      "source_line": 39,
+      "expected_fact": "Configured function binding consumes topic fhir-msg (TOPIC default).",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains CONSUMES service:fhir-to-server -> topic:fhir-msg; application.yml evidence lines 39 and 49 represent the single/batch bindings.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/miracum--kafka-fhir-to-server/graph.json",
+      "graph_evidence": [
+        "application.yml:39",
+        "application.yml:49"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "SilverNine/spring-boot-jwt-tutorial",
+      "commit_sha": "999bac637e02a355dd24ef14398243a70c03211a",
+      "source_path": "src/main/java/me/silvernine/tutorial/controller/UserController.java",
+      "source_line": 25,
+      "expected_fact": "POST /api/signup invokes signup service and persists User through UserRepository.save.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains REACHES endpoint POST /api/signup -> table user, evidence UserController.java:26 and UserRepository.java:9; pinned service saves at UserService.java:44.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/SilverNine--spring-boot-jwt-tutorial/graph.json",
+      "graph_evidence": [
+        "UserController.java:26",
+        "UserRepository.java:9"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "sivaprasadreddy/spring-cloud-aws-demo",
+      "commit_sha": "50d559a6efcb19501a60525a1fbc832b4a272c29",
+      "source_path": "src/main/java/dev/sivalabs/demo/MessageSender.java",
+      "source_line": 16,
+      "expected_fact": "SqsTemplate.send publishes the message to the configured SQS queue; graph would need a queue/message edge to represent this call.",
+      "actual_result": "Rechecked the available graph in distribution 27f560cb4c6332c9/run1; no SQS queue edge is present. No SQS queue or messaging edge appears in this graph. Scanner messaging extraction supports Kafka, RabbitMQ, and RocketMQ patterns; AWS SqsTemplate is outside current support, so this checked fact is unsupported rather than a miss.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/sivaprasadreddy--spring-cloud-aws-demo/graph.json",
+      "graph_evidence": [],
+      "status": "unsupported"
+    },
+    {
+      "repository": "wilfredkimura/scentcepts2.0",
+      "commit_sha": "17e451fe8dc32498281f56d95821982565f7b4bf",
+      "source_path": "src/main/java/ke/co/scentcepts/payment/PaymentEventListener.java",
+      "source_line": 87,
+      "expected_fact": "RestTemplate POST to Safaricom Daraja STK push URL calls external host sandbox.safaricom.co.ke and path /mpesa/stkpush/v1/processrequest.",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains CALLS service:scentcepts -> external:sandbox.safaricom.co.ke with POST path /mpesa/stkpush/v1/processrequest, evidence at PaymentEventListener.java:87.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/wilfredkimura--scentcepts2.0/graph.json",
+      "graph_evidence": [
+        "PaymentEventListener.java:87"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "kylehoehns/dugout",
+      "commit_sha": "187afc91e3461d6bc2c26c6bd859fb9236f8b1b3",
+      "source_path": "src/main/java/com/kylehoehns/dugout/player/PlayerController.java",
+      "source_line": 13,
+      "expected_fact": "Controller exposes GET /api/players (class @RequestMapping plus @GetMapping).",
+      "actual_result": "Rechecked in distribution 27f560cb4c6332c9/run1: Graph contains EXPOSES service:dugout -> endpoint:dugout:GET /api/players with evidence at PlayerController.java:13-14.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/kylehoehns--dugout/graph.json",
+      "graph_evidence": [
+        "PlayerController.java:13",
+        "PlayerController.java:14"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "robalexlimas/franquicias-api",
+      "commit_sha": "ee0c6206a3da054041aa8d67f78c9cae2a03af1e",
+      "source_path": "infrastructure/entry-points/reactive-web/src/main/java/co/com/bancolombia/api/RouterRest.java",
+      "source_line": 193,
+      "expected_fact": "Router is nested under path(\"/api\"); GET /franchises/{franchiseId}/top-products therefore resolves as /api/franchises/{franchiseId}/top-products.",
+      "pre_fix_actual_result": "Source nests route tree in nest(path(\"/api\"), ...) at lines 193-194; GET predicate is at line 203. Graph reports GET /franchises/{franchiseId}/top-products with EXACT evidence line 203, omitting /api.",
+      "pre_fix_graph_path": "build/audit200/runs/f34362d1091cbc87/run1/robalexlimas--franquicias-api/graph.json",
+      "pre_fix_graph_evidence": [
+        "RouterRest.java:203",
+        "Handler.java:126"
+      ],
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/robalexlimas--franquicias-api/graph.json",
+      "graph_evidence": [
+        "RouterRest.java:203",
+        "Handler.java:126"
+      ],
+      "actual_result": "Graph contains EXACT EXPOSES edge to endpoint GET /api/franchises/{franchiseId}/top-products, with evidence at RouterRest.java:203 and Handler.java:126.",
+      "status": "verified",
+      "post_fix_status": "verified",
+      "post_fix_reason": "Confirmed the corrected prefixed route in the final distribution graph."
+    }
+  ],
+  "not_rechecked": [],
+  "note": "All 12 source facts were checked against the final distribution graph. The repaired route record preserves pre-fix actual result and graph evidence alongside post-fix verification."
+}

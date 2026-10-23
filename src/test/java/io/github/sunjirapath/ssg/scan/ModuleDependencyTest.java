@@ -364,6 +364,8 @@ class ModuleDependencyTest {
                 .file("system-start/src/main/java/start/EnableExtras.java", """
                         package start;
                         import other.Imported;
+                        import java.lang.annotation.*;
+                        @Retention(RetentionPolicy.RUNTIME)
                         @EnableExtras @Import(Imported.class) @interface EnableExtras {}
                         """)
                 .file("lib/src/main/java/other/Direct.java", "package other; @Configuration class Direct {}")

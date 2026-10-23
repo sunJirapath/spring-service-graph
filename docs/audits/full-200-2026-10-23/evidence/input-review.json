@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "review": "full-pinned-200-input-and-harness",
+  "status": "pass",
+  "scope": [
+    "full-200 manifest reconciliation against catalog and private local history",
+    "source pin and reference archive integrity",
+    "harness controls for source acquisition, scanner build identity, unsupported inputs and registry deduplication"
+  ],
+  "manifest": {
+    "rows": 200,
+    "unique_repositories": 200,
+    "unique_repository_commit_pins": 200,
+    "matches_public_catalog_union": true,
+    "matches_private_history_repository_commit_union": true,
+    "private_history_contents_emitted": false,
+    "boot4_rows": 170,
+    "boot4_by_build_tool": {
+      "maven": 85,
+      "gradle": 85
+    },
+    "boot4_by_historical_campaign": {
+      "boot4-extension-to-200": 90,
+      "boot4-post-fix-80": 80
+    },
+    "historical_baseline_rows": 30,
+    "historical_baseline_manifest_pins_match": 30,
+    "historical_baseline_rows_without_boot_version_or_evidence": 30,
+    "overall_100_of_100_claim_or_assertion": false
+  },
+  "references": {
+    "source_pins_match_catalog_campaign_records": 200,
+    "reference_source_commits_match_manifest": 200,
+    "archive_entries_resolved": 200,
+    "archive_graph_sha256_matches": 200,
+    "archive_graph_json_valid": 200,
+    "selected_most_recent_available_graph_for_each_pin": 200,
+    "selected_reference_priority": [
+      "remaining-audit-fixes (2)",
+      "boot4-extension-to-200 (90)",
+      "boot4-post-fix-80 (78; two later entries superseded by remaining-audit-fixes)",
+      "github40-baseline (30; ten baseline entries superseded by Boot 4 campaigns)"
+    ]
+  },
+  "harness_review": {
+    "source_acquisition": "Uses pinned full commits, sparse source checkout, verifies commit, clean state, Java source count and tier; no foreign build or application start is invoked.",
+    "frozen_scanner": "Campaign pins and asserts both installed application JAR and dependency distribution SHA-256 before scanning.",
+    "expected_unsupported": "Only the five known Taotao repositories qualify, and only with two successful deterministic scans, zero services, and the exact zero-services diagnostic; other failures remain unexpected.",
+    "registry_deduplication": "Existing runner deduplicates on repository, source commit, scanner JAR/distribution hashes, profile, aliases, config repository, scan mode and suite; full-pinned-200 is a distinct suite identity.",
+    "duplicate_manifest_slugs": 0,
+    "aggregate_100_of_100_assertions_in_harness": 0,
+    "concrete_correctness_defects_found": 0
+  },
+  "findings": []
+}

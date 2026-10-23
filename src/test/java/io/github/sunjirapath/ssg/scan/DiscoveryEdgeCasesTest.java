@@ -70,6 +70,78 @@ class DiscoveryEdgeCasesTest {
     }
 
     @Test
+    void nestedSourceComposedSpringBootApplicationAnnotationsAreRecognized() {
+        var repo = repo("composed-app").file("src/main/java/app/BootAnnotations.java", """
+                package app;
+                import java.lang.annotation.*;
+                @Retention(RetentionPolicy.RUNTIME) @SpringBootApplication @interface RootApplication {}
+                @Retention(RetentionPolicy.RUNTIME) @RootApplication @interface NestedApplication {}
+                @NestedApplication
+                class App {}
+                """);
+
+        assertThat(repo.services()).singleElement().satisfies(service -> {
+            assertThat(service.name()).isEqualTo("composed-app");
+            assertThat(service.nameEvidence().file()).isEqualTo("src/main/java/app/BootAnnotations.java");
+            assertThat(service.nameEvidence().line()).isEqualTo(6);
+        });
+    }
+
+    @Test
+    void springBootApplicationOnAnAnnotationDeclarationDoesNotCreateAService() {
+        var repo = repo("annotation-is-not-app").java("app/BootMarker.java",
+                "package app; @SpringBootApplication @interface BootMarker {}");
+
+        assertThat(repo.services()).isEmpty();
+    }
+
+    @Test
+    void unresolvedAndCyclicSourceAnnotationsDoNotCreateServices() {
+        var repo = repo("annotation-cycle").file("src/main/java/app/Annotations.java", """
+                package app;
+                import java.lang.annotation.*;
+                @MissingBootMeta @CycleA class NotAnApplication {}
+                @Retention(RetentionPolicy.RUNTIME) @CycleB @interface CycleA {}
+                @Retention(RetentionPolicy.RUNTIME) @CycleA @interface CycleB {}
+                """);
+
+        assertThat(repo.services()).isEmpty();
+    }
+
+    @Test
+    void composedApplicationAnnotationsMustBeRetainedAtRuntime() {
+        for (String retention : java.util.List.of("", "@Retention(RetentionPolicy.CLASS)", "@Retention(RetentionPolicy.SOURCE)")) {
+            var repo = repo("not-runtime-" + Math.abs(retention.hashCode())).java("app/Annotations.java", """
+                    package app;
+                    import java.lang.annotation.*;
+                    @SpringBootApplication
+                    """ + retention + " @interface Marker {}\n@Marker class NotAnApplication {}");
+            assertThat(repo.services()).isEmpty();
+        }
+    }
+
+    @Test
+    void composedApplicationDrivesItsOwnModuleScanWhenOtherAppsExist() {
+        var repo = repo("composed-module-scan")
+                .file("orders/pom.xml", "<project><artifactId>orders</artifactId><dependencies><dependency><artifactId>shared</artifactId></dependency></dependencies></project>")
+                .file("shared/pom.xml", "<project><artifactId>shared</artifactId></project>")
+                .file("orders/src/main/java/orders/BootAnnotations.java", """
+                        package orders;
+                        import java.lang.annotation.*;
+                        @Retention(RetentionPolicy.RUNTIME) @SpringBootApplication(scanBasePackages = "shared.api") @interface RootApplication {}
+                        @Retention(RetentionPolicy.RUNTIME) @RootApplication @interface NestedApplication {}
+                        @NestedApplication class App {}
+                        """)
+                .file("users/src/main/java/users/App.java", "package users; @SpringBootApplication class App {}")
+                .file("shared/src/main/java/shared/api/InScan.java", "package shared.api; @Service class InScan {}")
+                .file("shared/src/main/java/shared/other/OutOfScan.java", "package shared.other; @Service class OutOfScan {}");
+
+        Service orders = repo.service("orders");
+        assertThat(orders.units()).extracting(cu -> orders.index().fileOf(cu).getFileName().toString())
+                .contains("InScan.java").doesNotContain("OutOfScan.java");
+    }
+
+    @Test
     void applicationClassOnlyUnderTestSourcesIsIgnored() {
         var repo = repo("test-only").file("src/test/java/app/App.java",
                 "package app; @SpringBootApplication class App {}");

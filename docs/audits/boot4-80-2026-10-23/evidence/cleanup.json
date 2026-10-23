@@ -1,0 +1,28 @@
+{
+  "completed_at": "2026-10-23T08:40:34.4453069Z",
+  "task_created_checkouts_removed": 80,
+  "removed": [
+    {
+      "path": "bench/boot4-audit",
+      "files": 80482,
+      "bytes": 1935435603.0,
+      "removed": true
+    },
+    {
+      "path": "build/fix-audit",
+      "files": 2441,
+      "bytes": 138091120.0,
+      "removed": true
+    },
+    {
+      "path": "build/github40-reproductions",
+      "files": 74,
+      "bytes": 29296.0,
+      "removed": true
+    }
+  ],
+  "preexisting_bench_directories_preserved": 15,
+  "private_run_history_preserved": true,
+  "global_temp_settings_changed": false,
+  "retained": "Public reports, fixtures, pinned manifests, compressed graphs/reproductions, results and source/output hashes; private local run registry"
+}

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +74,9 @@ class FailOnBreakingTest {
         var call = new Edge(Edge.Kind.CALLS, gateway.id(), endpoint.id(), Confidence.EXACT, new TreeMap<>(),
                 List.of(new Evidence("gateway", "Client.java", 1)));
         JsonOutput.write(new Graph(List.of(orders, gateway, endpoint), List.of(call), List.of()), base);
-        JsonOutput.write(new Graph(List.of(orders, gateway), List.of(), List.of()), head);
+        var remaining = new Edge(Edge.Kind.CALLS, gateway.id(), orders.id(), Confidence.EXACT,
+                new TreeMap<>(Map.of("method", "GET", "path", "/orders")), call.evidence());
+        JsonOutput.write(new Graph(List.of(orders, gateway), List.of(remaining), List.of()), head);
         return new GraphPaths(base, head);
     }
 

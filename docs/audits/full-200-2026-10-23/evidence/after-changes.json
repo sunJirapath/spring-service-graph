@@ -1,0 +1,3501 @@
+[
+  {
+    "repository": "aboullaite/fhemni",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 165,
+      "edges": 764,
+      "findings": 25
+    },
+    "after_counts": {
+      "nodes": 165,
+      "edges": 764,
+      "findings": 25
+    },
+    "changes": {}
+  },
+  {
+    "repository": "aerospike/spring-data-aerospike-starters",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 18,
+      "edges": 14,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 18,
+      "edges": 14,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "AET-DevOps26/team-bnd",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 47,
+      "edges": 101,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 47,
+      "edges": 101,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "AFaria20s/TeamSync-Backend",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 63,
+      "edges": 115,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 63,
+      "edges": 115,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "alibaba/nacos",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 430,
+      "edges": 474,
+      "findings": 132
+    },
+    "after_counts": {
+      "nodes": 430,
+      "edges": 474,
+      "findings": 132
+    },
+    "changes": {}
+  },
+  {
+    "repository": "alpha3166/charana",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Amir-UL-Islam/core-services",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 105,
+      "edges": 227,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 105,
+      "edges": 227,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "andresmontoyat/spring-boot-hexagonal-architecture",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "anfega154/Realtime-Learning",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "apache/dolphinscheduler",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 541,
+      "edges": 861,
+      "findings": 73
+    },
+    "after_counts": {
+      "nodes": 541,
+      "edges": 861,
+      "findings": 73
+    },
+    "changes": {
+      "nodes": {
+        "added": 6,
+        "removed": 6,
+        "added_kinds": {
+          "service": 6
+        },
+        "removed_kinds": {
+          "service": 6
+        }
+      },
+      "edges": {
+        "added": 861,
+        "removed": 861,
+        "added_kinds": {
+          "REACHES": 150,
+          "EXPOSES": 239,
+          "USES": 176,
+          "OWNS": 296
+        },
+        "removed_kinds": {
+          "REACHES": 150,
+          "EXPOSES": 239,
+          "USES": 176,
+          "OWNS": 296
+        }
+      },
+      "findings": {
+        "added": 73,
+        "removed": 73,
+        "added_kinds": {
+          "SHARED_TABLE": 73
+        },
+        "removed_kinds": {
+          "SHARED_TABLE": 73
+        }
+      }
+    }
+  },
+  {
+    "repository": "apache/fineract",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 1276,
+      "edges": 7406,
+      "findings": 428
+    },
+    "after_counts": {
+      "nodes": 1276,
+      "edges": 7406,
+      "findings": 428
+    },
+    "changes": {
+      "nodes": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "service": 1
+        },
+        "removed_kinds": {
+          "service": 1
+        }
+      },
+      "edges": {
+        "added": 7406,
+        "removed": 7406,
+        "added_kinds": {
+          "REACHES": 5915,
+          "CALLS": 2,
+          "EXPOSES": 968,
+          "CONSUMES": 1,
+          "PRODUCES": 1,
+          "USES": 275,
+          "OWNS": 244
+        },
+        "removed_kinds": {
+          "REACHES": 5915,
+          "CALLS": 2,
+          "EXPOSES": 968,
+          "CONSUMES": 1,
+          "PRODUCES": 1,
+          "USES": 275,
+          "OWNS": 244
+        }
+      },
+      "findings": {
+        "added": 428,
+        "removed": 428,
+        "added_kinds": {
+          "UNRESOLVED": 428
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 428
+        }
+      }
+    }
+  },
+  {
+    "repository": "apache/streampipes",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 309,
+      "edges": 308,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 309,
+      "edges": 308,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "apache/syncope",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 105,
+      "edges": 99,
+      "findings": 6
+    },
+    "after_counts": {
+      "nodes": 105,
+      "edges": 99,
+      "findings": 6
+    },
+    "changes": {}
+  },
+  {
+    "repository": "apolloconfig/apollo",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 299,
+      "edges": 867,
+      "findings": 38
+    },
+    "after_counts": {
+      "nodes": 299,
+      "edges": 867,
+      "findings": 38
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ARUNSANKARB/MEDI-STOCK",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 89,
+      "edges": 208,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 89,
+      "edges": 208,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "arunstiwari/2026-batch1-week2",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 17,
+      "edges": 32,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 17,
+      "edges": 32,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "aurix-core-banking/aurix-backend",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5895,
+      "edges": 8916,
+      "findings": 188
+    },
+    "after_counts": {
+      "nodes": 5895,
+      "edges": 8916,
+      "findings": 188
+    },
+    "changes": {}
+  },
+  {
+    "repository": "autark-labs/autark-os",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 133,
+      "edges": 457,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 133,
+      "edges": 457,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "bancolombia/async-dataflow",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 4,
+      "edges": 8,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 4,
+      "edges": 8,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "battcn/wemirr-platform",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 617,
+      "edges": 910,
+      "findings": 20
+    },
+    "after_counts": {
+      "nodes": 617,
+      "edges": 910,
+      "findings": 20
+    },
+    "changes": {}
+  },
+  {
+    "repository": "bitpay/java-kiosk-demo-springboot",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 21,
+      "edges": 20,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 21,
+      "edges": 20,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "bochkov/tasks",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "bootify-io/spring-boot-jte-example",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 13,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "buildbasekit/AuthKit-Lite",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 16,
+      "edges": 30,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 16,
+      "edges": 30,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Bytedesk/bytedesk",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2559,
+      "edges": 25377,
+      "findings": 14
+    },
+    "after_counts": {
+      "nodes": 2559,
+      "edges": 25377,
+      "findings": 14
+    },
+    "changes": {}
+  },
+  {
+    "repository": "codecentric/spring-boot-admin",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 10,
+      "edges": 149,
+      "findings": 178
+    },
+    "after_counts": {
+      "nodes": 10,
+      "edges": 149,
+      "findings": 178
+    },
+    "changes": {}
+  },
+  {
+    "repository": "crossplane/function-sdk-java",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "damingerdai/hoteler",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 52,
+      "edges": 101,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 52,
+      "edges": 101,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "DanielSolonskii/CreateCityExpansionCore",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 68,
+      "edges": 255,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 68,
+      "edges": 255,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "dataease/dataease",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 317,
+      "edges": 840,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 317,
+      "edges": 840,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "datahub-project/datahub",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 252,
+      "edges": 260,
+      "findings": 11
+    },
+    "after_counts": {
+      "nodes": 252,
+      "edges": 260,
+      "findings": 11
+    },
+    "changes": {}
+  },
+  {
+    "repository": "dengxingzhi000/scm-platform",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 701,
+      "edges": 1149,
+      "findings": 42
+    },
+    "after_counts": {
+      "nodes": 701,
+      "edges": 1149,
+      "findings": 42
+    },
+    "changes": {}
+  },
+  {
+    "repository": "domschmidt/koku",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 179,
+      "edges": 266,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 179,
+      "edges": 266,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "dromara/RuoYi-Cloud-Plus",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 346,
+      "edges": 607,
+      "findings": 6
+    },
+    "after_counts": {
+      "nodes": 346,
+      "edges": 607,
+      "findings": 6
+    },
+    "changes": {}
+  },
+  {
+    "repository": "dromara/RuoYi-Vue-Plus",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 318,
+      "edges": 590,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 318,
+      "edges": 590,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "dsouzamelroy2007/fernbank",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 44,
+      "edges": 149,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 44,
+      "edges": 149,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "duclongbox/Microservices-E-commerce-API-Backend",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 17,
+      "edges": 24,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 17,
+      "edges": 24,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ecogenetic/ecosystem-runtime-localbuild",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 18,
+      "edges": 17,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 18,
+      "edges": 17,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "eliasnogueira/credit-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 10,
+      "edges": 17,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 10,
+      "edges": 17,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "entur/ukur-demo",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 14,
+      "edges": 18,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 14,
+      "edges": 18,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "esig/dss-demonstrations",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 92,
+      "edges": 91,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 92,
+      "edges": 91,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "europeana/metis-framework",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 15,
+      "edges": 13,
+      "findings": 17
+    },
+    "after_counts": {
+      "nodes": 15,
+      "edges": 13,
+      "findings": 17
+    },
+    "changes": {}
+  },
+  {
+    "repository": "eventuate-tram/eventuate-tram-examples-customers-and-orders",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 29,
+      "edges": 39,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 29,
+      "edges": 39,
+      "findings": 2
+    },
+    "changes": {
+      "findings": {
+        "added": 2,
+        "removed": 2,
+        "added_kinds": {
+          "UNRESOLVED": 2
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 2
+        }
+      }
+    }
+  },
+  {
+    "repository": "eventuate-tram/eventuate-tram-sagas-examples-customers-and-orders",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 23,
+      "edges": 35,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 23,
+      "edges": 35,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ewolff/microservice-kafka",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 22,
+      "edges": 31,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 22,
+      "edges": 31,
+      "findings": 0
+    },
+    "changes": {
+      "nodes": {
+        "added": 3,
+        "removed": 3,
+        "added_kinds": {
+          "service": 3
+        },
+        "removed_kinds": {
+          "service": 3
+        }
+      },
+      "edges": {
+        "added": 31,
+        "removed": 31,
+        "added_kinds": {
+          "REACHES": 10,
+          "EXPOSES": 10,
+          "CONSUMES": 2,
+          "PRODUCES": 1,
+          "USES": 8
+        },
+        "removed_kinds": {
+          "REACHES": 10,
+          "EXPOSES": 10,
+          "CONSUMES": 2,
+          "PRODUCES": 1,
+          "USES": 8
+        }
+      }
+    }
+  },
+  {
+    "repository": "FAForever/faf-java-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 121,
+      "edges": 204,
+      "findings": 8
+    },
+    "after_counts": {
+      "nodes": 121,
+      "edges": 204,
+      "findings": 8
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ffroliva/tiny-ledger",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 17,
+      "edges": 25,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 17,
+      "edges": 25,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "finos/traderX",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 32,
+      "edges": 53,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 32,
+      "edges": 53,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "fl4nk3r-h/shorturl",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "francelabs/datafari",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 69,
+      "edges": 69,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 69,
+      "edges": 69,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "futomaru/todo-app-java",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 8,
+      "edges": 7,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 8,
+      "edges": 7,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ganeshalamuru/authservice",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 12,
+      "edges": 18,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 12,
+      "edges": 18,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "GBSW-ReMake/GONE-server-V1",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 76,
+      "edges": 247,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 76,
+      "edges": 247,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "GdeiAssistant/GdeiAssistant",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 210,
+      "edges": 214,
+      "findings": 8
+    },
+    "after_counts": {
+      "nodes": 210,
+      "edges": 214,
+      "findings": 8
+    },
+    "changes": {}
+  },
+  {
+    "repository": "gessnerfl/rabbitmq-queue-management",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 16,
+      "edges": 15,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 16,
+      "edges": 15,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "GIScience/openrouteservice",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 38,
+      "edges": 37,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 38,
+      "edges": 37,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "git13166956007/dsh-java",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 101,
+      "edges": 100,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 101,
+      "edges": 100,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "grandamp/rest-service",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 6,
+      "edges": 5,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 6,
+      "edges": 5,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "greenharborlabs/spring-boot-starter-paygate",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 13,
+      "edges": 11,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 13,
+      "edges": 11,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "halo-dev/halo",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 20,
+      "edges": 27,
+      "findings": 7
+    },
+    "after_counts": {
+      "nodes": 26,
+      "edges": 33,
+      "findings": 7
+    },
+    "changes": {
+      "nodes": {
+        "added": 14,
+        "removed": 8,
+        "added_kinds": {
+          "endpoint": 14
+        },
+        "removed_kinds": {
+          "endpoint": 8
+        }
+      },
+      "edges": {
+        "added": 19,
+        "removed": 13,
+        "added_kinds": {
+          "REACHES": 5,
+          "EXPOSES": 14
+        },
+        "removed_kinds": {
+          "REACHES": 5,
+          "EXPOSES": 8
+        }
+      }
+    }
+  },
+  {
+    "repository": "HelloWRC/CircleChat",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 26,
+      "edges": 77,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 26,
+      "edges": 77,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "hendisantika/spring-boot-prometheus-grafana",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "hiero-ledger/hiero-mirror-node",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 234,
+      "edges": 381,
+      "findings": 7
+    },
+    "after_counts": {
+      "nodes": 234,
+      "edges": 381,
+      "findings": 7
+    },
+    "changes": {}
+  },
+  {
+    "repository": "hirokazu-kobayashi-koba-hiro/idp-server",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 241,
+      "edges": 240,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 241,
+      "edges": 240,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "hywenklis/buddy-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 37,
+      "edges": 84,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 37,
+      "edges": 84,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "IngCarlosGM/franchise-inventory-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 10,
+      "edges": 15,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 10,
+      "edges": 15,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "InseeFr/Eno",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 19,
+      "edges": 33,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 19,
+      "edges": 33,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "IvanTolkach/yandex-pc-controller",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "jeecgboot/JeecgBoot",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1105,
+      "edges": 2024,
+      "findings": 32
+    },
+    "after_counts": {
+      "nodes": 1105,
+      "edges": 2024,
+      "findings": 32
+    },
+    "changes": {}
+  },
+  {
+    "repository": "jhipster/jhipster-sample-app-gateway",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 26,
+      "edges": 45,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 26,
+      "edges": 45,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "JJun-He/Supplier-Hub",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 12,
+      "edges": 22,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 12,
+      "edges": 22,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "jmix-framework/jmix-samples-2",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 38,
+      "edges": 63,
+      "findings": 7
+    },
+    "after_counts": {
+      "nodes": 38,
+      "edges": 63,
+      "findings": 7
+    },
+    "changes": {}
+  },
+  {
+    "repository": "johan1271/fya-creditos-backend",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 6,
+      "edges": 11,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 6,
+      "edges": 11,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "johssalinas/backend-accenture-reactive",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 22,
+      "edges": 30,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 22,
+      "edges": 30,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "JoshRivas313/OTP-Service",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 15,
+      "edges": 20,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 15,
+      "edges": 20,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "jrjohn/arcana-cloud-springboot",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 96,
+      "edges": 186,
+      "findings": 20
+    },
+    "after_counts": {
+      "nodes": 96,
+      "edges": 186,
+      "findings": 20
+    },
+    "changes": {}
+  },
+  {
+    "repository": "jumpmindinc/symmetric-ds",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5,
+      "edges": 4,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 5,
+      "edges": 4,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kaandvloglu/skin-lesion-ai",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 11,
+      "edges": 14,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 11,
+      "edges": 14,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Kanan-peoiks/Signum_Animae",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 103,
+      "edges": 215,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 103,
+      "edges": 215,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Keglev/stockease",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 62,
+      "edges": 186,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 62,
+      "edges": 186,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kenyodarz/Agent-MCP",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kitae104/SBB-1",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 4,
+      "edges": 3,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 4,
+      "edges": 3,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kl3inIT/northstar",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 208,
+      "edges": 584,
+      "findings": 6
+    },
+    "after_counts": {
+      "nodes": 208,
+      "edges": 584,
+      "findings": 6
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kl3inIT/OrgMemory",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 375,
+      "edges": 2816,
+      "findings": 133
+    },
+    "after_counts": {
+      "nodes": 375,
+      "edges": 2816,
+      "findings": 133
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kl3inIT/zero-mail",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 353,
+      "edges": 1263,
+      "findings": 110
+    },
+    "after_counts": {
+      "nodes": 353,
+      "edges": 1263,
+      "findings": 110
+    },
+    "changes": {}
+  },
+  {
+    "repository": "KouShenhai/KCloud-Platform-IoT",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 331,
+      "edges": 528,
+      "findings": 48
+    },
+    "after_counts": {
+      "nodes": 331,
+      "edges": 528,
+      "findings": 48
+    },
+    "changes": {}
+  },
+  {
+    "repository": "koushikkothagal/spring-boot-microservices-workshop",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 10,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 10,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "kylehoehns/dugout",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "LChumi/microserviciosCumpleanos",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 387,
+      "edges": 891,
+      "findings": 24
+    },
+    "after_counts": {
+      "nodes": 387,
+      "edges": 891,
+      "findings": 24
+    },
+    "changes": {}
+  },
+  {
+    "repository": "lee-gimoon/futures-paper-trading",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 20,
+      "edges": 31,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 20,
+      "edges": 31,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "letspeppol/letspeppol",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 148,
+      "edges": 460,
+      "findings": 53
+    },
+    "after_counts": {
+      "nodes": 148,
+      "edges": 460,
+      "findings": 53
+    },
+    "changes": {}
+  },
+  {
+    "repository": "likelion-backend-25th/itda",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 76,
+      "edges": 94,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 76,
+      "edges": 94,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "linlinjava/litemall",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 359,
+      "edges": 491,
+      "findings": 34
+    },
+    "after_counts": {
+      "nodes": 359,
+      "edges": 491,
+      "findings": 34
+    },
+    "changes": {}
+  },
+  {
+    "repository": "lpenap/java-monitor-example",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "lunaovsk/portal-solicitacoes-internas",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 15,
+      "edges": 32,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 15,
+      "edges": 32,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "macrozheng/mall-swarm",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 341,
+      "edges": 681,
+      "findings": 18
+    },
+    "after_counts": {
+      "nodes": 342,
+      "edges": 687,
+      "findings": 17
+    },
+    "changes": {
+      "nodes": {
+        "added": 9,
+        "removed": 8,
+        "added_kinds": {
+          "service": 7,
+          "table": 2
+        },
+        "removed_kinds": {
+          "service": 7,
+          "table": 1
+        }
+      },
+      "edges": {
+        "added": 687,
+        "removed": 681,
+        "added_kinds": {
+          "REACHES": 30,
+          "CALLS": 252,
+          "EXPOSES": 250,
+          "CONSUMES": 1,
+          "PRODUCES": 2,
+          "OWNS": 69,
+          "USES": 83
+        },
+        "removed_kinds": {
+          "REACHES": 25,
+          "CALLS": 252,
+          "EXPOSES": 250,
+          "CONSUMES": 1,
+          "PRODUCES": 2,
+          "OWNS": 69,
+          "USES": 82
+        }
+      },
+      "findings": {
+        "added": 17,
+        "removed": 18,
+        "added_kinds": {
+          "SHARED_TABLE": 17
+        },
+        "removed_kinds": {
+          "SHARED_TABLE": 17,
+          "UNRESOLVED": 1
+        }
+      }
+    }
+  },
+  {
+    "repository": "maframaran/smart-logistics-network",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 115,
+      "edges": 287,
+      "findings": 14
+    },
+    "after_counts": {
+      "nodes": 115,
+      "edges": 287,
+      "findings": 14
+    },
+    "changes": {}
+  },
+  {
+    "repository": "manevpe/java-cloud-agent-framework",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 28,
+      "findings": 10
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 28,
+      "findings": 10
+    },
+    "changes": {}
+  },
+  {
+    "repository": "marcofidel-dev/Inventario-Alejandria-Make-Up-1.1",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 89,
+      "edges": 292,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 89,
+      "edges": 292,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "marcosvrc/grpc-spring",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "mateoscns/ceto-ecommerce",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 25,
+      "edges": 97,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 25,
+      "edges": 97,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "mdnkv/accounting-iu",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 48,
+      "edges": 115,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 48,
+      "edges": 115,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "meryemarroussi/trading-assistant",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5,
+      "edges": 6,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 5,
+      "edges": 6,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "metersphere/metersphere",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 1222,
+      "edges": 1384,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 1222,
+      "edges": 1384,
+      "findings": 2
+    },
+    "changes": {
+      "nodes": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "service": 1
+        },
+        "removed_kinds": {
+          "service": 1
+        }
+      },
+      "edges": {
+        "added": 1384,
+        "removed": 1384,
+        "added_kinds": {
+          "REACHES": 12,
+          "CALLS": 2,
+          "EXPOSES": 1053,
+          "CONSUMES": 4,
+          "PRODUCES": 3,
+          "USES": 151,
+          "OWNS": 159
+        },
+        "removed_kinds": {
+          "REACHES": 12,
+          "CALLS": 2,
+          "EXPOSES": 1053,
+          "CONSUMES": 4,
+          "PRODUCES": 3,
+          "USES": 151,
+          "OWNS": 159
+        }
+      },
+      "findings": {
+        "added": 2,
+        "removed": 2,
+        "added_kinds": {
+          "UNRESOLVED": 2
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 2
+        }
+      }
+    }
+  },
+  {
+    "repository": "microcks/microcks",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 114,
+      "edges": 325,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 114,
+      "edges": 325,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "microservices-patterns/ftgo-application",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 41,
+      "edges": 50,
+      "findings": 9
+    },
+    "after_counts": {
+      "nodes": 41,
+      "edges": 50,
+      "findings": 9
+    },
+    "changes": {
+      "nodes": {
+        "added": 7,
+        "removed": 7,
+        "added_kinds": {
+          "service": 7
+        },
+        "removed_kinds": {
+          "service": 7
+        }
+      },
+      "edges": {
+        "added": 50,
+        "removed": 50,
+        "added_kinds": {
+          "REACHES": 16,
+          "CALLS": 1,
+          "EXPOSES": 24,
+          "USES": 9
+        },
+        "removed_kinds": {
+          "REACHES": 16,
+          "CALLS": 1,
+          "EXPOSES": 24,
+          "USES": 9
+        }
+      },
+      "findings": {
+        "added": 9,
+        "removed": 9,
+        "added_kinds": {
+          "UNRESOLVED": 8,
+          "DUPLICATE_SERVICE": 1
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 8,
+          "DUPLICATE_SERVICE": 1
+        }
+      }
+    }
+  },
+  {
+    "repository": "miracum/fhir-gateway",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 13,
+      "edges": 13,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 13,
+      "edges": 13,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "miracum/kafka-fhir-to-server",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "mjkang4416/stay-supplier-integration",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 11,
+      "edges": 16,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 11,
+      "edges": 16,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "monsoon-io/trading-engine",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "murilodcosta/flashpad-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5,
+      "edges": 7,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 5,
+      "edges": 7,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "murraco/spring-boot-jwt",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 10,
+      "edges": 21,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 10,
+      "edges": 21,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "MyPureCloud/local-key-manager",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 13,
+      "edges": 19,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 13,
+      "edges": 19,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "nageoffer/tinyrag",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5,
+      "edges": 7,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 5,
+      "edges": 7,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "neilghosh/springboot-workshop",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 14,
+      "edges": 24,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 14,
+      "edges": 24,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "obsidiandynamics/kafdrop",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 24,
+      "edges": 23,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 24,
+      "edges": 23,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "oinsio/gnomish-factory",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "openanalytics/RDepot",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 115,
+      "edges": 274,
+      "findings": 6
+    },
+    "after_counts": {
+      "nodes": 115,
+      "edges": 274,
+      "findings": 6
+    },
+    "changes": {}
+  },
+  {
+    "repository": "OpenConext/OpenConext-pdp",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 13,
+      "edges": 26,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 13,
+      "edges": 26,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "paascloud/paascloud-master",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 244,
+      "edges": 341,
+      "findings": 7
+    },
+    "after_counts": {
+      "nodes": 244,
+      "edges": 397,
+      "findings": 7
+    },
+    "changes": {
+      "nodes": {
+        "added": 10,
+        "removed": 10,
+        "added_kinds": {
+          "service": 10
+        },
+        "removed_kinds": {
+          "service": 10
+        }
+      },
+      "edges": {
+        "added": 397,
+        "removed": 341,
+        "added_kinds": {
+          "REACHES": 35,
+          "CALLS": 129,
+          "EXPOSES": 190,
+          "CONSUMES": 2,
+          "USES": 37,
+          "OWNS": 4
+        },
+        "removed_kinds": {
+          "REACHES": 35,
+          "CALLS": 73,
+          "EXPOSES": 190,
+          "CONSUMES": 2,
+          "USES": 37,
+          "OWNS": 4
+        }
+      },
+      "findings": {
+        "added": 7,
+        "removed": 7,
+        "added_kinds": {
+          "UNRESOLVED": 7
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 7
+        }
+      }
+    }
+  },
+  {
+    "repository": "palaceIA/backend-repositorio-ia",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "petromir/spring-boot-onion-service",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 9,
+      "edges": 8,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "pig-mesh/pig",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 352,
+      "edges": 535,
+      "findings": 5
+    },
+    "after_counts": {
+      "nodes": 352,
+      "edges": 535,
+      "findings": 5
+    },
+    "changes": {}
+  },
+  {
+    "repository": "piomin/sample-spring-boot-graphql",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 8,
+      "edges": 6,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 8,
+      "edges": 6,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "piomin/sample-spring-kafka-microservices",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 11,
+      "edges": 12,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 11,
+      "edges": 12,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "PrasannaMalatesha/EmployeeManagementSystem",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Prathamesh-Kothalkar/hotel-booking-server",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 33,
+      "edges": 62,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 33,
+      "edges": 62,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "quokkify/path-of-exile-starter",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 28,
+      "edges": 62,
+      "findings": 10
+    },
+    "after_counts": {
+      "nodes": 28,
+      "edges": 62,
+      "findings": 10
+    },
+    "changes": {}
+  },
+  {
+    "repository": "raeperd/realworld-springboot-java",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 27,
+      "edges": 63,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 27,
+      "edges": 63,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "rapla/rapla",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 42,
+      "edges": 152,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 42,
+      "edges": 152,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Rapter1990/SpringBootMicroservices",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 36,
+      "edges": 90,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 36,
+      "edges": 90,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "rememberber/WePush",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 116,
+      "edges": 541,
+      "findings": 14
+    },
+    "after_counts": {
+      "nodes": 116,
+      "edges": 541,
+      "findings": 14
+    },
+    "changes": {}
+  },
+  {
+    "repository": "robalexlimas/franquicias-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 14,
+      "edges": 27,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 14,
+      "edges": 27,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "saintbassanaga/BytesMind-Plateform",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 393,
+      "edges": 1304,
+      "findings": 60
+    },
+    "after_counts": {
+      "nodes": 393,
+      "edges": 1304,
+      "findings": 60
+    },
+    "changes": {}
+  },
+  {
+    "repository": "sajo-team/sajo",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 120,
+      "edges": 368,
+      "findings": 14
+    },
+    "after_counts": {
+      "nodes": 120,
+      "edges": 368,
+      "findings": 14
+    },
+    "changes": {}
+  },
+  {
+    "repository": "sanluan/PublicCMS",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 384,
+      "edges": 467,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 384,
+      "edges": 467,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "SAP/cloud-security-services-integration-library",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 8,
+      "edges": 5,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 8,
+      "edges": 5,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "seed4j/seed4j-sample-app",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 13,
+      "edges": 12,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 13,
+      "edges": 12,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "SelimHorri/ecommerce-microservice-backend-app",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 171,
+      "edges": 554,
+      "findings": 13
+    },
+    "after_counts": {
+      "nodes": 171,
+      "edges": 554,
+      "findings": 13
+    },
+    "changes": {}
+  },
+  {
+    "repository": "ServandoL/home-budget-sb",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 32,
+      "edges": 36,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 32,
+      "edges": 36,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shabbirdwd53/spring-boot-microservices",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 37,
+      "edges": 60,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 37,
+      "edges": 60,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shopizer-ecommerce/shopizer",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 404,
+      "edges": 1919,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 404,
+      "edges": 1919,
+      "findings": 0
+    },
+    "changes": {
+      "nodes": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "service": 1
+        },
+        "removed_kinds": {
+          "service": 1
+        }
+      },
+      "edges": {
+        "added": 1919,
+        "removed": 1919,
+        "added_kinds": {
+          "REACHES": 1516,
+          "EXPOSES": 321,
+          "USES": 82
+        },
+        "removed_kinds": {
+          "REACHES": 1516,
+          "EXPOSES": 321,
+          "USES": 82
+        }
+      }
+    }
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-goods",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-member",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-message",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-order",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-project",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 993,
+      "edges": 1004,
+      "findings": 91
+    },
+    "after_counts": {
+      "nodes": 993,
+      "edges": 1004,
+      "findings": 91
+    },
+    "changes": {
+      "findings": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "PARSE_ERROR": 1
+        },
+        "removed_kinds": {
+          "PARSE_ERROR": 1
+        }
+      }
+    }
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-sys",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 0,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "SilverNine/spring-boot-jwt-tutorial",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 8,
+      "edges": 9,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 8,
+      "edges": 9,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "sivaprasadreddy/spring-cloud-aws-demo",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "smithy-ai/smithy-ai",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 32,
+      "edges": 119,
+      "findings": 2
+    },
+    "after_counts": {
+      "nodes": 32,
+      "edges": 119,
+      "findings": 2
+    },
+    "changes": {}
+  },
+  {
+    "repository": "smitroy4/AdminPlusPlus",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 45,
+      "edges": 130,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 45,
+      "edges": 130,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-cloud/spring-functions-catalog",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-accessing-data-jpa",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-accessing-data-mongodb",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-accessing-data-mysql",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 4,
+      "edges": 5,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 4,
+      "edges": 5,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-actuator-service",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-batch-processing",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 4,
+      "edges": 3,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 4,
+      "edges": 3,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-caching",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-handling-form-submission",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-messaging-rabbitmq",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-rest-hateoas",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-rest-service",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-securing-web",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-serving-web-content",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 2,
+      "edges": 1,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-guides/gs-uploading-files",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 5,
+      "edges": 3,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 5,
+      "edges": 3,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-petclinic/spring-petclinic-microservices",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 35,
+      "edges": 70,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 35,
+      "edges": 70,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-petclinic/spring-petclinic-rest",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 47,
+      "edges": 55,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 47,
+      "edges": 55,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "spring-projects/spring-petclinic",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 25,
+      "edges": 39,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 25,
+      "edges": 39,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "sqshq/piggymetrics",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 26,
+      "edges": 34,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 26,
+      "edges": 34,
+      "findings": 0
+    },
+    "changes": {
+      "nodes": {
+        "added": 9,
+        "removed": 9,
+        "added_kinds": {
+          "service": 9
+        },
+        "removed_kinds": {
+          "service": 9
+        }
+      },
+      "edges": {
+        "added": 34,
+        "removed": 34,
+        "added_kinds": {
+          "REACHES": 13,
+          "CALLS": 5,
+          "EXPOSES": 11,
+          "USES": 5
+        },
+        "removed_kinds": {
+          "REACHES": 13,
+          "CALLS": 5,
+          "EXPOSES": 11,
+          "USES": 5
+        }
+      }
+    }
+  },
+  {
+    "repository": "Stirling-Tools/Stirling-PDF",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 382,
+      "edges": 1287,
+      "findings": 5
+    },
+    "after_counts": {
+      "nodes": 382,
+      "edges": 1287,
+      "findings": 5
+    },
+    "changes": {}
+  },
+  {
+    "repository": "Sye-1321/PayLab",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 17,
+      "edges": 63,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 17,
+      "edges": 63,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "target/POSSUM",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 51,
+      "edges": 50,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 51,
+      "edges": 50,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "TassSinclair/mocktail-mixologist",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 1,
+      "edges": 0,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "team-project-final/synapse-platform-svc",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 82,
+      "edges": 219,
+      "findings": 10
+    },
+    "after_counts": {
+      "nodes": 82,
+      "edges": 219,
+      "findings": 10
+    },
+    "changes": {}
+  },
+  {
+    "repository": "team-propra/roommate",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 31,
+      "edges": 107,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 31,
+      "edges": 107,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "thainv1602/digishield",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 163,
+      "edges": 368,
+      "findings": 4
+    },
+    "after_counts": {
+      "nodes": 163,
+      "edges": 368,
+      "findings": 4
+    },
+    "changes": {}
+  },
+  {
+    "repository": "The-OAG-Development-Project/Application-Gateway",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 7,
+      "edges": 6,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 7,
+      "edges": 6,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "thingsboard/thingsboard",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 1058,
+      "edges": 5091,
+      "findings": 1801
+    },
+    "after_counts": {
+      "nodes": 1058,
+      "edges": 5091,
+      "findings": 1801
+    },
+    "changes": {
+      "nodes": {
+        "added": 24,
+        "removed": 24,
+        "added_kinds": {
+          "service": 24
+        },
+        "removed_kinds": {
+          "service": 24
+        }
+      },
+      "edges": {
+        "added": 5091,
+        "removed": 5091,
+        "added_kinds": {
+          "REACHES": 2267,
+          "CALLS": 1702,
+          "EXPOSES": 914,
+          "USES": 116,
+          "OWNS": 92
+        },
+        "removed_kinds": {
+          "REACHES": 2267,
+          "CALLS": 1702,
+          "EXPOSES": 914,
+          "USES": 116,
+          "OWNS": 92
+        }
+      },
+      "findings": {
+        "added": 1801,
+        "removed": 1801,
+        "added_kinds": {
+          "UNRESOLVED": 1801
+        },
+        "removed_kinds": {
+          "UNRESOLVED": 1801
+        }
+      }
+    }
+  },
+  {
+    "repository": "tkaczmarzyk/specification-arg-resolver",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 3,
+      "edges": 2,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "tobeflyboy/sc",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 10,
+      "edges": 8,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 10,
+      "edges": 8,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "urlaubsverwaltung/zeiterfassung",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 83,
+      "edges": 204,
+      "findings": 22
+    },
+    "after_counts": {
+      "nodes": 83,
+      "edges": 204,
+      "findings": 22
+    },
+    "changes": {}
+  },
+  {
+    "repository": "vladimirnilov28/dot-com-retail",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 60,
+      "edges": 139,
+      "findings": 13
+    },
+    "after_counts": {
+      "nodes": 60,
+      "edges": 139,
+      "findings": 13
+    },
+    "changes": {}
+  },
+  {
+    "repository": "vsouzx/cqrs-pattern",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 14,
+      "edges": 22,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 14,
+      "edges": 22,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "waelhe/app-java-v3",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 678,
+      "edges": 2069,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 678,
+      "edges": 2069,
+      "findings": 2
+    },
+    "changes": {
+      "findings": {
+        "added": 0,
+        "removed": 1,
+        "added_kinds": {},
+        "removed_kinds": {
+          "PARSE_ERROR": 1
+        }
+      }
+    }
+  },
+  {
+    "repository": "wilfredkimura/scentcepts2.0",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 25,
+      "edges": 47,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 25,
+      "edges": 47,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "wushuo894/open-panel",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 37,
+      "edges": 36,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 37,
+      "edges": 36,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "XuanHau190206/weather-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 7,
+      "edges": 10,
+      "findings": 1
+    },
+    "after_counts": {
+      "nodes": 7,
+      "edges": 10,
+      "findings": 1
+    },
+    "changes": {}
+  },
+  {
+    "repository": "xuxueli/xxl-api",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 61,
+      "edges": 69,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 61,
+      "edges": 69,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "xuxueli/xxl-conf",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 60,
+      "edges": 66,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 60,
+      "edges": 66,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "xuxueli/xxl-job",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 54,
+      "edges": 59,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 54,
+      "edges": 59,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "xuxueli/xxl-mq",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 56,
+      "edges": 62,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 56,
+      "edges": 62,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "xuxueli/xxl-sso",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 40,
+      "edges": 33,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 40,
+      "edges": 33,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "yangxj96/spectra-admin",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 479,
+      "edges": 1393,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 479,
+      "edges": 1393,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "yangzongzhuan/RuoYi-Cloud",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 169,
+      "edges": 363,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 169,
+      "edges": 363,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "yangzongzhuan/RuoYi-Vue",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 169,
+      "edges": 188,
+      "findings": 0
+    },
+    "after_counts": {
+      "nodes": 169,
+      "edges": 188,
+      "findings": 0
+    },
+    "changes": {}
+  },
+  {
+    "repository": "yidao620c/SpringBootBucket",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 290,
+      "edges": 421,
+      "findings": 6
+    },
+    "after_counts": {
+      "nodes": 290,
+      "edges": 421,
+      "findings": 6
+    },
+    "changes": {}
+  },
+  {
+    "repository": "yulichang/mybatis-plus-join",
+    "semantic_change": false,
+    "before_counts": {
+      "nodes": 20,
+      "edges": 34,
+      "findings": 3
+    },
+    "after_counts": {
+      "nodes": 20,
+      "edges": 34,
+      "findings": 3
+    },
+    "changes": {}
+  },
+  {
+    "repository": "YunaiV/ruoyi-vue-pro",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 404,
+      "edges": 954,
+      "findings": 8
+    },
+    "after_counts": {
+      "nodes": 404,
+      "edges": 954,
+      "findings": 9
+    },
+    "changes": {
+      "nodes": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "topic": 1
+        },
+        "removed_kinds": {
+          "topic": 1
+        }
+      },
+      "edges": {
+        "added": 1,
+        "removed": 1,
+        "added_kinds": {
+          "PRODUCES": 1
+        },
+        "removed_kinds": {
+          "PRODUCES": 1
+        }
+      },
+      "findings": {
+        "added": 1,
+        "removed": 0,
+        "added_kinds": {
+          "UNRESOLVED": 1
+        },
+        "removed_kinds": {}
+      }
+    }
+  },
+  {
+    "repository": "YunaiV/yudao-cloud",
+    "semantic_change": true,
+    "before_counts": {
+      "nodes": 4049,
+      "edges": 17378,
+      "findings": 35
+    },
+    "after_counts": {
+      "nodes": 4049,
+      "edges": 17378,
+      "findings": 38
+    },
+    "changes": {
+      "nodes": {
+        "added": 25,
+        "removed": 25,
+        "added_kinds": {
+          "service": 25
+        },
+        "removed_kinds": {
+          "service": 25
+        }
+      },
+      "edges": {
+        "added": 17378,
+        "removed": 17378,
+        "added_kinds": {
+          "REACHES": 9347,
+          "CALLS": 3954,
+          "EXPOSES": 3449,
+          "CONSUMES": 5,
+          "PRODUCES": 11,
+          "OWNS": 48,
+          "USES": 564
+        },
+        "removed_kinds": {
+          "REACHES": 9347,
+          "CALLS": 3954,
+          "EXPOSES": 3449,
+          "CONSUMES": 5,
+          "PRODUCES": 11,
+          "OWNS": 48,
+          "USES": 564
+        }
+      },
+      "findings": {
+        "added": 38,
+        "removed": 35,
+        "added_kinds": {
+          "SHARED_TABLE": 2,
+          "UNRESOLVED": 29,
+          "CONTRACT_DRIFT": 7
+        },
+        "removed_kinds": {
+          "SHARED_TABLE": 2,
+          "UNRESOLVED": 26,
+          "CONTRACT_DRIFT": 7
+        }
+      }
+    }
+  }
+]

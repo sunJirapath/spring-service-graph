@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "suite": "remaining-audit-fixes",
+  "manifest": "build/final-bugs/qualified.json",
+  "started_at": "2026-10-23T10:06:01.452026+00:00",
+  "updated_at": "2026-10-23T10:06:21.982453+00:00",
+  "scanner_commit": "de7682c676ab08e3db62c7bfa762761f69417df8",
+  "scanner_jar_sha256": "c0265ff65ec110a06b75b52c3ebf70f89011e3554202eafe2805fe759acf07b4",
+  "distribution_sha256": "208008249d565c316fe6f1fd9d35804e79a72223c706821046522e46c47c3a69",
+  "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+  "candidate_count": 2,
+  "passed": 2,
+  "failed": 0,
+  "execution_passed": 2,
+  "extraction_passed": 2,
+  "successful_scans": 4,
+  "deterministic_repositories": 2,
+  "output_files_per_run": 10,
+  "evidence_references_checked": 1080,
+  "mcp_passed": 2,
+  "diff_passed": 2,
+  "nodes": {
+    "endpoint": 358,
+    "service": 2,
+    "table": 22,
+    "topic": 9
+  },
+  "edges": {
+    "REACHES": 117,
+    "EXPOSES": 358,
+    "PRODUCES": 2,
+    "CONSUMES": 7,
+    "OWNS": 22,
+    "USES": 21
+  },
+  "findings": {
+    "UNRESOLVED": 10,
+    "PARSE_ERROR": 6
+  },
+  "foreign_builds_executed": 0,
+  "foreign_applications_started": 0,
+  "raw_logs_published": false
+}

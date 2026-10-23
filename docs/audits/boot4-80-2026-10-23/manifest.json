@@ -1,0 +1,1798 @@
+[
+  {
+    "repository": "spring-guides/gs-rest-service",
+    "url": "https://github.com/spring-guides/gs-rest-service",
+    "commit": "3f4cef01152596c19bc4d37939409358812b1421",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 4,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n  id 'java'\n  id 'org.springframework.boot' version '4.0.8'\n  id 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'com.example'\nversion = '0.0.1-SNAPSHOT'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/restservice/RestServiceApplication.java",
+      "initial/src/main/java/com/example/restservice/RestServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-uploading-files",
+    "url": "https://github.com/spring-guides/gs-uploading-files",
+    "commit": "d3f432cac961edfd39a9be157f2cdc258ed1ac65",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 13,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n  id 'org.springframework.boot' version '4.0.8'\n  id 'io.spring.dependency-management' version '1.1.7'\n  id 'java'\n}\n\ngroup = 'com.example'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/uploadingfiles/UploadingFilesApplication.java",
+      "initial/src/main/java/com/example/uploadingfiles/UploadingFilesApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-serving-web-content",
+    "url": "https://github.com/spring-guides/gs-serving-web-content",
+    "commit": "de04dc825d8a802f18a3fecc6ceb33b369d2dffa",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 3,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n  id 'org.springframework.boot' version '4.1.1'\n  id 'io.spring.dependency-management' version '1.1.7'\n  id 'java'\n}\n\ngroup = 'com.example'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/servingwebcontent/ServingWebContentApplication.java",
+      "initial/src/main/java/com/example/servingwebcontent/ServingWebContentApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-handling-form-submission",
+    "url": "https://github.com/spring-guides/gs-handling-form-submission",
+    "commit": "c34ded6971c68735da719973e4051f4600a7846a",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 4,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n  id 'org.springframework.boot' version '4.1.1'\n  id 'io.spring.dependency-management' version '1.1.7'\n  id 'java'\n}\n\ngroup = 'com.example'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/handlingformsubmission/HandlingFormSubmissionApplication.java",
+      "initial/src/main/java/com/example/handlingformsubmission/HandlingFormSubmissionApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-actuator-service",
+    "url": "https://github.com/spring-guides/gs-actuator-service",
+    "commit": "68f52bb7282f46aa39434199fa825d26ae180dc1",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 4,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n\tid 'java'\n\tid 'org.springframework.boot' version '4.0.8'\n\tid 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'com.example'\nversion = '0.0.1-SNAPSHOT'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/actuatorservice/HelloWorldApplication.java",
+      "initial/src/main/java/com/example/actuatorservice/ActuatorServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-accessing-data-mysql",
+    "url": "https://github.com/spring-guides/gs-accessing-data-mysql",
+    "commit": "42aad055097e6debccd68972c5eeca9f403846d1",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 5,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n\tid 'org.springframework.boot' version '4.0.8'\n\tid 'io.spring.dependency-management' version '1.1.7'\n\tid 'java'\n}\n\ngroup = 'com.example'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/accessingdatamysql/AccessingDataMysqlApplication.java",
+      "initial/src/main/java/com/example/accessingdatamysql/AccessingDataMysqlApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-accessing-data-mongodb",
+    "url": "https://github.com/spring-guides/gs-accessing-data-mongodb",
+    "commit": "1b095970bf66642800d57c54d33cd12e7652440f",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 4,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n\tid 'java'\n\tid 'org.springframework.boot' version '4.0.8'\n\tid 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'com.example'\nversion = '0.0.1-SNAPSHOT'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/accessingdatamongodb/AccessingDataMongodbApplication.java",
+      "initial/src/main/java/com/example/accessingdatamongodb/AccessingDataMongodbApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-caching",
+    "url": "https://github.com/spring-guides/gs-caching",
+    "commit": "48bb5a93d5d7ad72c28e74f9e0854df76e9e9903",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 10,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n  id 'org.springframework.boot' version '4.0.8'\n  id 'io.spring.dependency-management' version '1.1.7'\n  id 'java'\n}\n\ngroup = 'com.example'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/caching/CachingApplication.java",
+      "initial/src/main/java/com/example/caching/CachingApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-securing-web",
+    "url": "https://github.com/spring-guides/gs-securing-web",
+    "commit": "38b43f1d209b880e234b1082f49973a9e97639b4",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 5,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n\tid 'java'\n\tid 'org.springframework.boot' version '4.0.8'\n\tid 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'com.example'\nversion = '0.0.1-SNAPSHOT'"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/securingweb/SecuringWebApplication.java",
+      "initial/src/main/java/com/example/securingweb/SecuringWebApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "spring-guides/gs-batch-processing",
+    "url": "https://github.com/spring-guides/gs-batch-processing",
+    "commit": "ec64005c74f9b06a9ab11060c8ab3440bdc2291b",
+    "build_system": "gradle",
+    "tier": "small",
+    "java_files": 6,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "complete/build.gradle",
+      "line": 2,
+      "excerpt": "plugins {\n\tid 'org.springframework.boot' version '4.0.8'\n\tid 'java'\n}\n\napply plugin: 'io.spring.dependency-management'\n"
+    },
+    "app_sources": [
+      "complete/src/main/java/com/example/batchprocessing/BatchProcessingApplication.java",
+      "initial/src/main/java/com/example/batchprocessing/BatchProcessingApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "andresmontoyat/spring-boot-hexagonal-architecture",
+    "url": "https://github.com/andresmontoyat/spring-boot-hexagonal-architecture",
+    "commit": "1ddc307962aa0d3e922b77a9ce49ba320552e543",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 60,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 4,
+      "excerpt": "import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension\n\nplugins {\n    id(\"org.springframework.boot\") version \"4.0.8\" apply false\n    id(\"io.spring.dependency-management\") version \"1.1.7\" apply false\n    id(\"com.diffplug.spotless\") version \"8.1.0\" apply false\n    id(\"org.sonarqube\") version \"7.2.3.7755\"\n}\n"
+    },
+    "app_sources": [
+      "bootstrap/src/main/java/my/packagename/BootApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "JJun-He/Supplier-Hub",
+    "url": "https://github.com/JJun-He/Supplier-Hub",
+    "commit": "5fbb53b4a85d970be106ebc4e29c097455eb2696",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 72,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 5,
+      "excerpt": "import org.springframework.boot.gradle.tasks.bundling.BootJar\n\nplugins {\n\tjava\n\tid(\"org.springframework.boot\") version \"4.0.8\"\n\tid(\"io.spring.dependency-management\") version \"1.1.7\"\n}\n\ngroup = \"com.supplierhub\"\nversion = \"0.0.1-SNAPSHOT\""
+    },
+    "app_sources": [
+      "mock-supplier/src/main/java/com/supplierhub/mock/MockSupplierApplication.java",
+      "src/main/java/com/supplierhub/SupplierHubApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "mjkang4416/stay-supplier-integration",
+    "url": "https://github.com/mjkang4416/stay-supplier-integration",
+    "commit": "c5290adec3e948ceccbca117ec593f1367b9a2af",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 51,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 3,
+      "excerpt": "plugins {\n\tjava\n\tid(\"org.springframework.boot\") version \"4.0.8\"\n\tid(\"io.spring.dependency-management\") version \"1.1.7\"\n}\n\ngroup = \"com.staysupplier\"\nversion = \"0.0.1-SNAPSHOT\""
+    },
+    "app_sources": [
+      "mock-supplier/src/main/java/com/staysupplier/mock/MockSupplierApplication.java",
+      "src/main/java/com/staysupplier/StaySupplierIntegrationApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "TassSinclair/mocktail-mixologist",
+    "url": "https://github.com/TassSinclair/mocktail-mixologist",
+    "commit": "b4a90649dabee4eadd9f667e827f043ad73d5c0b",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 91,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 5,
+      "excerpt": "import net.ltgt.gradle.errorprone.errorprone\n\nplugins {\n    java\n    id(\"org.springframework.boot\") version \"4.0.8\"\n    id(\"io.spring.dependency-management\") version \"1.1.7\"\n    id(\"com.diffplug.spotless\") version \"8.8.0\"\n    id(\"net.ltgt.errorprone\") version \"5.1.0\"\n}\n"
+    },
+    "app_sources": [
+      "src/main/java/net/sinclairstudios/mixologist/MixologistApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "smithy-ai/smithy-ai",
+    "url": "https://github.com/smithy-ai/smithy-ai",
+    "commit": "aef3fcad1e49eb1436933de0bd6808cae3b7b995",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 170,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "orchestrator/backend/build.gradle.kts",
+      "line": 5,
+      "excerpt": "import org.springframework.boot.gradle.plugin.SpringBootPlugin\n\nplugins {\n    java\n    id(\"org.springframework.boot\") version \"4.0.8\"\n    id(\"com.diffplug.spotless\") version \"7.0.3\"\n}\n\njava {\n    toolchain {"
+    },
+    "app_sources": [
+      "knowledgebase/src/main/java/dev/smithyai/knowledgebase/KnowledgebaseApplication.java",
+      "orchestrator/backend/src/main/java/dev/smithyai/orchestrator/OrchestratorApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "greenharborlabs/spring-boot-starter-paygate",
+    "url": "https://github.com/greenharborlabs/spring-boot-starter-paygate",
+    "commit": "ef395bb40c798fcb5db133de1e09900e31788fc1",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 165,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 11,
+      "excerpt": "    id(\"org.cyclonedx.bom\") version \"3.2.2\" apply false\n    id(\"com.diffplug.spotless\") version \"7.2.1\" apply false\n    id(\"org.owasp.dependencycheck\") version \"13.0.0\"\n}\n\nval springBootVersion = \"4.0.8\"\nval log4jVersion = \"2.25.5\"\nval tomcatVersion = \"11.0.25\"\nval caffeineVersion = \"3.2.3\"\nval grpcVersion = \"1.80.0\"\nval protobufVersion = \"4.29.3\""
+    },
+    "app_sources": [
+      "paygate-example-app-spring-security/src/main/java/com/greenharborlabs/paygate/example/security/SecurityExampleApplication.java",
+      "paygate-example-app/src/main/java/com/greenharborlabs/paygate/example/ExampleApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "dsouzamelroy2007/fernbank",
+    "url": "https://github.com/dsouzamelroy2007/fernbank",
+    "commit": "43abcf2dbd228a296840f7507f7417345bc4d875",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 159,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "backend/build.gradle.kts",
+      "line": 4,
+      "excerpt": "plugins {\n\tjava\n\tcheckstyle\n\tid(\"org.springframework.boot\") version \"4.0.8\"\n\tid(\"io.spring.dependency-management\") version \"1.1.7\"\n\tid(\"jacoco\")\n\tid(\"com.diffplug.spotless\") version \"8.10.0\"\n\tid(\"org.owasp.dependencycheck\") version \"12.1.3\"\n}"
+    },
+    "app_sources": [
+      "backend/src/main/java/com/mel/fernbank/ledger/LedgerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "vladimirnilov28/dot-com-retail",
+    "url": "https://github.com/vladimirnilov28/dot-com-retail",
+    "commit": "0e01fa43a16d63a8fa7f1f8b9ac85e516760d510",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 212,
+    "boot_version": "4.0.7",
+    "boot_evidence": {
+      "file": "backend/build.gradle.kts",
+      "line": 36,
+      "excerpt": "\nplugins {\n    java\n\n    // Spring Boot build lifecycle\n    id(\"org.springframework.boot\") version \"4.0.7\"\n\n    // Spring dependency version management\n    id(\"io.spring.dependency-management\") version \"1.1.7\"\n\n    // Code formatting"
+    },
+    "app_sources": [
+      "backend/src/main/java/ee/bytecore/backend/BackendApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "team-project-final/synapse-platform-svc",
+    "url": "https://github.com/team-project-final/synapse-platform-svc",
+    "commit": "4a530a1017c223d1dfdbaa4d63e909a7183381bf",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 241,
+    "boot_version": "4.0.0",
+    "boot_evidence": {
+      "file": "build.gradle.kts",
+      "line": 5,
+      "excerpt": "plugins {\n    java\n    checkstyle\n    jacoco\n    id(\"org.springframework.boot\") version \"4.0.0\"\n    id(\"io.spring.dependency-management\") version \"1.1.7\"\n    id(\"com.github.spotbugs\") version \"6.0.9\"\n    id(\"com.github.davidmc24.gradle.plugin.avro\") version \"1.9.1\"\n}\n"
+    },
+    "app_sources": [
+      "src/main/java/com/synapse/platform/PlatformApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "jrjohn/arcana-cloud-springboot",
+    "url": "https://github.com/jrjohn/arcana-cloud-springboot",
+    "commit": "58adcbd2137911d041d6b9c186141e23d1732565",
+    "build_system": "gradle",
+    "tier": "medium",
+    "java_files": 155,
+    "boot_version": "4.1.2",
+    "boot_evidence": {
+      "file": "gradle/libs.versions.toml",
+      "line": 3,
+      "excerpt": "[versions]\n# Spring Boot 4.0\nspring-boot = \"4.1.2\"\nspring-dependency-management = \"1.1.7\"\nspring-cloud = \"2025.1.3\"\n\n# gRPC and Protobuf (Spring gRPC for Spring Boot 4.0)\n# Must match the io.grpc/protobuf versions pinned by spring-grpc-dependencies BOM"
+    },
+    "app_sources": [
+      "src/main/java/com/arcana/cloud/ArcanaCloudApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "GdeiAssistant/GdeiAssistant",
+    "url": "https://github.com/GdeiAssistant/GdeiAssistant",
+    "commit": "4eeca4ce90fdf864a89d78c6859cd0b279139d04",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 593,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n    id 'java'\n    id 'org.springframework.boot' version '4.1.1'\n    id 'io.spring.dependency-management' version '1.1.7'\n    // GraalVM Native Image：nativeCompile 需 JDK 17+\n    id 'org.graalvm.buildtools.native' version '1.1.11'\n    id 'jacoco'\n}"
+    },
+    "app_sources": [
+      "src/main/java/cn/gdeiassistant/GdeiAssistantApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "FAForever/faf-java-api",
+    "url": "https://github.com/FAForever/faf-java-api",
+    "commit": "caed91e0e6f969ea49177c76a3fad93b0b755397",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 310,
+    "boot_version": "4.0.6",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 14,
+      "excerpt": "  }\n}\n\nplugins {\n  id \"java\"\n  id \"org.springframework.boot\" version \"4.0.6\"\n  id \"idea\"\n  id \"com.adarshr.test-logger\" version \"4.0.0\"\n}\n\ngroup = 'faforever'"
+    },
+    "app_sources": [
+      "src/main/java/com/faforever/api/FafApiApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "kl3inIT/northstar",
+    "url": "https://github.com/kl3inIT/northstar",
+    "commit": "caef9a9a55e60e8bc99b47275b4840d6cd940372",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 482,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "build-logic/build.gradle.kts",
+      "line": 14,
+      "excerpt": "\n// Plugin versions are hardcoded here to match gradle/libs.versions.toml.\n// (Version catalogs are not directly accessible from precompiled convention\n// plugins; keep these in sync with the catalog.)\ndependencies {\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.0\")\n    implementation(\"io.spring.gradle:dependency-management-plugin:1.1.7\")\n}"
+    },
+    "app_sources": [
+      "apps/api/src/main/java/com/northstar/api/NorthstarServerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "autark-labs/autark-os",
+    "url": "https://github.com/autark-labs/autark-os",
+    "commit": "c19e27373bc6bd3c920ff389d21d7ae86404d592",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 383,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "backend/build.gradle",
+      "line": 3,
+      "excerpt": "plugins {\n\tid 'java'\n\tid 'org.springframework.boot' version '4.1.0'\n\tid 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'com.autarkos'\nversion = providers.environmentVariable('AUTARK_OS_BUILD_VERSION').getOrElse('0.0.1-SNAPSHOT')"
+    },
+    "app_sources": [
+      "backend/src/main/java/com/autarkos/AutarkOsApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-sys",
+    "url": "https://github.com/shuigedeng/taotao-cloud-sys",
+    "commit": "98f3345c647f735dc11b9e46569bd4d666dcf368",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 517,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 30,
+      "excerpt": "buildscript {\n    ext {\n        ttcVersion = version\n        ttcGroup = \"io.github.shuigedeng\"\n\n        springBootVersion = \"4.1.1\"\n        querydslAptVersion = \"5.1.0\"\n        mapstructProcessorVersion = \"1.6.3\"\n        lombokMapstructBindingVersion = \"0.2.0\"\n        lombokVersion = \"1.18.48\"\n        recordBuilderVersion = \"53\""
+    },
+    "app_sources": [
+      "taotao-cloud-sys-assembly/src/main/java/com/taotao/cloud/sys/TaoTaoCloudSysApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-goods",
+    "url": "https://github.com/shuigedeng/taotao-cloud-goods",
+    "commit": "b91cb22c8ce2020feb79f2bcd1abfdef73d7bcfa",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 484,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 30,
+      "excerpt": "buildscript {\n    ext {\n        ttcVersion = version\n        ttcGroup = \"io.github.shuigedeng\"\n\n        springBootVersion = \"4.1.1\"\n        querydslAptVersion = \"5.1.0\"\n        mapstructProcessorVersion = \"1.6.3\"\n        lombokMapstructBindingVersion = \"0.2.0\"\n        lombokVersion = \"1.18.48\"\n        recordBuilderVersion = \"53\""
+    },
+    "app_sources": [
+      "taotao-cloud-goods-assembly/src/main/java/com/taotao/cloud/goods/TaoTaoCloudGoodsApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-order",
+    "url": "https://github.com/shuigedeng/taotao-cloud-order",
+    "commit": "3f49ec68a800818f67aff4ce17f3590d2d9a15ae",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 469,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 30,
+      "excerpt": "buildscript {\n    ext {\n        ttcVersion = version\n        ttcGroup = \"io.github.shuigedeng\"\n\n        springBootVersion = \"4.1.1\"\n        querydslAptVersion = \"5.1.0\"\n        mapstructProcessorVersion = \"1.6.3\"\n        lombokMapstructBindingVersion = \"0.2.0\"\n        lombokVersion = \"1.18.48\"\n        recordBuilderVersion = \"53\""
+    },
+    "app_sources": [
+      "taotao-cloud-order-assembly/src/main/java/com/taotao/cloud/order/TaoTaoCloudOrderApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-member",
+    "url": "https://github.com/shuigedeng/taotao-cloud-member",
+    "commit": "ad7155a8987a42f51094d6a3cf668eca16f0a050",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 320,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 30,
+      "excerpt": "buildscript {\n    ext {\n        ttcVersion = version\n        ttcGroup = \"io.github.shuigedeng\"\n\n        springBootVersion = \"4.1.1\"\n        querydslAptVersion = \"5.1.0\"\n        mapstructProcessorVersion = \"1.6.3\"\n        lombokMapstructBindingVersion = \"0.2.0\"\n        lombokVersion = \"1.18.48\"\n        recordBuilderVersion = \"53\""
+    },
+    "app_sources": [
+      "taotao-cloud-member-assembly/src/main/java/com/taotao/cloud/member/TaoTaoCloudMemberApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-message",
+    "url": "https://github.com/shuigedeng/taotao-cloud-message",
+    "commit": "e4079716b21e786dab18c0b71f0bd61958e3877a",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 273,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 30,
+      "excerpt": "buildscript {\n    ext {\n        ttcVersion = version\n        ttcGroup = \"io.github.shuigedeng\"\n\n        springBootVersion = \"4.1.1\"\n        querydslAptVersion = \"5.1.0\"\n        mapstructProcessorVersion = \"1.6.3\"\n        lombokMapstructBindingVersion = \"0.2.0\"\n        lombokVersion = \"1.18.48\"\n        recordBuilderVersion = \"53\""
+    },
+    "app_sources": [
+      "taotao-cloud-message-assembly/src/main/java/com/taotao/cloud/message/TaoTaoCloudMessageApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "thainv1602/digishield",
+    "url": "https://github.com/thainv1602/digishield",
+    "commit": "d81c746429a62911f29cba9283094bba9f26e8ee",
+    "build_system": "gradle",
+    "tier": "large",
+    "java_files": 370,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "digishield/buildSrc/build.gradle.kts",
+      "line": 10,
+      "excerpt": "repositories {\n    mavenCentral()\n    gradlePluginPortal()\n}\n\ndependencies {\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.0\")\n    implementation(\"io.spring.gradle:dependency-management-plugin:1.1.7\")\n    implementation(\"com.github.spotbugs.snom:spotbugs-gradle-plugin:6.5.10\")\n}"
+    },
+    "app_sources": [
+      "digishield/boot/app/src/main/java/com/digishield/DigishieldApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "Stirling-Tools/Stirling-PDF",
+    "url": "https://github.com/Stirling-Tools/Stirling-PDF",
+    "commit": "87d790a30d8c072c7d84041afce3bc84528f1118",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1530,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 24,
+      "excerpt": "import org.gradle.api.tasks.testing.Test\nimport org.gradle.jvm.toolchain.JavaLanguageVersion\nimport stirling.software.gradle.ModuleLicenseOverrideFilter\n\next {\n    springBootVersion = \"4.1.1\"\n    pdfboxVersion = \"3.0.8\"\n    officeConvertVersion = \"0.2.2\"\n    imageioVersion = \"3.15.2\"\n    lombokVersion = \"1.18.46\"\n    bouncycastleVersion = \"1.85\""
+    },
+    "app_sources": [
+      "app/core/src/main/java/stirling/software/SPDF/SPDFApplication.java",
+      "app/proprietary/src/main/java/stirling/software/proprietary/security/controller/api/AdminSettingsController.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "datahub-project/datahub",
+    "url": "https://github.com/datahub-project/datahub",
+    "commit": "53b0a20bd56695590cc38c736f12fce8365b126a",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 3234,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 43,
+      "excerpt": "  ext.versionGradle = '9.5.0'\n  // CVE-2026-41842, CVE-2026-41845 (spring-webmvc), CVE-2026-41850 (spring-expression): fixed in 7.0.8+ / 6.2.19+\n  // JDK 25 ClassFile-reader OOM (spring-framework#37111): fixed in 7.0.9+ (#37112)\n  ext.springVersion = '7.0.9'\n  // CVE-2026-40976 / GHSA (spring-boot 4.0.6+); CVE-2026-41001 (Artemis data dir): fixed in 4.0.7+\n  ext.springBootVersion = '4.0.8'\n  // CVE-2026-22748 (oauth2-jose), CVE-2026-22751: fixed in 7.0.5+; explicit pins were 7.0.4 — use latest 7.0.x patch\n  ext.springSecurityVersion = '7.0.7'\n  // CVE-2026-41731 (spring-kafka header deserialization): fixed in 4.0.6+ / 3.3.16+\n  ext.springKafkaVersion = '4.0.7'\n  // CVE-2023-50572 (GroovyEngine OOM); GHSA-2r2c-cx56-8933 (remote-telnet NAWS DoS): fixed in 4.2.1+"
+    },
+    "app_sources": [
+      "datahub-upgrade/src/main/java/com/linkedin/datahub/upgrade/UpgradeCliApplication.java",
+      "datahub-upgrade/src/main/java/com/linkedin/datahub/upgrade/sqlsetup/SqlSetupUpgradeConfig.java",
+      "metadata-jobs/mae-consumer-job/src/main/java/com/linkedin/metadata/kafka/MaeConsumerApplication.java",
+      "metadata-jobs/mce-consumer-job/src/main/java/com/linkedin/metadata/kafka/MceConsumerApplication.java",
+      "metadata-service/war/src/main/java/com/linkedin/gms/GMSApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "sanluan/PublicCMS",
+    "url": "https://github.com/sanluan/PublicCMS",
+    "commit": "d6d44b7e0cbac040a5246a80cce0ff6881d853e5",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1164,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "publiccms-parent/build.gradle",
+      "line": 38,
+      "excerpt": "        // http://mvnrepository.com/artifact/org.springframework/spring-core\n        // https://spring.io/projects/spring-framework\n        springVersion = \"7.0.9\"\n        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web\n        // https://spring.io/projects/spring-boot\n        springBootVersion = \"4.1.1\"\n        // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine\n        junitVersion = \"6.1.3\"\n        // http://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core\n        // http://hibernate.org/orm/downloads/\n        hibernateVersion = \"7.4.13.Final\""
+    },
+    "app_sources": [
+      "publiccms-parent/publiccms/src/main/java/boot/SpringBootApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "hiero-ledger/hiero-mirror-node",
+    "url": "https://github.com/hiero-ledger/hiero-mirror-node",
+    "commit": "a7a992f3868aecff300c368e17ec6f2831d62cd8",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1064,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "buildSrc/build.gradle.kts",
+      "line": 49,
+      "excerpt": "    implementation(\"org.jooq:jooq-codegen-gradle:$jooqVersion\")\n    implementation(\"org.jooq:jooq-meta:$jooqVersion\")\n    implementation(\"org.jooq:jooq-postgres-extensions:${jooqVersion}\")\n    implementation(\"org.openapitools:openapi-generator-gradle-plugin:7.26.0\")\n    implementation(\"org.owasp:dependency-check-gradle:13.0.0\")\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.1\")\n    implementation(\"org.testcontainers:testcontainers-postgresql:2.0.5\")\n    implementation(\"org.web3j:web3j-gradle-plugin:5.0.2\")\n}\n\n// These transitive dependencies are vulnerable and not used"
+    },
+    "app_sources": [
+      "graphql/src/main/java/org/hiero/mirror/graphql/GraphqlApplication.java",
+      "grpc/src/main/java/org/hiero/mirror/grpc/GrpcApplication.java",
+      "importer/src/main/java/org/hiero/mirror/importer/ImporterApplication.java",
+      "monitor/src/main/java/org/hiero/mirror/monitor/MonitorApplication.java",
+      "rest-java/src/main/java/org/hiero/mirror/restjava/RestJavaApplication.java",
+      "test/src/main/java/org/hiero/mirror/test/TestApplication.java",
+      "web3/src/main/java/org/hiero/mirror/web3/Web3Application.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "oinsio/gnomish-factory",
+    "url": "https://github.com/oinsio/gnomish-factory",
+    "commit": "693ff432414dbab45f48f96dce2fc3866f03a76a",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1383,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "gradle/libs.versions.toml",
+      "line": 15,
+      "excerpt": "# Strict: the Spring Boot BOM manages Groovy 5.x, which is incompatible with\n# the stable Spock 2.4-groovy-4.0 line; the test stack must stay on Groovy 4.\ngroovy = { strictly = \"4.0.32\" }\n# Spock groovy-4 variant, aligned with the Groovy 4 line (design risk: Gradle 9 / Groovy 4 / Spock matrix)\nspock = \"2.4-groovy-4.0\"\nspring-boot = \"4.1.0\"\n# JaCoCo tool version for the core 'jacoco' Gradle plugin; 0.8.14+ supports Java 25 bytecode.\njacoco = \"0.8.15\"\n# PIT: latest pinned for Java 25 bytecode support (design risk: PIT vs Java 25).\n# Key is 'pitest-tool' (not 'pitest') so it doesn't collide with the\n# pitest-* keys below as a catalog-accessor prefix (would force asProvider())."
+    },
+    "app_sources": [
+      "bootstrap/src/main/java/com/github/oinsio/gnomish/CommandExit.java",
+      "bootstrap/src/main/java/com/github/oinsio/gnomish/FactoryApplication.java",
+      "bootstrap/src/main/java/com/github/oinsio/gnomish/app/OperatorConfigLoader.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "kl3inIT/zero-mail",
+    "url": "https://github.com/kl3inIT/zero-mail",
+    "commit": "95961c79ab0ea76bda63a8cf1e7843cb2b0e836d",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1423,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "buildSrc/build.gradle.kts",
+      "line": 13,
+      "excerpt": "    maven(\"https://repo.spring.io/milestone\")\n    maven(\"https://repo.spring.io/snapshot\")\n}\n\ndependencies {\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.0\")\n    implementation(\"io.spring.gradle:dependency-management-plugin:1.1.7\")\n}"
+    },
+    "app_sources": [
+      "backend/api/src/main/java/com/zeromail/api/ZeroMailApiApplication.java",
+      "backend/worker/src/main/java/com/zeromail/worker/ZeroMailWorkerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "kl3inIT/OrgMemory",
+    "url": "https://github.com/kl3inIT/OrgMemory",
+    "commit": "db999fab09a2f012f276909878840e1941fa2711",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1200,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "build-logic/build.gradle.kts",
+      "line": 13,
+      "excerpt": "}\n\ndependencies {\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.0\")\n    implementation(\"io.spring.gradle:dependency-management-plugin:1.1.7\")\n}"
+    },
+    "app_sources": [
+      "apps/api/src/main/java/com/orgmemory/api/OrgMemoryApiApplication.java",
+      "apps/mcp/src/main/java/com/orgmemory/mcp/OrgMemoryMcpApplication.java",
+      "apps/worker/src/main/java/com/orgmemory/worker/OrgMemoryWorkerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "saintbassanaga/BytesMind-Plateform",
+    "url": "https://github.com/saintbassanaga/BytesMind-Plateform",
+    "commit": "14bafe4bd790a0ac66a4f773005990aed8891773",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1137,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "buildSrc/build.gradle.kts",
+      "line": 10,
+      "excerpt": "repositories {\n    mavenCentral()\n    gradlePluginPortal()\n}\n\ndependencies {\n    implementation(\"org.springframework.boot:spring-boot-gradle-plugin:4.1.0\")\n    implementation(\"io.spring.gradle:dependency-management-plugin:1.1.7\")\n}"
+    },
+    "app_sources": [
+      "applications/accounting-service/src/main/java/tech/bytesmind/accounting/AccountingServiceApplication.java",
+      "applications/api-consumer/src/main/java/tech/bytesmind/apiconsumer/ApiConsumerApplication.java",
+      "applications/backoffice-service/src/main/java/tech/bytesmind/backoffice/BackofficeServiceApplication.java",
+      "applications/compliance-api/src/main/java/tech/bytesmind/compliance/ComplianceApiApplication.java",
+      "applications/gateway/src/main/java/tech/bytesmind/gateway/GatewayApplication.java",
+      "applications/identity-server/src/main/java/tech/bytesmind/identity/IdentityServerApplication.java",
+      "applications/katica-api/src/main/java/tech/bytesmind/katica/KaticaApiApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "jumpmindinc/symmetric-ds",
+    "url": "https://github.com/jumpmindinc/symmetric-ds",
+    "commit": "2b24e3b0ff8ea52ca3d10b33b5f873bd97665776",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 1227,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "symmetric-assemble/common.gradle",
+      "line": 343,
+      "excerpt": "        powerMockVersion = '2.0.9'\n        mysqlVersion = '8.4.0'\n        servletVersion = '4.0.1'\n        springVersion = '7.0.9'\n        springDataVersion = '4.0.6'\n        springBootVersion = '4.1.1'\n        jtdsVersion = '1.3.1'\n        bouncyCastleVersion = '1.86'\n        animalSnifferVersion = '1.23'\n        jnaVersion = '5.14.0'\n        jettyVersion = '12.1.12'"
+    },
+    "app_sources": [
+      "symmetric-server/src/main/java/org/jumpmind/symmetric/SymmetricBoot.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "shuigedeng/taotao-cloud-project",
+    "url": "https://github.com/shuigedeng/taotao-cloud-project",
+    "commit": "9d2f5897aef578908482233dd1768865767145c0",
+    "build_system": "gradle",
+    "tier": "huge",
+    "java_files": 7713,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "build.gradle",
+      "line": 171,
+      "excerpt": "\n    //Spring Boot 可以轻松创建独立的、生产级的基于 Spring 的应用程序，您可以“直接运行”\n    // 我们对 Spring 平台和第三方库持固执己见的看法，\n    // 大多数 Spring Boot 应用程序只需要很少的 Spring 配置\n    //https://plugins.gradle.org/plugin/org.springframework.boot\n    id \"org.springframework.boot\" version \"4.1.1\"\n\n    //一个 Gradle 插件，提供类似 Maven 的依赖管理功能\n    //https://plugins.gradle.org/plugin/io.spring.dependency-management\n    id 'io.spring.dependency-management' version '1.1.7'\n"
+    },
+    "app_sources": [
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/TaoTaoCloudAiApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/chat/alibaba_chat/AlibabaChatApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/chat/deepseek_chat/DeepseekChatApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/chat/openai_chat/OpenAIChatApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/graph/human_node/HumanNodeApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/graph/mcp_node/McpNodeApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/graph/parallel_node/ParallelNodeApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/graph/simple/SimpleGraphApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/graph/stream_node/StreamNodeApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/client/mcp_nacos2_client/Nacos2ClientApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/client/mcp_nacos3_client/Nacos3ClientApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/client/mcp_stdio_client/StdioClientApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/client/mcp_webflux_client/WebfluxClientApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/server/mcp_nacos2_server/Nacos2ServerApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/server/mcp_nacos3_server/Nacos3ServerApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/server/mcp_stdio_server/StdioServerApplication.java",
+      "taotao-cloud-ai/src/main/java/com/taotao/cloud/ai/alibaba/mcp/server/mcp_webflux_server/WebfluxServerApplication.java",
+      "taotao-cloud-bigdata/taotao-cloud-doris/src/main/java/com/taotao/cloud/doris/spring/DorisApplication.java",
+      "taotao-cloud-bigdata/taotao-cloud-realtime-warehouse/src/main/java/com/taotao/cloud/realtime/warehouse/datageneration/DataGenerationApplication.java",
+      "taotao-cloud-bigdata/taotao-cloud-realtime-warehouse/src/main/java/com/taotao/cloud/realtime/warehouse/datageneration/business_code/BusinessCommandLineRunner.java",
+      "taotao-cloud-bigdata/taotao-cloud-realtime-warehouse/src/main/java/com/taotao/cloud/realtime/warehouse/datageneration/userlog_code/UserLogCommandRunner.java",
+      "taotao-cloud-ccsr/taotao-cloud-ccsr-dashboard/src/main/java/com/taotao/cloud/rpc/dashboard/CcsrDashboardApplication.java",
+      "taotao-cloud-ccsr/taotao-cloud-ccsr-example/src/main/java/com/taotao/cloud/ccsr/example/CcsrExampleApplication.java",
+      "taotao-cloud-ccsr/taotao-cloud-ccsr-server/src/main/java/com/taotao/cloud/ccsr/server/CcsrServerApplication.java",
+      "taotao-cloud-job/taotao-cloud-job-dashboard/src/main/java/com/taotao/cloud/job/dashboard/JobDashboardApplication.java",
+      "taotao-cloud-job/taotao-cloud-job-nameserver/src/main/java/com/taotao/cloud/job/nameserver/JobNameServerApplication.java",
+      "taotao-cloud-job/taotao-cloud-job-server/src/main/java/com/taotao/cloud/job/server/JobServerApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-bff/src/main/java/com/taotao/cloud/bff/TaoTaoCloudBffApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-auth/taotao-cloud-auth-biz/src/main/java/com/taotao/cloud/auth/biz/TaoTaoCloudAuthApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-auth/taotao-cloud-auth-sa/src/main/java/com/taotao/cloud/sa/just/biz/TaoTaoCloudSaJustApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-customer/taotao-cloud-customer-biz/src/main/java/com/taotao/cloud/customer/biz/TaoTaoCloudCustomerApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-distribution/taotao-cloud-distribution-biz/src/main/java/com/taotao/cloud/distribution/biz/TaoTaoCloudDistributionApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-front/taotao-cloud-front-biz/src/main/java/com/taotao/cloud/front/biz/TaoTaoCloudFrontApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-goods/taotao-cloud-goods-biz/src/main/java/com/taotao/cloud/goods/biz/TaoTaoCloudGoodsApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-im/taotao-cloud-im-biz/src/main/java/com/taotao/cloud/im/biz/TaoTaoCloudImApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-iot/taotao-cloud-iot-biz/src/main/java/com/taotao/cloud/iot/biz/TaoTaoCloudIotApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-media/taotao-cloud-media-biz/src/main/java/com/taotao/cloud/media/biz/TaotaoCloudMediaApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-member/taotao-cloud-member-biz/src/main/java/com/taotao/cloud/member/biz/TaoTaoCloudMemberApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-message/taotao-cloud-message-biz/src/main/java/com/taotao/cloud/message/biz/TaoTaoCloudMessageApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-operation/taotao-cloud-operation-biz/src/main/java/com/taotao/cloud/operation/biz/TaoTaoCloudOperationApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-order/taotao-cloud-order-biz/src/main/java/com/taotao/cloud/order/biz/TaoTaoCloudOrderApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-payment/taotao-cloud-payment-biz/src/main/java/com/taotao/cloud/payment/biz/TaoTaoCloudPaymentApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-promotion/taotao-cloud-promotion-biz/src/main/java/com/taotao/cloud/promotion/biz/TaoTaoCloudPromotionApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-report/taotao-cloud-report-biz/src/main/java/com/taotao/cloud/report/biz/TaoTaoCloudReportApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-shortlink/taotao-cloud-shortlink-biz/src/main/java/com/taotao/cloud/shortlink/biz/TaoTaoCloudShortLinkApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-shortlink/taotao-cloud-shortlink-biz/src/main/java/com/taotao/cloud/shortlink/biz/infrastructure/dcloud/LinkApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-shortlink/taotao-cloud-shortlink-biz/src/main/java/com/taotao/cloud/shortlink/biz/infrastructure/other/ShortUrlServerApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-shortlink/taotao-cloud-shortlink-biz/src/main/java/com/taotao/cloud/shortlink/biz/infrastructure/shortlink/ShortLinkServerApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-shortlink/taotao-cloud-shortlink-biz/src/main/java/com/taotao/cloud/shortlink/biz/interfaces/web/ShortLinkBffApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-stock/taotao-cloud-stock-biz/src/main/java/com/taotao/cloud/stock/biz/TaoTaoCloudStockApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-store/taotao-cloud-store-biz/src/main/java/com/taotao/cloud/store/biz/TaoTaoCloudStoreApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-sys/taotao-cloud-sys-biz/src/main/java/com/taotao/cloud/sys/biz/TaoTaoCloudSysApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-tenant/taotao-cloud-tenant-biz/src/main/java/com/taotao/cloud/tenant/biz/TaoTaoCloudTenantApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-wechat/taotao-cloud-wechat-biz/src/main/java/com/taotao/cloud/wechat/biz/TaoTaoCloudWechatApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-wechat/taotao-cloud-wechat-biz/src/main/java/com/taotao/cloud/wechat/biz/infrastructure/niefy/BootApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-workflow/taotao-cloud-workflow-biz/src/main/java/com/taotao/cloud/workflow/biz/TaoTaoCloudWorkflowApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-workflow/taotao-cloud-workflow-biz/src/main/java/com/taotao/cloud/workflow/biz/infrastructure/flowable/server/FlowableApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-data-analysis/src/main/java/com/taotao/cloud/data/analysis/TaoTaoCloudDataAnalysisApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-data-sync/src/main/java/com/taotao/cloud/data/sync/TaoTaoCloudDataSyncApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-data-sync/src/main/java/com/taotao/cloud/data/sync/parallel/ParallelStepJob.java",
+      "taotao-cloud-microservice/taotao-cloud-data-sync/src/main/java/com/taotao/cloud/data/sync/partitioner/PartStepJob.java",
+      "taotao-cloud-microservice/taotao-cloud-data-sync/src/main/java/com/taotao/cloud/data/sync/thread/ThreadStepJob.java",
+      "taotao-cloud-microservice/taotao-cloud-gateway-webflux/src/main/java/com/taotao/cloud/gateway/TaoTaoCloudGatewayWebfluxApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-gateway-webmvc/src/main/java/com/taotao/cloud/gateway/TaoTaoCloudGatewayWebmvcApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-generator/src/main/java/com/taotao/cloud/generator/TaoTaoCloudGeneratorApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-modulith/src/main/java/com/taotao/cloud/modulith/TaoTaoCloudModulithApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-monitor/src/main/java/com/taotao/cloud/monitor/TaoTaoCloudMonitorApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-open-platform/src/main/java/com/taotao/cloud/open/platform/biz/TaoTaoCloudOpenPlatformApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-recommend/src/main/java/com/taotao/cloud/recommend/TaoTaoCloudRecommendApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-shell/src/main/java/com/taotao/cloud/shell/TaoTaoCloudShellApplication.java",
+      "taotao-cloud-microservice/taotao-cloud-xxljob/src/main/java/com/taotao/cloud/xxljob/TaoTaoCloudXxlJobApplication.java",
+      "taotao-cloud-mq/taotao-cloud-mq-dashboard/src/main/java/com/taotao/cloud/mq/dashboard/MqDashboardApplication.java",
+      "taotao-cloud-mq/taotao-cloud-mq-nameserver/src/main/java/com/taotao/cloud/mq/nameserver/MqNameServerApplication.java",
+      "taotao-cloud-rpc/taotao-cloud-rpc-common/src/main/java/com/taotao/cloud/rpc/common/util/ReflectUtil.java",
+      "taotao-cloud-rpc/taotao-cloud-rpc-dashboard/src/main/java/com/taotao/cloud/rpc/dashboard/RpcDashboardApplication.java",
+      "taotao-cloud-rpc/taotao-cloud-rpc-nameserver/src/main/java/com/taotao/cloud/mq/nameserver/RpcNameServerApplication.java",
+      "taotao-cloud-tx/taotao-cloud-tx-server/src/main/java/com/taotao/cloud/tx/server/TxManagerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build"
+  },
+  {
+    "repository": "nageoffer/tinyrag",
+    "url": "https://github.com/nageoffer/tinyrag",
+    "commit": "294f860cd4b20055bbf1769738fc397f925efa60",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 21,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 17,
+      "excerpt": "    <description>TinyRAG - 基于Spring Boot的智能文档处理与检索系统</description>\n\n    <properties>\n        <java.version>17</java.version>\n        <maven.compiler.release>17</maven.compiler.release>\n        <spring-boot.version>4.0.1</spring-boot.version>\n        <spring-ai.version>2.0.0-M2</spring-ai.version>\n        <tika.version>2.9.2</tika.version>\n        <hutool-all.version>5.8.37</hutool-all.version>\n        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>\n    </properties>"
+    },
+    "app_sources": [
+      "tinyrag-bootstrap/src/main/java/com/nageoffer/ai/tinyrag/TinyragApplication.java",
+      "tinyrag-mcp-server/src/main/java/com/nageoffer/ai/tinyrag/mcp/McpServerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:17"
+  },
+  {
+    "repository": "duclongbox/Microservices-E-commerce-API-Backend",
+    "url": "https://github.com/duclongbox/Microservices-E-commerce-API-Backend",
+    "commit": "de172ee54caed9ae4c92f4262577ebceb597d02d",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 41,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 26,
+      "excerpt": "        <module>api-gateway</module>\n    </modules>\n\n    <properties>\n        <java.version>25</java.version>\n        <spring-boot.version>4.0.1</spring-boot.version>\n        <spring-cloud.version>2025.1.0</spring-cloud.version>\n        <maven.compiler.source>25</maven.compiler.source>\n        <maven.compiler.target>25</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>"
+    },
+    "app_sources": [
+      "api-gateway/src/main/java/com/example/demo/ApiGatewayApplication.java",
+      "inventory-service/src/main/java/com/example/demo/InventoryServiceApplication.java",
+      "notification-service/src/main/java/com/example/demo/NotificationServiceApplication.java",
+      "order-service/src/main/java/com/example/demo/OrderServiceApplication.java",
+      "product-service/src/main/java/com/example/demo/ProductServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:26"
+  },
+  {
+    "repository": "eliasnogueira/credit-api",
+    "url": "https://github.com/eliasnogueira/credit-api",
+    "commit": "ea9430a5632e0571e5d8a00bd2bde190876e247d",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 28,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 10,
+      "excerpt": "    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n    </parent>\n\n    <groupId>com.eliasogueira.credit</groupId>\n    <artifactId>combined-credit-api</artifactId>\n    <version>2.1.0</version>"
+    },
+    "app_sources": [
+      "src/main/java/com/eliasnogueira/credit/CreditApiApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:10"
+  },
+  {
+    "repository": "tobeflyboy/sc",
+    "url": "https://github.com/tobeflyboy/sc",
+    "commit": "732439b4f16659bcc7d4bbdbf7b3c8b0afbaf83b",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 25,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 78,
+      "excerpt": "        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>\n        <maven.test.skip>true</maven.test.skip>\n        <skipTests>true</skipTests>\n\n        <!-- springboot & spring-cloud -->\n        <spring-boot.version>4.0.1</spring-boot.version>\n        <spring-cloud.version>2025.1.0</spring-cloud.version>\n    </properties>\n\n    <dependencyManagement>\n        <dependencies>"
+    },
+    "app_sources": [
+      "sc-config-server/src/main/java/com/nutcracker/ConfigServerApplication.java",
+      "sc-eureka-server/src/main/java/com/nutcracker/EurekaServerApplication.java",
+      "sc-gateway/src/main/java/com/nutcracker/gateway/GatewayApplication.java",
+      "sc-server-a/src/main/java/com/nutcracker/server/ServerAStartup.java",
+      "sc-server-b/src/main/java/com/nutcracker/server/ServerBStartup.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:78"
+  },
+  {
+    "repository": "xuxueli/xxl-api",
+    "url": "https://github.com/xuxueli/xxl-api",
+    "commit": "119f7d6ef3fabdd7c9940003608a9346d754c93b",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 42,
+    "boot_version": "4.0.6",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 36,
+      "excerpt": "\n\t\t<!-- servlet -->\n\t\t<jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>\n\n\t\t<!-- spring -->\n\t\t<spring-boot.version>4.0.6</spring-boot.version>\n\t\t<!-- mybatis & db -->\n\t\t<mybatis-spring-boot-starter.version>4.0.1</mybatis-spring-boot-starter.version>\n\t\t<mysql-connector-j.version>9.7.0</mysql-connector-j.version>\n\n\t\t<!-- xxl-sso (+xxl-tool、gson) -->"
+    },
+    "app_sources": [
+      "xxl-api-admin/src/main/java/com/xxl/api/admin/XxlApiAdminApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:36"
+  },
+  {
+    "repository": "vsouzx/cqrs-pattern",
+    "url": "https://github.com/vsouzx/cqrs-pattern",
+    "commit": "3d1fcbcf1d688197b349e59cd57e3a72347f7426",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 26,
+    "boot_version": "4.0.5",
+    "boot_evidence": {
+      "file": "catalog-service/pom.xml",
+      "line": 9,
+      "excerpt": "\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.0.5</version>\n\t\t<relativePath/> <!-- lookup parent from repository -->\n\t</parent>\n\t<groupId>br.com.souza.cqrs-pattern</groupId>\n\t<artifactId>catalog-service</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>\n\t<name/>"
+    },
+    "app_sources": [
+      "catalog-service/src/main/java/br/com/souza/cqrs_pattern/catalog_service/CatalogServiceApplication.java",
+      "music-service/src/main/java/br/com/souza/cqrs_pattern/music_service/MusicServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "catalog-service/pom.xml:9; music-service/pom.xml:9"
+  },
+  {
+    "repository": "spring-projects/spring-petclinic",
+    "url": "https://github.com/spring-projects/spring-petclinic",
+    "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 30,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 7,
+      "excerpt": "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>4.1.0</version>\n  </parent>\n\n  <groupId>org.springframework.samples</groupId>\n  <artifactId>spring-petclinic</artifactId>"
+    },
+    "app_sources": [
+      "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:7-8 (parent)"
+  },
+  {
+    "repository": "johan1271/fya-creditos-backend",
+    "url": "https://github.com/johan1271/fya-creditos-backend",
+    "commit": "982493c7df5bd48c00adc4bce04cd3180b9d0426",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 26,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 8,
+      "excerpt": "\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.1.0</version>\n\t\t<relativePath/> <!-- lookup parent from repository -->\n\t</parent>\n\t<groupId>com.fya</groupId>\n\t<artifactId>creditos-backend</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>"
+    },
+    "app_sources": [
+      "src/main/java/com/fya/creditos/CreditosBackendApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:8 (parent)"
+  },
+  {
+    "repository": "monsoon-io/trading-engine",
+    "url": "https://github.com/monsoon-io/trading-engine",
+    "commit": "6fbe8cf571d06e1bdfc2ddeb3c12beb5b1ed4c63",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 10,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 8,
+      "excerpt": "\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.1.0</version>\n\t\t<relativePath/> <!-- lookup parent from repository -->\n\t</parent>\n\t<groupId>com.trading</groupId>\n\t<artifactId>engine</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>"
+    },
+    "app_sources": [
+      "src/main/java/com/trading/engine/EngineApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:8 (parent)"
+  },
+  {
+    "repository": "PrasannaMalatesha/EmployeeManagementSystem",
+    "url": "https://github.com/PrasannaMalatesha/EmployeeManagementSystem",
+    "commit": "1e994300905f962bb8643463437109915cf430f5",
+    "build_system": "maven",
+    "tier": "small",
+    "java_files": 11,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 10,
+      "excerpt": "    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.0</version>\n        <relativePath/>\n    </parent>\n\n    <groupId>com.malatesha</groupId>\n    <artifactId>ems</artifactId>"
+    },
+    "app_sources": [
+      "src/main/java/com/malatesha/ems/EmsApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:10 (parent)"
+  },
+  {
+    "repository": "spring-petclinic/spring-petclinic-microservices",
+    "url": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "commit": "1d76b00d683e86b62867a6bf59530f8ab301244f",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 53,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 8,
+      "excerpt": "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.0.1</version>\n    </parent>\n\n    <groupId>org.springframework.samples</groupId>\n    <artifactId>spring-petclinic-microservices</artifactId>"
+    },
+    "app_sources": [
+      "spring-petclinic-admin-server/src/main/java/org/springframework/samples/petclinic/admin/SpringBootAdminApplication.java",
+      "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/ApiGatewayApplication.java",
+      "spring-petclinic-config-server/src/main/java/org/springframework/samples/petclinic/config/ConfigServerApplication.java",
+      "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/CustomersServiceApplication.java",
+      "spring-petclinic-discovery-server/src/main/java/org/springframework/samples/petclinic/discovery/DiscoveryServerApplication.java",
+      "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/GenAIServiceApplication.java",
+      "spring-petclinic-vets-service/src/main/java/org/springframework/samples/petclinic/vets/VetsServiceApplication.java",
+      "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/VisitsServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:8-9"
+  },
+  {
+    "repository": "seed4j/seed4j-sample-app",
+    "url": "https://github.com/seed4j/seed4j-sample-app",
+    "commit": "9fc234310a84fca99376b7621cd10caec8354e64",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 112,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 204,
+      "excerpt": "    <compiler-plugin.version>3.14.1</compiler-plugin.version>\n    <surefire-plugin.version>3.5.4</surefire-plugin.version>\n    <failsafe-plugin.version>3.5.4</failsafe-plugin.version>\n    <jacoco.version>0.8.14</jacoco.version>\n    <commons-lang3.version>3.20.0</commons-lang3.version>\n    <spring-boot.version>4.0.1</spring-boot.version>\n    <reflections.version>0.10.2</reflections.version>\n    <archunit-junit5.version>1.4.1</archunit-junit5.version>\n    <git-commit-id-plugin.version>9.0.2</git-commit-id-plugin.version>\n    <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>\n    <npm.version>11.7.0</npm.version>"
+    },
+    "app_sources": [
+      "src/main/java/com/seed4j/sample/Seed4jsampleApp.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:204"
+  },
+  {
+    "repository": "SAP/cloud-security-services-integration-library",
+    "url": "https://github.com/SAP/cloud-security-services-integration-library",
+    "commit": "0732e26522fdf81eea6db24703b85579531770f2",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 221,
+    "boot_version": "4.0.6",
+    "boot_evidence": {
+      "file": "samples/spring-security-basic-auth/pom.xml",
+      "line": 11,
+      "excerpt": "\t\txmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.0.6</version>\n\t\t<relativePath/>\n\t</parent>\n\n\t<artifactId>spring-security-basic-auth</artifactId>\n\t<version>4.0.1</version>"
+    },
+    "app_sources": [
+      "samples/spring-security-basic-auth/src/main/java/sample/spring/xsuaa/Application.java",
+      "samples/spring-security-hybrid-usage/src/main/java/sample/spring/security/Application.java",
+      "samples/spring-webflux-security-hybrid-usage/src/main/java/sample/spring/webflux/hybrid/Application.java",
+      "spring-security-3/src/main/java/com/sap/cloud/security/spring/autoconfig/SecurityContextEnvironmentPostProcessor.java",
+      "spring-security/src/main/java/com/sap/cloud/security/spring/autoconfig/SecurityContextEnvironmentPostProcessor.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "samples/spring-security-basic-auth/pom.xml:11"
+  },
+  {
+    "repository": "xuxueli/xxl-conf",
+    "url": "https://github.com/xuxueli/xxl-conf",
+    "commit": "ebcaa283de241429d4982242190a70d3cec347ab",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 111,
+    "boot_version": "4.0.6",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 38,
+      "excerpt": "\t\t<!-- base -->\n\t\t<slf4j-api.version>2.0.18</slf4j-api.version>\n\t\t<junit-jupiter.version>6.1.0</junit-jupiter.version>\n\n\t\t<!-- spring -->\n\t\t<spring-boot.version>4.0.6</spring-boot.version>\n\t\t<spring.version>7.0.7</spring.version>\n\t\t<!-- mybatis & db -->\n\t\t<mybatis-spring-boot-starter.version>4.0.1</mybatis-spring-boot-starter.version>\n\t\t<mysql-connector-j.version>9.7.0</mysql-connector-j.version>\n"
+    },
+    "app_sources": [
+      "xxl-conf-admin/src/main/java/com/xxl/conf/admin/XxlConfAdminApplication.java",
+      "xxl-conf-samples/xxl-conf-sample-springboot/src/main/java/com/xxl/conf/sample/XxlConfSampleApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:38"
+  },
+  {
+    "repository": "xuxueli/xxl-mq",
+    "url": "https://github.com/xuxueli/xxl-mq",
+    "commit": "02ab1a80448a4b3c48b90d45a029b89ee21f4795",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 104,
+    "boot_version": "4.0.6",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 38,
+      "excerpt": "\t\t<!-- base -->\n\t\t<slf4j-api.version>2.0.18</slf4j-api.version>\n\t\t<junit-jupiter.version>6.1.0</junit-jupiter.version>\n\n\t\t<!-- spring -->\n\t\t<spring-boot.version>4.0.6</spring-boot.version>\n\t\t<spring.version>7.0.7</spring.version>\n\t\t<!-- mybatis & db -->\n\t\t<mybatis-spring-boot-starter.version>4.0.1</mybatis-spring-boot-starter.version>\n\t\t<mysql-connector-j.version>9.7.0</mysql-connector-j.version>\n"
+    },
+    "app_sources": [
+      "xxl-mq-admin/src/main/java/com/xxl/mq/admin/XxlMqAdminApplication.java",
+      "xxl-mq-samples/xxl-mq-samples-springboot/src/main/java/com/xxl/mq/sample/springboot/XxlMqSampleApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:38"
+  },
+  {
+    "repository": "xuxueli/xxl-job",
+    "url": "https://github.com/xuxueli/xxl-job",
+    "commit": "693d27640be76d02ed7214ede57ce75f7f9ebb71",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 145,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 42,
+      "excerpt": "\n\t\t<!-- jakarta.annotation-api -->\n\t\t<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>\n\n\t\t<!-- spring -->\n\t\t<spring-boot.version>4.1.1</spring-boot.version>\n\t\t<spring.version>7.0.9</spring.version>\n\t\t<!-- mybatis & db -->\n\t\t<mybatis-spring-boot-starter.version>4.1.0</mybatis-spring-boot-starter.version>\n\t\t<mysql-connector-j.version>26.7.0</mysql-connector-j.version>\n"
+    },
+    "app_sources": [
+      "xxl-job-admin/src/main/java/com/xxl/job/admin/XxlJobAdminApplication.java",
+      "xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/XxlJobAIExecutorApplication.java",
+      "xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/XxlJobExecutorApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:42"
+  },
+  {
+    "repository": "xuxueli/xxl-sso",
+    "url": "https://github.com/xuxueli/xxl-sso",
+    "commit": "e2158cc2b8212ce9108df9f0bdff9e6c8db42487",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 90,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 41,
+      "excerpt": "\n        <!-- servlet -->\n        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>\n\n        <!-- spring -->\n        <spring-boot.version>4.1.0</spring-boot.version>\n        <spring.version>7.0.8</spring.version>\n        <!-- reactor -->\n        <reactor.version>3.8.6</reactor.version>\n\n        <!-- xxl-tool -->"
+    },
+    "app_sources": [
+      "xxl-sso-samples/xxl-sso-sample-filter-cas/src/main/java/com/xxl/sso/sample/XxlSsoCasApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-filter-native/src/main/java/com/xxl/sso/sample/XxlSsoNativeApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-filter-web/src/main/java/com/xxl/sso/sample/XxlSsoWebApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-interceptor-cas/src/main/java/com/xxl/sso/sample/XxlSsoCasApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-interceptor-native/src/main/java/com/xxl/sso/sample/XxlSsoNativeApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-interceptor-web/src/main/java/com/xxl/sso/sample/XxlSsoWebApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-reactive-cas/src/main/java/com/xxl/sso/sample/XxlSsoCasWebFluxApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-reactive-native/src/main/java/com/xxl/sso/sample/XxlSsoNativeWebFluxApplication.java",
+      "xxl-sso-samples/xxl-sso-sample-reactive-web/src/main/java/com/xxl/sso/sample/XxlSsoWebFluxApplication.java",
+      "xxl-sso-server/src/main/java/com/xxl/sso/server/XxlSsoServerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:41"
+  },
+  {
+    "repository": "Keglev/stockease",
+    "url": "https://github.com/Keglev/stockease",
+    "commit": "a8601b78328d12c197de509270e766948f351b9c",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 122,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "backend/pom.xml",
+      "line": 8,
+      "excerpt": "\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.1.1</version>\n\t\t<relativePath/> <!-- lookup parent from repository -->\n\t</parent>\n\t<groupId>com.stocks</groupId>\n\t<artifactId>stockease</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>"
+    },
+    "app_sources": [
+      "backend/src/main/java/com/stocks/stockease/StockEaseApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "backend/pom.xml:8 (parent)"
+  },
+  {
+    "repository": "mateoscns/ceto-ecommerce",
+    "url": "https://github.com/mateoscns/ceto-ecommerce",
+    "commit": "19178a0259860e198330fa7976e94bdb60a8d500",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 170,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "backend/pom.xml",
+      "line": 11,
+      "excerpt": "\n    <!-- Exact patch, never \"latest\" (D-20261006-08). Verified against Maven Central: 4.1.1. -->\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n        <relativePath/>\n    </parent>\n\n    <groupId>ar.cetobhb</groupId>\n    <artifactId>ceto-backend</artifactId>"
+    },
+    "app_sources": [
+      "backend/src/main/java/ar/cetobhb/CetoBackendApplication.java",
+      "backend/src/main/java/ar/cetobhb/common/config/SchemaManagementGuard.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "backend/pom.xml:11 (parent)"
+  },
+  {
+    "repository": "spring-petclinic/spring-petclinic-rest",
+    "url": "https://github.com/spring-petclinic/spring-petclinic-rest",
+    "commit": "afc8fc1d3b8ec8de69414482b3bd70a1da78cb95",
+    "build_system": "maven",
+    "tier": "medium",
+    "java_files": 87,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 15,
+      "excerpt": "    <description>REST version of the Spring Petclinic sample application</description>\n    <url>https://spring-petclinic.github.io/</url>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n        <relativePath/> <!-- lookup parent from Maven repository -->\n    </parent>\n\n    <properties>"
+    },
+    "app_sources": [
+      "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:15-16 (parent)"
+  },
+  {
+    "repository": "pig-mesh/pig",
+    "url": "https://github.com/pig-mesh/pig",
+    "commit": "a0d273afd3adc6678b065c0f2d25433541343ad7",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 545,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 37,
+      "excerpt": "        <url>https://www.pig4cloud.com</url>\n    </organization>\n\n    <properties>\n        <skipTests>true</skipTests>\n        <spring-boot.version>4.1.1</spring-boot.version>\n        <spring-cloud.version>2025.1.3</spring-cloud.version>\n        <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n        <maven.compiler.source>17</maven.compiler.source>\n        <maven.compiler.target>17</maven.compiler.target>"
+    },
+    "app_sources": [
+      "pig-auth/src/main/java/com/pig4cloud/pig/auth/PigAuthApplication.java",
+      "pig-boot/src/main/java/com/pig4cloud/pig/PigBootApplication.java",
+      "pig-common/pig-common-log/src/main/java/com/pig4cloud/pig/common/log/init/ApplicationLoggerInitializer.java",
+      "pig-gateway/src/main/java/com/pig4cloud/pig/gateway/PigGatewayApplication.java",
+      "pig-register/src/main/java/com/alibaba/nacos/bootstrap/PigNacosApplication.java",
+      "pig-upms/pig-upms-biz/src/main/java/com/pig4cloud/pig/admin/PigAdminApplication.java",
+      "pig-visual/pig-codegen/src/main/java/com/pig4cloud/pig/codegen/PigCodeGenApplication.java",
+      "pig-visual/pig-monitor/src/main/java/com/pig4cloud/pig/monitor/PigMonitorApplication.java",
+      "pig-visual/pig-quartz/src/main/java/com/pig4cloud/pig/daemon/quartz/PigDaemonQuartzApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:37"
+  },
+  {
+    "repository": "jeecgboot/JeecgBoot",
+    "url": "https://github.com/jeecgboot/JeecgBoot",
+    "commit": "4998e645db547ff614b6568df3895bf5586effbf",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 946,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "jeecg-boot/pom.xml",
+      "line": 27,
+      "excerpt": "\t\n  \t<parent>\n\t    <groupId>org.springframework.boot</groupId>\n\t    <artifactId>spring-boot-starter-parent</artifactId>\n\t    <version>4.1.0</version>\n\t    <relativePath/>\n\t</parent>\n\n\t<properties>\n\t\t<jeecgboot.version>3.9.5</jeecgboot.version>\n\t\t<jeecg-starter.version>3.9.5</jeecg-starter.version>"
+    },
+    "app_sources": [
+      "jeecg-boot/jeecg-boot-base-core/src/main/java/org/jeecg/config/DruidWallConfigRegister.java",
+      "jeecg-boot/jeecg-boot-module/jeecg-boot-module-airag/src/main/java/org/jeecg/JeecgAiRagApplication.java",
+      "jeecg-boot/jeecg-module-system/jeecg-system-start/src/main/java/org/jeecg/JeecgSystemApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-cloud-gateway/src/main/java/org/jeecg/JeecgGatewayApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-cloud-nacos/src/main/java/com/alibaba/nacos/JeecgNacosApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-demo-cloud-start/src/main/java/org/jeecg/JeecgDemoCloudApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-system-cloud-start/src/main/java/org/jeecg/JeecgSystemCloudApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-monitor/src/main/java/org/jeecg/monitor/JeecgMonitorApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-sentinel/src/main/java/com/alibaba/csp/sentinel/dashboard/JeecgSentinelApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-test/jeecg-cloud-test-seata/jeecg-cloud-test-seata-account/src/main/java/org/jeecg/SeataAccountApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-test/jeecg-cloud-test-seata/jeecg-cloud-test-seata-order/src/main/java/org/jeecg/SeataOrderApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-test/jeecg-cloud-test-seata/jeecg-cloud-test-seata-product/src/main/java/org/jeecg/SeataProductApplication.java",
+      "jeecg-boot/jeecg-server-cloud/jeecg-visual/jeecg-cloud-xxljob/src/main/java/com/xxl/job/admin/XxlJobAdminApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "jeecg-boot/pom.xml:27"
+  },
+  {
+    "repository": "dromara/RuoYi-Vue-Plus",
+    "url": "https://github.com/dromara/RuoYi-Vue-Plus",
+    "commit": "9227f626a3a37e1546d6c291ed398183e94df92b",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 689,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 23,
+      "excerpt": "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>\n        <java.version>21</java.version>\n\n        <!-- Spring 生态依赖版本 -->\n        <spring-boot.version>4.1.1</spring-boot.version>\n        <spring-boot-admin.version>4.1.2</spring-boot-admin.version>\n        <spring-ai.version>2.0.1</spring-ai.version>\n        <springdoc.version>3.1.1</springdoc.version>\n\n        <!-- 数据访问与持久化相关依赖版本 -->"
+    },
+    "app_sources": [
+      "ruoyi-admin/src/main/java/org/dromara/DromaraApplication.java",
+      "ruoyi-admin/src/main/java/org/dromara/DromaraServletInitializer.java",
+      "ruoyi-common/ruoyi-common-elasticsearch/src/main/java/org/dromara/common/elasticsearch/config/ActuatorEnvironmentPostProcessor.java",
+      "ruoyi-extend/ruoyi-monitor-admin/src/main/java/org/dromara/monitor/admin/MonitorAdminApplication.java",
+      "ruoyi-extend/ruoyi-snailai-server/src/main/java/org/dromara/snailai/SnailAiServerApplication.java",
+      "ruoyi-extend/ruoyi-snailjob-server/src/main/java/org/dromara/snailjob/SnailJobServerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:23"
+  },
+  {
+    "repository": "yangzongzhuan/RuoYi-Cloud",
+    "url": "https://github.com/yangzongzhuan/RuoYi-Cloud",
+    "commit": "ec83e0032b549ecba23f627b270533cb96ab7027",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 274,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 20,
+      "excerpt": "    <properties>\n        <ruoyi.version>3.6.8</ruoyi.version>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>\n        <java.version>17</java.version>\n        <spring-boot.version>4.1.0</spring-boot.version>\n        <spring-cloud.version>2025.1.2</spring-cloud.version>\n        <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>\n        <spring-boot-admin.version>4.1.2</spring-boot-admin.version>\n        <mybatis-spring-boot.version>4.1.0</mybatis-spring-boot.version>\n        <kaptcha.version>2.3.3</kaptcha.version>"
+    },
+    "app_sources": [
+      "ruoyi-auth/src/main/java/com/ruoyi/auth/RuoYiAuthApplication.java",
+      "ruoyi-gateway/src/main/java/com/ruoyi/gateway/RuoYiGatewayApplication.java",
+      "ruoyi-modules/ruoyi-file/src/main/java/com/ruoyi/file/RuoYiFileApplication.java",
+      "ruoyi-modules/ruoyi-gen/src/main/java/com/ruoyi/gen/RuoYiGenApplication.java",
+      "ruoyi-modules/ruoyi-job/src/main/java/com/ruoyi/job/RuoYiJobApplication.java",
+      "ruoyi-modules/ruoyi-system/src/main/java/com/ruoyi/system/RuoYiSystemApplication.java",
+      "ruoyi-visual/ruoyi-monitor/src/main/java/com/ruoyi/modules/monitor/RuoYiMonitorApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:20"
+  },
+  {
+    "repository": "dromara/RuoYi-Cloud-Plus",
+    "url": "https://github.com/dromara/RuoYi-Cloud-Plus",
+    "commit": "a319a6861d8bbfa5dbc4422d27743325b8c817ef",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 797,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 23,
+      "excerpt": "        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>\n        <java.version>21</java.version>\n\n        <!-- Spring 生态依赖版本 -->\n        <spring-boot.version>4.1.1</spring-boot.version>\n        <spring-cloud.version>2025.1.2</spring-cloud.version>\n        <spring-boot-admin.version>4.1.1</spring-boot-admin.version>\n        <spring-ai.version>2.0.1</spring-ai.version>\n        <springdoc.version>3.1.1</springdoc.version>\n        <swagger.core.version>2.2.55</swagger.core.version>"
+    },
+    "app_sources": [
+      "ruoyi-auth/src/main/java/org/dromara/auth/RuoYiAuthApplication.java",
+      "ruoyi-common/ruoyi-common-elasticsearch/src/main/java/org/dromara/common/elasticsearch/config/ActuatorEnvironmentPostProcessor.java",
+      "ruoyi-common/ruoyi-common-loadbalancer/src/main/java/org/dromara/common/loadbalance/config/CustomEnvironmentPostProcessor.java",
+      "ruoyi-example/ruoyi-demo/src/main/java/org/dromara/demo/RuoYiDemoApplication.java",
+      "ruoyi-example/ruoyi-test-mq/src/main/java/org/dromara/stream/RuoYiTestMqApplication.java",
+      "ruoyi-gateway/src/main/java/org/dromara/gateway/RuoYiGatewayApplication.java",
+      "ruoyi-modules/ruoyi-ai/src/main/java/org/dromara/ai/RuoYiAiApplication.java",
+      "ruoyi-modules/ruoyi-gen/src/main/java/org/dromara/gen/RuoYiGenApplication.java",
+      "ruoyi-modules/ruoyi-job/src/main/java/org/dromara/job/RuoYiJobApplication.java",
+      "ruoyi-modules/ruoyi-resource/src/main/java/org/dromara/resource/RuoYiResourceApplication.java",
+      "ruoyi-modules/ruoyi-system/src/main/java/org/dromara/system/RuoYiSystemApplication.java",
+      "ruoyi-modules/ruoyi-workflow/src/main/java/org/dromara/workflow/RuoYiWorkflowApplication.java",
+      "ruoyi-visual/ruoyi-monitor/src/main/java/org/dromara/modules/monitor/RuoYiMonitorApplication.java",
+      "ruoyi-visual/ruoyi-snailai-server/src/main/java/org/dromara/snailai/SnailAiServerApplication.java",
+      "ruoyi-visual/ruoyi-snailjob-server/src/main/java/org/dromara/snailjob/SnailJobServerApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:23"
+  },
+  {
+    "repository": "rememberber/WePush",
+    "url": "https://github.com/rememberber/WePush",
+    "commit": "e0f24162eacc9a1bf2b37417a82dad5e8cc50742",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 578,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "next/pom.xml",
+      "line": 71,
+      "excerpt": "        <junit.version>6.1.3</junit.version>\n        <maven.compiler.version>3.15.0</maven.compiler.version>\n        <maven.surefire.version>3.5.6</maven.surefire.version>\n        <jackson.version>2.22.2</jackson.version>\n        <archunit.version>1.5.0</archunit.version>\n        <spring-boot.version>4.1.1</spring-boot.version>\n        <grpc.version>1.83.1</grpc.version>\n        <protoc.version>4.35.1</protoc.version>\n        <bouncycastle.version>1.85</bouncycastle.version>\n        <aws-sdk.version>2.42.35</aws-sdk.version>\n        <postgresql.version>42.7.13</postgresql.version>"
+    },
+    "app_sources": [
+      "next/service/service-app/src/main/java/com/fangxuele/wepush/next/service/app/WePushNextServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "next/pom.xml:71"
+  },
+  {
+    "repository": "urlaubsverwaltung/zeiterfassung",
+    "url": "https://github.com/urlaubsverwaltung/zeiterfassung",
+    "commit": "efb6320b0bce5897ece0cbe3ccd9a900044f1ff8",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 446,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 8,
+      "excerpt": "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>4.1.1</version>\n  </parent>\n\n  <groupId>de.focus-shift</groupId>\n  <artifactId>zeiterfassung</artifactId>"
+    },
+    "app_sources": [
+      "src/main/java/de/focusshift/zeiterfassung/Application.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:8-9"
+  },
+  {
+    "repository": "europeana/metis-framework",
+    "url": "https://github.com/europeana/metis-framework",
+    "commit": "d9d1b10b9c6d19d939f959c6fab23237bacde322",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 424,
+    "boot_version": "4.0.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 47,
+      "excerpt": "    <version.metis-schema>16-SNAPSHOT</version.metis-schema>\n    <version.metis-common>21-SNAPSHOT</version.metis-common>\n\n    <!--External-->\n    <version.corelib>2.18.1-SNAPSHOT</version.corelib>\n    <version.spring.boot>4.0.1</version.spring.boot>\n    <version.springdoc-openapi-starter-webmvc-ui>2.8.14</version.springdoc-openapi-starter-webmvc-ui>\n    <version.apache.commons-pool2>2.9.0</version.apache.commons-pool2>\n    <version.apache.httpclient5>5.4.1</version.apache.httpclient5>\n    <version.apache.httpcore5>5.3.1</version.apache.httpcore5>\n    <version.entity-api-client>2.3</version.entity-api-client>"
+    },
+    "app_sources": [
+      "metis-debias/metis-debias-detect-rest/src/main/java/eu/europeana/metis/debias/detect/rest/Application.java",
+      "metis-dereference/metis-dereference-rest/src/main/java/eu/europeana/metis/dereference/rest/Application.java",
+      "metis-repository/metis-repository-rest/src/main/java/eu/europeana/metis/repository/rest/Application.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:47 (version.spring.boot property); dependencyManagement imports spring-boot-dependencies at lines101-107"
+  },
+  {
+    "repository": "yidao620c/SpringBootBucket",
+    "url": "https://github.com/yidao620c/SpringBootBucket",
+    "commit": "e64920cd1e3fffe28eb2f71506147e33f59d0f2d",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 427,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "springboot4-rabbitmq/pom.xml",
+      "line": 10,
+      "excerpt": "    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n        <relativePath/>\n    </parent>\n\n    <groupId>com.xncoding</groupId>\n    <artifactId>springboot4-rabbitmq</artifactId>"
+    },
+    "app_sources": [
+      "springboot4-ai-mcp/src/main/java/com/xncoding/aimcp/McpServerApplication.java",
+      "springboot4-aop/src/main/java/com/xncoding/aop/AopApplication.java",
+      "springboot4-apiversion/src/main/java/com/xncoding/apiversion/ApiversionApplication.java",
+      "springboot4-async/src/main/java/com/xncoding/async/AsyncApplication.java",
+      "springboot4-batch/src/main/java/com/xncoding/batch/BatchApplication.java",
+      "springboot4-cache/src/main/java/com/xncoding/cache/CacheApplication.java",
+      "springboot4-echarts/src/main/java/com/xncoding/echarts/EchartsApplication.java",
+      "springboot4-grpc/src/main/java/com/xncoding/grpc/GrpcApplication.java",
+      "springboot4-jackson3/src/main/java/com/xncoding/jackson3/Jackson3Application.java",
+      "springboot4-jpa/src/main/java/com/xncoding/jpa/JpaApplication.java",
+      "springboot4-mongodb/src/main/java/com/xncoding/mongo/MongoApplication.java",
+      "springboot4-multisource/src/main/java/com/xncoding/multisource/MultisourceApplication.java",
+      "springboot4-mybatis/src/main/java/com/xncoding/mybatis/MybatisApplication.java",
+      "springboot4-native/src/main/java/com/xncoding/nativeapp/NativeDemoApplication.java",
+      "springboot4-oauth2/src/main/java/com/xncoding/oauth2/Oauth2Application.java",
+      "springboot4-observability/src/main/java/com/xncoding/observability/ObservabilityApplication.java",
+      "springboot4-openapi/src/main/java/com/xncoding/openapi/OpenapiApplication.java",
+      "springboot4-rabbitmq/src/main/java/com/xncoding/amqp/AmqpApplication.java",
+      "springboot4-redis/src/main/java/com/xncoding/redis/RedisApplication.java",
+      "springboot4-resilience/src/main/java/com/xncoding/resilience/ResilienceApplication.java",
+      "springboot4-restclient/src/main/java/com/xncoding/restclient/RestClientApplication.java",
+      "springboot4-restful/src/main/java/com/xncoding/restful/RestfulApplication.java",
+      "springboot4-schedule/src/main/java/com/xncoding/schedule/ScheduleApplication.java",
+      "springboot4-security/src/main/java/com/xncoding/security/SecurityApplication.java",
+      "springboot4-starter/order-notify-app/src/main/java/com/xncoding/orderapp/OrderNotifyAppApplication.java",
+      "springboot4-testing/src/main/java/com/xncoding/testing/TestingApplication.java",
+      "springboot4-thymeleaf/src/main/java/com/xncoding/thymeleaf/ThymeleafApplication.java",
+      "springboot4-transaction/src/main/java/com/xncoding/transaction/TransactionApplication.java",
+      "springboot4-virtualthreads/src/main/java/com/xncoding/virtualthreads/VirtualThreadsApplication.java",
+      "springboot4-websocket/src/main/java/com/xncoding/websocket/WsApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "springboot4-rabbitmq/pom.xml:10-11"
+  },
+  {
+    "repository": "microcks/microcks",
+    "url": "https://github.com/microcks/microcks",
+    "commit": "0e0c0b4ef119e25de2764c9a55400dab29823080",
+    "build_system": "maven",
+    "tier": "large",
+    "java_files": 427,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 64,
+      "excerpt": "\n  <properties>\n    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    <multi-project.rootdir>${project.basedir}</multi-project.rootdir>\n    <docker.image.prefix>microcks</docker.image.prefix>\n    <spring-boot.version>4.1.1</spring-boot.version>\n    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>\n    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>\n    <sonar.organization>microcks</sonar.organization>\n    <sonar.host.url>https://sonarcloud.io</sonar.host.url>\n    <git.hooks.skip>false</git.hooks.skip>"
+    },
+    "app_sources": [
+      "webapp/src/main/java/io/github/microcks/MicrocksApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:64"
+  },
+  {
+    "repository": "KouShenhai/KCloud-Platform-IoT",
+    "url": "https://github.com/KouShenhai/KCloud-Platform-IoT",
+    "commit": "6c1abf28beec99b87876eb8370ef6c9d87e32f67",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1373,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 130,
+      "excerpt": "    <!-- maven-gpg-plugin版本 -->\n    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>\n    <!-- flatten-maven-plugin版本 -->\n    <flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>\n    <!-- spring-boot版本 -->\n    <spring-boot.version>4.1.1</spring-boot.version>\n    <!-- spring-cloud版本 -->\n    <spring-cloud.version>2025.1.3</spring-cloud.version>\n    <!-- cloud-alibaba版本 -->\n    <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>\n    <!-- spring-framework版本 -->"
+    },
+    "app_sources": [
+      "laokou-cloud/laokou-gateway/src/main/java/org/laokou/gateway/GatewayApp.java",
+      "laokou-cloud/laokou-monitor/src/main/java/org/laokou/monitor/MonitorApp.java",
+      "laokou-cloud/laokou-nacos/src/main/java/org/laokou/nacos/NacosApp.java",
+      "laokou-service/laokou-admin/laokou-admin-start/src/main/java/org/laokou/admin/AdminApp.java",
+      "laokou-service/laokou-auth/laokou-auth-start/src/main/java/org/laokou/auth/AuthApp.java",
+      "laokou-service/laokou-iot-mcp-server/laokou-iot-mcp-server-start/src/main/java/org/laokou/iot/mcp/server/IoTMcpServerApp.java",
+      "laokou-service/laokou-iot/laokou-iot-start/src/main/java/org/laokou/iot/IotApp.java",
+      "laokou-service/laokou-logstash/laokou-logstash-start/src/main/java/org/laokou/logstash/LogtashApp.java",
+      "laokou-service/laokou-oss/laokou-oss-start/src/main/java/org/laokou/oss/OssApp.java",
+      "laokou-service/laokou-report/laokou-report-start/src/main/java/org/laokou/report/ReportApp.java",
+      "laokou-service/laokou-snowflake-id/laokou-snowflake-id-start/src/main/java/org/laokou/snowflake/id/SnowflakeIdApp.java",
+      "laokou-service/laokou-standalone/laokou-standalone-admin/laokou-standalone-admin-start/src/main/java/org/laokou/standalone/admin/StandaloneAdminApp.java",
+      "laokou-service/laokou-standalone/laokou-standalone-auth/laokou-standalone-auth-start/src/main/java/org/laokou/standalone/auth/StandaloneAuthApp.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:130"
+  },
+  {
+    "repository": "battcn/wemirr-platform",
+    "url": "https://github.com/battcn/wemirr-platform",
+    "commit": "0618bbd51e65bafb293282af497ab9e4a1c64564",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1293,
+    "boot_version": "4.0.3",
+    "boot_evidence": {
+      "file": "wemirr-platform-dependencies/pom.xml",
+      "line": 30,
+      "excerpt": "        <maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>\n        <spotless-maven-plugin.version>2.22.1</spotless-maven-plugin.version>\n        <spring-ai.version>1.1.2</spring-ai.version>\n        <!-- Spring Boot 相关 版本-->\n        <spring-boot-admin.version>4.0.2</spring-boot-admin.version>\n        <spring-boot.version>4.0.3</spring-boot.version>\n        <spring-cloud.version>2025.1.0</spring-cloud.version>\n        <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>\n        <!-- DB 相关 -->\n        <mybatis-plus.version>3.5.16</mybatis-plus.version>\n        <dynamic-datasource.version>4.5.0</dynamic-datasource.version>"
+    },
+    "app_sources": [
+      "wemirr-platform-gateway/src/main/java/com/wemirr/platform/gateway/GatewayApplication.java",
+      "wemirr-platform-iam/src/main/java/com/wemirr/platform/iam/IamApplication.java",
+      "wemirr-platform-suite/src/main/java/com/wemirr/platform/suite/SuiteApplication.java",
+      "wemirr-plugin/wemirr-platform-ai/src/main/java/com/wemirr/platform/ai/AiApplication.java",
+      "wemirr-plugin/wemirr-platform-monitor/src/main/java/com/wemirr/platform/monitor/MonitorApplication.java",
+      "wemirr-plugin/wemirr-platform-tms/src/main/java/com/wemirr/platform/tms/TmsApplication.java",
+      "wemirr-plugin/wemirr-platform-wms/src/main/java/com/wemirr/platform/wms/WmsApplication.java",
+      "wemirr-plugin/wemirr-platform-workflow/src/main/java/com/wemirr/platform/workflow/WorkFlowApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "wemirr-platform-dependencies/pom.xml:30"
+  },
+  {
+    "repository": "apache/syncope",
+    "url": "https://github.com/apache/syncope",
+    "commit": "4fe42f66662edaff45ccb29575f703622baf766e",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 2939,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 438,
+      "excerpt": "\n    <cxf.version>4.2.4</cxf.version>\n    <bouncycastle.version>1.86</bouncycastle.version>\n    <nimbus-jose-jwt.version>10.10</nimbus-jose-jwt.version>\n\n    <spring-boot.version>4.1.1</spring-boot.version>\n    <spring-cloud-version>5.0.3</spring-cloud-version>\n\n    <hibernate.version>7.4.13.Final</hibernate.version>\n\n    <jasypt.version>1.9.3</jasypt.version>"
+    },
+    "app_sources": [
+      "client/idrepo/console/src/main/java/org/apache/syncope/client/console/SyncopeConsoleApplication.java",
+      "client/idrepo/enduser/src/main/java/org/apache/syncope/client/enduser/SyncopeEnduserApplication.java",
+      "core/starter/src/main/java/org/apache/syncope/core/starter/SyncopeCoreApplication.java",
+      "ext/flowable/flowable-bpmn/src/main/java/org/apache/syncope/core/flowable/FlowableLiquibaseEnvironmentPostProcessor.java",
+      "fit/build-tools/src/main/java/org/apache/syncope/fit/buildtools/SyncopeBuildToolsApplication.java",
+      "sra/src/main/java/org/apache/syncope/sra/SyncopeSRAApplication.java",
+      "wa/starter/src/main/java/org/apache/syncope/wa/starter/SyncopeWAApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:438"
+  },
+  {
+    "repository": "yangxj96/spectra-admin",
+    "url": "https://github.com/yangxj96/spectra-admin",
+    "commit": "363360bc2f0465efc09a4dd1a5f80d5f07def623",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1207,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 17,
+      "excerpt": "    <description>光谱后端平台基础</description>\n    <url>https://github.com/yangxj96/spectra-admin</url>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.0</version>\n        <relativePath/>\n    </parent>\n\n    <properties>"
+    },
+    "app_sources": [
+      "spectra-launch/src/main/java/com/devops00/spectra/launch/LaunchApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:17-18 (parent)"
+  },
+  {
+    "repository": "aurix-core-banking/aurix-backend",
+    "url": "https://github.com/aurix-core-banking/aurix-backend",
+    "commit": "9bef8a4a4d694d3aeb8fd12c03d141179b391900",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1384,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 20,
+      "excerpt": "    \n    <properties>\n        <maven.compiler.source>25</maven.compiler.source>\n        <maven.compiler.target>25</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n        <spring-boot.version>4.1.0</spring-boot.version>\n        <spring-cloud.version>2025.1.2</spring-cloud.version>\n        <java.version>25</java.version>\n    </properties>\n    \n    <modules>"
+    },
+    "app_sources": [
+      "aurix-gateway/src/main/java/com/aurix/platform/gateway/AurixGatewayApplication.java",
+      "svc-accounts/src/main/java/com/aurix/platform/accounts/AccountsApplication.java",
+      "svc-ai/src/main/java/com/aurix/platform/ai/AiApplication.java",
+      "svc-banking/src/main/java/com/aurix/platform/banking/BankingApplication.java",
+      "svc-cambio/src/main/java/com/aurix/platform/cambio/CambioApplication.java",
+      "svc-cards/src/main/java/com/aurix/platform/cards/CardsApplication.java",
+      "svc-compliance/src/main/java/com/aurix/platform/compliance/ComplianceApplication.java",
+      "svc-contracts/src/main/java/com/aurix/platform/contracts/AurixContractsApplication.java",
+      "svc-credit/src/main/java/com/aurix/platform/credit/CreditApplication.java",
+      "svc-customer/src/main/java/com/aurix/platform/customer/AurixCustomerApplication.java",
+      "svc-finance-mgmt/src/main/java/com/aurix/platform/finance/FinanceApplication.java",
+      "svc-fraud/src/main/java/com/aurix/platform/fraud/FraudApplication.java",
+      "svc-intelligence/src/main/java/com/aurix/platform/intelligence/IntelligenceApplication.java",
+      "svc-investimentos/src/main/java/com/aurix/platform/investimentos/InvestimentosApplication.java",
+      "svc-payments/src/main/java/com/aurix/platform/payments/AurixPaymentsApplication.java",
+      "svc-platform/src/main/java/com/aurix/platform/platform/PlatformApplication.java",
+      "svc-products/src/main/java/com/aurix/platform/products/AurixProductsApplication.java",
+      "svc-salary/src/main/java/com/aurix/platform/salary/SalaryApplication.java",
+      "svc-savings/src/main/java/com/aurix/platform/savings/SavingsApplication.java",
+      "svc-seguros/src/main/java/com/aurix/platform/seguros/SegurosApplication.java",
+      "svc-settlement/src/main/java/com/aurix/platform/settlement/SettlementApplication.java",
+      "svc-transactions/src/main/java/com/aurix/platform/transactions/TransactionsApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:20 (property; BOM lines62-63)"
+  },
+  {
+    "repository": "rapla/rapla",
+    "url": "https://github.com/rapla/rapla",
+    "commit": "cfdd73af2d4918850f5c6526b90ca91a48c710bf",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1270,
+    "boot_version": "4.0.8",
+    "boot_evidence": {
+      "file": "rapla-bom/pom.xml",
+      "line": 18,
+      "excerpt": "\t\t<logback.version>1.3.15</logback.version>\n\t\t<intellijAnnotations.version>12.0</intellijAnnotations.version>\n\t\t<ical4j.version>4.2.0</ical4j.version>\n\t\t<rxjava.version>3.1.5</rxjava.version>\n\t\t<spring-boot.version>4.0.8</spring-boot.version>\n\t\t<tomcat.version>11.0.25</tomcat.version> <!-- FIXME: temporary CVE pin, see dependencyManagement note -->\n\t\t<java.version>17</java.version>\n\t\t<exchange.webservice.api>2.0</exchange.webservice.api>\n\t\t<maven.install.skip>false</maven.install.skip>\n        <commons-io.version>2.14.0</commons-io.version>\n\t\t<commons-codec.version>1.14</commons-codec.version>"
+    },
+    "app_sources": [
+      "rapla-app/src/main/java/org/rapla/server/spring/RaplaSpringBootApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "rapla-bom/pom.xml:18 (property)"
+  },
+  {
+    "repository": "Bytedesk/bytedesk",
+    "url": "https://github.com/Bytedesk/bytedesk",
+    "commit": "4c4ae47489173540f1ca24624d61036738888d13",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 4243,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 9,
+      "excerpt": "    xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n    </parent>\n\n    <groupId>com.bytedesk</groupId>\n    <artifactId>im</artifactId>"
+    },
+    "app_sources": [
+      "modules/ai/src/main/java/com/bytedesk/ai/AiApplication.java",
+      "modules/bi/src/main/java/com/bytedesk/bi/BiApplication.java",
+      "modules/call/src/main/java/com/bytedesk/call/CallApplication.java",
+      "modules/core/src/main/java/com/bytedesk/core/CoreApplication.java",
+      "modules/crm/src/main/java/com/bytedesk/crm/CrmApplication.java",
+      "modules/disk/src/main/java/com/bytedesk/disk/DiskApplication.java",
+      "modules/erp/src/main/java/com/bytedesk/erp/ErpApplication.java",
+      "modules/forum/src/main/java/com/bytedesk/forum/ForumApplication.java",
+      "modules/kanban/src/main/java/com/bytedesk/kanban/KanbanApplication.java",
+      "modules/kbase/src/main/java/com/bytedesk/kbase/KbaseApplication.java",
+      "modules/mall/src/main/java/com/bytedesk/mall/MallApplication.java",
+      "modules/marketing/src/main/java/com/bytedesk/marketing/MarketingApplication.java",
+      "modules/meet/src/main/java/com/bytedesk/meet/MeetApplication.java",
+      "modules/opinion/src/main/java/com/bytedesk/opinion/OpinionApplication.java",
+      "modules/remote/src/main/java/com/bytedesk/remote/RemoteApplication.java",
+      "modules/service/src/main/java/com/bytedesk/service/AgentApplication.java",
+      "modules/social/src/main/java/com/bytedesk/social/SocialApplication.java",
+      "modules/team/src/main/java/com/bytedesk/team/TeamApplication.java",
+      "modules/ticket/src/main/java/com/bytedesk/ticket/TicketApplication.java",
+      "modules/training/src/main/java/com/bytedesk/training/TrainingApplication.java",
+      "modules/voc/src/main/java/com/bytedesk/voc/VocApplication.java",
+      "modules/webrtc/src/main/java/com/bytedesk/webrtc/WebrtcApplication.java",
+      "starter/src/main/java/com/bytedesk/starter/StarterApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:9-10 (Boot parent)"
+  },
+  {
+    "repository": "apache/streampipes",
+    "url": "https://github.com/apache/streampipes",
+    "commit": "c4fd92635236427ed96b3aa7ce9f98bb36a07b64",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 2216,
+    "boot_version": "4.0.2",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 42,
+      "excerpt": "        IoT data streams.\n    </description>\n    <url>https://streampipes.apache.org</url>\n\n    <properties>\n        <spring-boot.version>4.0.2</spring-boot.version>\n        <plc4x.version>0.13.1</plc4x.version>\n\n        <apache-sis-referencing.version>1.6</apache-sis-referencing.version>\n        <antlr4.version>4.11.1</antlr4.version>\n        <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>"
+    },
+    "app_sources": [
+      "streampipes-extensions/streampipes-extensions-all-iiot/src/main/java/org/apache/streampipes/extensions/all/iiot/AllExtensionsIIoTInit.java",
+      "streampipes-service-base/src/main/java/org/apache/streampipes/service/base/StreamPipesServiceBase.java",
+      "streampipes-service-base/src/main/java/org/apache/streampipes/service/base/logging/LogbackRollingFileConfig.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:42 (property)"
+  },
+  {
+    "repository": "waelhe/app-java-v3",
+    "url": "https://github.com/waelhe/app-java-v3",
+    "commit": "ea0031a97db4452748a47582d3fed2c4d3ec1d52",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1146,
+    "boot_version": "4.1.1",
+    "boot_evidence": {
+      "file": "pom.xml",
+      "line": 8,
+      "excerpt": "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <parent>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-starter-parent</artifactId>\n        <version>4.1.1</version>\n        <relativePath/>\n    </parent>\n"
+    },
+    "app_sources": [
+      "marketplace-app/src/main/java/com/marketplace/MarketplaceApplication.java",
+      "marketplace-edge/src/main/java/com/marketplace/edge/EdgeApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "pom.xml:8-10"
+  },
+  {
+    "repository": "dengxingzhi000/scm-platform",
+    "url": "https://github.com/dengxingzhi000/scm-platform",
+    "commit": "fa2671c3280e93eef2644d39b97fbcc09e8ed71b",
+    "build_system": "maven",
+    "tier": "huge",
+    "java_files": 1282,
+    "boot_version": "4.1.0",
+    "boot_evidence": {
+      "file": "com.scm.parent/pom.xml",
+      "line": 63,
+      "excerpt": "    <module>../scm-analytics</module>\n  </modules>\n\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>4.1.0</version>\n    <relativePath/>\n  </parent>\n\n  <properties>"
+    },
+    "app_sources": [
+      "scm-analytics/service/src/main/java/com/scmcloud/analytics/ScmAnalyticsApplication.java",
+      "scm-approval/service/src/main/java/com/scmcloud/approval/ApprovalServiceApplication.java",
+      "scm-audit/service/src/main/java/com/scmcloud/audit/AuditServiceApplication.java",
+      "scm-auth/src/main/java/com/scmcloud/auth/AuthApplication.java",
+      "scm-document/service/src/main/java/com/scmcloud/document/ScmDocumentApplication.java",
+      "scm-file/service/src/main/java/com/scmcloud/file/ScmFileApplication.java",
+      "scm-finance/service/src/main/java/com/scmcloud/finance/FinanceServiceApplication.java",
+      "scm-fulfillment/service/src/main/java/com/scmcloud/fulfillment/FulfillmentServiceApplication.java",
+      "scm-gateway/src/main/java/com/scmcloud/gateway/GatewayApplication.java",
+      "scm-inventory/service/src/main/java/com/scmcloud/inventory/InventoryServiceApplication.java",
+      "scm-mall/service/src/main/java/com/scmcloud/mall/MallServiceApplication.java",
+      "scm-member/service/src/main/java/com/scmcloud/member/MemberServiceApplication.java",
+      "scm-message/service/src/main/java/com/scmcloud/message/ScmMessageApplication.java",
+      "scm-notify/service/src/main/java/com/scmcloud/notify/NotifyServiceApplication.java",
+      "scm-order-center/service/src/main/java/com/scmcloud/ordercenter/OrderCenterServiceApplication.java",
+      "scm-order/service/src/main/java/com/scmcloud/order/OrderServiceApplication.java",
+      "scm-payment/service/src/main/java/com/scmcloud/payment/PaymentServiceApplication.java",
+      "scm-product/service/src/main/java/com/scmcloud/product/ProductServiceApplication.java",
+      "scm-promotion/service/src/main/java/com/scmcloud/promotion/PromotionServiceApplication.java",
+      "scm-purchase/service/src/main/java/com/scmcloud/purchase/PurchaseServiceApplication.java",
+      "scm-search/service/src/main/java/com/scmcloud/search/SearchServiceApplication.java",
+      "scm-system/service/src/main/java/com/scmcloud/system/SysServiceApplication.java",
+      "scm-tenant/service/src/main/java/com/scmcloud/tenant/TenantServiceApplication.java"
+    ],
+    "snapshot": "sparse: all src/main, build descriptors, SQL and API specs; no foreign build",
+    "build_evidence_notes": "com.scm.parent/pom.xml:63-64 (spring-boot-starter-parent); line76 sets spring-boot.version=4.1.1 for explicit starter versions"
+  }
+]

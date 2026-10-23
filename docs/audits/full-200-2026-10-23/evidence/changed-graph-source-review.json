@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "review": "source-semantics-of-changed-full200-graphs",
+  "status": "passed",
+  "repositories": [
+    {
+      "repository": "apache/dolphinscheduler",
+      "commit": "c70003c2aa325a143e033e6b753ac7de30ec31a9",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "service_nodes_relabelled": 6,
+        "edges_with_only_evidence_repo_label_change": 861,
+        "findings_with_only_evidence_repo_label_change": 73,
+        "source_file_line_evidence_sets_changed": 0,
+        "route_table_or_relationship_semantics_changed": false,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/controller/AlertPluginInstanceController.java:66,88",
+        "dolphinscheduler-dao/src/main/java/org/apache/dolphinscheduler/dao/mapper/AlertPluginInstanceMapper.java:60"
+      ],
+      "explanation": "Graph object identities and substantive fields are stable. The repository label changes from the checkout basename to the normalized owner--repository slug; evidence file and line locations are unchanged. The pinned controller and mapper declarations support the retained endpoint-to-data-flow edges.",
+      "final_graph_sha256": "1c99b34a40d8699a06669b1021a2574845a502e412313bf45999ca6b3cc04294",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "apache/fineract",
+      "commit": "71681f2d8828f377e7a5b93dba3721384db1daaf",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "nodes": 1276,
+        "edges": 7406,
+        "findings": 428,
+        "repo_label_normalization_only": true,
+        "source_file_line_evidence_sets_changed": 0,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "fineract-provider/src/main/java/org/apache/fineract/ServerApplication.java:42",
+        "fineract-accounting/src/main/java/org/apache/fineract/accounting/accrual/api/AccrualAccountingApiResource.java:42"
+      ],
+      "explanation": "Every node, edge, and finding matches after normalizing the old checkout-basename repository label to the current owner--repository slug. All 968 endpoint nodes, 304 table nodes, finding content, and source file/line evidence are otherwise unchanged. The application and JAX-RS resource remain present at the pinned source locations.",
+      "final_graph_sha256": "cf8c417b440c8c4db72709010132a74191db699c2d58a8817338c99840cc0d9f",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "eventuate-tram/eventuate-tram-examples-customers-and-orders",
+      "commit": "8632d030301c2a477141350df1e77f3f991f64e0",
+      "reference": "boot4-extension-to-200",
+      "review": "explained_qualified_type_diagnostic",
+      "delta": {
+        "unresolved_findings_reworded": 2,
+        "finding_evidence_paths_or_lines_changed": 0,
+        "nodes_or_edges_changed": false
+      },
+      "source_checks": [
+        "order-history-text-search-service/src/main/java/io/eventuate/examples/tram/ordersandcustomers/orderhistorytextsearch/repositories/CustomerTextViewRepository.java:9",
+        "order-history-text-search-service/src/main/java/io/eventuate/examples/tram/ordersandcustomers/orderhistorytextsearch/repositories/OrderTextViewRepository.java:9",
+        "order-history-text-search-service-api-web/src/main/java/io/eventuate/examples/tram/ordersandcustomers/orderhistorytextsearch/apiweb/CustomerTextView.java:4",
+        "order-history-text-search-service-api-web/src/main/java/io/eventuate/examples/tram/ordersandcustomers/orderhistorytextsearch/apiweb/OrderTextView.java:3"
+      ],
+      "explanation": "The unresolved messages now print fully qualified generic type names, while retaining the same two source locations and no graph edges or nodes change. The repositories extend ElasticsearchRepository and the referenced classes are Elasticsearch view POJOs in a sibling source module, not relational JPA entities; the remaining relational-entity finding is an input/model boundary, not newly lost graph data.",
+      "final_graph_sha256": "a440144cebdf84ecfac4a20409cbfe2c49c322640da793d42b33810f6132e1d6",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "ewolff/microservice-kafka",
+      "commit": "103de22da497c631708f0541a0cad0e662d04aa5",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "service_nodes_relabelled": 3,
+        "edges_with_only_evidence_repo_label_change": 31,
+        "source_file_line_evidence_sets_changed": 0,
+        "route_table_or_relationship_semantics_changed": false,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "microservice-kafka/microservice-kafka-invoicing/src/main/java/com/ewolff/microservice/invoicing/web/InvoiceController.java:20,25",
+        "microservice-kafka/microservice-kafka-invoicing/src/main/java/com/ewolff/microservice/invoicing/InvoiceRepository.java:9"
+      ],
+      "explanation": "All service, endpoint, table, topic and edge identities remain stable. Only repository labels on the three services and evidence repository labels are normalized; source file and line locations are unchanged.",
+      "final_graph_sha256": "260201bcd08da4fcccb6ba593a5c6a71f6a6359261baa89bbfde2611b5ab4e79",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "halo-dev/halo",
+      "commit": "eb235e17f480bdf25547147c88dfb9a5b3e0effd",
+      "reference": "github40-baseline",
+      "review": "confirmed_nested_router_prefix_recovery",
+      "delta": {
+        "endpoint_nodes_added": 14,
+        "truncated_endpoint_nodes_removed": 8,
+        "edges_added": 19,
+        "edges_removed": 13,
+        "unresolved_findings_changed": 0
+      },
+      "source_checks": [
+        "application/src/main/java/run/halo/app/security/preauth/EmailProfileCompletionEndpoint.java:70-75",
+        "application/src/main/java/run/halo/app/security/preauth/PreAuthEmailCodeLoginEndpoint.java:52-55",
+        "application/src/main/java/run/halo/app/security/preauth/PreAuthEmailPasswordResetEndpoint.java:65-66,80,108,150",
+        "application/src/main/java/run/halo/app/security/preauth/PreAuthLoginEndpoint.java:66-67",
+        "application/src/main/java/run/halo/app/security/preauth/PreAuthOAuth2RegistrationEndpoint.java:66-70",
+        "application/src/main/java/run/halo/app/security/preauth/PreAuthSignUpEndpoint.java:76-87,150"
+      ],
+      "explanation": "Removed short or root paths (such as `/`, `/send`, and `/oauth2/register`) are replaced by method paths composed with enclosing RouterFunctions.nest path predicates, such as `/complete-profile/send-email-code`, `/login/oauth2/register`, and `/password-reset/email/{resetToken}`. The pinned Java declarations confirm those prefixes and inner paths. This matches the documented nested WebFlux route fix; no unsupported route was promoted from an unresolved predicate.",
+      "final_graph_sha256": "69e82b7f2881cb926f236c0c08d9bfc0e51e2cc106d1b856ae1fd4891f5252b2",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "macrozheng/mall-swarm",
+      "commit": "04c442fe318356bae4445a109dde7af297ce1e84",
+      "reference": "github40-baseline",
+      "review": "confirmed_store_name_resolution",
+      "delta": {
+        "semantic_nodes_added": 2,
+        "semantic_nodes_removed": 1,
+        "semantic_edges_added": 12,
+        "semantic_edges_removed": 6,
+        "unresolved_entity_findings_removed": 1,
+        "other_changes_repo_attribution_or_evidence_only": true
+      },
+      "source_checks": [
+        "mall-search/src/main/java/com/macro/mall/search/domain/EsProduct.java:17",
+        "mall-search/src/main/java/com/macro/mall/search/repository/EsProductRepository.java:12",
+        "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java:14",
+        "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberProductCollection.java:12-13",
+        "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java:31,43,55,64,72"
+      ],
+      "explanation": "The Elasticsearch entity declares indexName=\"pms\", so replacing the class-name fallback index esProduct with pms is source-supported. The portal repository extends MongoRepository<MemberProductCollection,String>; its entity and controller support the new Mongo collection and reachability edges. The unresolved entity finding is therefore resolved by Spring Data type-use recognition. Remaining service relabels and evidence-only changes normalize away.",
+      "final_graph_sha256": "654bbd73d52ca4b7ef57640fa2545b981bff37f9dc2bfa3e68f8af4eafa2b3b0",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "metersphere/metersphere",
+      "commit": "53df526e2fb08bdf933662acf7eb5ae0f1bd5e3a",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "nodes": 1,
+        "edges": 1384,
+        "findings": 2,
+        "repo_label_normalization_only": true,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "backend/app/src/main/java/io/metersphere/controller/IndexController.java:8-15",
+        "backend/framework/domain/src/main/java/io/metersphere/api/mapper/ApiDebugBlobMapper.xml:75,91,105,113",
+        "backend/services/system-setting/src/main/java/io/metersphere/system/utils/TaskRunnerClient.java:53,69"
+      ],
+      "explanation": "After normalizing the old checkout-basename repository label to metersphere--metersphere, the node, edge, and finding multisets match exactly. The controller, mapper, and unresolved reference evidence remains at the same pinned file/line locations; this is attribution normalization only.",
+      "final_graph_sha256": "b5971c7ab2bc55f8b4854e78000400262cb17e335fe5b431092537535677152a",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "microservices-patterns/ftgo-application",
+      "commit": "558dfc53b11d30a5f1d995c0c6d58d5106c28189",
+      "reference": "github40-baseline",
+      "review": "explained_repo_and_diagnostic_path_normalization",
+      "delta": {
+        "service_nodes_relabelled": 7,
+        "edges": 50,
+        "unresolved_findings": 8,
+        "semantic_relationship_changes": false,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/main/OrderServiceMain.java:15,20,23",
+        "ftgo-delivery-service/src/main/java/net/chrisrichardson/ftgo/deliveryservice/main/DeliveryServiceMain.java:17,20"
+      ],
+      "explanation": "Graph semantics and evidence locations are unchanged after repository-label normalization. The only finding text difference is the expected normalized checkout-root prefix in a preexisting DUPLICATE_SERVICE diagnostic for ftgo-order-service; it remains an input diagnostic, not a scanner regression.",
+      "final_graph_sha256": "582f3ca9649aa9db00d9337a0f88ef596494f4c390e35a93b72e8ab4fcf39c45",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "paascloud/paascloud-master",
+      "commit": "781281a9503332ed3cef44ea618349d14230a127",
+      "reference": "github40-baseline",
+      "review": "confirmed_feign_declarations_from_shared_api_modules",
+      "delta": {
+        "semantic_call_edges_added": 56,
+        "semantic_call_edges_removed": 0,
+        "semantic_nodes_changed": false,
+        "findings_changed": false,
+        "source_refs_verified": 56,
+        "source_ref_locations": 29,
+        "services_with_repo_metadata_only_changes": 10
+      },
+      "source_checks": [
+        "paascloud-provider-api/paascloud-provider-mdc-api/src/main/java/com/paascloud/provider/service/MdcAddressQueryFeignApi.java:27,37",
+        "paascloud-provider-api/paascloud-provider-mdc-api/src/main/java/com/paascloud/provider/service/MdcProductFeignApi.java:27,38",
+        "paascloud-provider-api/paascloud-provider-omc-api/src/main/java/com/paascloud/provider/service/OmcCartFeignApi.java:27,39,51,63,74,86",
+        "paascloud-provider-api/paascloud-provider-opc-api/src/main/java/com/paascloud/provider/service/OpcMqMessageFeignApi.java:27,44,54",
+        "Discovery.java:153-165",
+        "OutboundHttpExtractor.java:28-62"
+      ],
+      "explanation": "All 56 added CALLS edges are supported by source-declared Feign interfaces with matching @FeignClient destination and Spring method mapping; the 29 unique declaration locations were checked against the pinned checkout. Shared provider-api module attribution is intentional per Discovery’s dependency-based service assignment. These declarations establish configured/source-level calls, not runtime invocation or traffic.",
+      "final_graph_sha256": "1597c4d6f96db3ff4c0042f4617923706a4b591d630acc4fa47cd353ca28e744",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "shopizer-ecommerce/shopizer",
+      "commit": "6a4a0a65a3408ee8f62597b51d1b3aac24b77dee",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "nodes": 404,
+        "edges": 1919,
+        "findings": 0,
+        "repo_label_normalization_only": true,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "sm-shop/src/main/java/com/salesmanager/shop/store/api/v1/customer/AuthenticateCustomerApi.java:100,217",
+        "sm-core/src/main/java/com/salesmanager/core/business/repositories/customer/CustomerRepository.java:20,38,56"
+      ],
+      "explanation": "All nodes, edges, and findings are equal after repository and evidence repository labels are normalized; endpoint and repository declarations remain at the same pinned source paths. The apparent graph change is only the repository label moving from checkout basename shopizer to normalized owner--repository slug.",
+      "final_graph_sha256": "fccdbf8014f0e5b564b1885b8fff076a9a5ec662aace58b1846127146416f24c",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "sqshq/piggymetrics",
+      "commit": "6bb2cf9ddbca980b664d3edbb6ff775d75369278",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "nodes": 26,
+        "edges": 34,
+        "findings": 0,
+        "repo_label_normalization_only": true,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java:14,22-36",
+        "auth-service/src/main/java/com/piggymetrics/auth/controller/UserController.java:17,22-29",
+        "notification-service/src/main/java/com/piggymetrics/notification/controller/RecipientController.java:16,21-27",
+        "statistics-service/src/main/java/com/piggymetrics/statistics/controller/StatisticsController.java:15,20-33"
+      ],
+      "explanation": "All nodes, edges, and findings are equal after repository/evidence labels are normalized from checkout basename piggymetrics to sqshq--piggymetrics. The four service controller declarations and routes remain in the pinned source tree; no graph semantic changes were found.",
+      "final_graph_sha256": "5adf0bb007cf21d1014d03027c5414826743e65bb35edec2971e2fbf9524346c",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "thingsboard/thingsboard",
+      "commit": "4dc94037fa1f58e87e028cf9480514a6ea0ce565",
+      "reference": "github40-baseline",
+      "review": "explained_repo_attribution_normalization",
+      "delta": {
+        "nodes": 1058,
+        "edges": 5091,
+        "findings": 1801,
+        "repo_label_normalization_only": true,
+        "graph_equal_after_repo_label_normalization": true
+      },
+      "source_checks": [
+        "common/integration/http-integrations/src/main/java/org/thingsboard/integration/http/controller/chirpstack/ChirpStackIntegrationController.java:33,35",
+        "application/src/main/java/org/thingsboard/server/controller/AgentProfileController.java:57,74,89"
+      ],
+      "explanation": "The complete node, edge, and finding multisets match after normalizing repository labels and evidence repository labels. The service attribution and route declarations remain supported by the same pinned files and lines; the raw semantic-change marker is caused only by the checkout-basename to owner--repository label normalization.",
+      "final_graph_sha256": "9b781206b483affe47ef308e854338a51f775866ccb41bf772a4db042d99cf84",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "waelhe/app-java-v3",
+      "commit": "ea0031a97db4452748a47582d3fed2c4d3ec1d52",
+      "reference": "boot4-post-fix-80",
+      "review": "confirmed_spurious_record_accessor_parse_finding_removed",
+      "delta": {
+        "nodes": 678,
+        "edges": 2069,
+        "parse_errors_removed": 1,
+        "nodes_or_edges_changed": false
+      },
+      "source_checks": [
+        "marketplace-orders/src/main/java/com/marketplace/orders/OrderReturnsController.java:145-167"
+      ],
+      "explanation": "The sole finding removed is a false PARSE_ERROR claiming the record accessor return type differs from the component type even though both are List<ReturnLineRequest>. The pinned Java record defines a List<@Valid ReturnLineRequest> component and an explicit List<ReturnLineRequest> accessor, which is a legal covariant-equivalent record accessor; graph nodes and edges are unchanged.",
+      "final_graph_sha256": "7b6214951d85011880ebd40f7806aabcf4cc5bb1727103ceef57643017067ad3",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "YunaiV/ruoyi-vue-pro",
+      "commit": "555bd9749261ce77d11c4330172d27ca381ea22e",
+      "reference": "github40-baseline",
+      "review": "confirmed_dynamic_rabbit_exchange_no_longer_mislabeled_as_routing_topic",
+      "delta": {
+        "topic_nodes_replaced": 1,
+        "produces_edges_reclassified": 1,
+        "unresolved_findings_added": 1,
+        "source_evidence": "same line 43"
+      },
+      "source_checks": [
+        "yudao-module-iot/yudao-module-iot-core/src/main/java/cn/iocoder/yudao/module/iot/core/messagebus/core/rabbitmq/IotRabbitMQMessageBus.java:30,42-44,58-60"
+      ],
+      "explanation": "RabbitTemplate.send(topic, ROUTING_KEY, ...) receives a dynamic exchange/topic argument and the constant ROUTING_KEY is \"#\". The old graph incorrectly treated that routing-key constant as a resolved topic; the new graph leaves the dynamic exchange unresolved with the same line-43 evidence. The changed result corrects an overconfident topic claim rather than losing a statically known topic.",
+      "final_graph_sha256": "c13e68059ec599181ba9d4d73467c8b4fa1098e6eb851964fa182ce6a0da341c",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "YunaiV/yudao-cloud",
+      "commit": "0757f0597e44357d5f2777a2f9e1370cc1534d5f",
+      "reference": "github40-baseline",
+      "review": "repo_normalization_plus_raw_mapper_entity_diagnostics",
+      "delta": {
+        "nodes": 4049,
+        "edges": 17378,
+        "findings_before": 35,
+        "findings_after": 38,
+        "nodes_and_edges_equal_after_repo_label_normalization": true,
+        "new_normalized_findings": 3,
+        "new_findings_all_unknown_generic_mapper_entities": true
+      },
+      "source_checks": [
+        "yudao-module-mall/yudao-module-statistics-server/src/main/java/cn/iocoder/yudao/module/statistics/dal/mysql/infra/ApiAccessLogStatisticsMapper.java:16-17",
+        "yudao-module-mall/yudao-module-statistics-server/src/main/java/cn/iocoder/yudao/module/statistics/dal/mysql/member/MemberStatisticsMapper.java:20-21",
+        "yudao-module-mall/yudao-module-statistics-server/src/main/java/cn/iocoder/yudao/module/statistics/dal/mysql/pay/PayWalletStatisticsMapper.java:17-18",
+        "yudao-framework/yudao-spring-boot-starter-mybatis/src/main/java/cn/iocoder/yudao/framework/mybatis/core/mapper/BaseMapperX.java:33"
+      ],
+      "explanation": "After normalizing repository and evidence labels, all nodes and edges match exactly; there are three additional UNRESOLVED diagnostics, each for entity T on one statistics mapper. Those mapper interfaces use raw BaseMapperX (with @SuppressWarnings(\"rawtypes\")), while BaseMapperX<T> is generic. The entity type is genuinely unspecified in the source declaration, so these are conservative input/type-resolution diagnostics rather than lost resolved table edges. Raw diff shared-table and contract-drift churn normalizes away.",
+      "final_graph_sha256": "a1205732399fc6b0341fb8f0c9782ef86a8a73514dce49c00ef4cee3536bb2f6",
+      "final_graph_byte_identical_to_source_reviewed_before_graph": true
+    },
+    {
+      "repository": "shuigedeng/taotao-cloud-project",
+      "review": "confirmed_lexical_diagnostic_source_line_correction",
+      "final_graph_sha256": "86c6ae6f420f291ee4ef6ae503a19ccc323a2a5d93091ce7e119f42accfa03ce",
+      "delta": {
+        "nodes_unchanged": true,
+        "edges_unchanged": true,
+        "findings_count_unchanged": true,
+        "only_change": "MediaHandler.java lexical PARSE_ERROR evidence line 1 -> 155; message retained"
+      },
+      "source_checks": [
+        "taotao-cloud-microservice/taotao-cloud-business/taotao-cloud-media/taotao-cloud-media-biz/src/main/java/com/taotao/cloud/media/biz/infrastructure/streammediaservices/MediaHandler.java:155"
+      ],
+      "explanation": "The source contains an illegal string escape on line155. The scanner retains the actual lexical error and now locates it accurately; all13 malformed-source diagnostics remain visible."
+    }
+  ],
+  "unexpected_changes": [],
+  "scope_note": "All 16 final graphs that differ from the pinned retained references have source explanations. Fifteen source reviews carry by byte identity; the new lexical evidence correction is checked explicitly. This does not claim full precision/recall.",
+  "before_campaign": {
+    "distribution_hash_prefix": "7358a5a285f341b4",
+    "completed_at_snapshot": 200,
+    "changed_graphs_at_snapshot": 15,
+    "reviewed_repositories": 15,
+    "not_waited_for_active_scans": false
+  },
+  "campaign": {
+    "distribution_sha256": "313f4172f17aaca473be2ab4a7f3a79d09f9bbab594c24af1e2024bb2c8ebcf1",
+    "scanner_jar_sha256": "3a6448851936edfd488b5cf98d093047f4bdea1207c9cbe2d321c47e94abdaf9",
+    "completed": 200,
+    "changed_graphs": 16,
+    "reviewed_repositories": 16,
+    "before_reviews_carried_by_exact_graph_byte_identity": 15
+  }
+}

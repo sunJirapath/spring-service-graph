@@ -32,6 +32,8 @@ Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`
 
 A service is a module with a `@SpringBootApplication` class, or with a `main` method that starts Spring through `SpringApplication` or `SpringApplicationBuilder`. Its name is `spring.application.name`, falling back to the module directory name.
 
+Source-defined composed `@SpringBootApplication` annotations are recognized when retained at runtime, including nested composition. External custom annotations whose definitions are absent from the scanned sources are not inferred.
+
 ## What is detected
 
 **Inbound HTTP**

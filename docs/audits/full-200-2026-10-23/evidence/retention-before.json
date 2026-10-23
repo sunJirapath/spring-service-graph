@@ -1,0 +1,12 @@
+{
+  "scanner_source_commit": "cd7c1c20881cb5a80a7737c97352b1389ddc6a88",
+  "tests": "1",
+  "failures": "1",
+  "expected_failure": true,
+  "cases": [
+    {
+      "name": "composedFeignRegistrationRequiresRuntimeRetention()",
+      "failure": "java.lang.AssertionError: \r\nExpecting no elements of:\r\n  [Edge[kind=CALLS, from=service:orders, to=endpoint:users:GET /users/{id}, confidence=EXACT, attrs={client=feign, method=GET, path=/users/{id}}, evidence=[maven/shared/src/main/java/clients/UsersApi.java:2]],\r\n    Edge[kind=EXPOSES, from=service:users, to=endpoint:users:GET /users/{id}, confidence=EXACT, attrs={source=controller}, evidence=[maven/users/src/main/java/users/Users.java:2]]]\r\nto match given predicate but this element did:\r\n  Edge[kind=CALLS, from=service:orders, to=endpoint:users:GET /users/{id}, confidence=EXACT, attrs={client=feign, method=GET, path=/users/{id}}, evidence=[maven/shared/src/main/java/clients/UsersApi.java:2]]"
+    }
+  ]
+}

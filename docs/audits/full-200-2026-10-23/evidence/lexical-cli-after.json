@@ -1,0 +1,9 @@
+{
+  "mode": "fixed",
+  "passed": true,
+  "source_error_line": 5,
+  "evidence_line": 5,
+  "retained_parse_errors": 1,
+  "scanner_jar_sha256": "3a6448851936edfd488b5cf98d093047f4bdea1207c9cbe2d321c47e94abdaf9",
+  "graph_sha256": "8f870bdeddac62271cbed615b5ec30e8ff5f5754b8e6527bb73666854e304365"
+}

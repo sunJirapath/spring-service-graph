@@ -1,0 +1,1 @@
+<project><artifactId>client-app</artifactId><dependencies><dependency><groupId>g</groupId><artifactId>shared-client</artifactId></dependency></dependencies></project>

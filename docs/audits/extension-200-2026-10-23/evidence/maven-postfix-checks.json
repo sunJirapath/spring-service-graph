@@ -1,0 +1,1078 @@
+{
+  "schema_version": 1,
+  "run": "208008249d565c31/run1",
+  "checks": [
+    {
+      "repository": "aerospike/spring-data-aerospike-starters",
+      "source_commit": "7d2dc52269f9c9a9f654033e4e6a656c2b8c27df",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/aerospike--spring-data-aerospike-starters/graph.json",
+      "source_references": [
+        {
+          "file": "spring-boot-starter-example-aerospike/starter-example-data/src/main/java/com/aerospike/example/CustomerController.java",
+          "line": 35,
+          "excerpt": "@GetMapping(\"/customer/{id}\")"
+        },
+        {
+          "file": "spring-boot-starter-example-aerospike/starter-example-data/src/main/java/com/aerospike/example/CustomerController.java",
+          "line": 21,
+          "excerpt": "@RequestMapping(\"/sync\")"
+        }
+      ],
+      "source_claim": "Controller exposes GET /sync/customer/{id}.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:starter-example-data:GET /sync/customer/{id}",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:starter-example-data",
+              "to": "endpoint:starter-example-data:GET /sync/customer/{id}",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "aerospike--spring-data-aerospike-starters",
+                  "file": "spring-boot-starter-example-aerospike/starter-example-data/src/main/java/com/aerospike/example/CustomerController.java",
+                  "line": 35
+                },
+                {
+                  "repo": "aerospike--spring-data-aerospike-starters",
+                  "file": "spring-boot-starter-example-aerospike/starter-example-data/src/main/java/com/aerospike/example/CustomerController.java",
+                  "line": 36
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "alpha3166/charana",
+      "source_commit": "f92420f470855a6f8987dea4f4660e9de5c5eba9",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/alpha3166--charana/graph.json",
+      "source_references": [
+        {
+          "file": "charana-web/src/main/java/alpha3166/charana/web/ApiController.java",
+          "line": 17,
+          "excerpt": "@RequestMapping(\"api\")"
+        },
+        {
+          "file": "charana-web/src/main/java/alpha3166/charana/web/ApiController.java",
+          "line": 19,
+          "excerpt": "@GetMapping(\"parse/{string}\")"
+        }
+      ],
+      "source_claim": "Class and method mappings combine to GET /api/parse/{string}.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:charana-web:GET /api/parse/{string}",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:charana-web",
+              "to": "endpoint:charana-web:GET /api/parse/{string}",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "alpha3166--charana",
+                  "file": "charana-web/src/main/java/alpha3166/charana/web/ApiController.java",
+                  "line": 19
+                },
+                {
+                  "repo": "alpha3166--charana",
+                  "file": "charana-web/src/main/java/alpha3166/charana/web/ApiController.java",
+                  "line": 20
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "bootify-io/spring-boot-jte-example",
+      "source_commit": "f502ba816adc1b24519888bca724d2a26de10ce8",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/bootify-io--spring-boot-jte-example/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/io/bootify/jte/product/ProductController.java",
+          "line": 26,
+          "excerpt": "@GetMapping"
+        },
+        {
+          "file": "src/main/java/io/bootify/jte/product/ProductController.java",
+          "line": 17,
+          "excerpt": "@RequestMapping(\"/products\")"
+        },
+        {
+          "file": "src/main/java/io/bootify/jte/product/Product.java",
+          "line": 14,
+          "excerpt": "@Table(name = \"Products\")"
+        }
+      ],
+      "source_claim": "GET /products is exposed; Product entity maps to Products and the service reaches that table through its repository.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:jte:GET /products",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:jte",
+              "to": "endpoint:jte:GET /products",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/ProductController.java",
+                  "line": 26
+                },
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/ProductController.java",
+                  "line": 27
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "USES",
+          "expected_node": "table:jte/products",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "USES",
+              "from": "service:jte",
+              "to": "table:jte/products",
+              "confidence": "EXACT",
+              "attrs": {},
+              "evidence": [
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/Product.java",
+                  "line": 13
+                },
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/ProductRepository.java",
+                  "line": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "REACHES",
+          "expected_node": "table:jte/products",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "REACHES",
+              "from": "endpoint:jte:GET /products",
+              "to": "table:jte/products",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "chain": "ProductController.list → ProductService.findAll → productRepository.findAll"
+              },
+              "evidence": [
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/ProductRepository.java",
+                  "line": 6
+                },
+                {
+                  "repo": "bootify-io--spring-boot-jte-example",
+                  "file": "src/main/java/io/bootify/jte/product/ProductController.java",
+                  "line": 27
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "grandamp/rest-service",
+      "source_commit": "39bb798526a4211a38b5e2f23dbdd05c9bd2f128",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/grandamp--rest-service/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/org/keysupport/api/controller/vss/ValidateController.java",
+          "line": 77,
+          "excerpt": "@PostMapping(path = \"/vss/v2/validate\", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)"
+        },
+        {
+          "file": "src/main/java/org/keysupport/api/controller/vss/ValidateController.java",
+          "line": 114,
+          "excerpt": "ResponseEntity<VssResponse> validate(@RequestBody VssRequest request, @RequestHeader Map<String, String> headers)"
+        }
+      ],
+      "source_claim": "Validation controller exposes POST /vss/v2/validate.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:VSS:POST /vss/v2/validate",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:VSS",
+              "to": "endpoint:VSS:POST /vss/v2/validate",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "grandamp--rest-service",
+                  "file": "src/main/java/org/keysupport/api/controller/vss/ValidateController.java",
+                  "line": 77
+                },
+                {
+                  "repo": "grandamp--rest-service",
+                  "file": "src/main/java/org/keysupport/api/controller/vss/ValidateController.java",
+                  "line": 114
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "ecogenetic/ecosystem-runtime-localbuild",
+      "source_commit": "6797809698ea5489554baa6a5262e642c77d104e",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/ecogenetic--ecosystem-runtime-localbuild/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/ecosystem/runtime/ProductMaster.java",
+          "line": 114,
+          "excerpt": "@PostMapping(\"/invocations\")"
+        },
+        {
+          "file": "src/main/java/com/ecosystem/runtime/ProductMaster.java",
+          "line": 115,
+          "excerpt": "public String invoke("
+        }
+      ],
+      "source_claim": "ProductMaster exposes POST /invocations.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:ecogenetic--ecosystem-runtime-localbuild:POST /invocations",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:ecogenetic--ecosystem-runtime-localbuild",
+              "to": "endpoint:ecogenetic--ecosystem-runtime-localbuild:POST /invocations",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "ecogenetic--ecosystem-runtime-localbuild",
+                  "file": "src/main/java/com/ecosystem/runtime/ProductMaster.java",
+                  "line": 114
+                },
+                {
+                  "repo": "ecogenetic--ecosystem-runtime-localbuild",
+                  "file": "src/main/java/com/ecosystem/runtime/ProductMaster.java",
+                  "line": 115
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "entur/ukur-demo",
+      "source_commit": "b74a124153740f4406f65bb812a581ffaafd04de",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/entur--ukur-demo/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/org/entur/demo/ukur/web/PushMessageRestController.java",
+          "line": 46,
+          "excerpt": "@RequestMapping(path = \"/push/{pushId}\", method = RequestMethod.POST,"
+        },
+        {
+          "file": "src/main/java/org/entur/demo/ukur/web/PushMessageRestController.java",
+          "line": 48,
+          "excerpt": "public ResponseEntity siri(@PathVariable(\"pushId\") String pushId, @RequestBody Siri siri) {"
+        }
+      ],
+      "source_claim": "Push receiver exposes POST /push/{pushId}. This is an HTTP handler, not evidence of a broker consumer.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:entur--ukur-demo:POST /push/{pushId}",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:entur--ukur-demo",
+              "to": "endpoint:entur--ukur-demo:POST /push/{pushId}",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "entur--ukur-demo",
+                  "file": "src/main/java/org/entur/demo/ukur/web/PushMessageRestController.java",
+                  "line": 46
+                },
+                {
+                  "repo": "entur--ukur-demo",
+                  "file": "src/main/java/org/entur/demo/ukur/web/PushMessageRestController.java",
+                  "line": 48
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "lunaovsk/portal-solicitacoes-internas",
+      "source_commit": "f9ad88c1b99229a35aeb7ec778b3d7e8a0a428fe",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/lunaovsk--portal-solicitacoes-internas/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/portal_interno/api/controller/RequestController.java",
+          "line": 27,
+          "excerpt": "@RequestMapping(\"/api/v1/request\")"
+        },
+        {
+          "file": "src/main/java/com/portal_interno/api/controller/RequestController.java",
+          "line": 33,
+          "excerpt": "@PostMapping"
+        },
+        {
+          "file": "src/main/java/com/portal_interno/api/domain/model/request/Request.java",
+          "line": 11,
+          "excerpt": "@Table(name = \"tb_request\")"
+        }
+      ],
+      "source_claim": "RequestController exposes POST /api/v1/request; Request maps to tb_request.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:api:POST /api/v1/request",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:api",
+              "to": "endpoint:api:POST /api/v1/request",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/controller/RequestController.java",
+                  "line": 33
+                },
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/controller/RequestController.java",
+                  "line": 40
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "USES",
+          "expected_node": "table:api/tb_request",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "USES",
+              "from": "service:api",
+              "to": "table:api/tb_request",
+              "confidence": "EXACT",
+              "attrs": {},
+              "evidence": [
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/domain/model/request/Request.java",
+                  "line": 10
+                },
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/domain/repository/RequestRepository.java",
+                  "line": 12
+                },
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/domain/repository/RequestRepository.java",
+                  "line": 15
+                },
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/domain/repository/RequestRepository.java",
+                  "line": 23
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "REACHES",
+          "expected_node": "table:api/tb_request",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "REACHES",
+              "from": "endpoint:api:POST /api/v1/request",
+              "to": "table:api/tb_request",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "chain": "RequestController.requestCreated → RequestService.createdRequest → requestRepository.save"
+              },
+              "evidence": [
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/domain/repository/RequestRepository.java",
+                  "line": 12
+                },
+                {
+                  "repo": "lunaovsk--portal-solicitacoes-internas",
+                  "file": "src/main/java/com/portal_interno/api/controller/RequestController.java",
+                  "line": 40
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "murilodcosta/flashpad-api",
+      "source_commit": "9a6b55bdf6d31b65e62ee7f803af1e059bf43bfc",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/murilodcosta--flashpad-api/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+          "line": 12,
+          "excerpt": "@RequestMapping(\"/api/pads\")"
+        },
+        {
+          "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+          "line": 37,
+          "excerpt": "@GetMapping(value = \"/{slug}/stream\", produces = MediaType.TEXT_EVENT_STREAM_VALUE)"
+        },
+        {
+          "file": "src/main/java/com/murilodcosta/flashpad_api/entity/Note.java",
+          "line": 12,
+          "excerpt": "@Table(name = \"notes\")"
+        },
+        {
+          "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+          "line": 22,
+          "excerpt": "public NoteResponse getNoteBySlug(@PathVariable String slug)"
+        }
+      ],
+      "source_claim": "NoteController exposes GET /api/pads/{slug}/stream (SSE); Note maps to notes.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:flashpad-api:GET /api/pads/{slug}/stream",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:flashpad-api",
+              "to": "endpoint:flashpad-api:GET /api/pads/{slug}/stream",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+                  "line": 37
+                },
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+                  "line": 38
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "USES",
+          "expected_node": "table:flashpad-api/notes",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "USES",
+              "from": "service:flashpad-api",
+              "to": "table:flashpad-api/notes",
+              "confidence": "EXACT",
+              "attrs": {},
+              "evidence": [
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/entity/Note.java",
+                  "line": 11
+                },
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/repository/NoteRepository.java",
+                  "line": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "REACHES",
+          "expected_node": "table:flashpad-api/notes",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "REACHES",
+              "from": "endpoint:flashpad-api:GET /api/pads/{slug}",
+              "to": "table:flashpad-api/notes",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "chain": "NoteController.getNoteBySlug → NoteService.getNoteBySlug → noteRepository.findByPath"
+              },
+              "evidence": [
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/repository/NoteRepository.java",
+                  "line": 8
+                },
+                {
+                  "repo": "murilodcosta--flashpad-api",
+                  "file": "src/main/java/com/murilodcosta/flashpad_api/controller/NoteController.java",
+                  "line": 22
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "buildbasekit/AuthKit-Lite",
+      "source_commit": "b8700ef191991de264483782dd4450c0fa7c80dd",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/buildbasekit--AuthKit-Lite/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/auth/controllers/ApiTestController.java",
+          "line": 9,
+          "excerpt": "@GetMapping({ \"/api-test\", \"/api-test/\" })"
+        }
+      ],
+      "source_claim": "Controller declares GET /api-test (and trailing-slash alias).",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:AuthKit-Lite:GET /api-test",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:AuthKit-Lite",
+              "to": "endpoint:AuthKit-Lite:GET /api-test",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "buildbasekit--AuthKit-Lite",
+                  "file": "src/main/java/com/auth/controllers/ApiTestController.java",
+                  "line": 9
+                },
+                {
+                  "repo": "buildbasekit--AuthKit-Lite",
+                  "file": "src/main/java/com/auth/controllers/ApiTestController.java",
+                  "line": 10
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "MyPureCloud/local-key-manager",
+      "source_commit": "7a0eaa56b204f57206f08741e876fb7d11af576c",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/MyPureCloud--local-key-manager/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/inin/keymanagement/controllers/HawkController.java",
+          "line": 10,
+          "excerpt": "@RequestMapping(\"/key-management/v1/auth\")"
+        },
+        {
+          "file": "src/main/java/com/inin/keymanagement/controllers/HawkController.java",
+          "line": 23,
+          "excerpt": "@PostMapping(\"\")"
+        },
+        {
+          "file": "src/main/java/com/inin/keymanagement/models/dao/HawkModel.java",
+          "line": 11,
+          "excerpt": "@Table(name = \"auth\")"
+        }
+      ],
+      "source_claim": "HawkController exposes POST /key-management/v1/auth; HawkModel maps to auth.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:MyPureCloud--local-key-manager:POST /key-management/v1/auth",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:MyPureCloud--local-key-manager",
+              "to": "endpoint:MyPureCloud--local-key-manager:POST /key-management/v1/auth",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/controllers/HawkController.java",
+                  "line": 23
+                },
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/controllers/HawkController.java",
+                  "line": 25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "USES",
+          "expected_node": "table:MyPureCloud--local-key-manager/auth",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "USES",
+              "from": "service:MyPureCloud--local-key-manager",
+              "to": "table:MyPureCloud--local-key-manager/auth",
+              "confidence": "EXACT",
+              "attrs": {},
+              "evidence": [
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/models/dao/HawkModel.java",
+                  "line": 10
+                },
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/models/repositories/HawkDaoRepository.java",
+                  "line": 11
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "REACHES",
+          "expected_node": "table:MyPureCloud--local-key-manager/auth",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "REACHES",
+              "from": "endpoint:MyPureCloud--local-key-manager:POST /key-management/v1/auth",
+              "to": "table:MyPureCloud--local-key-manager/auth",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "chain": "HawkController.registerService → HawkAuthentication.registerService → repository.findById"
+              },
+              "evidence": [
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/models/repositories/HawkDaoRepository.java",
+                  "line": 11
+                },
+                {
+                  "repo": "MyPureCloud--local-key-manager",
+                  "file": "src/main/java/com/inin/keymanagement/controllers/HawkController.java",
+                  "line": 25
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "neilghosh/springboot-workshop",
+      "source_commit": "e0bd7e9fd27b8da591318362288db20f54cd9e2e",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/neilghosh--springboot-workshop/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/example/ecommerce/controller/ProductController.java",
+          "line": 15,
+          "excerpt": "@RequestMapping(\"/api/products\")"
+        },
+        {
+          "file": "src/main/java/com/example/ecommerce/controller/ProductController.java",
+          "line": 34,
+          "excerpt": "@GetMapping(\"/{id}/summary\")"
+        },
+        {
+          "file": "src/main/java/com/example/ecommerce/model/ProductEntity.java",
+          "line": 7,
+          "excerpt": "@Table(name = \"products\")"
+        }
+      ],
+      "source_claim": "Product summary endpoint is GET /api/products/{id}/summary; ProductEntity maps to products and endpoint reaches the table.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:neilghosh--springboot-workshop:GET /api/products/{id}/summary",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:neilghosh--springboot-workshop",
+              "to": "endpoint:neilghosh--springboot-workshop:GET /api/products/{id}/summary",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/controller/ProductController.java",
+                  "line": 34
+                },
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/controller/ProductController.java",
+                  "line": 35
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "USES",
+          "expected_node": "table:neilghosh--springboot-workshop/products",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "USES",
+              "from": "service:neilghosh--springboot-workshop",
+              "to": "table:neilghosh--springboot-workshop/products",
+              "confidence": "EXACT",
+              "attrs": {},
+              "evidence": [
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/model/ProductEntity.java",
+                  "line": 6
+                },
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/repository/ProductRepository.java",
+                  "line": 9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "REACHES",
+          "expected_node": "table:neilghosh--springboot-workshop/products",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "REACHES",
+              "from": "endpoint:neilghosh--springboot-workshop:GET /api/products/{id}/summary",
+              "to": "table:neilghosh--springboot-workshop/products",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "chain": "ProductController.getProductSummary → ProductService.getProductSummary → ProductService.getProductById → productRepository.findById"
+              },
+              "evidence": [
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/repository/ProductRepository.java",
+                  "line": 9
+                },
+                {
+                  "repo": "neilghosh--springboot-workshop",
+                  "file": "src/main/java/com/example/ecommerce/controller/ProductController.java",
+                  "line": 35
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "palaceIA/backend-repositorio-ia",
+      "source_commit": "08be566b041f1ddcfc74bb47415522262138212f",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/palaceIA--backend-repositorio-ia/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/com/repositorio/registromodelo/controller/DadosController.java",
+          "line": 28,
+          "excerpt": "@PostMapping"
+        },
+        {
+          "file": "src/main/java/com/repositorio/registromodelo/controller/DadosController.java",
+          "line": 29,
+          "excerpt": "public ResponseEntity<String> cadastrar(@RequestBody DadosRequest request)"
+        }
+      ],
+      "source_claim": "DadosController exposes POST /dados.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:registromodelo:POST /dados",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:registromodelo",
+              "to": "endpoint:registromodelo:POST /dados",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "palaceIA--backend-repositorio-ia",
+                  "file": "src/main/java/com/repositorio/registromodelo/controller/DadosController.java",
+                  "line": 28
+                },
+                {
+                  "repo": "palaceIA--backend-repositorio-ia",
+                  "file": "src/main/java/com/repositorio/registromodelo/controller/DadosController.java",
+                  "line": 29
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "wushuo894/open-panel",
+      "source_commit": "bcaaf4d6beb99ae8ea1e2bce9c4bbe694c0cd52b",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/wushuo894--open-panel/graph.json",
+      "source_references": [
+        {
+          "file": "open-panel-application/src/main/java/open/panel/controller/AdminController.java",
+          "line": 31,
+          "excerpt": "@RequestMapping(\"/api/admin\")"
+        },
+        {
+          "file": "open-panel-application/src/main/java/open/panel/controller/AdminController.java",
+          "line": 53,
+          "excerpt": "@PutMapping(\"/config\")"
+        }
+      ],
+      "source_claim": "AdminController exposes PUT /api/admin/config.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:open-panel:PUT /api/admin/config",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:open-panel",
+              "to": "endpoint:open-panel:PUT /api/admin/config",
+              "confidence": "EXACT",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "wushuo894--open-panel",
+                  "file": "open-panel-application/src/main/java/open/panel/controller/AdminController.java",
+                  "line": 53
+                },
+                {
+                  "repo": "wushuo894--open-panel",
+                  "file": "open-panel-application/src/main/java/open/panel/controller/AdminController.java",
+                  "line": 54
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "OpenConext/OpenConext-pdp",
+      "source_commit": "f388a0d43742f1377799f3b6c9fb299b43017db3",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/OpenConext--OpenConext-pdp/graph.json",
+      "source_references": [
+        {
+          "file": "src/main/java/pdp/web/PdpController.java",
+          "line": 52,
+          "excerpt": "@RequestMapping("
+        },
+        {
+          "file": "src/main/java/pdp/web/PdpController.java",
+          "line": 93,
+          "excerpt": "@RequestMapping(method = RequestMethod.POST, value = \"/manage/decide\")"
+        },
+        {
+          "file": "src/main/resources/application.yml",
+          "line": 81,
+          "excerpt": "context-path:"
+        }
+      ],
+      "source_claim": "POST /manage/decide combines with configured context path /pdp/api to produce POST /pdp/api/manage/decide.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:OpenConext--OpenConext-pdp:POST /pdp/api/manage/decide",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:OpenConext--OpenConext-pdp",
+              "to": "endpoint:OpenConext--OpenConext-pdp:POST /pdp/api/manage/decide",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "OpenConext--OpenConext-pdp",
+                  "file": "src/main/java/pdp/web/PdpController.java",
+                  "line": 93
+                },
+                {
+                  "repo": "OpenConext--OpenConext-pdp",
+                  "file": "src/main/java/pdp/web/PdpController.java",
+                  "line": 94
+                },
+                {
+                  "repo": "OpenConext--OpenConext-pdp",
+                  "file": "src/main/resources/application.yml",
+                  "line": 81
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    },
+    {
+      "repository": "petromir/spring-boot-onion-service",
+      "source_commit": "5381d2f7fd81e98b46f5f2bc987031ba94184463",
+      "graph_path": "build/audit200/runs/208008249d565c31/run1/petromir--spring-boot-onion-service/graph.json",
+      "source_references": [
+        {
+          "file": "modules/user/src/main/java/com/petromirdzhunev/user/infra/http/server/controller/UsersApi.java",
+          "line": 29,
+          "excerpt": "String PATH_AUTHENTICATED_USER = \"/api/users/self\";"
+        },
+        {
+          "file": "modules/user/src/main/java/com/petromirdzhunev/user/infra/http/server/controller/UsersApi.java",
+          "line": 38,
+          "excerpt": "@RequestMapping("
+        },
+        {
+          "file": "application/src/main/resources/application.yaml",
+          "line": 9,
+          "excerpt": "path: /api"
+        }
+      ],
+      "source_claim": "Authenticated-user route constant /api/users/self plus configured context path /api yields external GET /api/api/users/self.",
+      "verified_graph_facts": [
+        {
+          "kind": "EXPOSES",
+          "expected_node": "endpoint:spring-boot-onin-service:GET /api/api/users/self",
+          "classification": "pass",
+          "graph_evidence": [
+            {
+              "kind": "EXPOSES",
+              "from": "service:spring-boot-onin-service",
+              "to": "endpoint:spring-boot-onin-service:GET /api/api/users/self",
+              "confidence": "RESOLVED",
+              "attrs": {
+                "source": "controller"
+              },
+              "evidence": [
+                {
+                  "repo": "petromir--spring-boot-onion-service",
+                  "file": "modules/user/src/main/java/com/petromirdzhunev/user/infra/http/server/controller/UsersApi.java",
+                  "line": 38
+                },
+                {
+                  "repo": "petromir--spring-boot-onion-service",
+                  "file": "application/src/main/resources/application.yaml",
+                  "line": 9
+                },
+                {
+                  "repo": "petromir--spring-boot-onion-service",
+                  "file": "modules/user/src/main/java/com/petromirdzhunev/user/infra/http/server/controller/UserController.java",
+                  "line": 42
+                },
+                {
+                  "repo": "petromir--spring-boot-onion-service",
+                  "file": "modules/user/src/main/java/com/petromirdzhunev/user/infra/http/server/controller/UsersApi.java",
+                  "line": 29
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "classification": "pass"
+    }
+  ],
+  "final_build_revalidation": {
+    "method": "All 90 final graphs are byte-identical to the independently source-checked intermediate graphs, at identical pinned source commits.",
+    "source_checked_distribution": "27f560cb4c6332c9abe899906bbb508085e0985e089e3f9fbe5e05eecf6f131b",
+    "final_distribution": "208008249d565c316fe6f1fd9d35804e79a72223c706821046522e46c47c3a69",
+    "graphs_compared": 90,
+    "identical": 90
+  }
+}

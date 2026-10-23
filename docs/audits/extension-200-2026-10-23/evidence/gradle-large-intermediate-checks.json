@@ -1,0 +1,162 @@
+{
+  "run_id": "27f560cb4c6332c9/run1",
+  "revalidated_against": "final scanner run",
+  "checked_facts": 8,
+  "counts": {
+    "verified": 8,
+    "miss": 0,
+    "unsupported": 0
+  },
+  "checks": [
+    {
+      "repository": "gessnerfl/rabbitmq-queue-management",
+      "commit_sha": "7609f601b97c8f2cc1de940873640a4502c79cfb",
+      "source_path": "src/main/java/de/gessnerfl/rabbitmq/queue/management/controller/RequeueFirstMessageController.java",
+      "source_line": 52,
+      "expected_fact": "POST /messages/requeue-first performs the requeue action; class mapping and method mapping define the route.",
+      "actual_result": "Graph contains EXPOSES service:RabbitMQ Queue Managment -> endpoint POST /messages/requeue-first with EXACT evidence at method mapping lines 52-53.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/gessnerfl--rabbitmq-queue-management/graph.json",
+      "graph_evidence": [
+        "RequeueFirstMessageController.java:52",
+        "RequeueFirstMessageController.java:53"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "finos/traderX",
+      "commit_sha": "e88ec9ab2ad37b26cbb9522e36375b384babc4d5",
+      "source_path": "templates/trade-processor-specfirst/src/main/java/finos/traderx/tradeprocessor/controller/TradeServiceController.java",
+      "source_line": 22,
+      "expected_fact": "POST /tradeservice/order invokes TradeService.processTrade, which persists the Trade through tradeRepository.save.",
+      "actual_result": "Graph has EXPOSES service:trade-processor-specfirst -> POST /tradeservice/order with exact controller evidence at lines 22-23, and REACHES that endpoint -> table trades with resolved chain TradeServiceController.processOrder → TradeService.processTrade → tradeRepository.save.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/finos--traderX/graph.json",
+      "graph_evidence": [
+        "TradeServiceController.java:22",
+        "TradeServiceController.java:23",
+        "TradeRepository.java:7",
+        "TradeServiceController.java:23"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "quokkify/path-of-exile-starter",
+      "commit_sha": "ac0f05484029e85f2bfba91080d172d18e992258",
+      "source_path": "modules/spring-webflux-aggregator/src/main/java/io/starter/controller/VendorRecipeController.java",
+      "source_line": 33,
+      "expected_fact": "GET /vendor-recipes returns vendor recipes by league and accesses vendor_recipes storage.",
+      "actual_result": "Graph contains EXPOSES service:spring-webflux-aggregator -> GET /vendor-recipes (EXACT evidence lines 33-34) and REACHES the endpoint -> table vendor_recipes (RESOLVED evidence VendorRecipeRepository.java:11 and VendorRecipeController.java:34).",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/quokkify--path-of-exile-starter/graph.json",
+      "graph_evidence": [
+        "VendorRecipeController.java:33",
+        "VendorRecipeController.java:34",
+        "VendorRecipeRepository.java:11"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "hywenklis/buddy-api",
+      "commit_sha": "1a890fd3eae303dd240bef13dcbd460701210167",
+      "source_path": "src/main/java/com/buddy/api/web/terms/controllers/TermsController.java",
+      "source_line": 29,
+      "expected_fact": "GET /v1/terms/active resolves the active terms version from terms_version.",
+      "actual_result": "Graph contains EXPOSES service -> GET /v1/terms/active (EXACT evidence TermsController.java:29 and :31) and REACHES that endpoint -> terms_version (RESOLVED evidence TermsVersionRepository.java:11 and TermsController.java:31).",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/hywenklis--buddy-api/graph.json",
+      "graph_evidence": [
+        "TermsController.java:29",
+        "TermsController.java:31",
+        "TermsVersionRepository.java:11"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "likelion-backend-25th/itda",
+      "commit_sha": "4b7a37718c4d6df8d64fd4f45b771c25afc4e91a",
+      "source_path": "src/main/java/net/likelion/bebc25/itda/payment/controller/PaymentController.java",
+      "source_line": 69,
+      "expected_fact": "POST /api/v1/payments/complete verifies the payment by calling PortOne getPayment.",
+      "actual_result": "Graph contains EXPOSES service -> POST /api/v1/payments/complete (EXACT evidence PaymentController.java:69-70) and REACHES that endpoint -> external api.portone.io (RESOLVED evidence PortOneClient.java:85 and PaymentController.java:70).",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/likelion-backend-25th--itda/graph.json",
+      "graph_evidence": [
+        "PaymentController.java:69",
+        "PaymentController.java:70",
+        "PortOneClient.java:85"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "letspeppol/letspeppol",
+      "commit_sha": "371f8a211f3df6e8a1f86b32689854d5b2a00042",
+      "source_path": "app/backend/src/main/java/org/letspeppol/app/controller/DocumentController.java",
+      "source_line": 135,
+      "expected_fact": "POST /sapi/document creates a document and reaches the document table through DocumentService and DocumentRepository.",
+      "actual_result": "Graph contains EXPOSES service:app -> POST /sapi/document (EXACT evidence DocumentController.java:135 and :137), plus REACHES the endpoint -> table app/document (RESOLVED chain reaches DocumentRepository.existsByInvoiceReferenceAndTypeAndOwnerPeppolId and documentRepository.save; evidence DocumentRepository.java:16 and DocumentController.java:137).",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/letspeppol--letspeppol/graph.json",
+      "graph_evidence": [
+        "DocumentController.java:135",
+        "DocumentController.java:137",
+        "DocumentRepository.java:16"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "spring-cloud/spring-functions-catalog",
+      "commit_sha": "a486d8dc7399dff440d70c6430f8ba354d717d71",
+      "source_path": "samples/zip-split-rabbit-binder/src/main/resources/application.yml",
+      "source_line": 12,
+      "expected_fact": "The fileSupplier|unzipFunction|splitterFunction output binding publishes to topic unzipped_data_exchange.",
+      "actual_result": "Graph contains PRODUCES service:zip-split-rabbit-binder -> topic:unzipped_data_exchange with EXACT application.yml:12 evidence; edge attrs preserve the full binding pipeline.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/spring-cloud--spring-functions-catalog/graph.json",
+      "graph_evidence": [
+        "application.yml:12"
+      ],
+      "status": "verified"
+    },
+    {
+      "repository": "DanielSolonskii/CreateCityExpansionCore",
+      "commit_sha": "37a5da44da9f3f98623268ab923be6bdcfcdc41a",
+      "source_path": "platform/backend/src/main/java/dev/createserver/backend/api/InfrastructureController.java",
+      "source_line": 22,
+      "expected_fact": "GET /api/health exposes the backend health endpoint and delegates availability to DatabaseHealth.",
+      "actual_result": "Graph contains EXPOSES service:create-server-backend -> GET /api/health (EXACT evidence InfrastructureController.java:22-23); it also contains a RESOLVED path to platform_infrastructure via DatabaseHealth.isAvailable.",
+      "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/DanielSolonskii--CreateCityExpansionCore/graph.json",
+      "graph_evidence": [
+        "InfrastructureController.java:22",
+        "InfrastructureController.java:23",
+        "DatabaseHealth.java:17"
+      ],
+      "status": "verified"
+    }
+  ],
+  "bug_regression": {
+    "repository": "target/POSSUM",
+    "commit_sha": "1cc04b0de3329adc0645b9dcaf967c8052925b37",
+    "status": "fixed and verified",
+    "source_app": "src/main/java/com/target/devicemanager/DeviceMain.java (@SpringBootApplication line 25; SpringApplication.run line 36)",
+    "graph_path": "build/audit200/runs/27f560cb4c6332c9/run1/target--POSSUM/graph.json",
+    "run_status": "passed",
+    "graph_validation": {
+      "valid": true,
+      "errors": [],
+      "services": 1,
+      "endpoints": 50,
+      "nodes": 51,
+      "edges": 50,
+      "findings": 0,
+      "evidence_locations_checked": 100,
+      "source_files_line_counted": 14
+    },
+    "service": "service:target--POSSUM",
+    "endpoint_count": 50,
+    "verified_endpoints": [
+      "GET /v1/scan",
+      "GET /v1/scan/{scannerType}",
+      "GET /v1/scanner/health",
+      "POST /v1/scanner/reconnect"
+    ],
+    "sample_endpoint_evidence": [
+      "ScannerController.java:44",
+      "ScannerController.java:55"
+    ],
+    "expected_behavior": "The app detector recognizes the package path com/target as source code, emits service:target--POSSUM, and exposes ScannerController endpoints."
+  }
+}

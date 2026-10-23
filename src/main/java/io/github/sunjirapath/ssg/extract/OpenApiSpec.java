@@ -100,7 +100,12 @@ final class OpenApiSpec {
                         .map(OpenApiSpec::scalar).orElse("default") : "default";
                 // a HashSet, not Set.of: the tag and the path segment often give the same name
                 if (keep != null && !keep.test(new java.util.HashSet<>(List.of(squash(tag + "Api"), squash(firstSegment + "Api"))))) continue;
-                Value path = Mappings.joinValues(contextPath, base, Value.exact(scalar(p.getKeyNode())))
+                String context = Mappings.join(contextPath.text());
+                String server = Mappings.join(base.text());
+                // An OpenAPI server URL may already contain the servlet context path.
+                Value prefix = !context.equals("/") && contextPath.resolved() && base.resolved()
+                        && (server.equals(context) || server.startsWith(context + "/")) ? Value.exact("") : contextPath;
+                Value path = Mappings.joinValues(prefix, base, Value.exact(scalar(p.getKeyNode())))
                         .withConfidence(Confidence.RESOLVED, null);
                 int line = op.getKeyNode().getStartMark().getLine() + 1;
                 out.add(new Fact.Endpoint(verb.toUpperCase(), path, s.repo().evidence(file, line), "openapi", null));

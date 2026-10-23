@@ -1,0 +1,47 @@
+[
+  {
+    "case": "mongo-default",
+    "expected": "USES customer",
+    "fixed": true
+  },
+  {
+    "case": "elasticsearch-index",
+    "expected": "catalog",
+    "actual": [
+      "catalog"
+    ]
+  },
+  {
+    "case": "rabbit-overload",
+    "expected": "orders.key",
+    "actual": [
+      "orders.key"
+    ]
+  },
+  {
+    "case": "url-query",
+    "expected": "endpoint:target:GET /",
+    "actual": "endpoint:target:GET /"
+  },
+  {
+    "case": "openapi-framework-prefix",
+    "expected": "GET /petclinic/api/owners",
+    "fixed": true,
+    "control": "The com.example.api import also yields the endpoint"
+  },
+  {
+    "case": "feign-package",
+    "expected": "CALLS users GET /users/{id}",
+    "fixed": true
+  },
+  {
+    "case": "coordinated-retirement",
+    "expected": "exit 0",
+    "actual_exit": 0
+  },
+  {
+    "case": "duplicate-service-evidence",
+    "expected": "Configuration or launcher source file and line",
+    "fixed": true
+  }
+]

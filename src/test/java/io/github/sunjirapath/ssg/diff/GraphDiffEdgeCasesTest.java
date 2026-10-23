@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,8 @@ class GraphDiffEdgeCasesTest {
         var orders = service("orders");
         var gateway = service("gateway");
         Graph base = graph(List.of(orders, gateway), List.of(edge(Edge.Kind.CALLS, gateway.id(), orders.id(), 1)));
-        Graph head = graph(List.of(gateway), List.of());
+        var external = new Node.External("external:orders", "orders");
+        Graph head = graph(List.of(gateway, external), List.of(edge(Edge.Kind.CALLS, gateway.id(), external.id(), 1)));
 
         assertThat(GraphDiff.report(base, head))
                 .contains("Removed service `orders` is still called by gateway", "## Services removed");
@@ -122,7 +124,11 @@ class GraphDiffEdgeCasesTest {
         var able = endpoint("beta", "GET", "/able");
         Graph base = graph(List.of(alpha, beta, caller, zed, able), List.of(
                 edge(Edge.Kind.CALLS, caller.id(), zed.id(), 1), edge(Edge.Kind.CALLS, caller.id(), able.id(), 2)));
-        Graph head = graph(List.of(alpha, beta, caller), List.of(), List.of(
+        Graph head = graph(List.of(alpha, beta, caller), List.of(
+                new Edge(Edge.Kind.CALLS, caller.id(), alpha.id(), Confidence.EXACT,
+                        new TreeMap<>(Map.of("method", "GET", "path", "/zed")), List.of(ev(1))),
+                new Edge(Edge.Kind.CALLS, caller.id(), beta.id(), Confidence.EXACT,
+                        new TreeMap<>(Map.of("method", "GET", "path", "/able")), List.of(ev(2)))), List.of(
                 finding(Finding.Kind.CONTRACT_DRIFT, "caller", "middle", 3)));
 
         List<String> breaking = sectionBullets(GraphDiff.report(base, head), "## Breaking changes");

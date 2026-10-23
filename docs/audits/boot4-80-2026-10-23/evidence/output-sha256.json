@@ -1,0 +1,2270 @@
+{
+  "spring-guides/gs-rest-service": {
+    "commit": "3f4cef01152596c19bc4d37939409358812b1421",
+    "run1": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "a71c11d014c2ce50dcf63dd7f8e20b63381e176fee23864bf69de16927dd45db",
+      "index.md": "356673a8662fa230042c8631c61861f649a90f33af49796b0b9baea2dc69bdf9",
+      "services/initial.md": "97fa93a781e116238396e4edd61ce1b2a8a4ff7f34bbdaa40e14f82fbfa420a7"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "a71c11d014c2ce50dcf63dd7f8e20b63381e176fee23864bf69de16927dd45db",
+      "index.md": "356673a8662fa230042c8631c61861f649a90f33af49796b0b9baea2dc69bdf9",
+      "services/initial.md": "97fa93a781e116238396e4edd61ce1b2a8a4ff7f34bbdaa40e14f82fbfa420a7"
+    }
+  },
+  "spring-guides/gs-uploading-files": {
+    "commit": "d3f432cac961edfd39a9be157f2cdc258ed1ac65",
+    "run1": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "e82146823302dff0e586a1859efa16aa97aa5140c196a0b774e2c51058f0817c",
+      "index.md": "a26dee35db5a2f7430ef0cbbde5be10969e42ba767735397aaa3b31b8afe66af",
+      "services/complete.md": "b24f260fc793c1e9bcb6ad15ca1d99ca21f4533e2b0289854032dd783b16e98f",
+      "services/initial.md": "e4ead9ce8fc2efae55a26cd01a533529c54cb00a06465baf8356feeb661940d5"
+    },
+    "run2": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "e82146823302dff0e586a1859efa16aa97aa5140c196a0b774e2c51058f0817c",
+      "index.md": "a26dee35db5a2f7430ef0cbbde5be10969e42ba767735397aaa3b31b8afe66af",
+      "services/complete.md": "b24f260fc793c1e9bcb6ad15ca1d99ca21f4533e2b0289854032dd783b16e98f",
+      "services/initial.md": "e4ead9ce8fc2efae55a26cd01a533529c54cb00a06465baf8356feeb661940d5"
+    }
+  },
+  "spring-guides/gs-serving-web-content": {
+    "commit": "de04dc825d8a802f18a3fecc6ceb33b369d2dffa",
+    "run1": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "5306043d1adfec77a7fef5a3168e2133cc4a50645849a9ab32b6b2f2eb369b38",
+      "index.md": "edf0d1631d49177deb9e0cd625155f06b6805f619098024581bef59f251ef146",
+      "services/initial.md": "7dee8a21af93ce9f17b096a331dda44572a4a1cfeaee5392d728ab8a07102ec6"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "5306043d1adfec77a7fef5a3168e2133cc4a50645849a9ab32b6b2f2eb369b38",
+      "index.md": "edf0d1631d49177deb9e0cd625155f06b6805f619098024581bef59f251ef146",
+      "services/initial.md": "7dee8a21af93ce9f17b096a331dda44572a4a1cfeaee5392d728ab8a07102ec6"
+    }
+  },
+  "spring-guides/gs-handling-form-submission": {
+    "commit": "c34ded6971c68735da719973e4051f4600a7846a",
+    "run1": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "17fdb205cecd881ca0ab7a5bc29d344ef82e87e8947806b4faa181bd661c1209",
+      "index.md": "6d86ac1786ef5c0f3c9590f1c39cde3b9d9e61638c47845be4ee14df39ab5411",
+      "services/initial.md": "d38631da2e8de77d0236383f996ce0ce724fa95908ee882b53d0e0029449fb7b"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "17fdb205cecd881ca0ab7a5bc29d344ef82e87e8947806b4faa181bd661c1209",
+      "index.md": "6d86ac1786ef5c0f3c9590f1c39cde3b9d9e61638c47845be4ee14df39ab5411",
+      "services/initial.md": "d38631da2e8de77d0236383f996ce0ce724fa95908ee882b53d0e0029449fb7b"
+    }
+  },
+  "spring-guides/gs-actuator-service": {
+    "commit": "68f52bb7282f46aa39434199fa825d26ae180dc1",
+    "run1": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "dd5f3889311a1766e2d42702718b91166545782d51098fefce876fe000e4534a",
+      "index.md": "45f82b8531dde4f37fcb107f600e127a21ecc3e895b745779c15b2be3533093b",
+      "services/complete.md": "a7fd10068bb984b241fef4c0c5951028a602992a81832da91be04339be00408e",
+      "services/initial.md": "73a85a9122ed943fe32cfdd91ebcfcf2ae828ab40349af295a6c7a093f15b090"
+    },
+    "run2": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "dd5f3889311a1766e2d42702718b91166545782d51098fefce876fe000e4534a",
+      "index.md": "45f82b8531dde4f37fcb107f600e127a21ecc3e895b745779c15b2be3533093b",
+      "services/complete.md": "a7fd10068bb984b241fef4c0c5951028a602992a81832da91be04339be00408e",
+      "services/initial.md": "73a85a9122ed943fe32cfdd91ebcfcf2ae828ab40349af295a6c7a093f15b090"
+    }
+  },
+  "spring-guides/gs-accessing-data-mysql": {
+    "commit": "42aad055097e6debccd68972c5eeca9f403846d1",
+    "run1": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "28e429d9f472ab753e5794f9c8150224cd68859042849ed668ec06021fc145c8",
+      "graph.json": "8331c2e233124e9b9dba1c2212084ba2bba7384b0bfed640bdd9d8b6f1c0f044",
+      "index.md": "3da2c2d0a8a6ae0539ba4d5dba1c84cd6e0e07688b16743b99a2f6d6d326ef3c",
+      "services/initial.md": "1ba7c2cfd3a3ba58d80cc3c9c53c41e25955beb73e052bf00431daf6bf14e146"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "28e429d9f472ab753e5794f9c8150224cd68859042849ed668ec06021fc145c8",
+      "graph.json": "8331c2e233124e9b9dba1c2212084ba2bba7384b0bfed640bdd9d8b6f1c0f044",
+      "index.md": "3da2c2d0a8a6ae0539ba4d5dba1c84cd6e0e07688b16743b99a2f6d6d326ef3c",
+      "services/initial.md": "1ba7c2cfd3a3ba58d80cc3c9c53c41e25955beb73e052bf00431daf6bf14e146"
+    }
+  },
+  "spring-guides/gs-accessing-data-mongodb": {
+    "commit": "1b095970bf66642800d57c54d33cd12e7652440f",
+    "run1": {
+      "diagrams/complete.mmd": "902b75a22573ee7e7aefa20de0035e4f7b54b90eebb10e263cae0b9bae8e1496",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "ee89b6afd02992731d35645459a0b451b69dc9b30e19c0aa81be8bdf4da0bc2b",
+      "index.md": "f81331d1ae784383d6c38de33c18fa0bb6dee829973e90cd796f7699f08ae3c0",
+      "services/complete.md": "8fce7a6b306b76885614217b6a4eda6aa60fff3e28c1f3ce56b3dd0b1f63550b",
+      "services/initial.md": "5c2f08e4fca62954720ee34114601db6720925a684bca6f16cfcb82ba47631b4"
+    },
+    "run2": {
+      "diagrams/complete.mmd": "902b75a22573ee7e7aefa20de0035e4f7b54b90eebb10e263cae0b9bae8e1496",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "ee89b6afd02992731d35645459a0b451b69dc9b30e19c0aa81be8bdf4da0bc2b",
+      "index.md": "f81331d1ae784383d6c38de33c18fa0bb6dee829973e90cd796f7699f08ae3c0",
+      "services/complete.md": "8fce7a6b306b76885614217b6a4eda6aa60fff3e28c1f3ce56b3dd0b1f63550b",
+      "services/initial.md": "5c2f08e4fca62954720ee34114601db6720925a684bca6f16cfcb82ba47631b4"
+    }
+  },
+  "spring-guides/gs-caching": {
+    "commit": "48bb5a93d5d7ad72c28e74f9e0854df76e9e9903",
+    "run1": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "c2870dd013641c397d7eedc79f3dd13cc8afea7eb8a206c7309c68fefad6e3a6",
+      "index.md": "de686460168ad6b84c6f8012aacb0583c809b192337fe40b41204b335b6cf92b",
+      "services/complete.md": "017c641db5e5e57e5e4b5b6435c5535ed9ea9e94c4b640ffaeb5379bf379f0a7",
+      "services/initial.md": "65fcd98fdb3dcdb33c32ca9f50b5a7b052f9969901a8d8faa870e65993c0b259"
+    },
+    "run2": {
+      "diagrams/complete.mmd": "71c510dcb5d14ead31a2383b4f913b6324c5a583006a654a0ddfe8e5f49bdc3d",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "c2870dd013641c397d7eedc79f3dd13cc8afea7eb8a206c7309c68fefad6e3a6",
+      "index.md": "de686460168ad6b84c6f8012aacb0583c809b192337fe40b41204b335b6cf92b",
+      "services/complete.md": "017c641db5e5e57e5e4b5b6435c5535ed9ea9e94c4b640ffaeb5379bf379f0a7",
+      "services/initial.md": "65fcd98fdb3dcdb33c32ca9f50b5a7b052f9969901a8d8faa870e65993c0b259"
+    }
+  },
+  "spring-guides/gs-securing-web": {
+    "commit": "38b43f1d209b880e234b1082f49973a9e97639b4",
+    "run1": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "f6a2342be8fa2c3157ef140af01bf120d00005e1416a9bd3e204b8dc39026515",
+      "index.md": "49de695ac1bf50e09a53e6b9b1693dee3707a7196d8d50baaee76d5037577e70",
+      "services/initial.md": "dd0f561414ea9e244a364cb6e6b827e7fbeb6114ce8e82b360f0b910bc430687"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "03a7849d48e6ab03cbb8cbc56b0e44a6592ce615493a9ca5f4a7427acaefddd4",
+      "diagrams/initial.mmd": "1f9530ec05312a3da93267a0d62e9b30a4334a30b71eb23bac12d49b1080fbef",
+      "graph.json": "f6a2342be8fa2c3157ef140af01bf120d00005e1416a9bd3e204b8dc39026515",
+      "index.md": "49de695ac1bf50e09a53e6b9b1693dee3707a7196d8d50baaee76d5037577e70",
+      "services/initial.md": "dd0f561414ea9e244a364cb6e6b827e7fbeb6114ce8e82b360f0b910bc430687"
+    }
+  },
+  "spring-guides/gs-batch-processing": {
+    "commit": "ec64005c74f9b06a9ab11060c8ab3440bdc2291b",
+    "run1": {
+      "diagrams/complete.mmd": "d95bfefc88537e169707953149af6d8b7f980c51082f955a3fb39ca8e7333a17",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1b3295fe0fded13d53e2a65275b79a35fe1f7e701c06c199dd29e590b945238c",
+      "graph.json": "a99b7e6f7c0b76a613352aa31660ee65d69781326b37560830ab034a144ec7a0",
+      "index.md": "483164d1cb5ad2f2909e0ff5c91f9abff95442e982b6b1facc95445fe5a7c4de",
+      "services/complete.md": "b436227aa75378b6aafce964feb558da81e3df98c9c4c7d63d115021c6ffeaf7",
+      "services/initial.md": "873628ea3f1f6743814b6b1409503927cb7b8a7690ad2a7c95f997eeca665cfd"
+    },
+    "run2": {
+      "diagrams/complete.mmd": "d95bfefc88537e169707953149af6d8b7f980c51082f955a3fb39ca8e7333a17",
+      "diagrams/fleet.puml": "2a31881d263f4644425784390e215ae0e119f24a675062d4446739a1a74097d3",
+      "diagrams/initial.mmd": "1b3295fe0fded13d53e2a65275b79a35fe1f7e701c06c199dd29e590b945238c",
+      "graph.json": "a99b7e6f7c0b76a613352aa31660ee65d69781326b37560830ab034a144ec7a0",
+      "index.md": "483164d1cb5ad2f2909e0ff5c91f9abff95442e982b6b1facc95445fe5a7c4de",
+      "services/complete.md": "b436227aa75378b6aafce964feb558da81e3df98c9c4c7d63d115021c6ffeaf7",
+      "services/initial.md": "873628ea3f1f6743814b6b1409503927cb7b8a7690ad2a7c95f997eeca665cfd"
+    }
+  },
+  "andresmontoyat/spring-boot-hexagonal-architecture": {
+    "commit": "1ddc307962aa0d3e922b77a9ce49ba320552e543",
+    "run1": {
+      "diagrams/custom-service.mmd": "b9a885940727dc52886f665508cfe9a08b2dea9f768e14d78ee204d529d4e71b",
+      "diagrams/fleet.puml": "b6131e0435654d80e0bff918ae61e072a13038855265c7162ac7f1b4979863b3",
+      "graph.json": "ff1a9e0742b1d2ac6525c2954087537b0ce69eb33fc2813365df84b4e5a1819d",
+      "index.md": "45288b5099fb1b275db38efa9cd6964ad21f6ef02e0679810705701e38ea5aec",
+      "services/custom-service.md": "d15353b4677b84cba78a464a52fe0f24da0840e5bf98138fb082686108b365a0"
+    },
+    "run2": {
+      "diagrams/custom-service.mmd": "b9a885940727dc52886f665508cfe9a08b2dea9f768e14d78ee204d529d4e71b",
+      "diagrams/fleet.puml": "b6131e0435654d80e0bff918ae61e072a13038855265c7162ac7f1b4979863b3",
+      "graph.json": "ff1a9e0742b1d2ac6525c2954087537b0ce69eb33fc2813365df84b4e5a1819d",
+      "index.md": "45288b5099fb1b275db38efa9cd6964ad21f6ef02e0679810705701e38ea5aec",
+      "services/custom-service.md": "d15353b4677b84cba78a464a52fe0f24da0840e5bf98138fb082686108b365a0"
+    }
+  },
+  "JJun-He/Supplier-Hub": {
+    "commit": "5fbb53b4a85d970be106ebc4e29c097455eb2696",
+    "run1": {
+      "diagrams/fleet.puml": "9586a3718dfa0f747388ed4cb0829299131f849a65751132fddbed31dcaf255d",
+      "diagrams/mock-supplier.mmd": "ffe6097b984ddcc8d804c763bf17f7292a791248509abc1d7def925a7e6a3070",
+      "diagrams/supplier-hub.mmd": "3e55ca4a2ae939ad7a73bb62af10ba97eec7112b3dc7da4689b113d4c34853e9",
+      "graph.json": "a25d68330178161a945b9e83d01dbe88aaac9d949b655889eaa38935ce23c4ad",
+      "index.md": "7e9ea9cff80da52af9747b62ff02e1dde37dc23cca01bc0ae2fa2a98fc14046b",
+      "services/mock-supplier.md": "1d7fafbf074263535b18a26a0428bb90b72caca921760aecaffe6c8cf95c6bfe",
+      "services/supplier-hub.md": "4aae29db909e59ef2f5ba02c5a30c6e8930f933f5d88ec175818e580ed5806a8"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "9586a3718dfa0f747388ed4cb0829299131f849a65751132fddbed31dcaf255d",
+      "diagrams/mock-supplier.mmd": "ffe6097b984ddcc8d804c763bf17f7292a791248509abc1d7def925a7e6a3070",
+      "diagrams/supplier-hub.mmd": "3e55ca4a2ae939ad7a73bb62af10ba97eec7112b3dc7da4689b113d4c34853e9",
+      "graph.json": "a25d68330178161a945b9e83d01dbe88aaac9d949b655889eaa38935ce23c4ad",
+      "index.md": "7e9ea9cff80da52af9747b62ff02e1dde37dc23cca01bc0ae2fa2a98fc14046b",
+      "services/mock-supplier.md": "1d7fafbf074263535b18a26a0428bb90b72caca921760aecaffe6c8cf95c6bfe",
+      "services/supplier-hub.md": "4aae29db909e59ef2f5ba02c5a30c6e8930f933f5d88ec175818e580ed5806a8"
+    }
+  },
+  "mjkang4416/stay-supplier-integration": {
+    "commit": "c5290adec3e948ceccbca117ec593f1367b9a2af",
+    "run1": {
+      "diagrams/fleet.puml": "426ed2e64a013a5be1d5e58d37d27dfbe5a41eefd7cd03e2b2433ef2f376e526",
+      "diagrams/mock-supplier.mmd": "ffe6097b984ddcc8d804c763bf17f7292a791248509abc1d7def925a7e6a3070",
+      "diagrams/stay-supplier-integration.mmd": "ded5ce91079b6db708f71bfdbbb963527342267c6d14e809bb89a425a4f39ede",
+      "graph.json": "11bcf15ca9ce6dd8f4101e66860a98e68c1b85f70fc2e6ccc9855af957f5f134",
+      "index.md": "1a2828dcaee1a2e40a89c0af6b2a6b714356cbca92c87a7e83f2fc7ac366b79a",
+      "services/mock-supplier.md": "a87537354a074ebf784f789257994157af32aafefa47cd72b4fb6b26e336e204",
+      "services/stay-supplier-integration.md": "aa7672903358888ecab70b110ce5011786426f16ab25c6a36ced8825748aa208"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "426ed2e64a013a5be1d5e58d37d27dfbe5a41eefd7cd03e2b2433ef2f376e526",
+      "diagrams/mock-supplier.mmd": "ffe6097b984ddcc8d804c763bf17f7292a791248509abc1d7def925a7e6a3070",
+      "diagrams/stay-supplier-integration.mmd": "ded5ce91079b6db708f71bfdbbb963527342267c6d14e809bb89a425a4f39ede",
+      "graph.json": "11bcf15ca9ce6dd8f4101e66860a98e68c1b85f70fc2e6ccc9855af957f5f134",
+      "index.md": "1a2828dcaee1a2e40a89c0af6b2a6b714356cbca92c87a7e83f2fc7ac366b79a",
+      "services/mock-supplier.md": "a87537354a074ebf784f789257994157af32aafefa47cd72b4fb6b26e336e204",
+      "services/stay-supplier-integration.md": "aa7672903358888ecab70b110ce5011786426f16ab25c6a36ced8825748aa208"
+    }
+  },
+  "TassSinclair/mocktail-mixologist": {
+    "commit": "b4a90649dabee4eadd9f667e827f043ad73d5c0b",
+    "run1": {
+      "diagrams/fleet.puml": "18cb21b8cdca92503bd79ab23d9992e578ba3581c0d22ecec731804f7e85cfa1",
+      "diagrams/mocktail-mixologist.mmd": "a29bc514c755b9a1b4106fe8f62c28669627cfcfcc8f2a0155014de9325de2d5",
+      "graph.json": "dfdea1bed5fbbe3a0d44ff368e91c494f19fa150b22f97460fbbfad2844bf61e",
+      "index.md": "d3fce2f6b33da1af0ce630c4b71e1c39d1396ea5e37d4fb4ce8ca7bc0f6b5335",
+      "services/mocktail-mixologist.md": "2609bb4c8e925cead11f43b0df2cd6e56e1faa7c44ade89549a2b56affceabc3"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "18cb21b8cdca92503bd79ab23d9992e578ba3581c0d22ecec731804f7e85cfa1",
+      "diagrams/mocktail-mixologist.mmd": "a29bc514c755b9a1b4106fe8f62c28669627cfcfcc8f2a0155014de9325de2d5",
+      "graph.json": "dfdea1bed5fbbe3a0d44ff368e91c494f19fa150b22f97460fbbfad2844bf61e",
+      "index.md": "d3fce2f6b33da1af0ce630c4b71e1c39d1396ea5e37d4fb4ce8ca7bc0f6b5335",
+      "services/mocktail-mixologist.md": "2609bb4c8e925cead11f43b0df2cd6e56e1faa7c44ade89549a2b56affceabc3"
+    }
+  },
+  "smithy-ai/smithy-ai": {
+    "commit": "aef3fcad1e49eb1436933de0bd6808cae3b7b995",
+    "run1": {
+      "diagrams/backend.mmd": "61f91094942516ccf59254819ae857c5959a0290d9590f17fe1e0c6338dc619a",
+      "diagrams/fleet.puml": "57617c5881c670dff97d4ab710205e98cc97383ce80f066baaff621a758ab038",
+      "diagrams/knowledgebase-mcp.mmd": "2786c25fdff5c7ae7d36d4f93fe4a8f158d4c4215965021176361aa9872a4bc7",
+      "graph.json": "f70fc4bf5fbb7f23062511f5a3d642d10094ff9a7da117f47b6e5114895020ec",
+      "index.md": "f35ee67c8a182b84cd6b0466bbff22a75325b5bdf5357a8e7147ff4daf7ac65f",
+      "services/backend.md": "8554e18df370d4d3f275a87a84938d204a790e9b73068ccec98a90e875deee31",
+      "services/knowledgebase-mcp.md": "b48ada6a76394f68de326cda7e68741afed320e5c7548b3a7cf59cf59b191abd"
+    },
+    "run2": {
+      "diagrams/backend.mmd": "61f91094942516ccf59254819ae857c5959a0290d9590f17fe1e0c6338dc619a",
+      "diagrams/fleet.puml": "57617c5881c670dff97d4ab710205e98cc97383ce80f066baaff621a758ab038",
+      "diagrams/knowledgebase-mcp.mmd": "2786c25fdff5c7ae7d36d4f93fe4a8f158d4c4215965021176361aa9872a4bc7",
+      "graph.json": "f70fc4bf5fbb7f23062511f5a3d642d10094ff9a7da117f47b6e5114895020ec",
+      "index.md": "f35ee67c8a182b84cd6b0466bbff22a75325b5bdf5357a8e7147ff4daf7ac65f",
+      "services/backend.md": "8554e18df370d4d3f275a87a84938d204a790e9b73068ccec98a90e875deee31",
+      "services/knowledgebase-mcp.md": "b48ada6a76394f68de326cda7e68741afed320e5c7548b3a7cf59cf59b191abd"
+    }
+  },
+  "greenharborlabs/spring-boot-starter-paygate": {
+    "commit": "ef395bb40c798fcb5db133de1e09900e31788fc1",
+    "run1": {
+      "diagrams/fleet.puml": "fe09752a2903bdb08fdfe179792b92a0eade4a9423234dd65fc3b80a038b19de",
+      "diagrams/paygate-example-app-spring-security.mmd": "26037ae4752acf319bafd2d37a9ccdf63b70514f213740557b5a2e29a0775792",
+      "diagrams/paygate-example-app.mmd": "ccb13d20e85a71c02024e0d9a892b8a21dec99990147b9b2cde93a5449206cb7",
+      "graph.json": "44d8478042b3e79d5cfedc22683cce62747adefd86b7c3b18ecf4b76313f0aaa",
+      "index.md": "48e4714b3c8b5aae845c849f761f2f256eeaaa0554d27b4ebfd751074b39f380",
+      "services/paygate-example-app-spring-security.md": "04ea44dc71b6a1dcd1cd0f87ef5fd124deb0bfac37961ede48d819a551e33499",
+      "services/paygate-example-app.md": "04f2f8fba88bcdee3290ea661b869954fd41cf679b507d7a9c6f8e7376ef81c5"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fe09752a2903bdb08fdfe179792b92a0eade4a9423234dd65fc3b80a038b19de",
+      "diagrams/paygate-example-app-spring-security.mmd": "26037ae4752acf319bafd2d37a9ccdf63b70514f213740557b5a2e29a0775792",
+      "diagrams/paygate-example-app.mmd": "ccb13d20e85a71c02024e0d9a892b8a21dec99990147b9b2cde93a5449206cb7",
+      "graph.json": "44d8478042b3e79d5cfedc22683cce62747adefd86b7c3b18ecf4b76313f0aaa",
+      "index.md": "48e4714b3c8b5aae845c849f761f2f256eeaaa0554d27b4ebfd751074b39f380",
+      "services/paygate-example-app-spring-security.md": "04ea44dc71b6a1dcd1cd0f87ef5fd124deb0bfac37961ede48d819a551e33499",
+      "services/paygate-example-app.md": "04f2f8fba88bcdee3290ea661b869954fd41cf679b507d7a9c6f8e7376ef81c5"
+    }
+  },
+  "dsouzamelroy2007/fernbank": {
+    "commit": "43abcf2dbd228a296840f7507f7417345bc4d875",
+    "run1": {
+      "diagrams/fleet.puml": "bbf1088b2a6f19672345d5ed8e277f93b46ffb694062125f1b8e7d410f7952cf",
+      "diagrams/ledger.mmd": "b121ea4b55c44cc705a8d9515e1ecabdf18cc392868e5b6e6c69cb15e9446d21",
+      "graph.json": "bcd9ba52b0bcccac3421e9c4c12ab214214c57d2fa6f3389095147e838535b41",
+      "index.md": "1292d02a02f77b07a1894478c29ed63aa29fb8323f31779a4025d965a073e709",
+      "services/ledger.md": "92f75cc8e95e0fbe3fe7b6c28e129f177c83c9aefe2c73c656c08621f49d6a6b"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "bbf1088b2a6f19672345d5ed8e277f93b46ffb694062125f1b8e7d410f7952cf",
+      "diagrams/ledger.mmd": "b121ea4b55c44cc705a8d9515e1ecabdf18cc392868e5b6e6c69cb15e9446d21",
+      "graph.json": "bcd9ba52b0bcccac3421e9c4c12ab214214c57d2fa6f3389095147e838535b41",
+      "index.md": "1292d02a02f77b07a1894478c29ed63aa29fb8323f31779a4025d965a073e709",
+      "services/ledger.md": "92f75cc8e95e0fbe3fe7b6c28e129f177c83c9aefe2c73c656c08621f49d6a6b"
+    }
+  },
+  "vladimirnilov28/dot-com-retail": {
+    "commit": "0e01fa43a16d63a8fa7f1f8b9ac85e516760d510",
+    "run1": {
+      "diagrams/backend.mmd": "2e9e732537001ff9f0487441b85d5d3df31ca226c1738a437f355e01def22efb",
+      "diagrams/fleet.puml": "63de6a7aa00e5eb1d9f400c03b37e9e75c3fa53d62e82f1bb3b259af1178643e",
+      "graph.json": "27088bf1cbba0ccefb0f4eddfb1bc8e48d377e35e229893283ebe9553306a627",
+      "index.md": "5cd1ea0b44c7ed8990ae8f5873b2aa7de4e77072d2a9a018ded4e1527525cc81",
+      "services/backend.md": "43b51df8e02a9b10662ad02e3e6b618c2c09c5636859146044f587f5c77794eb"
+    },
+    "run2": {
+      "diagrams/backend.mmd": "2e9e732537001ff9f0487441b85d5d3df31ca226c1738a437f355e01def22efb",
+      "diagrams/fleet.puml": "63de6a7aa00e5eb1d9f400c03b37e9e75c3fa53d62e82f1bb3b259af1178643e",
+      "graph.json": "27088bf1cbba0ccefb0f4eddfb1bc8e48d377e35e229893283ebe9553306a627",
+      "index.md": "5cd1ea0b44c7ed8990ae8f5873b2aa7de4e77072d2a9a018ded4e1527525cc81",
+      "services/backend.md": "43b51df8e02a9b10662ad02e3e6b618c2c09c5636859146044f587f5c77794eb"
+    }
+  },
+  "team-project-final/synapse-platform-svc": {
+    "commit": "4a530a1017c223d1dfdbaa4d63e909a7183381bf",
+    "run1": {
+      "diagrams/fleet.puml": "87a97e75e445893f3f42c44d29a56848b4e4710de09a480c14450418859365c0",
+      "diagrams/platform-svc.mmd": "fad181ffc658e3badbf828a54124981130dc46c4f55a6d41836401c61531a78b",
+      "graph.json": "1f3bc7aac72d0e58de9983715458c105c67189613806c4a5545b83fe0d449773",
+      "index.md": "078b69cb18e864242c6eab011b9ce4c7c49da012f8066aec32e480f004e2336a",
+      "services/platform-svc.md": "803a662e959b83bd3e6b45bfbfa1d40bc107ea188b8e6e070f34f6fca3037a41"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "87a97e75e445893f3f42c44d29a56848b4e4710de09a480c14450418859365c0",
+      "diagrams/platform-svc.mmd": "fad181ffc658e3badbf828a54124981130dc46c4f55a6d41836401c61531a78b",
+      "graph.json": "1f3bc7aac72d0e58de9983715458c105c67189613806c4a5545b83fe0d449773",
+      "index.md": "078b69cb18e864242c6eab011b9ce4c7c49da012f8066aec32e480f004e2336a",
+      "services/platform-svc.md": "803a662e959b83bd3e6b45bfbfa1d40bc107ea188b8e6e070f34f6fca3037a41"
+    }
+  },
+  "jrjohn/arcana-cloud-springboot": {
+    "commit": "58adcbd2137911d041d6b9c186141e23d1732565",
+    "run1": {
+      "diagrams/arcana-cloud-java.mmd": "ca703b4be5521687900e816a18c68d6469d13a4b234aaec30fe8361831f006ef",
+      "diagrams/fleet.puml": "d6c227e35ebe90dd299abb75911ea4788a101815619aff1ca1b1376c012e4f2c",
+      "graph.json": "a01ecdad1fc8a7e0a6cfab62dbf86c50614ad5afcc251fdc8381505827f145af",
+      "index.md": "b6daed232ecd217b60d77ae5f7156276cff9bdf0d34fd4505d6cc1e7a3857823",
+      "services/arcana-cloud-java.md": "4c198747ea28a2a3223860187fdf6dd66424cfa30311f8bda6b49a5dd27e9c23"
+    },
+    "run2": {
+      "diagrams/arcana-cloud-java.mmd": "ca703b4be5521687900e816a18c68d6469d13a4b234aaec30fe8361831f006ef",
+      "diagrams/fleet.puml": "d6c227e35ebe90dd299abb75911ea4788a101815619aff1ca1b1376c012e4f2c",
+      "graph.json": "a01ecdad1fc8a7e0a6cfab62dbf86c50614ad5afcc251fdc8381505827f145af",
+      "index.md": "b6daed232ecd217b60d77ae5f7156276cff9bdf0d34fd4505d6cc1e7a3857823",
+      "services/arcana-cloud-java.md": "4c198747ea28a2a3223860187fdf6dd66424cfa30311f8bda6b49a5dd27e9c23"
+    }
+  },
+  "GdeiAssistant/GdeiAssistant": {
+    "commit": "4eeca4ce90fdf864a89d78c6859cd0b279139d04",
+    "run1": {
+      "diagrams/fleet.puml": "7a28d628c585d7bfa206e9af37a42d009ba7dd14936c5ae69165fc7881bd30ab",
+      "diagrams/GdeiAssistant.mmd": "7936eb5ffae1f744eb85483f452c6e810e884540ce5edc572ef4569cf4964ddc",
+      "graph.json": "33772784d07348d0b284b543fe6e082a0e160753a93c2b8f4b06642aca3eb542",
+      "index.md": "6bfaee791b3da135f2678225534d93338841ba6034bd9f79d35737735a198c82",
+      "services/GdeiAssistant.md": "ec3fe9d41c9eab763a9c1ce33ef0d4d95d380ab94f4d99e461056ddde47e24f5"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "7a28d628c585d7bfa206e9af37a42d009ba7dd14936c5ae69165fc7881bd30ab",
+      "diagrams/GdeiAssistant.mmd": "7936eb5ffae1f744eb85483f452c6e810e884540ce5edc572ef4569cf4964ddc",
+      "graph.json": "33772784d07348d0b284b543fe6e082a0e160753a93c2b8f4b06642aca3eb542",
+      "index.md": "6bfaee791b3da135f2678225534d93338841ba6034bd9f79d35737735a198c82",
+      "services/GdeiAssistant.md": "ec3fe9d41c9eab763a9c1ce33ef0d4d95d380ab94f4d99e461056ddde47e24f5"
+    }
+  },
+  "FAForever/faf-java-api": {
+    "commit": "caed91e0e6f969ea49177c76a3fad93b0b755397",
+    "run1": {
+      "diagrams/FAForever--faf-java-api.mmd": "8421e02cd938455b9ebd1f3cc85ada4345831167244ab471aaa3179751387ddf",
+      "diagrams/fleet.puml": "0664be4088ebf0ae5d1d973a785f9e01fc03788248142b2c7c5c03fe5474a026",
+      "graph.json": "97bd4a265baeffa82d11e4d3a56feff2863d6ee250a752f9fafc399f962ccd7e",
+      "index.md": "344f907cd2cbca1504c6d1d693c898fc65b827a53f91cb9862ffb877ecace750",
+      "services/FAForever--faf-java-api.md": "f97d43877154864363bbeda4c46fae9c1f25c0ce56e01db114c06f956e86c75c"
+    },
+    "run2": {
+      "diagrams/FAForever--faf-java-api.mmd": "8421e02cd938455b9ebd1f3cc85ada4345831167244ab471aaa3179751387ddf",
+      "diagrams/fleet.puml": "0664be4088ebf0ae5d1d973a785f9e01fc03788248142b2c7c5c03fe5474a026",
+      "graph.json": "97bd4a265baeffa82d11e4d3a56feff2863d6ee250a752f9fafc399f962ccd7e",
+      "index.md": "344f907cd2cbca1504c6d1d693c898fc65b827a53f91cb9862ffb877ecace750",
+      "services/FAForever--faf-java-api.md": "f97d43877154864363bbeda4c46fae9c1f25c0ce56e01db114c06f956e86c75c"
+    }
+  },
+  "kl3inIT/northstar": {
+    "commit": "caef9a9a55e60e8bc99b47275b4840d6cd940372",
+    "run1": {
+      "diagrams/fleet.puml": "53f12c5026469580765168330e34cacac093d6d7ced55928e0df5f724fe78138",
+      "diagrams/northstar-server.mmd": "727d6a493ec4791ac4f7e684f3081d02a6acee5482daece2f67f378cb7f14f02",
+      "graph.json": "ee39640e036fd79f95d889cf3f057ae11e4b9cb17dd6790965ed6434c0b2df8e",
+      "index.md": "0c786bd946522279305ce0b88d0ed91db85c6b10bb5d5575d592b2bd31b62626",
+      "services/northstar-server.md": "7c723d4d8958b76e8172bf2d1aa01ab22021f07aa147bee2ab1ab2fecd85a5df"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "53f12c5026469580765168330e34cacac093d6d7ced55928e0df5f724fe78138",
+      "diagrams/northstar-server.mmd": "727d6a493ec4791ac4f7e684f3081d02a6acee5482daece2f67f378cb7f14f02",
+      "graph.json": "ee39640e036fd79f95d889cf3f057ae11e4b9cb17dd6790965ed6434c0b2df8e",
+      "index.md": "0c786bd946522279305ce0b88d0ed91db85c6b10bb5d5575d592b2bd31b62626",
+      "services/northstar-server.md": "7c723d4d8958b76e8172bf2d1aa01ab22021f07aa147bee2ab1ab2fecd85a5df"
+    }
+  },
+  "autark-labs/autark-os": {
+    "commit": "c19e27373bc6bd3c920ff389d21d7ae86404d592",
+    "run1": {
+      "diagrams/autark-os-backend.mmd": "7ce8cd27076763625599970edc830f2271952655c343a27481fa83ff90a2ed3e",
+      "diagrams/fleet.puml": "27b9ee54bffed5028e4b3882a226d0751c86d6c6df66ebad1d03c432b3585425",
+      "graph.json": "d99b6376b67441a022ca44e7f2ca27f9e91c0a929e3b632042fd70a4cfaf5a74",
+      "index.md": "4c2c7a7135bcaabb131d31705d3638916e02f6cb4c96cc61f875db8e44bfb3ea",
+      "services/autark-os-backend.md": "49a09bd8e034cba1f3e0d17cf3e14f41cac1844b74539aebe51fba786bbc3b60"
+    },
+    "run2": {
+      "diagrams/autark-os-backend.mmd": "7ce8cd27076763625599970edc830f2271952655c343a27481fa83ff90a2ed3e",
+      "diagrams/fleet.puml": "27b9ee54bffed5028e4b3882a226d0751c86d6c6df66ebad1d03c432b3585425",
+      "graph.json": "d99b6376b67441a022ca44e7f2ca27f9e91c0a929e3b632042fd70a4cfaf5a74",
+      "index.md": "4c2c7a7135bcaabb131d31705d3638916e02f6cb4c96cc61f875db8e44bfb3ea",
+      "services/autark-os-backend.md": "49a09bd8e034cba1f3e0d17cf3e14f41cac1844b74539aebe51fba786bbc3b60"
+    }
+  },
+  "shuigedeng/taotao-cloud-sys": {
+    "commit": "98f3345c647f735dc11b9e46569bd4d666dcf368",
+    "run1": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    }
+  },
+  "shuigedeng/taotao-cloud-goods": {
+    "commit": "b91cb22c8ce2020feb79f2bcd1abfdef73d7bcfa",
+    "run1": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    }
+  },
+  "shuigedeng/taotao-cloud-order": {
+    "commit": "3f49ec68a800818f67aff4ce17f3590d2d9a15ae",
+    "run1": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    }
+  },
+  "shuigedeng/taotao-cloud-member": {
+    "commit": "ad7155a8987a42f51094d6a3cf668eca16f0a050",
+    "run1": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    }
+  },
+  "shuigedeng/taotao-cloud-message": {
+    "commit": "e4079716b21e786dab18c0b71f0bd61958e3877a",
+    "run1": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "fb3147a46863a5cab02eb46bb963efe11915d105133ab7ee42d3c38f7cf2d636",
+      "graph.json": "5a2ced6e1e5fd1eccfa3639037c35672b311395b94d873d0249dd95f1bc03f8d",
+      "index.md": "321373aac600d89bafa11bc2a5f7bb0b3478c93b653f642824485987ab03bc86"
+    }
+  },
+  "thainv1602/digishield": {
+    "commit": "d81c746429a62911f29cba9283094bba9f26e8ee",
+    "run1": {
+      "diagrams/digishield.mmd": "dcdce5a13770dbd07bf1a029e29f3958f94f8dfa4bc56489cf43261a6dec1c7c",
+      "diagrams/fleet.puml": "15f4dbfa1cbf05c7940ac40bfd081e5ff18331c7cecb5c477b0c7ee2a937da71",
+      "graph.json": "6b669453a7f55ba64e01523d93db8d04e527cf43cfb37186a36a99710aae2927",
+      "index.md": "d9795f388d6c67b489011c712408828d7fd8d0b4d05f0727faa79795c966d441",
+      "services/digishield.md": "b9dfc517f15e9c0dc7152d93098acb5055aba09656b37c42c5664e46284a4a07"
+    },
+    "run2": {
+      "diagrams/digishield.mmd": "dcdce5a13770dbd07bf1a029e29f3958f94f8dfa4bc56489cf43261a6dec1c7c",
+      "diagrams/fleet.puml": "15f4dbfa1cbf05c7940ac40bfd081e5ff18331c7cecb5c477b0c7ee2a937da71",
+      "graph.json": "6b669453a7f55ba64e01523d93db8d04e527cf43cfb37186a36a99710aae2927",
+      "index.md": "d9795f388d6c67b489011c712408828d7fd8d0b4d05f0727faa79795c966d441",
+      "services/digishield.md": "b9dfc517f15e9c0dc7152d93098acb5055aba09656b37c42c5664e46284a4a07"
+    }
+  },
+  "Stirling-Tools/Stirling-PDF": {
+    "commit": "87d790a30d8c072c7d84041afce3bc84528f1118",
+    "run1": {
+      "diagrams/core.mmd": "16f39eccdd23e7d3f7c944b6bbb6c939c3539058fbc81c5e456780c1996716ec",
+      "diagrams/fleet.puml": "1887d35f5506bef2098aea50fd99ab4e0a0b510ad21f4d0d0bb97d456e46b586",
+      "graph.json": "1ffe0c28d6c1d4c7c9fb168767cf0b51f87d6467a006ea0f2da26f5658f44d88",
+      "index.md": "11c406c41fc09e6dc4f0d9b1664ba8272b3080870aafb6a614ef883a4156b325",
+      "services/core.md": "75f8a103a892c75bfbb826e1cfc7e40eaa49c79f4559d23ace9e03a7f6acf5d6"
+    },
+    "run2": {
+      "diagrams/core.mmd": "16f39eccdd23e7d3f7c944b6bbb6c939c3539058fbc81c5e456780c1996716ec",
+      "diagrams/fleet.puml": "1887d35f5506bef2098aea50fd99ab4e0a0b510ad21f4d0d0bb97d456e46b586",
+      "graph.json": "1ffe0c28d6c1d4c7c9fb168767cf0b51f87d6467a006ea0f2da26f5658f44d88",
+      "index.md": "11c406c41fc09e6dc4f0d9b1664ba8272b3080870aafb6a614ef883a4156b325",
+      "services/core.md": "75f8a103a892c75bfbb826e1cfc7e40eaa49c79f4559d23ace9e03a7f6acf5d6"
+    }
+  },
+  "datahub-project/datahub": {
+    "commit": "53b0a20bd56695590cc38c736f12fce8365b126a",
+    "run1": {
+      "diagrams/datahub-upgrade.mmd": "a4c771bfe5534d33a770a75781a55f4d2ae741d6d504cb0bd5c2fa4fbbf73eea",
+      "diagrams/fleet.puml": "252809d5f9874d6e987f2611055890089822799494155d934d08f08251d5e3be",
+      "diagrams/mae-consumer-job.mmd": "cd4bf18ef932d7d56ca7c98816437ac7f75b7e72a1cbea491f6f1855a7d8ac6d",
+      "diagrams/mce-consumer-job.mmd": "e649837e8e7a9b6e8b11b5d1f011a1714c49934b00cbb49ffe72076f8a584bf3",
+      "diagrams/war.mmd": "84760ce017ef2d2444c8f4ce78329cd7a9d5b8487de82baa002b8d879c8cc737",
+      "graph.json": "f165043ef4198133b07acbed624169b2310d4096adc5798ab3608bb3464b7ac0",
+      "index.md": "80b9968c79825f2ceb51ead7e7539c926835590266d8d6c30ecf835033e17688",
+      "services/datahub-upgrade.md": "16804db561300c10343d3a56d1985c45f700bbc48a69e1a1b6f34bcd624aaa65",
+      "services/mae-consumer-job.md": "f3bcc4f8e00241e79426670a4317cf9eee1d6f07139ef65a19805d5c468f80cb",
+      "services/mce-consumer-job.md": "93407bddc02b66fcb83c5c5fdc474d2c45e59d33307db13b2f24e95cd324415c",
+      "services/war.md": "e89d246045ec55ddb51b9ff84ec28684c758c527f6b321ac2ccad78fa278fb47"
+    },
+    "run2": {
+      "diagrams/datahub-upgrade.mmd": "a4c771bfe5534d33a770a75781a55f4d2ae741d6d504cb0bd5c2fa4fbbf73eea",
+      "diagrams/fleet.puml": "252809d5f9874d6e987f2611055890089822799494155d934d08f08251d5e3be",
+      "diagrams/mae-consumer-job.mmd": "cd4bf18ef932d7d56ca7c98816437ac7f75b7e72a1cbea491f6f1855a7d8ac6d",
+      "diagrams/mce-consumer-job.mmd": "e649837e8e7a9b6e8b11b5d1f011a1714c49934b00cbb49ffe72076f8a584bf3",
+      "diagrams/war.mmd": "84760ce017ef2d2444c8f4ce78329cd7a9d5b8487de82baa002b8d879c8cc737",
+      "graph.json": "f165043ef4198133b07acbed624169b2310d4096adc5798ab3608bb3464b7ac0",
+      "index.md": "80b9968c79825f2ceb51ead7e7539c926835590266d8d6c30ecf835033e17688",
+      "services/datahub-upgrade.md": "16804db561300c10343d3a56d1985c45f700bbc48a69e1a1b6f34bcd624aaa65",
+      "services/mae-consumer-job.md": "f3bcc4f8e00241e79426670a4317cf9eee1d6f07139ef65a19805d5c468f80cb",
+      "services/mce-consumer-job.md": "93407bddc02b66fcb83c5c5fdc474d2c45e59d33307db13b2f24e95cd324415c",
+      "services/war.md": "e89d246045ec55ddb51b9ff84ec28684c758c527f6b321ac2ccad78fa278fb47"
+    }
+  },
+  "sanluan/PublicCMS": {
+    "commit": "d6d44b7e0cbac040a5246a80cce0ff6881d853e5",
+    "run1": {
+      "diagrams/fleet.puml": "f5fa3a7927d5d47a4a765f1adcca69b4df438a01846b0544b69a010d103e02cc",
+      "diagrams/publiccms.mmd": "8b044abf70e3c0dbbe0f7e341b787717e295ee0e951b6efca4c324e1d5a1fb4e",
+      "graph.json": "3bab70eedf0131ffc54d5ed70e74ef52c6d2951c4aa221dca78632bf0a5636fd",
+      "index.md": "2bd77bedb8111fe094ae1718e3057dc54f19ab44af4d4b89d73539bf6420a649",
+      "services/publiccms.md": "100360641f80f62f2443a696c955dd7544ca0f32627fb8f43abc2c4914cf7806"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "f5fa3a7927d5d47a4a765f1adcca69b4df438a01846b0544b69a010d103e02cc",
+      "diagrams/publiccms.mmd": "8b044abf70e3c0dbbe0f7e341b787717e295ee0e951b6efca4c324e1d5a1fb4e",
+      "graph.json": "3bab70eedf0131ffc54d5ed70e74ef52c6d2951c4aa221dca78632bf0a5636fd",
+      "index.md": "2bd77bedb8111fe094ae1718e3057dc54f19ab44af4d4b89d73539bf6420a649",
+      "services/publiccms.md": "100360641f80f62f2443a696c955dd7544ca0f32627fb8f43abc2c4914cf7806"
+    }
+  },
+  "hiero-ledger/hiero-mirror-node": {
+    "commit": "a7a992f3868aecff300c368e17ec6f2831d62cd8",
+    "run1": {
+      "diagrams/fleet.puml": "1d55fae41f15ab6fdac8cc73982342f521f1fe1d674b9f61b711a853a8a88854",
+      "diagrams/graphql.mmd": "389e319ef6a7a5390474028378011e81e06444b2dbb4405cbd1e55eb67348460",
+      "diagrams/grpc.mmd": "b9a18e8fa9e4da8f8927f085aa01244d4a6e236740c9f35a19ab09b36f2472a3",
+      "diagrams/importer.mmd": "a042cab457fe76ffdd4b0f417ee98ee496411981bf3387e94c4127925fa771a1",
+      "diagrams/monitor.mmd": "0fe96048497904ce853f2c89c3821624cc6718d38bc0f8d72c9515c84320a209",
+      "diagrams/rest-java.mmd": "14faf4eb2a2c5c5b771879ade1f4d54391b345edd18070d74be3eb82a432ea74",
+      "diagrams/test.mmd": "4e205e32ffd53a9b2055fc04dc42d3eb3cd95e22c728ef6fa09e22145099ffac",
+      "diagrams/web3.mmd": "0699c9c52975e41a30d342e40cf564e4240037e6569f2328c64381daead266de",
+      "graph.json": "3d9e2bac876a31e81f5fc709e3770b1b95ff2b17b1559b0f34555dc03cc07f27",
+      "index.md": "a239a4104f5ee362c75c8239ece6fd97c64b56c31ff20945d25ddbe4092738a5",
+      "services/graphql.md": "871c90d77329176d2dac6c828ec1627d2973e36ef63b66384bdacfed49acc478",
+      "services/grpc.md": "bcdf12d596a1223d26968b4a013b132f353bde61e6bb2d6c051d1a2a51be13b3",
+      "services/importer.md": "9908939f3f3a398d12c214cd2bd6c948b642f11e7a2e8705024eec6f1b00e3e8",
+      "services/monitor.md": "f0152432cf835e1c655219c7f899baadf8632b39c8427df28ded5257c33c2758",
+      "services/rest-java.md": "3637f760f304b2e572476fadb9cab0fea39db3a258eb7e301bcecbca20bc68da",
+      "services/test.md": "1ce9e34122437fd1be9cd576970cd5c1a23a2ecbc87ab0d2596629d3a66fcdf2",
+      "services/web3.md": "a7d46fb46cc68c51325a111a34534d3bbe3193475c488a7601e1a6c411a948b4"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "1d55fae41f15ab6fdac8cc73982342f521f1fe1d674b9f61b711a853a8a88854",
+      "diagrams/graphql.mmd": "389e319ef6a7a5390474028378011e81e06444b2dbb4405cbd1e55eb67348460",
+      "diagrams/grpc.mmd": "b9a18e8fa9e4da8f8927f085aa01244d4a6e236740c9f35a19ab09b36f2472a3",
+      "diagrams/importer.mmd": "a042cab457fe76ffdd4b0f417ee98ee496411981bf3387e94c4127925fa771a1",
+      "diagrams/monitor.mmd": "0fe96048497904ce853f2c89c3821624cc6718d38bc0f8d72c9515c84320a209",
+      "diagrams/rest-java.mmd": "14faf4eb2a2c5c5b771879ade1f4d54391b345edd18070d74be3eb82a432ea74",
+      "diagrams/test.mmd": "4e205e32ffd53a9b2055fc04dc42d3eb3cd95e22c728ef6fa09e22145099ffac",
+      "diagrams/web3.mmd": "0699c9c52975e41a30d342e40cf564e4240037e6569f2328c64381daead266de",
+      "graph.json": "3d9e2bac876a31e81f5fc709e3770b1b95ff2b17b1559b0f34555dc03cc07f27",
+      "index.md": "a239a4104f5ee362c75c8239ece6fd97c64b56c31ff20945d25ddbe4092738a5",
+      "services/graphql.md": "871c90d77329176d2dac6c828ec1627d2973e36ef63b66384bdacfed49acc478",
+      "services/grpc.md": "bcdf12d596a1223d26968b4a013b132f353bde61e6bb2d6c051d1a2a51be13b3",
+      "services/importer.md": "9908939f3f3a398d12c214cd2bd6c948b642f11e7a2e8705024eec6f1b00e3e8",
+      "services/monitor.md": "f0152432cf835e1c655219c7f899baadf8632b39c8427df28ded5257c33c2758",
+      "services/rest-java.md": "3637f760f304b2e572476fadb9cab0fea39db3a258eb7e301bcecbca20bc68da",
+      "services/test.md": "1ce9e34122437fd1be9cd576970cd5c1a23a2ecbc87ab0d2596629d3a66fcdf2",
+      "services/web3.md": "a7d46fb46cc68c51325a111a34534d3bbe3193475c488a7601e1a6c411a948b4"
+    }
+  },
+  "oinsio/gnomish-factory": {
+    "commit": "693ff432414dbab45f48f96dce2fc3866f03a76a",
+    "run1": {
+      "diagrams/bootstrap.mmd": "99d8a768ac66e665255549796d1383f77e45080c5add54103effe16c6214a757",
+      "diagrams/fleet.puml": "bd07f6685c0ee932b78a23be100f8ad98658a14fffe918b1a07f4050e3f1907f",
+      "graph.json": "c28bb2337e335a94263c339e1c7c162267ff60eede7af069563a3f9f6fce17e8",
+      "index.md": "1689c29fc6545c2bfc3fe955f4aeb02f9b8496dc89a8b4268a8f220ece4270a7",
+      "services/bootstrap.md": "e2375df7c5567ab5a11e13715315102accd762c854f65a5b14b21467cfff0c07"
+    },
+    "run2": {
+      "diagrams/bootstrap.mmd": "99d8a768ac66e665255549796d1383f77e45080c5add54103effe16c6214a757",
+      "diagrams/fleet.puml": "bd07f6685c0ee932b78a23be100f8ad98658a14fffe918b1a07f4050e3f1907f",
+      "graph.json": "c28bb2337e335a94263c339e1c7c162267ff60eede7af069563a3f9f6fce17e8",
+      "index.md": "1689c29fc6545c2bfc3fe955f4aeb02f9b8496dc89a8b4268a8f220ece4270a7",
+      "services/bootstrap.md": "e2375df7c5567ab5a11e13715315102accd762c854f65a5b14b21467cfff0c07"
+    }
+  },
+  "kl3inIT/zero-mail": {
+    "commit": "95961c79ab0ea76bda63a8cf1e7843cb2b0e836d",
+    "run1": {
+      "diagrams/fleet.puml": "8f1d3df3a37cde42d093a948af56d3b92fae10b758e1732900020e1420a65a25",
+      "diagrams/zeromail-api.mmd": "df5e35b1ae41f85ca5689fe82cc84da42edab33ce37266d8104edeba6e9274b2",
+      "diagrams/zeromail-worker.mmd": "e516b34ecd773c10da41f5e7deb10b2460fc6c46d0a44719e0d032eaf757769a",
+      "graph.json": "3e2f568beaacf7f0cdd2fe3ae7611e3f1afc284038f6a3dc8512e0301ee02e29",
+      "index.md": "c834bea43ea646f1cdc1ed4e2e9327482aa678c134644a853a200ecd02b10425",
+      "services/zeromail-api.md": "f44d6f8ff351a70428593d4cfc076b39508474cea6313258bb0217865f90f68a",
+      "services/zeromail-worker.md": "9b16b5f785815b9c80ad1af935eba4edf20f9b46fa11cc7d112b69e71fc9479a"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "8f1d3df3a37cde42d093a948af56d3b92fae10b758e1732900020e1420a65a25",
+      "diagrams/zeromail-api.mmd": "df5e35b1ae41f85ca5689fe82cc84da42edab33ce37266d8104edeba6e9274b2",
+      "diagrams/zeromail-worker.mmd": "e516b34ecd773c10da41f5e7deb10b2460fc6c46d0a44719e0d032eaf757769a",
+      "graph.json": "3e2f568beaacf7f0cdd2fe3ae7611e3f1afc284038f6a3dc8512e0301ee02e29",
+      "index.md": "c834bea43ea646f1cdc1ed4e2e9327482aa678c134644a853a200ecd02b10425",
+      "services/zeromail-api.md": "f44d6f8ff351a70428593d4cfc076b39508474cea6313258bb0217865f90f68a",
+      "services/zeromail-worker.md": "9b16b5f785815b9c80ad1af935eba4edf20f9b46fa11cc7d112b69e71fc9479a"
+    }
+  },
+  "kl3inIT/OrgMemory": {
+    "commit": "db999fab09a2f012f276909878840e1941fa2711",
+    "run1": {
+      "diagrams/fleet.puml": "c2d825ca225b6d1abf1f7ced2fb0d2dae9d1172ce92a44128354220a4bdb4724",
+      "diagrams/orgmemory-api.mmd": "4c7152976c7da2faee765f341c9bc07da0a5bb385781193a869864db57ed5fb6",
+      "diagrams/orgmemory-mcp.mmd": "3eafba5cb4fbd8304c1082eb6fb04c2a057489fd34c61324c679fbfcea9cf67d",
+      "diagrams/orgmemory-worker.mmd": "b3f6a86dc32c8235261d2eafb80e920e5b15ec39f92475c341d5e7316d300c28",
+      "graph.json": "ba8d37aec3b8b6f55a2ec8f520c09c489bd0a6f8ec7ea41230fd385b409ebe97",
+      "index.md": "b31f997b4e7cbd4c3a25858b0d20edfe58026ceca71b66957c7c37f23d9f36f8",
+      "services/orgmemory-api.md": "aae239947975a8d61fe0c30b4e293fc57ec9f48a4c18a3df0f3cb45a14bcadd0",
+      "services/orgmemory-mcp.md": "d02949bd1dd621a7531b78b389e7c62c89c820319c3a69d5579c25e60287f896",
+      "services/orgmemory-worker.md": "9ce14acbde3a3573ae430c49ad353c04d4ec1d93d012eb291338bf4dbd6c74b9"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "c2d825ca225b6d1abf1f7ced2fb0d2dae9d1172ce92a44128354220a4bdb4724",
+      "diagrams/orgmemory-api.mmd": "4c7152976c7da2faee765f341c9bc07da0a5bb385781193a869864db57ed5fb6",
+      "diagrams/orgmemory-mcp.mmd": "3eafba5cb4fbd8304c1082eb6fb04c2a057489fd34c61324c679fbfcea9cf67d",
+      "diagrams/orgmemory-worker.mmd": "b3f6a86dc32c8235261d2eafb80e920e5b15ec39f92475c341d5e7316d300c28",
+      "graph.json": "ba8d37aec3b8b6f55a2ec8f520c09c489bd0a6f8ec7ea41230fd385b409ebe97",
+      "index.md": "b31f997b4e7cbd4c3a25858b0d20edfe58026ceca71b66957c7c37f23d9f36f8",
+      "services/orgmemory-api.md": "aae239947975a8d61fe0c30b4e293fc57ec9f48a4c18a3df0f3cb45a14bcadd0",
+      "services/orgmemory-mcp.md": "d02949bd1dd621a7531b78b389e7c62c89c820319c3a69d5579c25e60287f896",
+      "services/orgmemory-worker.md": "9ce14acbde3a3573ae430c49ad353c04d4ec1d93d012eb291338bf4dbd6c74b9"
+    }
+  },
+  "saintbassanaga/BytesMind-Plateform": {
+    "commit": "14bafe4bd790a0ac66a4f773005990aed8891773",
+    "run1": {
+      "diagrams/accounting-service.mmd": "2e8a4705758132eb93414997765216287f173e1baabc68c4908c47afe1e92b7b",
+      "diagrams/api-consumer.mmd": "b8a4c9c7863fbf2a7159f7130e3ae2e6cb602442d955d47edfab2b21884b1b93",
+      "diagrams/backoffice-service.mmd": "361c4333277a8643fe868e6250e1611cc583d0eec98051d4f66dae1f10f47197",
+      "diagrams/fleet.puml": "5a9d4bed14a13a3930de686eec2c2b0ffac864c71b57280512d0a12058b04524",
+      "diagrams/gateway.mmd": "3d1813d67fd493f7fdd0ce76abecd4a3312af86f433bd1945f78e6215a50bf83",
+      "diagrams/identity-server.mmd": "fde8fa47ce59a7cfa0a59127918e9fdc53e10b90e229918e5f61bd8d79be8231",
+      "diagrams/k-compliance.mmd": "6a67d42b507c3d8e076099ba40c42c0cf4ceb50f257bb3e187bcfe20d0f10336",
+      "diagrams/katica-api.mmd": "c311c2964f811bc68724fce8fe838dea6c36652831e7a788bb26863cb46f7c3b",
+      "graph.json": "79f4aa906c3882fff4a099a405692eb072a03756b19cc928c42268c5ef78222f",
+      "index.md": "b41f02a9d9eb4f7f860be467b47e0dde6c82b2dc2bc313c6bdaf8479b519b8b6",
+      "services/accounting-service.md": "929a4abec64e38b68639c55d94ef6c62b3474e00c93780b6e90e9b0ceeb49b32",
+      "services/api-consumer.md": "7ec99dd75588bdd72bc8d84b1dd060d666a30727a75a89171f3eaee358ff98fd",
+      "services/backoffice-service.md": "48346cee99e0f17ec8b8021b23039285acc768884d7896b1ea46ee9500ba6961",
+      "services/gateway.md": "b4eca6a1d3998bbf110cec2cbae32bb98e5c3ccd6d4472dad9567b5adfd26a48",
+      "services/identity-server.md": "c290aed8783e4f3945151cfcd0560b30a1a22803a66658398d6eb4e21767a746",
+      "services/k-compliance.md": "3bebc69a907e9b6433b47ac92a3e27350c945a2019a46fd3a0e45cea0d0f3309",
+      "services/katica-api.md": "b6190f320515465cadde0ebb9b9cdd068e7e50b3bc01c0f7fd4fa90903fabfe5"
+    },
+    "run2": {
+      "diagrams/accounting-service.mmd": "2e8a4705758132eb93414997765216287f173e1baabc68c4908c47afe1e92b7b",
+      "diagrams/api-consumer.mmd": "b8a4c9c7863fbf2a7159f7130e3ae2e6cb602442d955d47edfab2b21884b1b93",
+      "diagrams/backoffice-service.mmd": "361c4333277a8643fe868e6250e1611cc583d0eec98051d4f66dae1f10f47197",
+      "diagrams/fleet.puml": "5a9d4bed14a13a3930de686eec2c2b0ffac864c71b57280512d0a12058b04524",
+      "diagrams/gateway.mmd": "3d1813d67fd493f7fdd0ce76abecd4a3312af86f433bd1945f78e6215a50bf83",
+      "diagrams/identity-server.mmd": "fde8fa47ce59a7cfa0a59127918e9fdc53e10b90e229918e5f61bd8d79be8231",
+      "diagrams/k-compliance.mmd": "6a67d42b507c3d8e076099ba40c42c0cf4ceb50f257bb3e187bcfe20d0f10336",
+      "diagrams/katica-api.mmd": "c311c2964f811bc68724fce8fe838dea6c36652831e7a788bb26863cb46f7c3b",
+      "graph.json": "79f4aa906c3882fff4a099a405692eb072a03756b19cc928c42268c5ef78222f",
+      "index.md": "b41f02a9d9eb4f7f860be467b47e0dde6c82b2dc2bc313c6bdaf8479b519b8b6",
+      "services/accounting-service.md": "929a4abec64e38b68639c55d94ef6c62b3474e00c93780b6e90e9b0ceeb49b32",
+      "services/api-consumer.md": "7ec99dd75588bdd72bc8d84b1dd060d666a30727a75a89171f3eaee358ff98fd",
+      "services/backoffice-service.md": "48346cee99e0f17ec8b8021b23039285acc768884d7896b1ea46ee9500ba6961",
+      "services/gateway.md": "b4eca6a1d3998bbf110cec2cbae32bb98e5c3ccd6d4472dad9567b5adfd26a48",
+      "services/identity-server.md": "c290aed8783e4f3945151cfcd0560b30a1a22803a66658398d6eb4e21767a746",
+      "services/k-compliance.md": "3bebc69a907e9b6433b47ac92a3e27350c945a2019a46fd3a0e45cea0d0f3309",
+      "services/katica-api.md": "b6190f320515465cadde0ebb9b9cdd068e7e50b3bc01c0f7fd4fa90903fabfe5"
+    }
+  },
+  "jumpmindinc/symmetric-ds": {
+    "commit": "2b24e3b0ff8ea52ca3d10b33b5f873bd97665776",
+    "run1": {
+      "diagrams/fleet.puml": "386c33581a3028b23cc3160fa7f5380a1cb9f04b70ff8c8b78f8a498737f28fa",
+      "diagrams/symmetric-server.mmd": "3a3fc6d0376a133dd31fb9cda77bcb2a0e542dcdd336233861311c0e337726a7",
+      "graph.json": "012c81d8a38aaf2999755ef95d0fe3f480c660cb72bde3220f9af48971deb3be",
+      "index.md": "0c9643ab6bc0edf92458331842b122338784904e3248ae40fc6ddb6f7002a4e6",
+      "services/symmetric-server.md": "dbb9dc161142ef348455d49971ad8390042b9e24a8ac833d4cdddf16a8e57785"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "386c33581a3028b23cc3160fa7f5380a1cb9f04b70ff8c8b78f8a498737f28fa",
+      "diagrams/symmetric-server.mmd": "3a3fc6d0376a133dd31fb9cda77bcb2a0e542dcdd336233861311c0e337726a7",
+      "graph.json": "012c81d8a38aaf2999755ef95d0fe3f480c660cb72bde3220f9af48971deb3be",
+      "index.md": "0c9643ab6bc0edf92458331842b122338784904e3248ae40fc6ddb6f7002a4e6",
+      "services/symmetric-server.md": "dbb9dc161142ef348455d49971ad8390042b9e24a8ac833d4cdddf16a8e57785"
+    }
+  },
+  "shuigedeng/taotao-cloud-project": {
+    "commit": "9d2f5897aef578908482233dd1768865767145c0",
+    "run1": {
+      "diagrams/fleet.puml": "ac2ce65c222f5efa38971f7542ead6793cf789f0f72435472ebee3b47a506dd1",
+      "diagrams/short.link.service.mmd": "282e9455d26742aa2926c0d26a999883d0b88e50a5d055ca4c64b330ce624ed5",
+      "diagrams/taotao-cloud-ai.mmd": "158da35f535e38e176da1c1c5a19d18d5fdbe21af8aadd37854f20aaef20aca5",
+      "diagrams/taotao-cloud-auth-biz.mmd": "6e855493e7895811800f90badcf308d44639f2c483af8e3f78e7d8eec7ec4c4a",
+      "diagrams/taotao-cloud-auth-sa.mmd": "1b12c53b229b8a763a2c0fd46c3249f76742826d33ecd119e2292129510f6994",
+      "diagrams/taotao-cloud-ccsr-dashboard.mmd": "be90bc05037218e336e021f7b90fc4d1664202802fefabd0b0d7747970400891",
+      "diagrams/taotao-cloud-ccsr-example.mmd": "840e8a27e86e251a796d009ab2f1528134d4b7e375ba474cf0c9f4a7073545d0",
+      "diagrams/taotao-cloud-ccsr-server.mmd": "21d9dd1be4606a606c65ead07fdd806a901c78f5906164175c9b7b9ab37cacac",
+      "diagrams/taotao-cloud-data-analysis.mmd": "a740d714da6a5cd86e80928d4078ed2dcff6ad78369bc9d8e016e92db221b7dc",
+      "diagrams/taotao-cloud-data-sync.mmd": "2af7d95c83611826dc598592fce9477c445d934cef4c7c2a0b01b9b0cac939c2",
+      "diagrams/taotao-cloud-doris.mmd": "5ffdc5d8e504fb461ca8470df82b77d79378dd205ad1d7d07735cc88fe29e42b",
+      "diagrams/taotao-cloud-front.mmd": "a33fd615e4eca79eb4a048f21d4d697731ae0c4b64b40ed29efd6b37d0b90938",
+      "diagrams/taotao-cloud-gateway-webflux.mmd": "ead32bc1b00a970448e74c20811ed7c34674b1d0f35360891c4ff5e1b6baed3f",
+      "diagrams/taotao-cloud-gateway-webmvc.mmd": "93465d2a3a7771b413b2ee43d3755d3117474e48dd93be8f9f5323e5a5e7679d",
+      "diagrams/taotao-cloud-job-dashboard.mmd": "26bbc5d3acf5ba5be63583db5a27603c8e36ee2413aaf4ff31c5d9c84d8abc22",
+      "diagrams/taotao-cloud-job-nameserver.mmd": "5510c434143e101553c48ff0d1b9d9097f6de717ffb468d2b4eaf8c5eb173556",
+      "diagrams/taotao-cloud-job-server.mmd": "744187eac6ebb54582ef52d8859f413580bfd995df9ca535d44d64538b693749",
+      "diagrams/taotao-cloud-monitor.mmd": "a4b43fce3ec57eefa08509b64a74120e518ba4101da39366f28076189a35ea2e",
+      "diagrams/taotao-cloud-mq-dashboard.mmd": "864bf9e8bb03a216a17100aa8469e221ab68e2e38eeb269ab294d75e74bec3c9",
+      "diagrams/taotao-cloud-mq-nameserver.mmd": "b5f8c6b617d0601e9330f89ada4064224bdd0339b44d53c4e10be22393b0a6e2",
+      "diagrams/taotao-cloud-opencv-service.mmd": "c00d6009806e575e147e91f4eae6bc9bee91729fb5ff34bb7cfaddea71ed20b6",
+      "diagrams/taotao-cloud-realtime-warehouse.mmd": "2c6aa3a5f48561ee77ec495883e733058ce5e5335bac66446e38da23194d8cb7",
+      "diagrams/taotao-cloud-rpc-dashboard.mmd": "9677fa60a8b8c6e7973625999bb41323e90c24005dd7235e6563ae989aa21f09",
+      "diagrams/taotao-cloud-rpc-nameserver.mmd": "f56622810dfe165247713257b0584e808e54fed28a613ba886de5a1fbe13aa21",
+      "diagrams/taotao-cloud-shell.mmd": "1457cfbb52bb97a17e66431502278bf4377c9b34a4243113f8ccda208eadcb8f",
+      "diagrams/taotao-cloud-tx-server.mmd": "8531f582ad28fe98a6c7c4ce07cba67caca3fb16d01c490cb9f2c8123cb4edfa",
+      "diagrams/taotao-cloud-wechat-biz.mmd": "2effa363a656f078392c7d9174ed733f1184bde6bc5c2085ab66202349e63f37",
+      "diagrams/taotao-cloud-workflow-biz.mmd": "6fff4d54c6f20be013c5de5583168bcd3bd4a4b1473493f627babb00e67240d3",
+      "diagrams/taotao-cloud-xxljob.mmd": "a9ac79fa639d866f089b607cd836cedce933438706264c17b15c3e8ff107f38d",
+      "graph.json": "bf383f0be074ed0dc79d4828e4e543bdb8c76c8c3705128c076ab09da37b045f",
+      "index.md": "a9789ea24ab697a49d9df0de90d50291a86f252e6fbb056e04c7afce20600b91",
+      "services/short.link.service.md": "202a2e92faa6423a839d4c56c5df807b646059b409c61375052b0817bb50be8b",
+      "services/taotao-cloud-ai.md": "113522535f00f7f7b711bad2f3698d55cc7d7ca2d3e712b103e3048b18229ff8",
+      "services/taotao-cloud-auth-biz.md": "8eedaff4ed39076d01e21eb252f3c1453937b17afea389ab75c3ff08c0064064",
+      "services/taotao-cloud-auth-sa.md": "f63128e8eec282f42cf7b5072b1a4fcfaec217803341bca0d7ae660e5d60845e",
+      "services/taotao-cloud-ccsr-dashboard.md": "c75d0bcdc2dc2ea883784dc0b9a2218328df7e467b831b537d4e02ac4c35e47d",
+      "services/taotao-cloud-ccsr-example.md": "4861d8bec0d0eb491e878fd81f7e8c684db90c82c771f8fc3ea16c4007545dff",
+      "services/taotao-cloud-ccsr-server.md": "3674b9f666b5d5ae2116d6c73713b2415a3c112c6340b8a1d33328ce1bca4d6c",
+      "services/taotao-cloud-data-analysis.md": "a8f6a0b62ed776e7d466fa0fa19201f6b0cf899a06882b639d47cf5be2e3c12c",
+      "services/taotao-cloud-data-sync.md": "a1f523b19cf7957b809f09e4904ed0ce7b805ae9d3435cdc73ffd51d8b1fb874",
+      "services/taotao-cloud-doris.md": "56c57878fd2a4b84aec7fd80abbb8a1afaf417df6606a26e5ca885df396e09e2",
+      "services/taotao-cloud-front.md": "1e46e56fecfdf2187862c123e70bdf2329844ac219d932030e98533b86296ab0",
+      "services/taotao-cloud-gateway-webflux.md": "9f8b4cdf53ef25ba55d8c3dd223d232dc3c34e6de29f95c5ae391fb8c96656f2",
+      "services/taotao-cloud-gateway-webmvc.md": "0fade93434d81105b52e6ed09c0802a5ce30a701b19fa2433ecd6ab4c57c61f2",
+      "services/taotao-cloud-job-dashboard.md": "8abf18979023ef5094d4d5bb0dabddc62637d6dec9302666de16168eefbaba33",
+      "services/taotao-cloud-job-nameserver.md": "d8b0d7effe2cd4bfb4c939b910b71e2d90f75729cd9880bd971c469f2a9f9eeb",
+      "services/taotao-cloud-job-server.md": "762fe248e1e8481dc1c1fee8bec594e9a825e4df522cbf20e50bc1c157be9c90",
+      "services/taotao-cloud-monitor.md": "225591bad2a3eac1b711e58c562ac8310cfdbeabb9e79c04cdf68b5e098f6494",
+      "services/taotao-cloud-mq-dashboard.md": "2717b5331400e6125d0cde0e143a1521930d31c141b53c7eef96187ee40eb851",
+      "services/taotao-cloud-mq-nameserver.md": "e0f0cc657ab0f92a0bc7c2b95cbbedd684d27bd33ae8e1abdeb3c8f47da8add2",
+      "services/taotao-cloud-opencv-service.md": "a454b57bb36f95ad4e8394b14e6946db68ab5c401c00839c5916ad69da1718a7",
+      "services/taotao-cloud-realtime-warehouse.md": "9d53efa437b024c29768d593f11e03e6de4eba7859fc107a9cf69498d2b5109d",
+      "services/taotao-cloud-rpc-dashboard.md": "e084e898153d341ef4fc9d2bf421a1708154b9367f8a78fc30b77cae971b6e08",
+      "services/taotao-cloud-rpc-nameserver.md": "4bab1072b034fd6573c2e4cbd4a2787ecf24b9f62fa25e0369282bffe05fa97a",
+      "services/taotao-cloud-shell.md": "a78b493a2e0f2b5fdd8b3fc8f75dc362eb1ab5a64bcbed281c46956b56b5970c",
+      "services/taotao-cloud-tx-server.md": "f941394621b28c2e67c8a367b70ec491964a207a01c3563c19b3689b2d3dfa70",
+      "services/taotao-cloud-wechat-biz.md": "b5002d4c37086d6a957b739530e342cf74c5b951ab3a5811dbfa307221371ba6",
+      "services/taotao-cloud-workflow-biz.md": "a8ce812841a1a34190b862960da3517cb9bc7391b8fed9fd230ba55f2a1b7fbc",
+      "services/taotao-cloud-xxljob.md": "9e286e8e88427a71d32af4300fbce3cac3279ec8b381b5eeda5b9521e75e8f3f"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "ac2ce65c222f5efa38971f7542ead6793cf789f0f72435472ebee3b47a506dd1",
+      "diagrams/short.link.service.mmd": "282e9455d26742aa2926c0d26a999883d0b88e50a5d055ca4c64b330ce624ed5",
+      "diagrams/taotao-cloud-ai.mmd": "158da35f535e38e176da1c1c5a19d18d5fdbe21af8aadd37854f20aaef20aca5",
+      "diagrams/taotao-cloud-auth-biz.mmd": "6e855493e7895811800f90badcf308d44639f2c483af8e3f78e7d8eec7ec4c4a",
+      "diagrams/taotao-cloud-auth-sa.mmd": "1b12c53b229b8a763a2c0fd46c3249f76742826d33ecd119e2292129510f6994",
+      "diagrams/taotao-cloud-ccsr-dashboard.mmd": "be90bc05037218e336e021f7b90fc4d1664202802fefabd0b0d7747970400891",
+      "diagrams/taotao-cloud-ccsr-example.mmd": "840e8a27e86e251a796d009ab2f1528134d4b7e375ba474cf0c9f4a7073545d0",
+      "diagrams/taotao-cloud-ccsr-server.mmd": "21d9dd1be4606a606c65ead07fdd806a901c78f5906164175c9b7b9ab37cacac",
+      "diagrams/taotao-cloud-data-analysis.mmd": "a740d714da6a5cd86e80928d4078ed2dcff6ad78369bc9d8e016e92db221b7dc",
+      "diagrams/taotao-cloud-data-sync.mmd": "2af7d95c83611826dc598592fce9477c445d934cef4c7c2a0b01b9b0cac939c2",
+      "diagrams/taotao-cloud-doris.mmd": "5ffdc5d8e504fb461ca8470df82b77d79378dd205ad1d7d07735cc88fe29e42b",
+      "diagrams/taotao-cloud-front.mmd": "a33fd615e4eca79eb4a048f21d4d697731ae0c4b64b40ed29efd6b37d0b90938",
+      "diagrams/taotao-cloud-gateway-webflux.mmd": "ead32bc1b00a970448e74c20811ed7c34674b1d0f35360891c4ff5e1b6baed3f",
+      "diagrams/taotao-cloud-gateway-webmvc.mmd": "93465d2a3a7771b413b2ee43d3755d3117474e48dd93be8f9f5323e5a5e7679d",
+      "diagrams/taotao-cloud-job-dashboard.mmd": "26bbc5d3acf5ba5be63583db5a27603c8e36ee2413aaf4ff31c5d9c84d8abc22",
+      "diagrams/taotao-cloud-job-nameserver.mmd": "5510c434143e101553c48ff0d1b9d9097f6de717ffb468d2b4eaf8c5eb173556",
+      "diagrams/taotao-cloud-job-server.mmd": "744187eac6ebb54582ef52d8859f413580bfd995df9ca535d44d64538b693749",
+      "diagrams/taotao-cloud-monitor.mmd": "a4b43fce3ec57eefa08509b64a74120e518ba4101da39366f28076189a35ea2e",
+      "diagrams/taotao-cloud-mq-dashboard.mmd": "864bf9e8bb03a216a17100aa8469e221ab68e2e38eeb269ab294d75e74bec3c9",
+      "diagrams/taotao-cloud-mq-nameserver.mmd": "b5f8c6b617d0601e9330f89ada4064224bdd0339b44d53c4e10be22393b0a6e2",
+      "diagrams/taotao-cloud-opencv-service.mmd": "c00d6009806e575e147e91f4eae6bc9bee91729fb5ff34bb7cfaddea71ed20b6",
+      "diagrams/taotao-cloud-realtime-warehouse.mmd": "2c6aa3a5f48561ee77ec495883e733058ce5e5335bac66446e38da23194d8cb7",
+      "diagrams/taotao-cloud-rpc-dashboard.mmd": "9677fa60a8b8c6e7973625999bb41323e90c24005dd7235e6563ae989aa21f09",
+      "diagrams/taotao-cloud-rpc-nameserver.mmd": "f56622810dfe165247713257b0584e808e54fed28a613ba886de5a1fbe13aa21",
+      "diagrams/taotao-cloud-shell.mmd": "1457cfbb52bb97a17e66431502278bf4377c9b34a4243113f8ccda208eadcb8f",
+      "diagrams/taotao-cloud-tx-server.mmd": "8531f582ad28fe98a6c7c4ce07cba67caca3fb16d01c490cb9f2c8123cb4edfa",
+      "diagrams/taotao-cloud-wechat-biz.mmd": "2effa363a656f078392c7d9174ed733f1184bde6bc5c2085ab66202349e63f37",
+      "diagrams/taotao-cloud-workflow-biz.mmd": "6fff4d54c6f20be013c5de5583168bcd3bd4a4b1473493f627babb00e67240d3",
+      "diagrams/taotao-cloud-xxljob.mmd": "a9ac79fa639d866f089b607cd836cedce933438706264c17b15c3e8ff107f38d",
+      "graph.json": "bf383f0be074ed0dc79d4828e4e543bdb8c76c8c3705128c076ab09da37b045f",
+      "index.md": "a9789ea24ab697a49d9df0de90d50291a86f252e6fbb056e04c7afce20600b91",
+      "services/short.link.service.md": "202a2e92faa6423a839d4c56c5df807b646059b409c61375052b0817bb50be8b",
+      "services/taotao-cloud-ai.md": "113522535f00f7f7b711bad2f3698d55cc7d7ca2d3e712b103e3048b18229ff8",
+      "services/taotao-cloud-auth-biz.md": "8eedaff4ed39076d01e21eb252f3c1453937b17afea389ab75c3ff08c0064064",
+      "services/taotao-cloud-auth-sa.md": "f63128e8eec282f42cf7b5072b1a4fcfaec217803341bca0d7ae660e5d60845e",
+      "services/taotao-cloud-ccsr-dashboard.md": "c75d0bcdc2dc2ea883784dc0b9a2218328df7e467b831b537d4e02ac4c35e47d",
+      "services/taotao-cloud-ccsr-example.md": "4861d8bec0d0eb491e878fd81f7e8c684db90c82c771f8fc3ea16c4007545dff",
+      "services/taotao-cloud-ccsr-server.md": "3674b9f666b5d5ae2116d6c73713b2415a3c112c6340b8a1d33328ce1bca4d6c",
+      "services/taotao-cloud-data-analysis.md": "a8f6a0b62ed776e7d466fa0fa19201f6b0cf899a06882b639d47cf5be2e3c12c",
+      "services/taotao-cloud-data-sync.md": "a1f523b19cf7957b809f09e4904ed0ce7b805ae9d3435cdc73ffd51d8b1fb874",
+      "services/taotao-cloud-doris.md": "56c57878fd2a4b84aec7fd80abbb8a1afaf417df6606a26e5ca885df396e09e2",
+      "services/taotao-cloud-front.md": "1e46e56fecfdf2187862c123e70bdf2329844ac219d932030e98533b86296ab0",
+      "services/taotao-cloud-gateway-webflux.md": "9f8b4cdf53ef25ba55d8c3dd223d232dc3c34e6de29f95c5ae391fb8c96656f2",
+      "services/taotao-cloud-gateway-webmvc.md": "0fade93434d81105b52e6ed09c0802a5ce30a701b19fa2433ecd6ab4c57c61f2",
+      "services/taotao-cloud-job-dashboard.md": "8abf18979023ef5094d4d5bb0dabddc62637d6dec9302666de16168eefbaba33",
+      "services/taotao-cloud-job-nameserver.md": "d8b0d7effe2cd4bfb4c939b910b71e2d90f75729cd9880bd971c469f2a9f9eeb",
+      "services/taotao-cloud-job-server.md": "762fe248e1e8481dc1c1fee8bec594e9a825e4df522cbf20e50bc1c157be9c90",
+      "services/taotao-cloud-monitor.md": "225591bad2a3eac1b711e58c562ac8310cfdbeabb9e79c04cdf68b5e098f6494",
+      "services/taotao-cloud-mq-dashboard.md": "2717b5331400e6125d0cde0e143a1521930d31c141b53c7eef96187ee40eb851",
+      "services/taotao-cloud-mq-nameserver.md": "e0f0cc657ab0f92a0bc7c2b95cbbedd684d27bd33ae8e1abdeb3c8f47da8add2",
+      "services/taotao-cloud-opencv-service.md": "a454b57bb36f95ad4e8394b14e6946db68ab5c401c00839c5916ad69da1718a7",
+      "services/taotao-cloud-realtime-warehouse.md": "9d53efa437b024c29768d593f11e03e6de4eba7859fc107a9cf69498d2b5109d",
+      "services/taotao-cloud-rpc-dashboard.md": "e084e898153d341ef4fc9d2bf421a1708154b9367f8a78fc30b77cae971b6e08",
+      "services/taotao-cloud-rpc-nameserver.md": "4bab1072b034fd6573c2e4cbd4a2787ecf24b9f62fa25e0369282bffe05fa97a",
+      "services/taotao-cloud-shell.md": "a78b493a2e0f2b5fdd8b3fc8f75dc362eb1ab5a64bcbed281c46956b56b5970c",
+      "services/taotao-cloud-tx-server.md": "f941394621b28c2e67c8a367b70ec491964a207a01c3563c19b3689b2d3dfa70",
+      "services/taotao-cloud-wechat-biz.md": "b5002d4c37086d6a957b739530e342cf74c5b951ab3a5811dbfa307221371ba6",
+      "services/taotao-cloud-workflow-biz.md": "a8ce812841a1a34190b862960da3517cb9bc7391b8fed9fd230ba55f2a1b7fbc",
+      "services/taotao-cloud-xxljob.md": "9e286e8e88427a71d32af4300fbce3cac3279ec8b381b5eeda5b9521e75e8f3f"
+    }
+  },
+  "nageoffer/tinyrag": {
+    "commit": "294f860cd4b20055bbf1769738fc397f925efa60",
+    "run1": {
+      "diagrams/fleet.puml": "4e2fe59ee6d988ff1369e3e2ba368df685215910b33b7db9962d027b487e8f46",
+      "diagrams/tinyrag-mcp-server.mmd": "7d64321caa4526b7c16776fb517ab4d0c4ca726a35d6688b228aaf86add5faf3",
+      "diagrams/tinyrag.mmd": "b58f97577a1e777a5590f216283bf608a652426cf2f66d091d7dd156ff9d91ad",
+      "graph.json": "a899c03529dc88b3f882e972e9ff80ac9ddaa9ae1f5a9057d26581ab6cac3ac1",
+      "index.md": "d0359b7affc28b3533203d4463ee816b7135226776784e4bdd27935d95b9cb87",
+      "services/tinyrag-mcp-server.md": "0629803f789185f60adbc334fc72584212887afc4e0673f970db79d71170f770",
+      "services/tinyrag.md": "6861c42f8b4961373fe6d7eab89413f1d81b79401904016f80ca85ece1fa43a6"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "4e2fe59ee6d988ff1369e3e2ba368df685215910b33b7db9962d027b487e8f46",
+      "diagrams/tinyrag-mcp-server.mmd": "7d64321caa4526b7c16776fb517ab4d0c4ca726a35d6688b228aaf86add5faf3",
+      "diagrams/tinyrag.mmd": "b58f97577a1e777a5590f216283bf608a652426cf2f66d091d7dd156ff9d91ad",
+      "graph.json": "a899c03529dc88b3f882e972e9ff80ac9ddaa9ae1f5a9057d26581ab6cac3ac1",
+      "index.md": "d0359b7affc28b3533203d4463ee816b7135226776784e4bdd27935d95b9cb87",
+      "services/tinyrag-mcp-server.md": "0629803f789185f60adbc334fc72584212887afc4e0673f970db79d71170f770",
+      "services/tinyrag.md": "6861c42f8b4961373fe6d7eab89413f1d81b79401904016f80ca85ece1fa43a6"
+    }
+  },
+  "duclongbox/Microservices-E-commerce-API-Backend": {
+    "commit": "de172ee54caed9ae4c92f4262577ebceb597d02d",
+    "run1": {
+      "diagrams/api-gateway.mmd": "e16c6ac1fc0c5290180b1a24ca993b7b0ae45ac135c9946d76fe83b7a1f47283",
+      "diagrams/fleet.puml": "5e46dfca9fdc03337ffa4e80307d9d0db3dc86f6e95bc2ddb4ce705f892e9ae6",
+      "diagrams/inventory-service.mmd": "28196f6097f3c45c5261342aa24678875a553d960ad8d05e8787a11ea9418dd1",
+      "diagrams/notification-service.mmd": "3e2165f0bed9ff7bc39e18a333301b9141feaf1f9797a04127d3107b7ad7648b",
+      "diagrams/order-service.mmd": "5563eedb5c22e3325293835b945bab625b8cc43a8017532ff11b1a7a3d0f9ba0",
+      "diagrams/product-service.mmd": "fbc2558267374c84ae9963b83d22173e695e7e6e93ca5d53ee9be728df5eaec0",
+      "graph.json": "5f85bba715acbbd7e88acec7709be86a0569579697160e3ebc1b97fd851b903d",
+      "index.md": "02f8d6518b510900c091396e19d312ee9f6ffe816f6781ca83b6e440aebb7cd1",
+      "services/api-gateway.md": "35bd46bf99562557f79878936d95952047e241832494e82c33aba2afa5b75b9b",
+      "services/inventory-service.md": "181d2ffeb008bd0f88f7a08f919b2c65e388e9fbfcb34403c940d730f26584a2",
+      "services/notification-service.md": "ac2f19b7ee38e7958ed65eeeed026892765979d7c7fcee8448d7fce67f2aea66",
+      "services/order-service.md": "463b53775743ae795097b3a43ca2ed9844a139da3e47ef8f13956f6b6cbe4d95",
+      "services/product-service.md": "181d7beb9e8a150d54c55be88563693c315b9d91de906abe0caa7e6744dd9e6d"
+    },
+    "run2": {
+      "diagrams/api-gateway.mmd": "e16c6ac1fc0c5290180b1a24ca993b7b0ae45ac135c9946d76fe83b7a1f47283",
+      "diagrams/fleet.puml": "5e46dfca9fdc03337ffa4e80307d9d0db3dc86f6e95bc2ddb4ce705f892e9ae6",
+      "diagrams/inventory-service.mmd": "28196f6097f3c45c5261342aa24678875a553d960ad8d05e8787a11ea9418dd1",
+      "diagrams/notification-service.mmd": "3e2165f0bed9ff7bc39e18a333301b9141feaf1f9797a04127d3107b7ad7648b",
+      "diagrams/order-service.mmd": "5563eedb5c22e3325293835b945bab625b8cc43a8017532ff11b1a7a3d0f9ba0",
+      "diagrams/product-service.mmd": "fbc2558267374c84ae9963b83d22173e695e7e6e93ca5d53ee9be728df5eaec0",
+      "graph.json": "5f85bba715acbbd7e88acec7709be86a0569579697160e3ebc1b97fd851b903d",
+      "index.md": "02f8d6518b510900c091396e19d312ee9f6ffe816f6781ca83b6e440aebb7cd1",
+      "services/api-gateway.md": "35bd46bf99562557f79878936d95952047e241832494e82c33aba2afa5b75b9b",
+      "services/inventory-service.md": "181d2ffeb008bd0f88f7a08f919b2c65e388e9fbfcb34403c940d730f26584a2",
+      "services/notification-service.md": "ac2f19b7ee38e7958ed65eeeed026892765979d7c7fcee8448d7fce67f2aea66",
+      "services/order-service.md": "463b53775743ae795097b3a43ca2ed9844a139da3e47ef8f13956f6b6cbe4d95",
+      "services/product-service.md": "181d7beb9e8a150d54c55be88563693c315b9d91de906abe0caa7e6744dd9e6d"
+    }
+  },
+  "eliasnogueira/credit-api": {
+    "commit": "ea9430a5632e0571e5d8a00bd2bde190876e247d",
+    "run1": {
+      "diagrams/eliasnogueira--credit-api.mmd": "0dbe7a34cc2cb6bce1e2d3a0471cdcfee16f9b7721b3e29fbc60713f5f9b621c",
+      "diagrams/fleet.puml": "29fadf72033bc512ce9f173e5cb4eee4c14587250304bfcd1cc2374e8f6b62c8",
+      "graph.json": "505b25017d1e837313e542540859fd3df5fb5d324f056687f8beb198260c4922",
+      "index.md": "8f4360cf994582153de98b6d21cd9a3d32430dcd6985fb6eb45bff054c6adc18",
+      "services/eliasnogueira--credit-api.md": "5f55d34070999568db0a0f051bca0cfafa006272e9e52ec2f5d4e327767f13ff"
+    },
+    "run2": {
+      "diagrams/eliasnogueira--credit-api.mmd": "0dbe7a34cc2cb6bce1e2d3a0471cdcfee16f9b7721b3e29fbc60713f5f9b621c",
+      "diagrams/fleet.puml": "29fadf72033bc512ce9f173e5cb4eee4c14587250304bfcd1cc2374e8f6b62c8",
+      "graph.json": "505b25017d1e837313e542540859fd3df5fb5d324f056687f8beb198260c4922",
+      "index.md": "8f4360cf994582153de98b6d21cd9a3d32430dcd6985fb6eb45bff054c6adc18",
+      "services/eliasnogueira--credit-api.md": "5f55d34070999568db0a0f051bca0cfafa006272e9e52ec2f5d4e327767f13ff"
+    }
+  },
+  "tobeflyboy/sc": {
+    "commit": "732439b4f16659bcc7d4bbdbf7b3c8b0afbaf83b",
+    "run1": {
+      "diagrams/fleet.puml": "c6cc5281e3127cf8191dbed17eea7cf1d10a5197f4135636e7c6579a22c5d194",
+      "diagrams/sc-config-server.mmd": "26e787c25364e2d31f72bd4b114982bd64c9dba98f3d092780d72f1a7db27f02",
+      "diagrams/sc-eureka-server.mmd": "571761c4d1d017e9bcbc50d252b22e64eda0c87d7bee8d2ca1294e64e4296fb1",
+      "diagrams/sc-gateway.mmd": "fa179cef6710b77977f4faf9d7d21c7fe7c3e986cd66c0b81505b7de79a2cea2",
+      "diagrams/sc-server-a.mmd": "968f80364b85f67efd186b537e4bc9810e82d23b32b0b68f34c1f04ecf90cdb3",
+      "diagrams/sc-server-b.mmd": "968f80364b85f67efd186b537e4bc9810e82d23b32b0b68f34c1f04ecf90cdb3",
+      "graph.json": "5cb7f20a93f6508aeaab06f7b56c62484112253e861cd7c2f5651ab2562f6e1f",
+      "index.md": "1523ea9f73b927c6bf29367a17ce8694b2b8f5be56a6461fb88cbe1c60d9fe0e",
+      "services/sc-config-server.md": "c758e38ad9557c5775326fe3b53d19b6faddebe6543f47b34d21af69efc0469e",
+      "services/sc-eureka-server.md": "5a57f65050bf99784d3c13af9d43b9a12cbdabe0ad691314940af43c0eeb42a7",
+      "services/sc-gateway.md": "e3e5ece45813f6ce75bfeb2a83e7460da0140966318c2a4825ae8f66607fb2aa",
+      "services/sc-server-a.md": "7c379e3296e6755f61edba6d7dcea3ecb9054d9e817c8ef2e3bf224087902a20",
+      "services/sc-server-b.md": "5fd3efaed4ebaa1d646e3693518c79f1539dbf2a180087872a49475e80972c08"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "c6cc5281e3127cf8191dbed17eea7cf1d10a5197f4135636e7c6579a22c5d194",
+      "diagrams/sc-config-server.mmd": "26e787c25364e2d31f72bd4b114982bd64c9dba98f3d092780d72f1a7db27f02",
+      "diagrams/sc-eureka-server.mmd": "571761c4d1d017e9bcbc50d252b22e64eda0c87d7bee8d2ca1294e64e4296fb1",
+      "diagrams/sc-gateway.mmd": "fa179cef6710b77977f4faf9d7d21c7fe7c3e986cd66c0b81505b7de79a2cea2",
+      "diagrams/sc-server-a.mmd": "968f80364b85f67efd186b537e4bc9810e82d23b32b0b68f34c1f04ecf90cdb3",
+      "diagrams/sc-server-b.mmd": "968f80364b85f67efd186b537e4bc9810e82d23b32b0b68f34c1f04ecf90cdb3",
+      "graph.json": "5cb7f20a93f6508aeaab06f7b56c62484112253e861cd7c2f5651ab2562f6e1f",
+      "index.md": "1523ea9f73b927c6bf29367a17ce8694b2b8f5be56a6461fb88cbe1c60d9fe0e",
+      "services/sc-config-server.md": "c758e38ad9557c5775326fe3b53d19b6faddebe6543f47b34d21af69efc0469e",
+      "services/sc-eureka-server.md": "5a57f65050bf99784d3c13af9d43b9a12cbdabe0ad691314940af43c0eeb42a7",
+      "services/sc-gateway.md": "e3e5ece45813f6ce75bfeb2a83e7460da0140966318c2a4825ae8f66607fb2aa",
+      "services/sc-server-a.md": "7c379e3296e6755f61edba6d7dcea3ecb9054d9e817c8ef2e3bf224087902a20",
+      "services/sc-server-b.md": "5fd3efaed4ebaa1d646e3693518c79f1539dbf2a180087872a49475e80972c08"
+    }
+  },
+  "xuxueli/xxl-api": {
+    "commit": "119f7d6ef3fabdd7c9940003608a9346d754c93b",
+    "run1": {
+      "diagrams/fleet.puml": "17e7c47aaadf8913681fcac98264e85d21fa8f147e7d14cbf54d68fc72b9b32b",
+      "diagrams/xxl-api-admin.mmd": "c1034fa804af34bf116df173476edf95af7ac57fc6721dfebe2a3eb54e1c3265",
+      "graph.json": "46bfbf9ce0073bafae987367913055e27493c61cbc2f627fa06c948740abbedc",
+      "index.md": "a9fe1ffa0bc96bdfb31d1e746f2ad105d300ad7bdf9b502ffe043bd96af28bb2",
+      "services/xxl-api-admin.md": "9a077f58c5e2e8aa2602aef05bea1b4a1fdacf21830932eade64b6fb6040c081"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "17e7c47aaadf8913681fcac98264e85d21fa8f147e7d14cbf54d68fc72b9b32b",
+      "diagrams/xxl-api-admin.mmd": "c1034fa804af34bf116df173476edf95af7ac57fc6721dfebe2a3eb54e1c3265",
+      "graph.json": "46bfbf9ce0073bafae987367913055e27493c61cbc2f627fa06c948740abbedc",
+      "index.md": "a9fe1ffa0bc96bdfb31d1e746f2ad105d300ad7bdf9b502ffe043bd96af28bb2",
+      "services/xxl-api-admin.md": "9a077f58c5e2e8aa2602aef05bea1b4a1fdacf21830932eade64b6fb6040c081"
+    }
+  },
+  "vsouzx/cqrs-pattern": {
+    "commit": "3d1fcbcf1d688197b349e59cd57e3a72347f7426",
+    "run1": {
+      "diagrams/catalog-service.mmd": "4c9c5b91faaf7ee7f6ae015821c62340fd1cfdeac7295c532aa5e0246a2d02ca",
+      "diagrams/fleet.puml": "de5e132ee4f2b4c88bd45c1fe150e2ec44e1fae45f923a90e1865b96e5664716",
+      "diagrams/music-service.mmd": "6106af9ce2f48a043fc2edd60f823678d9597b0adf4fe26c3d6b05be17974ae4",
+      "graph.json": "b3f7af16b70627085fc1bac802088dc1ad2db74f77631df44ddbee7c56d48f63",
+      "index.md": "f0c426ee20a4a75e65180fa567a544f9d271a5b2f93a80cc4a02b68ffed1172b",
+      "services/catalog-service.md": "a02c8dd63b3bff91b99ae2072a472d66e6f7a6e9fb14a65e88b061cd18a231ea",
+      "services/music-service.md": "dc1cf4cabb9e29abed9e30bdf86818f9d000d5d330dad25cca882054791db2fb"
+    },
+    "run2": {
+      "diagrams/catalog-service.mmd": "4c9c5b91faaf7ee7f6ae015821c62340fd1cfdeac7295c532aa5e0246a2d02ca",
+      "diagrams/fleet.puml": "de5e132ee4f2b4c88bd45c1fe150e2ec44e1fae45f923a90e1865b96e5664716",
+      "diagrams/music-service.mmd": "6106af9ce2f48a043fc2edd60f823678d9597b0adf4fe26c3d6b05be17974ae4",
+      "graph.json": "b3f7af16b70627085fc1bac802088dc1ad2db74f77631df44ddbee7c56d48f63",
+      "index.md": "f0c426ee20a4a75e65180fa567a544f9d271a5b2f93a80cc4a02b68ffed1172b",
+      "services/catalog-service.md": "a02c8dd63b3bff91b99ae2072a472d66e6f7a6e9fb14a65e88b061cd18a231ea",
+      "services/music-service.md": "dc1cf4cabb9e29abed9e30bdf86818f9d000d5d330dad25cca882054791db2fb"
+    }
+  },
+  "spring-projects/spring-petclinic": {
+    "commit": "500158f732419217507c7656904b8e6aa1bcc0d6",
+    "run1": {
+      "diagrams/fleet.puml": "da37e86f5f9124518f00bc9672e378dc34f0fa882018341d4992b69028015675",
+      "diagrams/spring-projects--spring-petclinic.mmd": "571ce1ce8ede4523790eb672c55697f9d6e198194288c533610c6a5689c99ce9",
+      "graph.json": "b8a88bf73e1f52872e68966a66f70b2368abefd8644824bf12a11476a1431b0f",
+      "index.md": "88e20a1fe102abacc99c0ca84ce966073a66004197a3cfa45d3fecf1e500d985",
+      "services/spring-projects--spring-petclinic.md": "c9cca8c42e7a66f236473a253493b2ed79a36f90a98e2ec8f65c1cced441c875"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "da37e86f5f9124518f00bc9672e378dc34f0fa882018341d4992b69028015675",
+      "diagrams/spring-projects--spring-petclinic.mmd": "571ce1ce8ede4523790eb672c55697f9d6e198194288c533610c6a5689c99ce9",
+      "graph.json": "b8a88bf73e1f52872e68966a66f70b2368abefd8644824bf12a11476a1431b0f",
+      "index.md": "88e20a1fe102abacc99c0ca84ce966073a66004197a3cfa45d3fecf1e500d985",
+      "services/spring-projects--spring-petclinic.md": "c9cca8c42e7a66f236473a253493b2ed79a36f90a98e2ec8f65c1cced441c875"
+    }
+  },
+  "johan1271/fya-creditos-backend": {
+    "commit": "982493c7df5bd48c00adc4bce04cd3180b9d0426",
+    "run1": {
+      "diagrams/creditos-backend.mmd": "2c19b3e842ae566c352b2a48f124654d29d5b4611ffd0db89ffcce8a957349ab",
+      "diagrams/fleet.puml": "642c112fc0f329dad8a88609556c0a31ead9fc2bd022b4f391e4f7cea28ea1f4",
+      "graph.json": "02fb51c832dc60796cac2161d03ad01c9bb35e5cbe7681be410d652d0621ee2a",
+      "index.md": "fa881604d4b71a3d0172011980e50104f4d86b855c556712875c94e2b5df5c9d",
+      "services/creditos-backend.md": "c0e94e47e1b8c22b55f2f819a8f7511705f538b298d7ced9f0df5fa1b701c938"
+    },
+    "run2": {
+      "diagrams/creditos-backend.mmd": "2c19b3e842ae566c352b2a48f124654d29d5b4611ffd0db89ffcce8a957349ab",
+      "diagrams/fleet.puml": "642c112fc0f329dad8a88609556c0a31ead9fc2bd022b4f391e4f7cea28ea1f4",
+      "graph.json": "02fb51c832dc60796cac2161d03ad01c9bb35e5cbe7681be410d652d0621ee2a",
+      "index.md": "fa881604d4b71a3d0172011980e50104f4d86b855c556712875c94e2b5df5c9d",
+      "services/creditos-backend.md": "c0e94e47e1b8c22b55f2f819a8f7511705f538b298d7ced9f0df5fa1b701c938"
+    }
+  },
+  "monsoon-io/trading-engine": {
+    "commit": "6fbe8cf571d06e1bdfc2ddeb3c12beb5b1ed4c63",
+    "run1": {
+      "diagrams/engine.mmd": "d6887b3927549636e553375fb1519c0f3163ff6c916e5e7f27a5476406f7c940",
+      "diagrams/fleet.puml": "f28d747c42226f9849848737d03dc1428406a709784a19e8c8fb7070733db2b4",
+      "graph.json": "f8a05d2f312c55b1b568b98dc92c59a484197bb222290adcfa3a666cdbb390c3",
+      "index.md": "e7204e2561e8bd4c84927692073d81a9197528e70c6f8c6c5beaebd53b18803f",
+      "services/engine.md": "3015131c3fa79d2642ec882b4e7f57bb7a5ec90df01ea022b4ab8288a7ac5511"
+    },
+    "run2": {
+      "diagrams/engine.mmd": "d6887b3927549636e553375fb1519c0f3163ff6c916e5e7f27a5476406f7c940",
+      "diagrams/fleet.puml": "f28d747c42226f9849848737d03dc1428406a709784a19e8c8fb7070733db2b4",
+      "graph.json": "f8a05d2f312c55b1b568b98dc92c59a484197bb222290adcfa3a666cdbb390c3",
+      "index.md": "e7204e2561e8bd4c84927692073d81a9197528e70c6f8c6c5beaebd53b18803f",
+      "services/engine.md": "3015131c3fa79d2642ec882b4e7f57bb7a5ec90df01ea022b4ab8288a7ac5511"
+    }
+  },
+  "PrasannaMalatesha/EmployeeManagementSystem": {
+    "commit": "1e994300905f962bb8643463437109915cf430f5",
+    "run1": {
+      "diagrams/ems.mmd": "ac45665a224782b8a349b7075b5f136d3fd887e9b701f4d9cc05e7a527e6e200",
+      "diagrams/fleet.puml": "445e461ad85fd61e97a671f7054eb3fa5b796e0fded4e3ff53c85f65297e3542",
+      "graph.json": "04d85cb6f2ffea559b8a0455869a38d949a35327ce8df76aaebeea31290282a8",
+      "index.md": "1687f8f65e9fb0f7413032260fd5cbb28bd4e24a012019801a8b0aa85db30aba",
+      "services/ems.md": "1005291cfa91c66512cb5371d8bf2dec6d267adf2667ab88c2165b2d5143777d"
+    },
+    "run2": {
+      "diagrams/ems.mmd": "ac45665a224782b8a349b7075b5f136d3fd887e9b701f4d9cc05e7a527e6e200",
+      "diagrams/fleet.puml": "445e461ad85fd61e97a671f7054eb3fa5b796e0fded4e3ff53c85f65297e3542",
+      "graph.json": "04d85cb6f2ffea559b8a0455869a38d949a35327ce8df76aaebeea31290282a8",
+      "index.md": "1687f8f65e9fb0f7413032260fd5cbb28bd4e24a012019801a8b0aa85db30aba",
+      "services/ems.md": "1005291cfa91c66512cb5371d8bf2dec6d267adf2667ab88c2165b2d5143777d"
+    }
+  },
+  "spring-petclinic/spring-petclinic-microservices": {
+    "commit": "1d76b00d683e86b62867a6bf59530f8ab301244f",
+    "run1": {
+      "diagrams/admin-server.mmd": "86a40795e57bcc08d36b106302af95f4772e9ef563a1713f8e12868514c0201c",
+      "diagrams/api-gateway.mmd": "d799509f2d5a6e8b3d0a95236ddc25f0ea00cedabc5254d227bd24abc5596f2b",
+      "diagrams/customers-service.mmd": "cc0dbcadaf350d2e0a161996c4a922907d8ecfb6f966ca28858f713dc70151aa",
+      "diagrams/discovery-server.mmd": "4b0ec686a9333c0c5e8f1a71a1a2c99fd4c7875aaea79c7863dfb30aef240b67",
+      "diagrams/fleet.puml": "99d4a886c1a6f043916ab3056e39705d30a510cd6f464ed43be7efd449505eb0",
+      "diagrams/genai-service.mmd": "feeee883538bed54c66c17eb817e4afca1301acb27a472f52edca724e480f058",
+      "diagrams/spring-petclinic-config-server.mmd": "1924823b2d5da73f2713fe275870928448d24cee3ff9f42948c324a1be96022c",
+      "diagrams/vets-service.mmd": "9f2a4c0bc55f33f3acf623cc6be780ea53a226d89f397818ca39cb87b5168514",
+      "diagrams/visits-service.mmd": "c0594e74730c7535c35588db783a029d7aededb6eae878f3249b77b52594cce3",
+      "graph.json": "7cce1cd690857fa41ab878d6725ecb959538d1710a46f2eff08b68033b7635fe",
+      "index.md": "c5d1511209a45e3b1844c0a8aff890fcee2d4d27ac88ab4d83381429b7c4fa35",
+      "services/admin-server.md": "749f788152bee1b2ddbeef22b8e203ad22163c65956d0f420b6a5f62e49ea2e0",
+      "services/api-gateway.md": "65f03d1a9204010b9af33821dd1b85bdf36335226d38980673b9d432c2708c4b",
+      "services/customers-service.md": "6f4363cbce240e7d4bd318eeba875936703ad0b9ef407dd5d4d90776ffb68754",
+      "services/discovery-server.md": "57ae0bf6ed95882d3ba96afe5742b4d89fd92d3884bf25b46d21ce458d9255db",
+      "services/genai-service.md": "f09de0706399a0b21bece4f1aa3f07788b25336ffef1bc72635342af247d33d3",
+      "services/spring-petclinic-config-server.md": "397d40b1dcea6ca5c2bd363b67b5d08375c09dba731e2e4bb6b06c80719b2ebe",
+      "services/vets-service.md": "587e7fa166c0e70e839b03b0955ce858756d60e770ba3863945e494cbb4de45a",
+      "services/visits-service.md": "2141a3b3521d4afca84d04bb0b8f1d80c5eca54c6eb7ad8fda8a0317bdbdc834"
+    },
+    "run2": {
+      "diagrams/admin-server.mmd": "86a40795e57bcc08d36b106302af95f4772e9ef563a1713f8e12868514c0201c",
+      "diagrams/api-gateway.mmd": "d799509f2d5a6e8b3d0a95236ddc25f0ea00cedabc5254d227bd24abc5596f2b",
+      "diagrams/customers-service.mmd": "cc0dbcadaf350d2e0a161996c4a922907d8ecfb6f966ca28858f713dc70151aa",
+      "diagrams/discovery-server.mmd": "4b0ec686a9333c0c5e8f1a71a1a2c99fd4c7875aaea79c7863dfb30aef240b67",
+      "diagrams/fleet.puml": "99d4a886c1a6f043916ab3056e39705d30a510cd6f464ed43be7efd449505eb0",
+      "diagrams/genai-service.mmd": "feeee883538bed54c66c17eb817e4afca1301acb27a472f52edca724e480f058",
+      "diagrams/spring-petclinic-config-server.mmd": "1924823b2d5da73f2713fe275870928448d24cee3ff9f42948c324a1be96022c",
+      "diagrams/vets-service.mmd": "9f2a4c0bc55f33f3acf623cc6be780ea53a226d89f397818ca39cb87b5168514",
+      "diagrams/visits-service.mmd": "c0594e74730c7535c35588db783a029d7aededb6eae878f3249b77b52594cce3",
+      "graph.json": "7cce1cd690857fa41ab878d6725ecb959538d1710a46f2eff08b68033b7635fe",
+      "index.md": "c5d1511209a45e3b1844c0a8aff890fcee2d4d27ac88ab4d83381429b7c4fa35",
+      "services/admin-server.md": "749f788152bee1b2ddbeef22b8e203ad22163c65956d0f420b6a5f62e49ea2e0",
+      "services/api-gateway.md": "65f03d1a9204010b9af33821dd1b85bdf36335226d38980673b9d432c2708c4b",
+      "services/customers-service.md": "6f4363cbce240e7d4bd318eeba875936703ad0b9ef407dd5d4d90776ffb68754",
+      "services/discovery-server.md": "57ae0bf6ed95882d3ba96afe5742b4d89fd92d3884bf25b46d21ce458d9255db",
+      "services/genai-service.md": "f09de0706399a0b21bece4f1aa3f07788b25336ffef1bc72635342af247d33d3",
+      "services/spring-petclinic-config-server.md": "397d40b1dcea6ca5c2bd363b67b5d08375c09dba731e2e4bb6b06c80719b2ebe",
+      "services/vets-service.md": "587e7fa166c0e70e839b03b0955ce858756d60e770ba3863945e494cbb4de45a",
+      "services/visits-service.md": "2141a3b3521d4afca84d04bb0b8f1d80c5eca54c6eb7ad8fda8a0317bdbdc834"
+    }
+  },
+  "seed4j/seed4j-sample-app": {
+    "commit": "9fc234310a84fca99376b7621cd10caec8354e64",
+    "run1": {
+      "diagrams/fleet.puml": "1566d9bda368dc4c3170924eb1f1fe03bcad9e89f32a5c9d60efaddbc8342110",
+      "diagrams/seed4j--seed4j-sample-app.mmd": "f5a0e88310f77b5b8155376ec4c10b925c1ab197cb76c2b479d6061291451403",
+      "graph.json": "c72cac4234b3198f19b617f00501d479fbe6c0fa0c50ffb245b6de2b6600d4a1",
+      "index.md": "95cbd7a3a860a55d13134a808e3ff107b3bfe2245e951cc2ec7a3ed543c28c59",
+      "services/seed4j--seed4j-sample-app.md": "1df011a60931d8dce12cd70ab307aa96edd094271d10cb79ed86b30b1ee251dc"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "1566d9bda368dc4c3170924eb1f1fe03bcad9e89f32a5c9d60efaddbc8342110",
+      "diagrams/seed4j--seed4j-sample-app.mmd": "f5a0e88310f77b5b8155376ec4c10b925c1ab197cb76c2b479d6061291451403",
+      "graph.json": "c72cac4234b3198f19b617f00501d479fbe6c0fa0c50ffb245b6de2b6600d4a1",
+      "index.md": "95cbd7a3a860a55d13134a808e3ff107b3bfe2245e951cc2ec7a3ed543c28c59",
+      "services/seed4j--seed4j-sample-app.md": "1df011a60931d8dce12cd70ab307aa96edd094271d10cb79ed86b30b1ee251dc"
+    }
+  },
+  "SAP/cloud-security-services-integration-library": {
+    "commit": "0732e26522fdf81eea6db24703b85579531770f2",
+    "run1": {
+      "diagrams/fleet.puml": "31eb14dd7d2db02b7756362322f508de029615c0c9c7c882935027aeb873ae0a",
+      "diagrams/spring-security-basic-auth.mmd": "ce19576d38c273edb539c4bc23ef7f96e043b8ca661c91cab9ba7e5a1802b0e4",
+      "diagrams/spring-security-hybrid-usage.mmd": "2aa0539ea1ea313b2b2a7f9dcbc21edfa371cd9dbcc617e235af4703fac833b3",
+      "diagrams/spring-webflux-security-hybrid-usage.mmd": "fc5231669030740ba8da8f929d769c23038b3a7f8adfe6d92fee826dab065f56",
+      "graph.json": "b62bb7ebd44a74447cc5a9c00537b5fd95a7067268f2e561fbff4c8d3df29f05",
+      "index.md": "e4ca938153cda85d7d11bc51dcd85a56d9a59e1ad78cd57c464a72064dba410c",
+      "services/spring-security-basic-auth.md": "ddb1e9e107def27119aa6827a5cfe244d554216cfaf3d417de5e251cda6921ad",
+      "services/spring-security-hybrid-usage.md": "8d13423c6fd12385f525e331bfe69339895c309404c9bdae2387039f5f119573",
+      "services/spring-webflux-security-hybrid-usage.md": "d2344d0ab51fcdf2f01ccc067829334fa843067ec9157af32d7acdad4060437c"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "31eb14dd7d2db02b7756362322f508de029615c0c9c7c882935027aeb873ae0a",
+      "diagrams/spring-security-basic-auth.mmd": "ce19576d38c273edb539c4bc23ef7f96e043b8ca661c91cab9ba7e5a1802b0e4",
+      "diagrams/spring-security-hybrid-usage.mmd": "2aa0539ea1ea313b2b2a7f9dcbc21edfa371cd9dbcc617e235af4703fac833b3",
+      "diagrams/spring-webflux-security-hybrid-usage.mmd": "fc5231669030740ba8da8f929d769c23038b3a7f8adfe6d92fee826dab065f56",
+      "graph.json": "b62bb7ebd44a74447cc5a9c00537b5fd95a7067268f2e561fbff4c8d3df29f05",
+      "index.md": "e4ca938153cda85d7d11bc51dcd85a56d9a59e1ad78cd57c464a72064dba410c",
+      "services/spring-security-basic-auth.md": "ddb1e9e107def27119aa6827a5cfe244d554216cfaf3d417de5e251cda6921ad",
+      "services/spring-security-hybrid-usage.md": "8d13423c6fd12385f525e331bfe69339895c309404c9bdae2387039f5f119573",
+      "services/spring-webflux-security-hybrid-usage.md": "d2344d0ab51fcdf2f01ccc067829334fa843067ec9157af32d7acdad4060437c"
+    }
+  },
+  "xuxueli/xxl-conf": {
+    "commit": "ebcaa283de241429d4982242190a70d3cec347ab",
+    "run1": {
+      "diagrams/fleet.puml": "476397e1bef23e986a7fdb5559beeccbb04564be6b90894e1288be39eaf21c62",
+      "diagrams/xxl-conf-admin.mmd": "0f80847df6fab9bf09d640d21a0f5f44ce745a8fc39627e3825626b37b2f2270",
+      "diagrams/xxl-conf-sample-springboot.mmd": "f3918300d1dff7674914facfe7f4112c5ea43aecb93a90486f57922a2cd289b8",
+      "graph.json": "8a13695213320b385ea0ccfa58f3c2a8d4a5e2e6ea87b8fe7a67dabee05b7f1d",
+      "index.md": "5d9971503502da18eff86f876a964a3840132a82216bdd468fa2a522f05ee7a5",
+      "services/xxl-conf-admin.md": "65e1171a7453c8315e54cfbafe5eb89c80b76dbe764e3f4668ff4dae89b71e3e",
+      "services/xxl-conf-sample-springboot.md": "71a8028e043469e0007d1d00522b7f262f9e2ea13de715fc6867775428e9284b"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "476397e1bef23e986a7fdb5559beeccbb04564be6b90894e1288be39eaf21c62",
+      "diagrams/xxl-conf-admin.mmd": "0f80847df6fab9bf09d640d21a0f5f44ce745a8fc39627e3825626b37b2f2270",
+      "diagrams/xxl-conf-sample-springboot.mmd": "f3918300d1dff7674914facfe7f4112c5ea43aecb93a90486f57922a2cd289b8",
+      "graph.json": "8a13695213320b385ea0ccfa58f3c2a8d4a5e2e6ea87b8fe7a67dabee05b7f1d",
+      "index.md": "5d9971503502da18eff86f876a964a3840132a82216bdd468fa2a522f05ee7a5",
+      "services/xxl-conf-admin.md": "65e1171a7453c8315e54cfbafe5eb89c80b76dbe764e3f4668ff4dae89b71e3e",
+      "services/xxl-conf-sample-springboot.md": "71a8028e043469e0007d1d00522b7f262f9e2ea13de715fc6867775428e9284b"
+    }
+  },
+  "xuxueli/xxl-mq": {
+    "commit": "02ab1a80448a4b3c48b90d45a029b89ee21f4795",
+    "run1": {
+      "diagrams/fleet.puml": "9afd8b568b0bf8ac8a48075bb2b9b506ec961940c194d7ef359344c6611ff481",
+      "diagrams/xxl-mq-admin.mmd": "d64f3d7382d1c67904da1a86c5565a3193ef02083d5e8cb7b9024b2677a86bf9",
+      "diagrams/xxl-mq-samples-springboot.mmd": "18b29f709c9091c42b936412f4342889808e35d8baaac07ede4c1f874602bbae",
+      "graph.json": "f1a868a00662470d18bddbd2c5ff6f8c2a31a28c12862a69716a8180c70e4ed3",
+      "index.md": "88de431339b8991dfe2039b5e3ed5dd47a5801113d5b88e55b8068e50310a495",
+      "services/xxl-mq-admin.md": "d437acfef7e2905e4a66b5c26dc4f80cc12e499113198b28d60b1b173924a91a",
+      "services/xxl-mq-samples-springboot.md": "41c6b185a239ec71c91b8e204e4e423ea15f36469da2a90ae4d0c601e651912a"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "9afd8b568b0bf8ac8a48075bb2b9b506ec961940c194d7ef359344c6611ff481",
+      "diagrams/xxl-mq-admin.mmd": "d64f3d7382d1c67904da1a86c5565a3193ef02083d5e8cb7b9024b2677a86bf9",
+      "diagrams/xxl-mq-samples-springboot.mmd": "18b29f709c9091c42b936412f4342889808e35d8baaac07ede4c1f874602bbae",
+      "graph.json": "f1a868a00662470d18bddbd2c5ff6f8c2a31a28c12862a69716a8180c70e4ed3",
+      "index.md": "88de431339b8991dfe2039b5e3ed5dd47a5801113d5b88e55b8068e50310a495",
+      "services/xxl-mq-admin.md": "d437acfef7e2905e4a66b5c26dc4f80cc12e499113198b28d60b1b173924a91a",
+      "services/xxl-mq-samples-springboot.md": "41c6b185a239ec71c91b8e204e4e423ea15f36469da2a90ae4d0c601e651912a"
+    }
+  },
+  "xuxueli/xxl-job": {
+    "commit": "693d27640be76d02ed7214ede57ce75f7f9ebb71",
+    "run1": {
+      "diagrams/fleet.puml": "2a651c069b92031f0cfe4bed5ba30a1809b28cb65abc4398cc041d60b40db6e1",
+      "diagrams/xxl-job-admin.mmd": "b9e58b2a1ced06f02638c103e6e0d289d94712c54a7d6adb7615b961ed23401b",
+      "diagrams/xxl-job-executor-sample-springboot-ai.mmd": "b58e0f4eb47e832bac1aa4212fa1498075798b29944c1b82fa87feada2422fe5",
+      "diagrams/xxl-job-executor-sample-springboot.mmd": "786acbf05b66c376e5412e2588a039d10317bc9d2f1773a7edb3718501250982",
+      "graph.json": "417fdbf6377be87f6c353b9a0c2eaed737d7478568a07d6af3eba1b73e078e87",
+      "index.md": "3d146bfea7023a45780c6a5097d0ba887ca15b3f3c0a9b25bab96e3c104eb324",
+      "services/xxl-job-admin.md": "017b36065b706166866fcd1befa2929cf745a58a6adcbbf96fb9f684bce7282e",
+      "services/xxl-job-executor-sample-springboot-ai.md": "5c773e22629f041a994a0febb71f791823e1ca85206361db096a3aa8961eb40c",
+      "services/xxl-job-executor-sample-springboot.md": "93e9a0c866b7152de5ea944a7d61193ab871eca9639f1a6c47cd2b19b2891dd5"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "2a651c069b92031f0cfe4bed5ba30a1809b28cb65abc4398cc041d60b40db6e1",
+      "diagrams/xxl-job-admin.mmd": "b9e58b2a1ced06f02638c103e6e0d289d94712c54a7d6adb7615b961ed23401b",
+      "diagrams/xxl-job-executor-sample-springboot-ai.mmd": "b58e0f4eb47e832bac1aa4212fa1498075798b29944c1b82fa87feada2422fe5",
+      "diagrams/xxl-job-executor-sample-springboot.mmd": "786acbf05b66c376e5412e2588a039d10317bc9d2f1773a7edb3718501250982",
+      "graph.json": "417fdbf6377be87f6c353b9a0c2eaed737d7478568a07d6af3eba1b73e078e87",
+      "index.md": "3d146bfea7023a45780c6a5097d0ba887ca15b3f3c0a9b25bab96e3c104eb324",
+      "services/xxl-job-admin.md": "017b36065b706166866fcd1befa2929cf745a58a6adcbbf96fb9f684bce7282e",
+      "services/xxl-job-executor-sample-springboot-ai.md": "5c773e22629f041a994a0febb71f791823e1ca85206361db096a3aa8961eb40c",
+      "services/xxl-job-executor-sample-springboot.md": "93e9a0c866b7152de5ea944a7d61193ab871eca9639f1a6c47cd2b19b2891dd5"
+    }
+  },
+  "xuxueli/xxl-sso": {
+    "commit": "e2158cc2b8212ce9108df9f0bdff9e6c8db42487",
+    "run1": {
+      "diagrams/fleet.puml": "0e9af7d444f9b02ef2bcf5a7fdcb8eccaf161bee9ee38532c682f05514615a25",
+      "diagrams/xxl-sso-sample-interceptor-cas.mmd": "4d5c507e65a94e87be9d362f2ef36b0b1ad27f98238038e63a0696a0d6d1a6d1",
+      "diagrams/xxl-sso-sample-interceptor-native.mmd": "6b995b2502cf7a72165244810c908ec7256f29fa6d583fa82b49c3a521e5f2d9",
+      "diagrams/xxl-sso-sample-interceptor-web.mmd": "7ff1f755eb9d518de351c995deabd40b7fcc8ad3847225de69607195f0a45665",
+      "diagrams/xxl-sso-sample-reactive-cas.mmd": "d8c398c32beba08556742885a985dd7f3d0187d34d927a0c68b0b08539435cd8",
+      "diagrams/xxl-sso-sample-reactive-native.mmd": "3b99ec61d5529d655bd0e0eec392481345b81437626c328b1556377b5fcc8935",
+      "diagrams/xxl-sso-sample-reactive-web.mmd": "f5c0f3f5f0375bd589780265c2ee02206e6623dbb92cc455472356d06c8e35d9",
+      "diagrams/xxl-sso-server.mmd": "1af85c32a565242ef5cab59fab7df4fc5cfde9b7d672c545720ebcc37ec24e74",
+      "graph.json": "51aa2942bedea903599995b546e802fe8c71e05dbe04c305236661abfc5ab263",
+      "index.md": "478cca0bc1ab4e01160585da0bfee62d51728dbaf23f818106c7cc07cdb93ceb",
+      "services/xxl-sso-sample-interceptor-cas.md": "cef70e4b1303164e220882f931b6eb67329d8c169ccc71723799b200e7bf4319",
+      "services/xxl-sso-sample-interceptor-native.md": "670dc726229f107023fb182fe8d51bc84ef002b017ce308466d4aefc5f83cf95",
+      "services/xxl-sso-sample-interceptor-web.md": "47f88a049ab0c69239500b2e64e523153be8a12ca3a94117697b40cdf484f584",
+      "services/xxl-sso-sample-reactive-cas.md": "299488b3af872b6561fa44ee28b8c3e35e7fd61308ee72af593e8f14e195c446",
+      "services/xxl-sso-sample-reactive-native.md": "e170b17173540fce920e0a0c7d9edece0408905077f0a83b8df211126d90452b",
+      "services/xxl-sso-sample-reactive-web.md": "18368d7e60edf618117481c0771b6ed81371a707301852b6bf4df275b2755543",
+      "services/xxl-sso-server.md": "4e8f1f9705979c533d8e26400710274f2392fcbaecf80c44b04bbcaf4453bfbf"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "0e9af7d444f9b02ef2bcf5a7fdcb8eccaf161bee9ee38532c682f05514615a25",
+      "diagrams/xxl-sso-sample-interceptor-cas.mmd": "4d5c507e65a94e87be9d362f2ef36b0b1ad27f98238038e63a0696a0d6d1a6d1",
+      "diagrams/xxl-sso-sample-interceptor-native.mmd": "6b995b2502cf7a72165244810c908ec7256f29fa6d583fa82b49c3a521e5f2d9",
+      "diagrams/xxl-sso-sample-interceptor-web.mmd": "7ff1f755eb9d518de351c995deabd40b7fcc8ad3847225de69607195f0a45665",
+      "diagrams/xxl-sso-sample-reactive-cas.mmd": "d8c398c32beba08556742885a985dd7f3d0187d34d927a0c68b0b08539435cd8",
+      "diagrams/xxl-sso-sample-reactive-native.mmd": "3b99ec61d5529d655bd0e0eec392481345b81437626c328b1556377b5fcc8935",
+      "diagrams/xxl-sso-sample-reactive-web.mmd": "f5c0f3f5f0375bd589780265c2ee02206e6623dbb92cc455472356d06c8e35d9",
+      "diagrams/xxl-sso-server.mmd": "1af85c32a565242ef5cab59fab7df4fc5cfde9b7d672c545720ebcc37ec24e74",
+      "graph.json": "51aa2942bedea903599995b546e802fe8c71e05dbe04c305236661abfc5ab263",
+      "index.md": "478cca0bc1ab4e01160585da0bfee62d51728dbaf23f818106c7cc07cdb93ceb",
+      "services/xxl-sso-sample-interceptor-cas.md": "cef70e4b1303164e220882f931b6eb67329d8c169ccc71723799b200e7bf4319",
+      "services/xxl-sso-sample-interceptor-native.md": "670dc726229f107023fb182fe8d51bc84ef002b017ce308466d4aefc5f83cf95",
+      "services/xxl-sso-sample-interceptor-web.md": "47f88a049ab0c69239500b2e64e523153be8a12ca3a94117697b40cdf484f584",
+      "services/xxl-sso-sample-reactive-cas.md": "299488b3af872b6561fa44ee28b8c3e35e7fd61308ee72af593e8f14e195c446",
+      "services/xxl-sso-sample-reactive-native.md": "e170b17173540fce920e0a0c7d9edece0408905077f0a83b8df211126d90452b",
+      "services/xxl-sso-sample-reactive-web.md": "18368d7e60edf618117481c0771b6ed81371a707301852b6bf4df275b2755543",
+      "services/xxl-sso-server.md": "4e8f1f9705979c533d8e26400710274f2392fcbaecf80c44b04bbcaf4453bfbf"
+    }
+  },
+  "Keglev/stockease": {
+    "commit": "a8601b78328d12c197de509270e766948f351b9c",
+    "run1": {
+      "diagrams/fleet.puml": "93f06c8fa02d73566441c6d0db146646f3dfc6afc0723b03d1ed595f723a7257",
+      "diagrams/StockEase.mmd": "d183702354480a50c2f5b371a53ef734196c5fd819a31cabb34d31e66941b77a",
+      "graph.json": "1d3f38165dd4c613e057f416f998e00699a227ec659ee812c9c6211c919df36d",
+      "index.md": "999b9a38b42e8b7f338d7f84df9aa3b178b9219bb516db854fa66df980d15c56",
+      "services/StockEase.md": "90f3cd3055958b1c3a95b5c564c146f672da3626b09b414167e87d2ff0c155a5"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "93f06c8fa02d73566441c6d0db146646f3dfc6afc0723b03d1ed595f723a7257",
+      "diagrams/StockEase.mmd": "d183702354480a50c2f5b371a53ef734196c5fd819a31cabb34d31e66941b77a",
+      "graph.json": "1d3f38165dd4c613e057f416f998e00699a227ec659ee812c9c6211c919df36d",
+      "index.md": "999b9a38b42e8b7f338d7f84df9aa3b178b9219bb516db854fa66df980d15c56",
+      "services/StockEase.md": "90f3cd3055958b1c3a95b5c564c146f672da3626b09b414167e87d2ff0c155a5"
+    }
+  },
+  "mateoscns/ceto-ecommerce": {
+    "commit": "19178a0259860e198330fa7976e94bdb60a8d500",
+    "run1": {
+      "diagrams/backend.mmd": "11b2f2afc072135c5ffde896689d5b1ab1b483f598954b0f4d381c5ac3c5508a",
+      "diagrams/fleet.puml": "3ee2307f0f14140bf65fb579ebc1c4c32dc6ed83173d6fc374ef48b4487733cb",
+      "graph.json": "3a2a2e3504bf9ce4c2430a22161c28a1a7f39a3d020ecf1d03c3265e96e3f77e",
+      "index.md": "694b6c02efb43b8050fbc453fb6b92c093ee542e99271008bf46f6fd9e6c2c32",
+      "services/backend.md": "4c57692a3a0f1e1d2e6e5a40a4afc64d5a3be48ca63cb9391a542712bfb97a50"
+    },
+    "run2": {
+      "diagrams/backend.mmd": "11b2f2afc072135c5ffde896689d5b1ab1b483f598954b0f4d381c5ac3c5508a",
+      "diagrams/fleet.puml": "3ee2307f0f14140bf65fb579ebc1c4c32dc6ed83173d6fc374ef48b4487733cb",
+      "graph.json": "3a2a2e3504bf9ce4c2430a22161c28a1a7f39a3d020ecf1d03c3265e96e3f77e",
+      "index.md": "694b6c02efb43b8050fbc453fb6b92c093ee542e99271008bf46f6fd9e6c2c32",
+      "services/backend.md": "4c57692a3a0f1e1d2e6e5a40a4afc64d5a3be48ca63cb9391a542712bfb97a50"
+    }
+  },
+  "spring-petclinic/spring-petclinic-rest": {
+    "commit": "afc8fc1d3b8ec8de69414482b3bd70a1da78cb95",
+    "run1": {
+      "diagrams/fleet.puml": "28cf72bb71d274ab3c0aac0096c9cbbf600861f2ec4723be19030a136cb9901c",
+      "diagrams/spring-petclinic--spring-petclinic-rest.mmd": "0be85f305e18d4a5cf875ae8ba849cfca2cab16d38f48927d61a2eb903a43186",
+      "graph.json": "61819e6da83f7218fe0aca15370794cdfe02b4e0c3354103ee5bebffe57f5f42",
+      "index.md": "71a1b7c1e92ee82fcc90422172081bdae226d34a6c854c5393e560aa9186f80e",
+      "services/spring-petclinic--spring-petclinic-rest.md": "c1536be02c897b8afb438ab9e8ea5e881707ffd8e5b71240469782c062700ca2"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "28cf72bb71d274ab3c0aac0096c9cbbf600861f2ec4723be19030a136cb9901c",
+      "diagrams/spring-petclinic--spring-petclinic-rest.mmd": "0be85f305e18d4a5cf875ae8ba849cfca2cab16d38f48927d61a2eb903a43186",
+      "graph.json": "61819e6da83f7218fe0aca15370794cdfe02b4e0c3354103ee5bebffe57f5f42",
+      "index.md": "71a1b7c1e92ee82fcc90422172081bdae226d34a6c854c5393e560aa9186f80e",
+      "services/spring-petclinic--spring-petclinic-rest.md": "c1536be02c897b8afb438ab9e8ea5e881707ffd8e5b71240469782c062700ca2"
+    }
+  },
+  "pig-mesh/pig": {
+    "commit": "a0d273afd3adc6678b065c0f2d25433541343ad7",
+    "run1": {
+      "diagrams/fleet.puml": "dbd19414ce1d6e5fe62d02c28126258341f92704218f9e1820114d2aae76f58b",
+      "diagrams/pig-auth.mmd": "0b916ee70799742e1b7036222fba273acbdd1928a88d4803ce079fafa338f6c5",
+      "diagrams/pig-boot.mmd": "0957c5b8c8f2808af1c4765fe9b389b5b4b96498644d54853c8c87fb97f1e17e",
+      "diagrams/pig-codegen.mmd": "eb96bc3fcc34e89408efcc0ef2c60cb813586b7ba0e1a87eb83f48400bcfd0ea",
+      "diagrams/pig-gateway.mmd": "32de53e7f369018c466cb66808e4d07d21290fcacf18e02e65a3a1971f79b4ac",
+      "diagrams/pig-monitor.mmd": "37c0ddc534e561f6bc74c80ee5d036b41f9b670aba05fd9903ddb24344dbd0ed",
+      "diagrams/pig-quartz.mmd": "4dcff5917f861cb32a1c6ecfe411e7e6641ff9f48a42d4ffc5477a88dabb6023",
+      "diagrams/pig-register.mmd": "34d087aefe16630852919a3a181e4c7dd6f54dec85b976ba75d4637b7c210a12",
+      "diagrams/pig-upms-biz.mmd": "526ae7e1c901abeabacdf21cf6027a60b66800c65c6124e8e572b29723b82b12",
+      "graph.json": "e13892d82dd3394eda5139ceebefa15979dff5ed87e7dd8ce808e0f507738d87",
+      "index.md": "8570a5850e3f708d22acb29ca59ac143496bbaf8c95429af0a4a464123fbf363",
+      "services/pig-auth.md": "d33e8b1d0e05eb77668d65a971b8f40137b330021965c1f4c0b17946827e58be",
+      "services/pig-boot.md": "a99e2131c092f3979f0a3f7b497f8acc069d824008f6822d150c109658c536ad",
+      "services/pig-codegen.md": "cce4978241577963d62008345f98b56820ec01333f173a174b4312623fe61fd4",
+      "services/pig-gateway.md": "2570549fa2da507caf56a48f206643eee2b52098c6bf23dfb91524e1f490dcb9",
+      "services/pig-monitor.md": "0f639f022a38ce451ffbf9d2d2e27ff087c3dc14f544328e7dbcb36978f19bc8",
+      "services/pig-quartz.md": "c1f567c0bf7aaff26c9cc7f4d3c27bf59655b8bdc9225a4ef85df8334ba7646b",
+      "services/pig-register.md": "e14f5ecc3879236eb52e78bf136c8841c3287e8a2e5850b13499e3813cd0385a",
+      "services/pig-upms-biz.md": "277a924f1a0371b9c67be44f3f74c5600bf67a76ab55d85c76af291daa63145a"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "dbd19414ce1d6e5fe62d02c28126258341f92704218f9e1820114d2aae76f58b",
+      "diagrams/pig-auth.mmd": "0b916ee70799742e1b7036222fba273acbdd1928a88d4803ce079fafa338f6c5",
+      "diagrams/pig-boot.mmd": "0957c5b8c8f2808af1c4765fe9b389b5b4b96498644d54853c8c87fb97f1e17e",
+      "diagrams/pig-codegen.mmd": "eb96bc3fcc34e89408efcc0ef2c60cb813586b7ba0e1a87eb83f48400bcfd0ea",
+      "diagrams/pig-gateway.mmd": "32de53e7f369018c466cb66808e4d07d21290fcacf18e02e65a3a1971f79b4ac",
+      "diagrams/pig-monitor.mmd": "37c0ddc534e561f6bc74c80ee5d036b41f9b670aba05fd9903ddb24344dbd0ed",
+      "diagrams/pig-quartz.mmd": "4dcff5917f861cb32a1c6ecfe411e7e6641ff9f48a42d4ffc5477a88dabb6023",
+      "diagrams/pig-register.mmd": "34d087aefe16630852919a3a181e4c7dd6f54dec85b976ba75d4637b7c210a12",
+      "diagrams/pig-upms-biz.mmd": "526ae7e1c901abeabacdf21cf6027a60b66800c65c6124e8e572b29723b82b12",
+      "graph.json": "e13892d82dd3394eda5139ceebefa15979dff5ed87e7dd8ce808e0f507738d87",
+      "index.md": "8570a5850e3f708d22acb29ca59ac143496bbaf8c95429af0a4a464123fbf363",
+      "services/pig-auth.md": "d33e8b1d0e05eb77668d65a971b8f40137b330021965c1f4c0b17946827e58be",
+      "services/pig-boot.md": "a99e2131c092f3979f0a3f7b497f8acc069d824008f6822d150c109658c536ad",
+      "services/pig-codegen.md": "cce4978241577963d62008345f98b56820ec01333f173a174b4312623fe61fd4",
+      "services/pig-gateway.md": "2570549fa2da507caf56a48f206643eee2b52098c6bf23dfb91524e1f490dcb9",
+      "services/pig-monitor.md": "0f639f022a38ce451ffbf9d2d2e27ff087c3dc14f544328e7dbcb36978f19bc8",
+      "services/pig-quartz.md": "c1f567c0bf7aaff26c9cc7f4d3c27bf59655b8bdc9225a4ef85df8334ba7646b",
+      "services/pig-register.md": "e14f5ecc3879236eb52e78bf136c8841c3287e8a2e5850b13499e3813cd0385a",
+      "services/pig-upms-biz.md": "277a924f1a0371b9c67be44f3f74c5600bf67a76ab55d85c76af291daa63145a"
+    }
+  },
+  "jeecgboot/JeecgBoot": {
+    "commit": "4998e645db547ff614b6568df3895bf5586effbf",
+    "run1": {
+      "diagrams/fleet.puml": "d238d9f0d55210f29eff9fb58666b9e1e5b7520f77af5080ad88b87a9248f71e",
+      "diagrams/jeecg-cloud-nacos.mmd": "0e54659051d6fc7639fc6d9c4dc260ac38c4cc554f21a29a4f28425565d86026",
+      "diagrams/jeecg-cloud-sentinel.mmd": "ee99c333280fdfba4e4f282c2481aa730461462dd8b3650964852c4515b752fb",
+      "diagrams/jeecg-cloud-xxljob.mmd": "43d2939feeb956ce1bbdae1763207695104307a6f19e2df7cd96201b23911def",
+      "diagrams/jeecg-demo.mmd": "024c3d68ded4498f96efd69c6f3348ee76faa25dd423a60ebbe6c4e54df8bf6c",
+      "diagrams/jeecg-gateway.mmd": "2b2614ed2de84bf4ba5e743fb37da8740762e5ebf13baf70af41fafe29e7171b",
+      "diagrams/jeecg-monitor.mmd": "0f8a1e2f8fc1ab06ae180a24df9eab68926413ef61d9c488943407d5f5ee0b88",
+      "diagrams/jeecg-system.mmd": "6ff4a40f2c9c636f39b1889fb5d56d0ac228155c2d0936a034aa39b5dadea9d4",
+      "diagrams/seata-account.mmd": "a40da3885e9ccedca13b3b882eac1de8e59f5483837d247aea7e65e34be37580",
+      "diagrams/seata-order.mmd": "3f79183d9ab27c45ceec7b97de170395aa9e59afb0f0c7269ea76f243b264d50",
+      "diagrams/seata-product.mmd": "a6fd32a919a7746506a300eb21bf22104a5d851c3aa20cdd92a4a79a0a74ff3c",
+      "graph.json": "d8869cecb14e702786f8b3722107471a4671d24fe50a0a373f5d31e1901c67cb",
+      "index.md": "ee8e1186d730d1aab14b9e09ee5d4ceb8bc00e9df1a5ce8b4fd2af042145887c",
+      "services/jeecg-cloud-nacos.md": "2c8ed50bf1602c3dbd4295c815f1efe7e2a659e66092feb7c9629145130f5db9",
+      "services/jeecg-cloud-sentinel.md": "d2f62c4536154ac8a36bd8cdf7f8fa8c82fd44baaf0936392755bb85c22b44f8",
+      "services/jeecg-cloud-xxljob.md": "c472d6769b2a889c6d95f87b91af54523e146840f07a4aeb3e3caaa21b0d2072",
+      "services/jeecg-demo.md": "00b9b097a947a40d31161aac582c49baa2389bbf0196b7adb624cd4f2c243e14",
+      "services/jeecg-gateway.md": "0564524d93d526a4f17cd3abec7f397af4b129f378eb2303577892b3758f565a",
+      "services/jeecg-monitor.md": "5f507628326cdce53bbdfae4232552990540f9af998d6577e67a46b7c5864679",
+      "services/jeecg-system.md": "ca0c7437f325ceb54a8be0bacc3782534e93d057b39b77e92534575f5e7717a6",
+      "services/seata-account.md": "082cc95e810b5ffd243f305dcbd522f69aee2ad9f41d43cc80d78738938a6a8b",
+      "services/seata-order.md": "ff9274872398faefe89c8c4192cb48b2f7779998afb9c4c2c2095387b72e3ed9",
+      "services/seata-product.md": "f9ef178de05be323bfa374095da3a7c5007451955586485e864c12c08005fd09"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "d238d9f0d55210f29eff9fb58666b9e1e5b7520f77af5080ad88b87a9248f71e",
+      "diagrams/jeecg-cloud-nacos.mmd": "0e54659051d6fc7639fc6d9c4dc260ac38c4cc554f21a29a4f28425565d86026",
+      "diagrams/jeecg-cloud-sentinel.mmd": "ee99c333280fdfba4e4f282c2481aa730461462dd8b3650964852c4515b752fb",
+      "diagrams/jeecg-cloud-xxljob.mmd": "43d2939feeb956ce1bbdae1763207695104307a6f19e2df7cd96201b23911def",
+      "diagrams/jeecg-demo.mmd": "024c3d68ded4498f96efd69c6f3348ee76faa25dd423a60ebbe6c4e54df8bf6c",
+      "diagrams/jeecg-gateway.mmd": "2b2614ed2de84bf4ba5e743fb37da8740762e5ebf13baf70af41fafe29e7171b",
+      "diagrams/jeecg-monitor.mmd": "0f8a1e2f8fc1ab06ae180a24df9eab68926413ef61d9c488943407d5f5ee0b88",
+      "diagrams/jeecg-system.mmd": "6ff4a40f2c9c636f39b1889fb5d56d0ac228155c2d0936a034aa39b5dadea9d4",
+      "diagrams/seata-account.mmd": "a40da3885e9ccedca13b3b882eac1de8e59f5483837d247aea7e65e34be37580",
+      "diagrams/seata-order.mmd": "3f79183d9ab27c45ceec7b97de170395aa9e59afb0f0c7269ea76f243b264d50",
+      "diagrams/seata-product.mmd": "a6fd32a919a7746506a300eb21bf22104a5d851c3aa20cdd92a4a79a0a74ff3c",
+      "graph.json": "d8869cecb14e702786f8b3722107471a4671d24fe50a0a373f5d31e1901c67cb",
+      "index.md": "ee8e1186d730d1aab14b9e09ee5d4ceb8bc00e9df1a5ce8b4fd2af042145887c",
+      "services/jeecg-cloud-nacos.md": "2c8ed50bf1602c3dbd4295c815f1efe7e2a659e66092feb7c9629145130f5db9",
+      "services/jeecg-cloud-sentinel.md": "d2f62c4536154ac8a36bd8cdf7f8fa8c82fd44baaf0936392755bb85c22b44f8",
+      "services/jeecg-cloud-xxljob.md": "c472d6769b2a889c6d95f87b91af54523e146840f07a4aeb3e3caaa21b0d2072",
+      "services/jeecg-demo.md": "00b9b097a947a40d31161aac582c49baa2389bbf0196b7adb624cd4f2c243e14",
+      "services/jeecg-gateway.md": "0564524d93d526a4f17cd3abec7f397af4b129f378eb2303577892b3758f565a",
+      "services/jeecg-monitor.md": "5f507628326cdce53bbdfae4232552990540f9af998d6577e67a46b7c5864679",
+      "services/jeecg-system.md": "ca0c7437f325ceb54a8be0bacc3782534e93d057b39b77e92534575f5e7717a6",
+      "services/seata-account.md": "082cc95e810b5ffd243f305dcbd522f69aee2ad9f41d43cc80d78738938a6a8b",
+      "services/seata-order.md": "ff9274872398faefe89c8c4192cb48b2f7779998afb9c4c2c2095387b72e3ed9",
+      "services/seata-product.md": "f9ef178de05be323bfa374095da3a7c5007451955586485e864c12c08005fd09"
+    }
+  },
+  "dromara/RuoYi-Vue-Plus": {
+    "commit": "9227f626a3a37e1546d6c291ed398183e94df92b",
+    "run1": {
+      "diagrams/fleet.puml": "840687be2d890862534911635a6cd8ce385715463501770e0fe1caf2c6893b97",
+      "diagrams/ruoyi-monitor-admin.mmd": "c4bd5ed570d016380aa2f4383daf57ea6e79f3c09c45a150f697369a478716a2",
+      "diagrams/ruoyi-snailai-server.mmd": "df69100ea385cb83752eff407e75f94d3fd46f69116b1ec1ee5d638f8f8d2cb8",
+      "diagrams/ruoyi-snailjob-server.mmd": "5e7dbc7db71e3651a0a47735bf8b6b2db94b88074b9386823494934d746ed603",
+      "diagrams/RuoYi-Vue-Plus.mmd": "b474584ef6967d97268f00776e670da99258f279458e711b19df6b16603f08f9",
+      "graph.json": "c037b87a2e0693a40a424e27f280c10c8b85f9dae650d36398679782b9968eea",
+      "index.md": "a2d681ec43b6a2afa0f12a13177f4fbfbfe62c846f7c20503350b1fce3f6a975",
+      "services/ruoyi-monitor-admin.md": "7d18689c1a082d1e4dbe6793e6ddb0f697af6d3efc94d607f3e383823a20dd04",
+      "services/ruoyi-snailai-server.md": "989a77e26d77a478e1f97cba3c89ec2de5acd6ec0705aa29be525d35c0bea95d",
+      "services/ruoyi-snailjob-server.md": "c684f5b3d3deb5183158d3bd6d9422c2dd0e3a8869d84df79282a8a1a0d48018",
+      "services/RuoYi-Vue-Plus.md": "c22a283a2351a9df4cd9217fcaea7aa60468232535e83433a80ea378b32ff951"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "840687be2d890862534911635a6cd8ce385715463501770e0fe1caf2c6893b97",
+      "diagrams/ruoyi-monitor-admin.mmd": "c4bd5ed570d016380aa2f4383daf57ea6e79f3c09c45a150f697369a478716a2",
+      "diagrams/ruoyi-snailai-server.mmd": "df69100ea385cb83752eff407e75f94d3fd46f69116b1ec1ee5d638f8f8d2cb8",
+      "diagrams/ruoyi-snailjob-server.mmd": "5e7dbc7db71e3651a0a47735bf8b6b2db94b88074b9386823494934d746ed603",
+      "diagrams/RuoYi-Vue-Plus.mmd": "b474584ef6967d97268f00776e670da99258f279458e711b19df6b16603f08f9",
+      "graph.json": "c037b87a2e0693a40a424e27f280c10c8b85f9dae650d36398679782b9968eea",
+      "index.md": "a2d681ec43b6a2afa0f12a13177f4fbfbfe62c846f7c20503350b1fce3f6a975",
+      "services/ruoyi-monitor-admin.md": "7d18689c1a082d1e4dbe6793e6ddb0f697af6d3efc94d607f3e383823a20dd04",
+      "services/ruoyi-snailai-server.md": "989a77e26d77a478e1f97cba3c89ec2de5acd6ec0705aa29be525d35c0bea95d",
+      "services/ruoyi-snailjob-server.md": "c684f5b3d3deb5183158d3bd6d9422c2dd0e3a8869d84df79282a8a1a0d48018",
+      "services/RuoYi-Vue-Plus.md": "c22a283a2351a9df4cd9217fcaea7aa60468232535e83433a80ea378b32ff951"
+    }
+  },
+  "yangzongzhuan/RuoYi-Cloud": {
+    "commit": "ec83e0032b549ecba23f627b270533cb96ab7027",
+    "run1": {
+      "diagrams/fleet.puml": "4e76511163b33b4fc1695562a8c44bba12cdb9687ccb70ac54fc59de49a7da28",
+      "diagrams/ruoyi-auth.mmd": "a65e96309aa85635e6474f1d7ac5d51ab23b7edb561ad81e01a54ac2913c9e42",
+      "diagrams/ruoyi-file.mmd": "61f2495cc4ace4b2510f7fd9f6edc30cd2b2c5c7572d453e5b7ce3bc02419db0",
+      "diagrams/ruoyi-gateway.mmd": "cf7b08663d66739734369003ef726ad102f6362969ee36adc53b6c5c0d4228a4",
+      "diagrams/ruoyi-gen.mmd": "495d3668ff2f3c3775b74db63d358370202617c8b4947f15db5be7a072294402",
+      "diagrams/ruoyi-job.mmd": "000cbf7e551d4e11c3cd03be41e6013924439a67acea18136bab8947613caba2",
+      "diagrams/ruoyi-monitor.mmd": "41bbfa3c55624d629800987a2e3d7398ba2906a1184097e470129c406899f4c8",
+      "diagrams/ruoyi-system.mmd": "c12979dacd8651b8313dae8119715ad7a6c9bbeff65b7b73a703266302a7d656",
+      "graph.json": "1128f3dad8b219b1dfc54beaecd1d9ff51e5ac8d4478529d70ae64eb936cd42c",
+      "index.md": "731fc74c218035b57c1c0b9cf47641d3897460c4e68bb3e86de504eac419ffc4",
+      "services/ruoyi-auth.md": "a060d7eae0760aec2012eb54c9c329811414f3bbf85b181c07260a41d9f7a515",
+      "services/ruoyi-file.md": "ff485bc14bd870165fdf2d042009c72f7e7b86926a31e2d675043f9254bc6594",
+      "services/ruoyi-gateway.md": "7113738f00b8c05ce318f3941ef393573c52b056e1bfe12bbe755cf9f4eb276d",
+      "services/ruoyi-gen.md": "6671b36642ab0749c4c3fe788067f7614b0881e8f297c4634d4957562272317f",
+      "services/ruoyi-job.md": "f40e5dc92c315ed95bb5b6446c66e32328c33d85af3f744268df4e43415176b5",
+      "services/ruoyi-monitor.md": "4e836649106b760d5b7979e6efd7431f3974c04c768cd1b08007c053800ddff4",
+      "services/ruoyi-system.md": "6d60478216dbbe4db8b23907d0afcbfa833000222bd7a1a6d26815ceb3493502"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "4e76511163b33b4fc1695562a8c44bba12cdb9687ccb70ac54fc59de49a7da28",
+      "diagrams/ruoyi-auth.mmd": "a65e96309aa85635e6474f1d7ac5d51ab23b7edb561ad81e01a54ac2913c9e42",
+      "diagrams/ruoyi-file.mmd": "61f2495cc4ace4b2510f7fd9f6edc30cd2b2c5c7572d453e5b7ce3bc02419db0",
+      "diagrams/ruoyi-gateway.mmd": "cf7b08663d66739734369003ef726ad102f6362969ee36adc53b6c5c0d4228a4",
+      "diagrams/ruoyi-gen.mmd": "495d3668ff2f3c3775b74db63d358370202617c8b4947f15db5be7a072294402",
+      "diagrams/ruoyi-job.mmd": "000cbf7e551d4e11c3cd03be41e6013924439a67acea18136bab8947613caba2",
+      "diagrams/ruoyi-monitor.mmd": "41bbfa3c55624d629800987a2e3d7398ba2906a1184097e470129c406899f4c8",
+      "diagrams/ruoyi-system.mmd": "c12979dacd8651b8313dae8119715ad7a6c9bbeff65b7b73a703266302a7d656",
+      "graph.json": "1128f3dad8b219b1dfc54beaecd1d9ff51e5ac8d4478529d70ae64eb936cd42c",
+      "index.md": "731fc74c218035b57c1c0b9cf47641d3897460c4e68bb3e86de504eac419ffc4",
+      "services/ruoyi-auth.md": "a060d7eae0760aec2012eb54c9c329811414f3bbf85b181c07260a41d9f7a515",
+      "services/ruoyi-file.md": "ff485bc14bd870165fdf2d042009c72f7e7b86926a31e2d675043f9254bc6594",
+      "services/ruoyi-gateway.md": "7113738f00b8c05ce318f3941ef393573c52b056e1bfe12bbe755cf9f4eb276d",
+      "services/ruoyi-gen.md": "6671b36642ab0749c4c3fe788067f7614b0881e8f297c4634d4957562272317f",
+      "services/ruoyi-job.md": "f40e5dc92c315ed95bb5b6446c66e32328c33d85af3f744268df4e43415176b5",
+      "services/ruoyi-monitor.md": "4e836649106b760d5b7979e6efd7431f3974c04c768cd1b08007c053800ddff4",
+      "services/ruoyi-system.md": "6d60478216dbbe4db8b23907d0afcbfa833000222bd7a1a6d26815ceb3493502"
+    }
+  },
+  "dromara/RuoYi-Cloud-Plus": {
+    "commit": "a319a6861d8bbfa5dbc4422d27743325b8c817ef",
+    "run1": {
+      "diagrams/fleet.puml": "6cd76d4d31b7d0dc89d1238ad47e65ad126b321ea75543592550577f8f15eacc",
+      "diagrams/ruoyi-ai.mmd": "eb3d5c4895b08ea0a8eb14295188772e0908bc3b6b1fc96f599e78d549057dbf",
+      "diagrams/ruoyi-auth.mmd": "653795a956dd80826ae48f083f1f8d201e3c6d8dc6d2f2bfd43f206ca023eb72",
+      "diagrams/ruoyi-demo.mmd": "e554eff83fcf2ff4b2648e6d0991cd503a8f1b6b8195b7e42beeba25549561f8",
+      "diagrams/ruoyi-gateway.mmd": "e4eb3653c4e0ceae99240f7820960cdd211a8011e8b023ad770dd3a83c36e4ad",
+      "diagrams/ruoyi-gen.mmd": "2f8df737dbd1c3fd1b407b576cd2dba1b791dc11282bf060f1ab7238dc7e87f4",
+      "diagrams/ruoyi-job.mmd": "a91f4c2e0ead2e00bb2b99720bf6f7e64ac59427b43642722ba43b83fc69652f",
+      "diagrams/ruoyi-monitor.mmd": "41bbfa3c55624d629800987a2e3d7398ba2906a1184097e470129c406899f4c8",
+      "diagrams/ruoyi-resource.mmd": "cd7530109f8c8eb7dd995aca6cce244becfd4222d1699a159f84d346048ce32f",
+      "diagrams/ruoyi-snailai-server.mmd": "df69100ea385cb83752eff407e75f94d3fd46f69116b1ec1ee5d638f8f8d2cb8",
+      "diagrams/ruoyi-snailjob-server.mmd": "5e7dbc7db71e3651a0a47735bf8b6b2db94b88074b9386823494934d746ed603",
+      "diagrams/ruoyi-system.mmd": "7c066caae6cce73783198af99f53495cd6d8fdca0ed357e575736e8c8a9ccb14",
+      "diagrams/ruoyi-test-mq.mmd": "baa494d25bf1bd2e02e0c8f4346331ce632c3d135eedc135aeaee5d81d191061",
+      "diagrams/ruoyi-workflow.mmd": "fda00df379dcadbaca29a28662afa7771ccfe01708ec5d0250c54d41f1d0d656",
+      "graph.json": "c00528d4b3f5d28424764042b78c1966d9a22dd3f02af06d067d1b45a3d9c287",
+      "index.md": "c97a4a883f16c0fb12f273c1e11845024fe276b0b99b74f1374c0e02a57fcc48",
+      "services/ruoyi-ai.md": "9f4d41106be1ca97827825e88bac0c5fceca52109944004931bb2e19bfe621f3",
+      "services/ruoyi-auth.md": "c58e3559e24b8ecb7eb88c64507cff7d9c1bbdb0035b68a3beecd61a8af68640",
+      "services/ruoyi-demo.md": "152a748aaeefbcb4d14d9e758657291de8a4fca5c1c53b6e7c9cdd9647c4a312",
+      "services/ruoyi-gateway.md": "1d43723a2e6ca9b3c5388057330558e95c24539c3f78b89a5f88e57369daffd0",
+      "services/ruoyi-gen.md": "6b73eafe4252c49daa12f9c5f3690f1d1a48a020e164e9c695628c667df0898a",
+      "services/ruoyi-job.md": "dcbd141e9802512177cff61ae5bc589012524e4300adb9a97b409afbb21bf608",
+      "services/ruoyi-monitor.md": "2ecfdabc09adbe35c9a7cf9e72bc7cfa9d157bdc66ad402151278a8d595d2436",
+      "services/ruoyi-resource.md": "8821a64f6c04792fc7049b0f84542298f2d80b3317a8be9a20eb4b89b6adf30a",
+      "services/ruoyi-snailai-server.md": "32c215199f38521b6366f15681a6a4a45a873ec0632a8c2ce7d7eee0eca8b911",
+      "services/ruoyi-snailjob-server.md": "8eae3b3718fbddface7556c64fca78947fa8297b773763d6949283d2d41e06f9",
+      "services/ruoyi-system.md": "7adb1ef6c9aa279d6f02e08f4b046d27472b05fb4c7b081330f8051635c70978",
+      "services/ruoyi-test-mq.md": "a167326baf129d3a5ee4a6f8bf27743e71d3804a211eff184a91089c1f8e797b",
+      "services/ruoyi-workflow.md": "77d5ca927f85936ce1fb87ddefb2d8aaa916920c327d0d6b2d2ace05df0f8bb1"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "6cd76d4d31b7d0dc89d1238ad47e65ad126b321ea75543592550577f8f15eacc",
+      "diagrams/ruoyi-ai.mmd": "eb3d5c4895b08ea0a8eb14295188772e0908bc3b6b1fc96f599e78d549057dbf",
+      "diagrams/ruoyi-auth.mmd": "653795a956dd80826ae48f083f1f8d201e3c6d8dc6d2f2bfd43f206ca023eb72",
+      "diagrams/ruoyi-demo.mmd": "e554eff83fcf2ff4b2648e6d0991cd503a8f1b6b8195b7e42beeba25549561f8",
+      "diagrams/ruoyi-gateway.mmd": "e4eb3653c4e0ceae99240f7820960cdd211a8011e8b023ad770dd3a83c36e4ad",
+      "diagrams/ruoyi-gen.mmd": "2f8df737dbd1c3fd1b407b576cd2dba1b791dc11282bf060f1ab7238dc7e87f4",
+      "diagrams/ruoyi-job.mmd": "a91f4c2e0ead2e00bb2b99720bf6f7e64ac59427b43642722ba43b83fc69652f",
+      "diagrams/ruoyi-monitor.mmd": "41bbfa3c55624d629800987a2e3d7398ba2906a1184097e470129c406899f4c8",
+      "diagrams/ruoyi-resource.mmd": "cd7530109f8c8eb7dd995aca6cce244becfd4222d1699a159f84d346048ce32f",
+      "diagrams/ruoyi-snailai-server.mmd": "df69100ea385cb83752eff407e75f94d3fd46f69116b1ec1ee5d638f8f8d2cb8",
+      "diagrams/ruoyi-snailjob-server.mmd": "5e7dbc7db71e3651a0a47735bf8b6b2db94b88074b9386823494934d746ed603",
+      "diagrams/ruoyi-system.mmd": "7c066caae6cce73783198af99f53495cd6d8fdca0ed357e575736e8c8a9ccb14",
+      "diagrams/ruoyi-test-mq.mmd": "baa494d25bf1bd2e02e0c8f4346331ce632c3d135eedc135aeaee5d81d191061",
+      "diagrams/ruoyi-workflow.mmd": "fda00df379dcadbaca29a28662afa7771ccfe01708ec5d0250c54d41f1d0d656",
+      "graph.json": "c00528d4b3f5d28424764042b78c1966d9a22dd3f02af06d067d1b45a3d9c287",
+      "index.md": "c97a4a883f16c0fb12f273c1e11845024fe276b0b99b74f1374c0e02a57fcc48",
+      "services/ruoyi-ai.md": "9f4d41106be1ca97827825e88bac0c5fceca52109944004931bb2e19bfe621f3",
+      "services/ruoyi-auth.md": "c58e3559e24b8ecb7eb88c64507cff7d9c1bbdb0035b68a3beecd61a8af68640",
+      "services/ruoyi-demo.md": "152a748aaeefbcb4d14d9e758657291de8a4fca5c1c53b6e7c9cdd9647c4a312",
+      "services/ruoyi-gateway.md": "1d43723a2e6ca9b3c5388057330558e95c24539c3f78b89a5f88e57369daffd0",
+      "services/ruoyi-gen.md": "6b73eafe4252c49daa12f9c5f3690f1d1a48a020e164e9c695628c667df0898a",
+      "services/ruoyi-job.md": "dcbd141e9802512177cff61ae5bc589012524e4300adb9a97b409afbb21bf608",
+      "services/ruoyi-monitor.md": "2ecfdabc09adbe35c9a7cf9e72bc7cfa9d157bdc66ad402151278a8d595d2436",
+      "services/ruoyi-resource.md": "8821a64f6c04792fc7049b0f84542298f2d80b3317a8be9a20eb4b89b6adf30a",
+      "services/ruoyi-snailai-server.md": "32c215199f38521b6366f15681a6a4a45a873ec0632a8c2ce7d7eee0eca8b911",
+      "services/ruoyi-snailjob-server.md": "8eae3b3718fbddface7556c64fca78947fa8297b773763d6949283d2d41e06f9",
+      "services/ruoyi-system.md": "7adb1ef6c9aa279d6f02e08f4b046d27472b05fb4c7b081330f8051635c70978",
+      "services/ruoyi-test-mq.md": "a167326baf129d3a5ee4a6f8bf27743e71d3804a211eff184a91089c1f8e797b",
+      "services/ruoyi-workflow.md": "77d5ca927f85936ce1fb87ddefb2d8aaa916920c327d0d6b2d2ace05df0f8bb1"
+    }
+  },
+  "rememberber/WePush": {
+    "commit": "e0f24162eacc9a1bf2b37417a82dad5e8cc50742",
+    "run1": {
+      "diagrams/fleet.puml": "8f2a46bfd4718f514eb89613a56db0a1d3d332701f489af390fafdf905e63c2a",
+      "diagrams/wepush-next-service.mmd": "7911adf90ea3af8cd4824c4812af355c7f9df114b832ae4e613d7c0f6466badb",
+      "graph.json": "d737da68d4757e8d596ebaed3aee4af5202c28cfdda89213782bd883fa953b29",
+      "index.md": "1bb94b67f8acf37874ce13e6a76a1c0bd7fbb7ea67c857171f224a85eb436bed",
+      "services/wepush-next-service.md": "737a780d6fe85cddf049bc1fd14b0fa8b53197392e3a83f4bd96bc9f01669c43"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "8f2a46bfd4718f514eb89613a56db0a1d3d332701f489af390fafdf905e63c2a",
+      "diagrams/wepush-next-service.mmd": "7911adf90ea3af8cd4824c4812af355c7f9df114b832ae4e613d7c0f6466badb",
+      "graph.json": "d737da68d4757e8d596ebaed3aee4af5202c28cfdda89213782bd883fa953b29",
+      "index.md": "1bb94b67f8acf37874ce13e6a76a1c0bd7fbb7ea67c857171f224a85eb436bed",
+      "services/wepush-next-service.md": "737a780d6fe85cddf049bc1fd14b0fa8b53197392e3a83f4bd96bc9f01669c43"
+    }
+  },
+  "urlaubsverwaltung/zeiterfassung": {
+    "commit": "efb6320b0bce5897ece0cbe3ccd9a900044f1ff8",
+    "run1": {
+      "diagrams/fleet.puml": "340c82143d91c1c1f21cdeb878a2c0db0325aaa011a8ec4313c8c9fd70cdb2b0",
+      "diagrams/urlaubsverwaltung--zeiterfassung.mmd": "9febcd2550a27db2e84d31840f5ccbdb429c0f1978da694ebae251e8ce44ad43",
+      "graph.json": "8fda763b12e81775fa1ae79487db797b135821eb706377769256fb86ba14675f",
+      "index.md": "8ef8a47ea0ab4603506c2c623b164da98e45c8ea1e16cf8e5a0eead432f12fa7",
+      "services/urlaubsverwaltung--zeiterfassung.md": "69d8cf42cdd6c9050465c6ec63c7d9c6480b866a46d5b4f889ccd50db8a55f2e"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "340c82143d91c1c1f21cdeb878a2c0db0325aaa011a8ec4313c8c9fd70cdb2b0",
+      "diagrams/urlaubsverwaltung--zeiterfassung.mmd": "9febcd2550a27db2e84d31840f5ccbdb429c0f1978da694ebae251e8ce44ad43",
+      "graph.json": "8fda763b12e81775fa1ae79487db797b135821eb706377769256fb86ba14675f",
+      "index.md": "8ef8a47ea0ab4603506c2c623b164da98e45c8ea1e16cf8e5a0eead432f12fa7",
+      "services/urlaubsverwaltung--zeiterfassung.md": "69d8cf42cdd6c9050465c6ec63c7d9c6480b866a46d5b4f889ccd50db8a55f2e"
+    }
+  },
+  "europeana/metis-framework": {
+    "commit": "d9d1b10b9c6d19d939f959c6fab23237bacde322",
+    "run1": {
+      "diagrams/fleet.puml": "b55bb22451cfd387868861eaff1d23b498dbd5af292359449d0745cf664ef850",
+      "diagrams/metis-debias-detect-rest.mmd": "d989fa22a2aec255501573c39e7f372515148ac388cc7464ae05ecfaf3bace96",
+      "diagrams/metis-dereference-rest.mmd": "4bd8b796ade2df33d5dea0bd0d1f37f3d5e0b97bbdee1a0e4e55ddb9f37dfa4e",
+      "diagrams/metis-repository-rest.mmd": "78230000c31970e20d3e05100b566c0eaad4d2b3b446d51f709967d6d80f3eb3",
+      "graph.json": "04cadf74b6e1df67d41357a4898f68b9ed7d0024e026bd39e9a46cdc5216904e",
+      "index.md": "9e0f8da70222cb424f0cd576916190fb11018aee6dbddfb2142ff03aaa1042be",
+      "services/metis-debias-detect-rest.md": "5c8c14f9992fc2801c3acae316d0ca87dc760a2ba2e6377203d79506ba6d216d",
+      "services/metis-dereference-rest.md": "2c4de729e2fce5b9407481acb6a109eea430fde9d14898fb95d3291b39c52b4c",
+      "services/metis-repository-rest.md": "f11b60cedcccede39f63a73393393b948a1c7e78d9be34f37c2ec41d51020075"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "b55bb22451cfd387868861eaff1d23b498dbd5af292359449d0745cf664ef850",
+      "diagrams/metis-debias-detect-rest.mmd": "d989fa22a2aec255501573c39e7f372515148ac388cc7464ae05ecfaf3bace96",
+      "diagrams/metis-dereference-rest.mmd": "4bd8b796ade2df33d5dea0bd0d1f37f3d5e0b97bbdee1a0e4e55ddb9f37dfa4e",
+      "diagrams/metis-repository-rest.mmd": "78230000c31970e20d3e05100b566c0eaad4d2b3b446d51f709967d6d80f3eb3",
+      "graph.json": "04cadf74b6e1df67d41357a4898f68b9ed7d0024e026bd39e9a46cdc5216904e",
+      "index.md": "9e0f8da70222cb424f0cd576916190fb11018aee6dbddfb2142ff03aaa1042be",
+      "services/metis-debias-detect-rest.md": "5c8c14f9992fc2801c3acae316d0ca87dc760a2ba2e6377203d79506ba6d216d",
+      "services/metis-dereference-rest.md": "2c4de729e2fce5b9407481acb6a109eea430fde9d14898fb95d3291b39c52b4c",
+      "services/metis-repository-rest.md": "f11b60cedcccede39f63a73393393b948a1c7e78d9be34f37c2ec41d51020075"
+    }
+  },
+  "yidao620c/SpringBootBucket": {
+    "commit": "e64920cd1e3fffe28eb2f71506147e33f59d0f2d",
+    "run1": {
+      "diagrams/fleet.puml": "7679f8e377ec2af5f8a37b15f5d7c93a5484bf6cd874c11a33944ceef53e649a",
+      "diagrams/order-notify-app.mmd": "8949226e93e9f68f26e8cc0781556004f82bab32fb5f66ae7db24323333951c1",
+      "diagrams/springboot4-ai-mcp.mmd": "8d3599a5cb26ef9d407b7d1655d9d1956c6a8e088e803af6a87a07d7fb08c38a",
+      "diagrams/springboot4-aop.mmd": "d73741d16c37b99fc40db657013a2f28620da54af38d017eef287e6a79150172",
+      "diagrams/springboot4-apiversion.mmd": "c5d5c3c19a8eaffc79029669f3d7c30577519ddb9fb343237ea4d7bff50b27a8",
+      "diagrams/springboot4-async.mmd": "3d9556566467df7cd9b4dcd744461761f0523d788bf0d08c62768798fa0af747",
+      "diagrams/springboot4-batch.mmd": "685b72782268a7ef376c9ecaba4318da975285a657872e99ec78284830737517",
+      "diagrams/springboot4-cache.mmd": "47560ea6cc83ccfd462cb8ad9105e511b820a83b6118c494c721fc86f4cc7e3b",
+      "diagrams/springboot4-echarts.mmd": "101336c82842f34be7c2cd1b42e6e961d000ad13830ada87c6038ed3b3ae2490",
+      "diagrams/springboot4-grpc.mmd": "7f4c72f283606319593b162c7004fe24e0fa6ebee04b2c9beca1ddcc2d75206e",
+      "diagrams/springboot4-jackson3.mmd": "50b222846b65e9f6358e29eecff0bbc1534fe7ae3dd5a5ca80defc13c6613966",
+      "diagrams/springboot4-jpa.mmd": "ab30eb8953e872cf3d79acc39feb4c3d941186b847dbf0ad10f8637802661d3b",
+      "diagrams/springboot4-mongodb.mmd": "199747a281497fe0dd7a3b0a3a5d50dcbe44ebaf1353405991c698e679d8231c",
+      "diagrams/springboot4-multisource.mmd": "0098ad362841a8f2afd2c50ef2ab4ba14524ada29a51d336d2d5edbf12866f1f",
+      "diagrams/springboot4-mybatis.mmd": "2fd89d674e6a61e1ad697af075b3e2f6c7e66da867caee271e4a96ffc64dabc4",
+      "diagrams/springboot4-native.mmd": "84ba276e23c545cb27bc1fb71a5617086d3beae11d64dff3bd23907a3ead16ef",
+      "diagrams/springboot4-oauth2.mmd": "d4ef119e020d54eb470ae2802c766024617ce99f1c7a3ed711c713b3a1e1776a",
+      "diagrams/springboot4-observability.mmd": "36cb4191770384a76242bdb5825465568892677c9f94b194e21ae244c5d7c495",
+      "diagrams/springboot4-openapi.mmd": "1b9c8cec28e9d57f824468cace62f4bc606fb2485d655b116c9cfbf2085b42da",
+      "diagrams/springboot4-rabbitmq.mmd": "e72745e6c9f06ed0eff78d970342044473e2bd5634a98c07da5254fbfe4cb28d",
+      "diagrams/springboot4-redis.mmd": "43dfc4bb1bae933f0a59a1334dbf7577ed85e4b247cdd622b9c3a1e6005a2285",
+      "diagrams/springboot4-resilience.mmd": "9f09c259101ac6cc5b85e49a06d66da53aae2688bc3dea32715f0ae51745d591",
+      "diagrams/springboot4-restclient.mmd": "2fe49c6f7ccf47089a30c854c64ade5470c2d2dc8c6e80e0f463279bcc2ca6ae",
+      "diagrams/springboot4-restful.mmd": "c9c85d02bace59f34e9bbec5418fbf770d21534e2b381a79c4d9b75f0e228ca3",
+      "diagrams/springboot4-schedule.mmd": "1d37be2bae3a09a8d2fce296c92d6daf290e5e2d504439136a5f0f136e5ceda4",
+      "diagrams/springboot4-security.mmd": "35806997c0ae02a8c2fe29890aeeff2a974fb8a25b458b783372f294060ca2b8",
+      "diagrams/springboot4-testing.mmd": "9b808bff9b09109e2b3bf446cd01b585099643d0722be6e60063d6885ddcd31f",
+      "diagrams/springboot4-thymeleaf.mmd": "2ecbcae8df39274f2b0085f839babe5386044361db31ad93748f3a1c3525b7cb",
+      "diagrams/springboot4-transaction.mmd": "e8a4e2a79739f5e233b17e19e747347db0ccdca5cf539be4118aed314f3c8f9e",
+      "diagrams/springboot4-virtualthreads.mmd": "fd0a9332268e6d631a1e4da6b3a058fe8fe6a6aba06d163cca62a1e31ec08b5f",
+      "diagrams/springboot4-websocket.mmd": "e87afcd3df47c7601a0ba6eedeaa289b2bef0b42ef7cc034d853d0b6dcc0fb42",
+      "graph.json": "548bfc6a10cf7085019e795c872d951f8f48a58a3f63500895b242e39b971332",
+      "index.md": "6b53405206051bb2e1154c49407129b13d2562d686c4ddc30b472a6e5ccb9dee",
+      "services/order-notify-app.md": "83b32eb8633997de99c1a5efe3401e94823c1e1de545ad6863c64e47f457b51d",
+      "services/springboot4-ai-mcp.md": "a7a4345f446c094acf1491b30cce9e8d7efaa2900afea9f8e6571ff2b607cf75",
+      "services/springboot4-aop.md": "af9a5402a689751f58444b3ba0bcd428365abd447d05cbceb6ad1d7767428ead",
+      "services/springboot4-apiversion.md": "43be222f024f7db90a83529239e3f8dba4d61bd5936475d1c0525ed83ae07d04",
+      "services/springboot4-async.md": "c9fea31e9edb98f1352cb0c2a1ed765095e507cb66d2e46ef79072befbc67e8f",
+      "services/springboot4-batch.md": "ddee7462b94a70f8134755c83ca022e98310ee99141bcd733c4640b75a4c258a",
+      "services/springboot4-cache.md": "b7fce8d6a94672a9d513c4e85fd0332191da0ad159fcd0013995fc765fc04e85",
+      "services/springboot4-echarts.md": "efc7e552a85bd18e1b90a2aa4e7fc5767cb171856ee765bc9a954573ea03a1c3",
+      "services/springboot4-grpc.md": "950ff45f9e9b380d979986b80c9e4d090b91007fc7fb90fef8b84bd31fba38de",
+      "services/springboot4-jackson3.md": "8b2e7dd59ed1a945ba907948efa3233a7f253d9d7f1aee617f80d87e1cd2dc37",
+      "services/springboot4-jpa.md": "f46a0e4e555eb32c99521a5147bbd0a7d5b086789eafa04826f79e39b0b520ca",
+      "services/springboot4-mongodb.md": "f4b2a981ee63c235b20eaaf4a9dd83d54f8fd190e18e99ebe765f664619f3b05",
+      "services/springboot4-multisource.md": "6875c1463b07831102c69f8121ea6fbc2c1ee5923041fab7379ee7da735421de",
+      "services/springboot4-mybatis.md": "6e8e5f4f6858a12b0e01a2223773b2b8921053b9d1281d247394433af600ba79",
+      "services/springboot4-native.md": "fff738b39bddf487e989d7374757deef9690feaf3f02ca4aeb2e2f79c61dfb59",
+      "services/springboot4-oauth2.md": "02f3b3769ab982bf62c413c7df502af833e47da1841aa648ab82a49d242cb535",
+      "services/springboot4-observability.md": "570fe28e9e3fc760d6aafe741e0e58d49720bff2ef0ec9bc9c74366d8f6ece06",
+      "services/springboot4-openapi.md": "615014cb2aa31d0d9baf8f4686a725b5f15f88effa795cf091e5d2cb238ac4bb",
+      "services/springboot4-rabbitmq.md": "f999853acd15d9d056b66bc174acd3dd359071254b19f4c2dda7cf7ebbec9167",
+      "services/springboot4-redis.md": "13b5f20a0e2125d01eb59fe1f63dd48eaaaed51d12833934ec38938dc58ab802",
+      "services/springboot4-resilience.md": "1ae0e8282148f296d2bc76d327df43fcadba89e7fe3fe975cc99b1815ef0dcd6",
+      "services/springboot4-restclient.md": "b45e777fd4333381a04ee3869ba5ea58ed08de68cd8319055955d78915645396",
+      "services/springboot4-restful.md": "65d131f1cbd2404f671e762d8aad02f02741e5fe5650e318f33c35b97175218c",
+      "services/springboot4-schedule.md": "5f9cb70ad5593f189a19299653e9f9ac4fcacff1c28fa96b8a11739b12df741d",
+      "services/springboot4-security.md": "15c8dddc5c37ac51178e6303abc9ffdd0fc9de28afe0908efcd146e7be2209bc",
+      "services/springboot4-testing.md": "e5f16897973de13f08ed710232f7fabe3ac08aacf92b6ff0fe794d19e160b7af",
+      "services/springboot4-thymeleaf.md": "18922a3ce43b0e04a0fcb55d145fa4f2f46ae16dd1aa7537c719118133b33ca3",
+      "services/springboot4-transaction.md": "932d18b9f5ec9b6cb7e6a3bdd9abb7a6c33f9e26947687ac9b428b043b03f7d5",
+      "services/springboot4-virtualthreads.md": "f5ee05605d701891469bd645f5b394817d292722a6085bbb3b377b0d7767be4f",
+      "services/springboot4-websocket.md": "5a82cf417e0a720df3da28820e9140f5ea2e668d19a1399b302c91a12cee9a2d"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "7679f8e377ec2af5f8a37b15f5d7c93a5484bf6cd874c11a33944ceef53e649a",
+      "diagrams/order-notify-app.mmd": "8949226e93e9f68f26e8cc0781556004f82bab32fb5f66ae7db24323333951c1",
+      "diagrams/springboot4-ai-mcp.mmd": "8d3599a5cb26ef9d407b7d1655d9d1956c6a8e088e803af6a87a07d7fb08c38a",
+      "diagrams/springboot4-aop.mmd": "d73741d16c37b99fc40db657013a2f28620da54af38d017eef287e6a79150172",
+      "diagrams/springboot4-apiversion.mmd": "c5d5c3c19a8eaffc79029669f3d7c30577519ddb9fb343237ea4d7bff50b27a8",
+      "diagrams/springboot4-async.mmd": "3d9556566467df7cd9b4dcd744461761f0523d788bf0d08c62768798fa0af747",
+      "diagrams/springboot4-batch.mmd": "685b72782268a7ef376c9ecaba4318da975285a657872e99ec78284830737517",
+      "diagrams/springboot4-cache.mmd": "47560ea6cc83ccfd462cb8ad9105e511b820a83b6118c494c721fc86f4cc7e3b",
+      "diagrams/springboot4-echarts.mmd": "101336c82842f34be7c2cd1b42e6e961d000ad13830ada87c6038ed3b3ae2490",
+      "diagrams/springboot4-grpc.mmd": "7f4c72f283606319593b162c7004fe24e0fa6ebee04b2c9beca1ddcc2d75206e",
+      "diagrams/springboot4-jackson3.mmd": "50b222846b65e9f6358e29eecff0bbc1534fe7ae3dd5a5ca80defc13c6613966",
+      "diagrams/springboot4-jpa.mmd": "ab30eb8953e872cf3d79acc39feb4c3d941186b847dbf0ad10f8637802661d3b",
+      "diagrams/springboot4-mongodb.mmd": "199747a281497fe0dd7a3b0a3a5d50dcbe44ebaf1353405991c698e679d8231c",
+      "diagrams/springboot4-multisource.mmd": "0098ad362841a8f2afd2c50ef2ab4ba14524ada29a51d336d2d5edbf12866f1f",
+      "diagrams/springboot4-mybatis.mmd": "2fd89d674e6a61e1ad697af075b3e2f6c7e66da867caee271e4a96ffc64dabc4",
+      "diagrams/springboot4-native.mmd": "84ba276e23c545cb27bc1fb71a5617086d3beae11d64dff3bd23907a3ead16ef",
+      "diagrams/springboot4-oauth2.mmd": "d4ef119e020d54eb470ae2802c766024617ce99f1c7a3ed711c713b3a1e1776a",
+      "diagrams/springboot4-observability.mmd": "36cb4191770384a76242bdb5825465568892677c9f94b194e21ae244c5d7c495",
+      "diagrams/springboot4-openapi.mmd": "1b9c8cec28e9d57f824468cace62f4bc606fb2485d655b116c9cfbf2085b42da",
+      "diagrams/springboot4-rabbitmq.mmd": "e72745e6c9f06ed0eff78d970342044473e2bd5634a98c07da5254fbfe4cb28d",
+      "diagrams/springboot4-redis.mmd": "43dfc4bb1bae933f0a59a1334dbf7577ed85e4b247cdd622b9c3a1e6005a2285",
+      "diagrams/springboot4-resilience.mmd": "9f09c259101ac6cc5b85e49a06d66da53aae2688bc3dea32715f0ae51745d591",
+      "diagrams/springboot4-restclient.mmd": "2fe49c6f7ccf47089a30c854c64ade5470c2d2dc8c6e80e0f463279bcc2ca6ae",
+      "diagrams/springboot4-restful.mmd": "c9c85d02bace59f34e9bbec5418fbf770d21534e2b381a79c4d9b75f0e228ca3",
+      "diagrams/springboot4-schedule.mmd": "1d37be2bae3a09a8d2fce296c92d6daf290e5e2d504439136a5f0f136e5ceda4",
+      "diagrams/springboot4-security.mmd": "35806997c0ae02a8c2fe29890aeeff2a974fb8a25b458b783372f294060ca2b8",
+      "diagrams/springboot4-testing.mmd": "9b808bff9b09109e2b3bf446cd01b585099643d0722be6e60063d6885ddcd31f",
+      "diagrams/springboot4-thymeleaf.mmd": "2ecbcae8df39274f2b0085f839babe5386044361db31ad93748f3a1c3525b7cb",
+      "diagrams/springboot4-transaction.mmd": "e8a4e2a79739f5e233b17e19e747347db0ccdca5cf539be4118aed314f3c8f9e",
+      "diagrams/springboot4-virtualthreads.mmd": "fd0a9332268e6d631a1e4da6b3a058fe8fe6a6aba06d163cca62a1e31ec08b5f",
+      "diagrams/springboot4-websocket.mmd": "e87afcd3df47c7601a0ba6eedeaa289b2bef0b42ef7cc034d853d0b6dcc0fb42",
+      "graph.json": "548bfc6a10cf7085019e795c872d951f8f48a58a3f63500895b242e39b971332",
+      "index.md": "6b53405206051bb2e1154c49407129b13d2562d686c4ddc30b472a6e5ccb9dee",
+      "services/order-notify-app.md": "83b32eb8633997de99c1a5efe3401e94823c1e1de545ad6863c64e47f457b51d",
+      "services/springboot4-ai-mcp.md": "a7a4345f446c094acf1491b30cce9e8d7efaa2900afea9f8e6571ff2b607cf75",
+      "services/springboot4-aop.md": "af9a5402a689751f58444b3ba0bcd428365abd447d05cbceb6ad1d7767428ead",
+      "services/springboot4-apiversion.md": "43be222f024f7db90a83529239e3f8dba4d61bd5936475d1c0525ed83ae07d04",
+      "services/springboot4-async.md": "c9fea31e9edb98f1352cb0c2a1ed765095e507cb66d2e46ef79072befbc67e8f",
+      "services/springboot4-batch.md": "ddee7462b94a70f8134755c83ca022e98310ee99141bcd733c4640b75a4c258a",
+      "services/springboot4-cache.md": "b7fce8d6a94672a9d513c4e85fd0332191da0ad159fcd0013995fc765fc04e85",
+      "services/springboot4-echarts.md": "efc7e552a85bd18e1b90a2aa4e7fc5767cb171856ee765bc9a954573ea03a1c3",
+      "services/springboot4-grpc.md": "950ff45f9e9b380d979986b80c9e4d090b91007fc7fb90fef8b84bd31fba38de",
+      "services/springboot4-jackson3.md": "8b2e7dd59ed1a945ba907948efa3233a7f253d9d7f1aee617f80d87e1cd2dc37",
+      "services/springboot4-jpa.md": "f46a0e4e555eb32c99521a5147bbd0a7d5b086789eafa04826f79e39b0b520ca",
+      "services/springboot4-mongodb.md": "f4b2a981ee63c235b20eaaf4a9dd83d54f8fd190e18e99ebe765f664619f3b05",
+      "services/springboot4-multisource.md": "6875c1463b07831102c69f8121ea6fbc2c1ee5923041fab7379ee7da735421de",
+      "services/springboot4-mybatis.md": "6e8e5f4f6858a12b0e01a2223773b2b8921053b9d1281d247394433af600ba79",
+      "services/springboot4-native.md": "fff738b39bddf487e989d7374757deef9690feaf3f02ca4aeb2e2f79c61dfb59",
+      "services/springboot4-oauth2.md": "02f3b3769ab982bf62c413c7df502af833e47da1841aa648ab82a49d242cb535",
+      "services/springboot4-observability.md": "570fe28e9e3fc760d6aafe741e0e58d49720bff2ef0ec9bc9c74366d8f6ece06",
+      "services/springboot4-openapi.md": "615014cb2aa31d0d9baf8f4686a725b5f15f88effa795cf091e5d2cb238ac4bb",
+      "services/springboot4-rabbitmq.md": "f999853acd15d9d056b66bc174acd3dd359071254b19f4c2dda7cf7ebbec9167",
+      "services/springboot4-redis.md": "13b5f20a0e2125d01eb59fe1f63dd48eaaaed51d12833934ec38938dc58ab802",
+      "services/springboot4-resilience.md": "1ae0e8282148f296d2bc76d327df43fcadba89e7fe3fe975cc99b1815ef0dcd6",
+      "services/springboot4-restclient.md": "b45e777fd4333381a04ee3869ba5ea58ed08de68cd8319055955d78915645396",
+      "services/springboot4-restful.md": "65d131f1cbd2404f671e762d8aad02f02741e5fe5650e318f33c35b97175218c",
+      "services/springboot4-schedule.md": "5f9cb70ad5593f189a19299653e9f9ac4fcacff1c28fa96b8a11739b12df741d",
+      "services/springboot4-security.md": "15c8dddc5c37ac51178e6303abc9ffdd0fc9de28afe0908efcd146e7be2209bc",
+      "services/springboot4-testing.md": "e5f16897973de13f08ed710232f7fabe3ac08aacf92b6ff0fe794d19e160b7af",
+      "services/springboot4-thymeleaf.md": "18922a3ce43b0e04a0fcb55d145fa4f2f46ae16dd1aa7537c719118133b33ca3",
+      "services/springboot4-transaction.md": "932d18b9f5ec9b6cb7e6a3bdd9abb7a6c33f9e26947687ac9b428b043b03f7d5",
+      "services/springboot4-virtualthreads.md": "f5ee05605d701891469bd645f5b394817d292722a6085bbb3b377b0d7767be4f",
+      "services/springboot4-websocket.md": "5a82cf417e0a720df3da28820e9140f5ea2e668d19a1399b302c91a12cee9a2d"
+    }
+  },
+  "microcks/microcks": {
+    "commit": "0e0c0b4ef119e25de2764c9a55400dab29823080",
+    "run1": {
+      "diagrams/fleet.puml": "7528192747874bdb4a0dd22a91e26a16f8c1a56440a903453278ed2454537d4b",
+      "diagrams/webapp.mmd": "a5239ea0061d76a3db8aebf2caccb98843cf8782abc443092fbc1448dfd7abc5",
+      "graph.json": "d5f433c193a58ae92afcec8038fb8022266c51643e59c96afc8f6ec800645abe",
+      "index.md": "8ad3ab1b2c446a1e749780163cd5a035792f75831a8f92273d59b7865b00b0fc",
+      "services/webapp.md": "6c613815fb0c04d2e9adc7cdb32bca1b892c2bb233f5eef6b6c1fc837addb41e"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "7528192747874bdb4a0dd22a91e26a16f8c1a56440a903453278ed2454537d4b",
+      "diagrams/webapp.mmd": "a5239ea0061d76a3db8aebf2caccb98843cf8782abc443092fbc1448dfd7abc5",
+      "graph.json": "d5f433c193a58ae92afcec8038fb8022266c51643e59c96afc8f6ec800645abe",
+      "index.md": "8ad3ab1b2c446a1e749780163cd5a035792f75831a8f92273d59b7865b00b0fc",
+      "services/webapp.md": "6c613815fb0c04d2e9adc7cdb32bca1b892c2bb233f5eef6b6c1fc837addb41e"
+    }
+  },
+  "KouShenhai/KCloud-Platform-IoT": {
+    "commit": "6c1abf28beec99b87876eb8370ef6c9d87e32f67",
+    "run1": {
+      "diagrams/fleet.puml": "95a17cfdd7b88a7922f7e27cd65454607595a4190c55cdfe4b75ed610ca13274",
+      "diagrams/laokou-admin.mmd": "59567ffee87a518e0215d813f7a17e1098b55d35e034e827f27db64f12b654ba",
+      "diagrams/laokou-auth.mmd": "47ae42bf41a2297396a7ecc2c4e0bad63b1a1cc43ecd4c3ada659c53daa3bf41",
+      "diagrams/laokou-gateway.mmd": "1109b62bf36936cabee1d6ac11fbc4a27f2dbb5633be0d2a3b72bd4d319e84d2",
+      "diagrams/laokou-iot-mcp-server.mmd": "8480ed9f4eda696f2dabd0a591a60984caa6cbdca18071fef79335ebc8245e2c",
+      "diagrams/laokou-iot.mmd": "566a46415de1fb3dfd4f224288054b5d1dbaa66fc662f41582ded5224b922f16",
+      "diagrams/laokou-logstash.mmd": "a942de6f8e8406faa206a6dbcfb6279388496f32829e54605c422adeaa867891",
+      "diagrams/laokou-monitor.mmd": "c07c1546d18ff4bc2366a3fae7d0864f4618b5fd140fed881ea79217a2acfc22",
+      "diagrams/laokou-nacos.mmd": "1a566cc3790a55a210ff169304d6abc2573d23b69275b1217cedf97eaa7afa83",
+      "diagrams/laokou-oss.mmd": "dbdda8868429465cef4a133351235999f95da29d6f69a2d1f059b1abf7953f3b",
+      "diagrams/laokou-report.mmd": "83a385a20dfe22cdf8999cb639052e606c0058f44d7e8931e6c221cd06b376b9",
+      "diagrams/laokou-snowflake-id.mmd": "a69801c1177ea972f4350a8b78eaccba2cedb4ce25a20797eef8378b5888b224",
+      "diagrams/laokou-standalone-admin.mmd": "f48ffe31c119b665d52e18e44aa813b79232074e78f8fa4948f9ed86aa94acbb",
+      "diagrams/laokou-standalone-auth.mmd": "7635193c560cfb4903601efc693814a7c1568f620c71c4b1a62db4e13d3f14aa",
+      "graph.json": "b83b7f2f9acaeb3de7ba86c93349a22ec7f0f7095ac6889586c48b73ee1897b6",
+      "index.md": "d878ed4eec09ae0cdebf12a1f2cba81fc605cdf08d51b16b1e9ed614f24b4879",
+      "services/laokou-admin.md": "90460cfdf0bf04d5108e143aa998e9500aa38b5ca9112201e4b0de9ce4bade87",
+      "services/laokou-auth.md": "2b78a258b8972e6c87a676fc8c94d0581b154eb915be6316d487b1ad3c1b15c6",
+      "services/laokou-gateway.md": "6f727052fa016b994cafa64c5d3df795e30df4f973036690130dad4a524c4ee8",
+      "services/laokou-iot-mcp-server.md": "1c61a813db923d7185dedec84b645aeff3a47445458cf168662e2dc096810891",
+      "services/laokou-iot.md": "71bb7f1d25852b82711d7694ad86295a3f97e99ecf416ed6abaa94a8111dcb56",
+      "services/laokou-logstash.md": "314911265c1f866bdd7bdde3f1bc883561891e468fa72637571d176700c9d6df",
+      "services/laokou-monitor.md": "877147620dddb8f7aecdf3f609649308b1e6eab9306fd4fb71fe518b406fe958",
+      "services/laokou-nacos.md": "4deef3d8d5275625b1b6881ab1ddb44a39698ba59ef7f44a43997d60b1647fe2",
+      "services/laokou-oss.md": "6b7bacc0bdec40b44a4095693df3e03f6eef8d623abfa152029a07c380d5a197",
+      "services/laokou-report.md": "66f8df7569871f3640e493e9c99cb6b24d3a854996656820252025515cd952eb",
+      "services/laokou-snowflake-id.md": "1ee2ee26eadfbf77632fcf28165144fc536c6f33097f51feeb8438be77ab6007",
+      "services/laokou-standalone-admin.md": "7609474e1eb51631755ae25c7bf0bcb1191d37fa580e548eccaf5203b737e44b",
+      "services/laokou-standalone-auth.md": "c9cd373c057579d0f827a30c00035587565b4c79b9a90dd62b021109a308f520"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "95a17cfdd7b88a7922f7e27cd65454607595a4190c55cdfe4b75ed610ca13274",
+      "diagrams/laokou-admin.mmd": "59567ffee87a518e0215d813f7a17e1098b55d35e034e827f27db64f12b654ba",
+      "diagrams/laokou-auth.mmd": "47ae42bf41a2297396a7ecc2c4e0bad63b1a1cc43ecd4c3ada659c53daa3bf41",
+      "diagrams/laokou-gateway.mmd": "1109b62bf36936cabee1d6ac11fbc4a27f2dbb5633be0d2a3b72bd4d319e84d2",
+      "diagrams/laokou-iot-mcp-server.mmd": "8480ed9f4eda696f2dabd0a591a60984caa6cbdca18071fef79335ebc8245e2c",
+      "diagrams/laokou-iot.mmd": "566a46415de1fb3dfd4f224288054b5d1dbaa66fc662f41582ded5224b922f16",
+      "diagrams/laokou-logstash.mmd": "a942de6f8e8406faa206a6dbcfb6279388496f32829e54605c422adeaa867891",
+      "diagrams/laokou-monitor.mmd": "c07c1546d18ff4bc2366a3fae7d0864f4618b5fd140fed881ea79217a2acfc22",
+      "diagrams/laokou-nacos.mmd": "1a566cc3790a55a210ff169304d6abc2573d23b69275b1217cedf97eaa7afa83",
+      "diagrams/laokou-oss.mmd": "dbdda8868429465cef4a133351235999f95da29d6f69a2d1f059b1abf7953f3b",
+      "diagrams/laokou-report.mmd": "83a385a20dfe22cdf8999cb639052e606c0058f44d7e8931e6c221cd06b376b9",
+      "diagrams/laokou-snowflake-id.mmd": "a69801c1177ea972f4350a8b78eaccba2cedb4ce25a20797eef8378b5888b224",
+      "diagrams/laokou-standalone-admin.mmd": "f48ffe31c119b665d52e18e44aa813b79232074e78f8fa4948f9ed86aa94acbb",
+      "diagrams/laokou-standalone-auth.mmd": "7635193c560cfb4903601efc693814a7c1568f620c71c4b1a62db4e13d3f14aa",
+      "graph.json": "b83b7f2f9acaeb3de7ba86c93349a22ec7f0f7095ac6889586c48b73ee1897b6",
+      "index.md": "d878ed4eec09ae0cdebf12a1f2cba81fc605cdf08d51b16b1e9ed614f24b4879",
+      "services/laokou-admin.md": "90460cfdf0bf04d5108e143aa998e9500aa38b5ca9112201e4b0de9ce4bade87",
+      "services/laokou-auth.md": "2b78a258b8972e6c87a676fc8c94d0581b154eb915be6316d487b1ad3c1b15c6",
+      "services/laokou-gateway.md": "6f727052fa016b994cafa64c5d3df795e30df4f973036690130dad4a524c4ee8",
+      "services/laokou-iot-mcp-server.md": "1c61a813db923d7185dedec84b645aeff3a47445458cf168662e2dc096810891",
+      "services/laokou-iot.md": "71bb7f1d25852b82711d7694ad86295a3f97e99ecf416ed6abaa94a8111dcb56",
+      "services/laokou-logstash.md": "314911265c1f866bdd7bdde3f1bc883561891e468fa72637571d176700c9d6df",
+      "services/laokou-monitor.md": "877147620dddb8f7aecdf3f609649308b1e6eab9306fd4fb71fe518b406fe958",
+      "services/laokou-nacos.md": "4deef3d8d5275625b1b6881ab1ddb44a39698ba59ef7f44a43997d60b1647fe2",
+      "services/laokou-oss.md": "6b7bacc0bdec40b44a4095693df3e03f6eef8d623abfa152029a07c380d5a197",
+      "services/laokou-report.md": "66f8df7569871f3640e493e9c99cb6b24d3a854996656820252025515cd952eb",
+      "services/laokou-snowflake-id.md": "1ee2ee26eadfbf77632fcf28165144fc536c6f33097f51feeb8438be77ab6007",
+      "services/laokou-standalone-admin.md": "7609474e1eb51631755ae25c7bf0bcb1191d37fa580e548eccaf5203b737e44b",
+      "services/laokou-standalone-auth.md": "c9cd373c057579d0f827a30c00035587565b4c79b9a90dd62b021109a308f520"
+    }
+  },
+  "battcn/wemirr-platform": {
+    "commit": "0618bbd51e65bafb293282af497ab9e4a1c64564",
+    "run1": {
+      "diagrams/fleet.puml": "035f2a59fb97d866b2a2cc6285688a1b94cc778874f2a1225e232ef6abb968eb",
+      "diagrams/wemirr-platform-ai.mmd": "e3a72132125adf42168fae26bfa3f99475045ab8e060c90b2091acafdd9eecd6",
+      "diagrams/wemirr-platform-gateway.mmd": "f99b668b230576f5234b713f43816f230462da672b523234a090ac946d18bc00",
+      "diagrams/wemirr-platform-iam.mmd": "fde94ff70f5c84782782aa17948a24f2aa0076a574a55c3a43e6f423d3bd1c1b",
+      "diagrams/wemirr-platform-monitor.mmd": "b6b8e90b1b1e360abc1564ee57e1df38c0ed6a083e8d520d0106151692aa072a",
+      "diagrams/wemirr-platform-suite.mmd": "cae8bd714212b2b737cf5fe33bf805cb9bc92ff57c73d08717c532fa1832891f",
+      "diagrams/wemirr-platform-tms.mmd": "0fb5f06a28cf20bb5fa7e00d8d08b2792f371a60b70123a46a02015d4cbebf83",
+      "diagrams/wemirr-platform-wms.mmd": "b648eaa7943a126d3cc4f9fb042222e94cae5aad2a222b4d4fe786ed19b94a08",
+      "diagrams/wemirr-platform-workflow.mmd": "019b9ec77bcf2fd281f9b9caa9650d1e16cb7bd49e6b3c40941a25d9eb203f2f",
+      "graph.json": "57860ff426466d17a29ee7212b4ff74bbbb0bf9ef3ff70292441b022d4f371f0",
+      "index.md": "d43c965eef2ae04802830c786d7ac88391ac2982860037cb2911d54a9547fd29",
+      "services/wemirr-platform-ai.md": "fb31c34522190a932845115cbc4f45b5ae4818bb934ff44cf3f4170fe85e1d06",
+      "services/wemirr-platform-gateway.md": "ee493169483851b1dfc3441d1591465e7bda929a73ed38437250d9f6170559d2",
+      "services/wemirr-platform-iam.md": "af7170670716f185e0ff71941a2c23ed074be0718ab88d66facc27db669b931a",
+      "services/wemirr-platform-monitor.md": "85f0397ac993edc5818b4b608d5f23ed385a0415033f7046e370ea3b83f52095",
+      "services/wemirr-platform-suite.md": "4bbb380c6445f149cfa18aba4a43aec1fc06faa275a7136b4b88f453a9b13e38",
+      "services/wemirr-platform-tms.md": "be75f35f4b5d283fd02a133f1012ecad304a456ae81c344663cbf41e48885780",
+      "services/wemirr-platform-wms.md": "ff3b2de1441483ec9f1230795a6de853d3e5d37afe67c0f8372e5154c4426b1c",
+      "services/wemirr-platform-workflow.md": "08a551debc3c1565395872e18711c68ac893f68a9afd34f25cccbf0af5bf8ff5"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "035f2a59fb97d866b2a2cc6285688a1b94cc778874f2a1225e232ef6abb968eb",
+      "diagrams/wemirr-platform-ai.mmd": "e3a72132125adf42168fae26bfa3f99475045ab8e060c90b2091acafdd9eecd6",
+      "diagrams/wemirr-platform-gateway.mmd": "f99b668b230576f5234b713f43816f230462da672b523234a090ac946d18bc00",
+      "diagrams/wemirr-platform-iam.mmd": "fde94ff70f5c84782782aa17948a24f2aa0076a574a55c3a43e6f423d3bd1c1b",
+      "diagrams/wemirr-platform-monitor.mmd": "b6b8e90b1b1e360abc1564ee57e1df38c0ed6a083e8d520d0106151692aa072a",
+      "diagrams/wemirr-platform-suite.mmd": "cae8bd714212b2b737cf5fe33bf805cb9bc92ff57c73d08717c532fa1832891f",
+      "diagrams/wemirr-platform-tms.mmd": "0fb5f06a28cf20bb5fa7e00d8d08b2792f371a60b70123a46a02015d4cbebf83",
+      "diagrams/wemirr-platform-wms.mmd": "b648eaa7943a126d3cc4f9fb042222e94cae5aad2a222b4d4fe786ed19b94a08",
+      "diagrams/wemirr-platform-workflow.mmd": "019b9ec77bcf2fd281f9b9caa9650d1e16cb7bd49e6b3c40941a25d9eb203f2f",
+      "graph.json": "57860ff426466d17a29ee7212b4ff74bbbb0bf9ef3ff70292441b022d4f371f0",
+      "index.md": "d43c965eef2ae04802830c786d7ac88391ac2982860037cb2911d54a9547fd29",
+      "services/wemirr-platform-ai.md": "fb31c34522190a932845115cbc4f45b5ae4818bb934ff44cf3f4170fe85e1d06",
+      "services/wemirr-platform-gateway.md": "ee493169483851b1dfc3441d1591465e7bda929a73ed38437250d9f6170559d2",
+      "services/wemirr-platform-iam.md": "af7170670716f185e0ff71941a2c23ed074be0718ab88d66facc27db669b931a",
+      "services/wemirr-platform-monitor.md": "85f0397ac993edc5818b4b608d5f23ed385a0415033f7046e370ea3b83f52095",
+      "services/wemirr-platform-suite.md": "4bbb380c6445f149cfa18aba4a43aec1fc06faa275a7136b4b88f453a9b13e38",
+      "services/wemirr-platform-tms.md": "be75f35f4b5d283fd02a133f1012ecad304a456ae81c344663cbf41e48885780",
+      "services/wemirr-platform-wms.md": "ff3b2de1441483ec9f1230795a6de853d3e5d37afe67c0f8372e5154c4426b1c",
+      "services/wemirr-platform-workflow.md": "08a551debc3c1565395872e18711c68ac893f68a9afd34f25cccbf0af5bf8ff5"
+    }
+  },
+  "apache/syncope": {
+    "commit": "4fe42f66662edaff45ccb29575f703622baf766e",
+    "run1": {
+      "diagrams/build-tools.mmd": "ea48c43a735fc643ea229dcb8852879c2d76e86178ea7e5e11ebd916dbd25a63",
+      "diagrams/console.mmd": "bb79b1586c4e8115f641e73af6861a0fa1d961da90941883c5fc16930efb2164",
+      "diagrams/core-starter.mmd": "86b13cd9879d854ba13aba30412c0f77b52802bc09f11a69143535e8885c11a2",
+      "diagrams/enduser.mmd": "2e0ebbd8b631d8977d2556f83f3030158c76d984a74ab9efdee899096c045d5d",
+      "diagrams/fleet.puml": "74beed4309fa18d0d7dc97eeabc5f8731706381b9082fa878b36edb28e2f5810",
+      "diagrams/sra.mmd": "64245c584434be633b00f747aaf77a9ba7b4390dff542acb504552ed517613e0",
+      "diagrams/wa-starter.mmd": "405de26f817c73951aff8ef3f012bbe3fd2c6f4c012a022e9c54d02125f30815",
+      "graph.json": "57e41a9b7971f2d9d2ecfc5dcb6c65f134a0d465cd20c8212048a0d11e8f8a37",
+      "index.md": "6ee648fbc191f478b36085bea0032f8b0487b81a15f5a9e66112f9db92a4ac26",
+      "services/build-tools.md": "54db0f004174a8699a03c0e2f176c8abafedf4112d52483e57bb982e2dadd2d2",
+      "services/console.md": "d7a9513b9e9149970d271a4042c3910a890280c6a50f7ab618113c07d205d89b",
+      "services/core-starter.md": "60202f59cfabf01e1637f495e1e588526a3db9331362fe2b865a086daba15b89",
+      "services/enduser.md": "ecd77fe200de2e88ad202f14b7efe76b93405aee427bcd9bcbb918aa0935bff0",
+      "services/sra.md": "5ea99d40aae0f89bf0135a26e907d7f5ec346fbcd26075d3f6cf00f228a121b3",
+      "services/wa-starter.md": "28e4926000459f274d99e7a2ba2c807c03424bfce79347e3eef0f11385f49ae4"
+    },
+    "run2": {
+      "diagrams/build-tools.mmd": "ea48c43a735fc643ea229dcb8852879c2d76e86178ea7e5e11ebd916dbd25a63",
+      "diagrams/console.mmd": "bb79b1586c4e8115f641e73af6861a0fa1d961da90941883c5fc16930efb2164",
+      "diagrams/core-starter.mmd": "86b13cd9879d854ba13aba30412c0f77b52802bc09f11a69143535e8885c11a2",
+      "diagrams/enduser.mmd": "2e0ebbd8b631d8977d2556f83f3030158c76d984a74ab9efdee899096c045d5d",
+      "diagrams/fleet.puml": "74beed4309fa18d0d7dc97eeabc5f8731706381b9082fa878b36edb28e2f5810",
+      "diagrams/sra.mmd": "64245c584434be633b00f747aaf77a9ba7b4390dff542acb504552ed517613e0",
+      "diagrams/wa-starter.mmd": "405de26f817c73951aff8ef3f012bbe3fd2c6f4c012a022e9c54d02125f30815",
+      "graph.json": "57e41a9b7971f2d9d2ecfc5dcb6c65f134a0d465cd20c8212048a0d11e8f8a37",
+      "index.md": "6ee648fbc191f478b36085bea0032f8b0487b81a15f5a9e66112f9db92a4ac26",
+      "services/build-tools.md": "54db0f004174a8699a03c0e2f176c8abafedf4112d52483e57bb982e2dadd2d2",
+      "services/console.md": "d7a9513b9e9149970d271a4042c3910a890280c6a50f7ab618113c07d205d89b",
+      "services/core-starter.md": "60202f59cfabf01e1637f495e1e588526a3db9331362fe2b865a086daba15b89",
+      "services/enduser.md": "ecd77fe200de2e88ad202f14b7efe76b93405aee427bcd9bcbb918aa0935bff0",
+      "services/sra.md": "5ea99d40aae0f89bf0135a26e907d7f5ec346fbcd26075d3f6cf00f228a121b3",
+      "services/wa-starter.md": "28e4926000459f274d99e7a2ba2c807c03424bfce79347e3eef0f11385f49ae4"
+    }
+  },
+  "yangxj96/spectra-admin": {
+    "commit": "363360bc2f0465efc09a4dd1a5f80d5f07def623",
+    "run1": {
+      "diagrams/fleet.puml": "31134d37272d8fae4ed81130b4484056f4839e3e70f23ca0212f5a3da8ba697d",
+      "diagrams/spectra-launch.mmd": "c62947c76682df3ed0d527ba8a9967c92f82321345a01f8cadd3df5c6af749ec",
+      "graph.json": "ab1b6630a810e261df0c8c4b6aad467124d19d8c8363491bbb03e22c65766526",
+      "index.md": "d779c208ada9cc77413d2f7a1efe2467d4a416075f2616d34156577f256c41ba",
+      "services/spectra-launch.md": "abd176c7936ac7b3d1c64f00ce49469344dc3f7588ee2cb7728b867f2171b331"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "31134d37272d8fae4ed81130b4484056f4839e3e70f23ca0212f5a3da8ba697d",
+      "diagrams/spectra-launch.mmd": "c62947c76682df3ed0d527ba8a9967c92f82321345a01f8cadd3df5c6af749ec",
+      "graph.json": "ab1b6630a810e261df0c8c4b6aad467124d19d8c8363491bbb03e22c65766526",
+      "index.md": "d779c208ada9cc77413d2f7a1efe2467d4a416075f2616d34156577f256c41ba",
+      "services/spectra-launch.md": "abd176c7936ac7b3d1c64f00ce49469344dc3f7588ee2cb7728b867f2171b331"
+    }
+  },
+  "aurix-core-banking/aurix-backend": {
+    "commit": "9bef8a4a4d694d3aeb8fd12c03d141179b391900",
+    "run1": {
+      "diagrams/aurix-gateway.mmd": "53cfb96557dce9dfb7afcad5701f7f67774362239794ad5764bda4c23dffd36c",
+      "diagrams/fleet.puml": "d70ebcb75483ca15211d4ea446c4713e4e046910992d9cf00df8e7d7e8d2c895",
+      "diagrams/svc-accounts.mmd": "8120a65fdc3a9eb9df9b2c201977e4fdbdfe47e417561619a1d540019f0908f3",
+      "diagrams/svc-ai.mmd": "980a3c5f25b31bcde02b4f65d5a4fbebce14eb0ca8f8d9a9641c1e62f52eaa52",
+      "diagrams/svc-banking.mmd": "cd47a7319548fbc05cffb98c07e66f2bdef39ba297b7251b014375404145d4b3",
+      "diagrams/svc-cambio.mmd": "d1e238e10f6280281219a16e65d096156323bfbe7fc6015ea684a150b9bbfbcc",
+      "diagrams/svc-cards.mmd": "300330db1be2e0392cdc6cedc95a533b21fdc09c4d86dd82df1cfab5631ef85d",
+      "diagrams/svc-compliance.mmd": "38780c40ac51479b92601dd37614225161180678bd7b94b533574093ffb873e0",
+      "diagrams/svc-contracts.mmd": "99cefd991d0c17aa387f33d4ed73624005c4c95206c419a4a842e36bc0104981",
+      "diagrams/svc-credit.mmd": "890a36ccdf02913b4202887051063edf826b4383cb10f3e68d9007c7d38f36cd",
+      "diagrams/svc-customer.mmd": "313dfc2ed73140700f5c41a81128b86aa81286240d966f4b2c8dcb43c09dcb3e",
+      "diagrams/svc-finance-mgmt.mmd": "37706a257ebe0cacf9fe58cf485ba799fde58068a48e97f8b2c6762b97097d7c",
+      "diagrams/svc-fraud.mmd": "ef8995b20f2c6cad41111418f548126da7777ca60133ed6fb07b83f80da58e02",
+      "diagrams/svc-intelligence.mmd": "ae9de114a0222cdcb31546839c1ec6b215f5a37d650e0db06ab4da7d45d8bbdd",
+      "diagrams/svc-investimentos.mmd": "861f9d5a8061628c1f8fe2c92e5261395c08b687dbeb612268bd8380482a7dc5",
+      "diagrams/svc-payments.mmd": "1c93c21e44bc702e8a9dd0a5343d8fec7444d78cea1d04293b11421b4d4577fd",
+      "diagrams/svc-platform.mmd": "c86bb325aa7d5474374a46f3b583a6a48d3b7c50dd629c1aac5cbd1cf2acac82",
+      "diagrams/svc-products.mmd": "c5fd1e1c63a4a7a5eddd13c981edb9629af9b0ed187af2844be8901242a34af5",
+      "diagrams/svc-salary.mmd": "d6e5707dd517077881792eff2863eca8664e6faccfd4092b30ba69f9846805dc",
+      "diagrams/svc-savings.mmd": "96ecccc01cdf21c8b5efd82cb3e3a711bea25866940337a338d44ab969245553",
+      "diagrams/svc-seguros.mmd": "164b1d0d4eb48e2844ec78d0fae9f99c503cddfbfccbfa695e62d6aed213d706",
+      "diagrams/svc-settlement.mmd": "1feba48cd52a94ff7639b1672d24d7d840bc2678d805459821aabd2b0d32ee0b",
+      "diagrams/svc-transactions.mmd": "b7be3c83bf19b2a264dc96421576d7226557056c2d5740a9bdeb137d317a2c6c",
+      "graph.json": "2f6644e1de5598636b20cedcdea2fda6db6e7240e8447d7187c1cbef9f7cd439",
+      "index.md": "08f8016abb122524df247f80540708d6bae8429294f709eb9e45dbc4af55f8e2",
+      "services/aurix-gateway.md": "773a683b066714b732184cc87cb1fd2aa953bf9eb1b741d2e72f1acbac4673d8",
+      "services/svc-accounts.md": "826bf0730a489df9d4ed187e2b05d49fa1a9a8578a21c4109c9a84b3701466ff",
+      "services/svc-ai.md": "dede99a50337c2f59b73feed9d378ea6cf890577130141770a919963b3bcf0b3",
+      "services/svc-banking.md": "4665897c3ae3996947f2501421244c1fb7a71feb3cb3ababb9cbc52c79a7fbe2",
+      "services/svc-cambio.md": "7e9abbc4462313bedd0215ec05c12d4bb2a3d0161c6dc1f65e209afaa83b081f",
+      "services/svc-cards.md": "91759e50b71e2c26c073bab197e2fbe37ef61ce4e85ca86974ab0e8dd434c3f9",
+      "services/svc-compliance.md": "a76b5c9b9fc6417a32b9217e69ddc54bef8cbf16d604e3c43b8213bbfba00be6",
+      "services/svc-contracts.md": "ff1414a39416eb7e9e56b38718ed7c55623422dda2318e49801809d24610bbd4",
+      "services/svc-credit.md": "d729644f10031ecdffb18e8d9ea86adc77f942e12f9d577e17761ed8d350c698",
+      "services/svc-customer.md": "049f070332c2e0bbcbaf19b2a41b681cd7b5580c3bcde8802f27c467be20a392",
+      "services/svc-finance-mgmt.md": "05d255d4833afc6372dd0ae29a2ccee5993d91d95d8d5fa550e8459d2a597ced",
+      "services/svc-fraud.md": "16c694c67cc16ef7257b3638b7c3ebeee6bccd0cdecab3bb03f40b563efef807",
+      "services/svc-intelligence.md": "6971ebdcd020287bf97eb2a076aa82398d56343fbdff7c644bcae86d3a0040e6",
+      "services/svc-investimentos.md": "b3241247c424a5b6a87abffa3cdabdabaa2346b935a7e422fa2b351dde5d47a1",
+      "services/svc-payments.md": "b5346f82700483f14a36659143351203a4f8b4d94ddc0f1a16b296800293b6b6",
+      "services/svc-platform.md": "5cdfdb983241eab6ebd0af6b0205b664d181e31d70c34d55dfe2660af9a8fd46",
+      "services/svc-products.md": "c2be3ba100e074247d39c00e9c6db00f8b40ae1f7ff537be475b932be00e62ec",
+      "services/svc-salary.md": "0a3e290579a7eeb3786d85b51beba83a8b5ac6a97b6fc898184114ec96294163",
+      "services/svc-savings.md": "05895d5b67af74990a220416b22e229b3dbc29a6736f1d697742773ed7de42b7",
+      "services/svc-seguros.md": "255731b4dc21c6d170cdabe56e55f339ede652cec1b3d2e470a6dade91b025fe",
+      "services/svc-settlement.md": "7fc1f661a45f42476e629d217061c0642d5fd4c60e0dde767db1ac7090af50f1",
+      "services/svc-transactions.md": "9896b74a21e9095b96ce32f6298b7af3161a011de01a790d1403f98c648c4bf2"
+    },
+    "run2": {
+      "diagrams/aurix-gateway.mmd": "53cfb96557dce9dfb7afcad5701f7f67774362239794ad5764bda4c23dffd36c",
+      "diagrams/fleet.puml": "d70ebcb75483ca15211d4ea446c4713e4e046910992d9cf00df8e7d7e8d2c895",
+      "diagrams/svc-accounts.mmd": "8120a65fdc3a9eb9df9b2c201977e4fdbdfe47e417561619a1d540019f0908f3",
+      "diagrams/svc-ai.mmd": "980a3c5f25b31bcde02b4f65d5a4fbebce14eb0ca8f8d9a9641c1e62f52eaa52",
+      "diagrams/svc-banking.mmd": "cd47a7319548fbc05cffb98c07e66f2bdef39ba297b7251b014375404145d4b3",
+      "diagrams/svc-cambio.mmd": "d1e238e10f6280281219a16e65d096156323bfbe7fc6015ea684a150b9bbfbcc",
+      "diagrams/svc-cards.mmd": "300330db1be2e0392cdc6cedc95a533b21fdc09c4d86dd82df1cfab5631ef85d",
+      "diagrams/svc-compliance.mmd": "38780c40ac51479b92601dd37614225161180678bd7b94b533574093ffb873e0",
+      "diagrams/svc-contracts.mmd": "99cefd991d0c17aa387f33d4ed73624005c4c95206c419a4a842e36bc0104981",
+      "diagrams/svc-credit.mmd": "890a36ccdf02913b4202887051063edf826b4383cb10f3e68d9007c7d38f36cd",
+      "diagrams/svc-customer.mmd": "313dfc2ed73140700f5c41a81128b86aa81286240d966f4b2c8dcb43c09dcb3e",
+      "diagrams/svc-finance-mgmt.mmd": "37706a257ebe0cacf9fe58cf485ba799fde58068a48e97f8b2c6762b97097d7c",
+      "diagrams/svc-fraud.mmd": "ef8995b20f2c6cad41111418f548126da7777ca60133ed6fb07b83f80da58e02",
+      "diagrams/svc-intelligence.mmd": "ae9de114a0222cdcb31546839c1ec6b215f5a37d650e0db06ab4da7d45d8bbdd",
+      "diagrams/svc-investimentos.mmd": "861f9d5a8061628c1f8fe2c92e5261395c08b687dbeb612268bd8380482a7dc5",
+      "diagrams/svc-payments.mmd": "1c93c21e44bc702e8a9dd0a5343d8fec7444d78cea1d04293b11421b4d4577fd",
+      "diagrams/svc-platform.mmd": "c86bb325aa7d5474374a46f3b583a6a48d3b7c50dd629c1aac5cbd1cf2acac82",
+      "diagrams/svc-products.mmd": "c5fd1e1c63a4a7a5eddd13c981edb9629af9b0ed187af2844be8901242a34af5",
+      "diagrams/svc-salary.mmd": "d6e5707dd517077881792eff2863eca8664e6faccfd4092b30ba69f9846805dc",
+      "diagrams/svc-savings.mmd": "96ecccc01cdf21c8b5efd82cb3e3a711bea25866940337a338d44ab969245553",
+      "diagrams/svc-seguros.mmd": "164b1d0d4eb48e2844ec78d0fae9f99c503cddfbfccbfa695e62d6aed213d706",
+      "diagrams/svc-settlement.mmd": "1feba48cd52a94ff7639b1672d24d7d840bc2678d805459821aabd2b0d32ee0b",
+      "diagrams/svc-transactions.mmd": "b7be3c83bf19b2a264dc96421576d7226557056c2d5740a9bdeb137d317a2c6c",
+      "graph.json": "2f6644e1de5598636b20cedcdea2fda6db6e7240e8447d7187c1cbef9f7cd439",
+      "index.md": "08f8016abb122524df247f80540708d6bae8429294f709eb9e45dbc4af55f8e2",
+      "services/aurix-gateway.md": "773a683b066714b732184cc87cb1fd2aa953bf9eb1b741d2e72f1acbac4673d8",
+      "services/svc-accounts.md": "826bf0730a489df9d4ed187e2b05d49fa1a9a8578a21c4109c9a84b3701466ff",
+      "services/svc-ai.md": "dede99a50337c2f59b73feed9d378ea6cf890577130141770a919963b3bcf0b3",
+      "services/svc-banking.md": "4665897c3ae3996947f2501421244c1fb7a71feb3cb3ababb9cbc52c79a7fbe2",
+      "services/svc-cambio.md": "7e9abbc4462313bedd0215ec05c12d4bb2a3d0161c6dc1f65e209afaa83b081f",
+      "services/svc-cards.md": "91759e50b71e2c26c073bab197e2fbe37ef61ce4e85ca86974ab0e8dd434c3f9",
+      "services/svc-compliance.md": "a76b5c9b9fc6417a32b9217e69ddc54bef8cbf16d604e3c43b8213bbfba00be6",
+      "services/svc-contracts.md": "ff1414a39416eb7e9e56b38718ed7c55623422dda2318e49801809d24610bbd4",
+      "services/svc-credit.md": "d729644f10031ecdffb18e8d9ea86adc77f942e12f9d577e17761ed8d350c698",
+      "services/svc-customer.md": "049f070332c2e0bbcbaf19b2a41b681cd7b5580c3bcde8802f27c467be20a392",
+      "services/svc-finance-mgmt.md": "05d255d4833afc6372dd0ae29a2ccee5993d91d95d8d5fa550e8459d2a597ced",
+      "services/svc-fraud.md": "16c694c67cc16ef7257b3638b7c3ebeee6bccd0cdecab3bb03f40b563efef807",
+      "services/svc-intelligence.md": "6971ebdcd020287bf97eb2a076aa82398d56343fbdff7c644bcae86d3a0040e6",
+      "services/svc-investimentos.md": "b3241247c424a5b6a87abffa3cdabdabaa2346b935a7e422fa2b351dde5d47a1",
+      "services/svc-payments.md": "b5346f82700483f14a36659143351203a4f8b4d94ddc0f1a16b296800293b6b6",
+      "services/svc-platform.md": "5cdfdb983241eab6ebd0af6b0205b664d181e31d70c34d55dfe2660af9a8fd46",
+      "services/svc-products.md": "c2be3ba100e074247d39c00e9c6db00f8b40ae1f7ff537be475b932be00e62ec",
+      "services/svc-salary.md": "0a3e290579a7eeb3786d85b51beba83a8b5ac6a97b6fc898184114ec96294163",
+      "services/svc-savings.md": "05895d5b67af74990a220416b22e229b3dbc29a6736f1d697742773ed7de42b7",
+      "services/svc-seguros.md": "255731b4dc21c6d170cdabe56e55f339ede652cec1b3d2e470a6dade91b025fe",
+      "services/svc-settlement.md": "7fc1f661a45f42476e629d217061c0642d5fd4c60e0dde767db1ac7090af50f1",
+      "services/svc-transactions.md": "9896b74a21e9095b96ce32f6298b7af3161a011de01a790d1403f98c648c4bf2"
+    }
+  },
+  "rapla/rapla": {
+    "commit": "cfdd73af2d4918850f5c6526b90ca91a48c710bf",
+    "run1": {
+      "diagrams/fleet.puml": "53f2de9be1ef19b3d78426a511c7db9e65f5d3dd31755bc62bb7dfbded86afc7",
+      "diagrams/rapla.mmd": "65e916de3a2ed60ea9997e0637828fc2e74f367fc968cce7c5dd2e5ef1353082",
+      "graph.json": "37a54d4bd82265af686f250dec97bfabfdcbb347c174674aa9e9ceccce4c19d2",
+      "index.md": "579c04ba3b76e572f6a7be8487021aeedc46b89e75da0f98d0153ae8e33e4995",
+      "services/rapla.md": "8fa399f46cc058be02b1685b36789965a2e5e95219816b7c5998d756e3a278e9"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "53f2de9be1ef19b3d78426a511c7db9e65f5d3dd31755bc62bb7dfbded86afc7",
+      "diagrams/rapla.mmd": "65e916de3a2ed60ea9997e0637828fc2e74f367fc968cce7c5dd2e5ef1353082",
+      "graph.json": "37a54d4bd82265af686f250dec97bfabfdcbb347c174674aa9e9ceccce4c19d2",
+      "index.md": "579c04ba3b76e572f6a7be8487021aeedc46b89e75da0f98d0153ae8e33e4995",
+      "services/rapla.md": "8fa399f46cc058be02b1685b36789965a2e5e95219816b7c5998d756e3a278e9"
+    }
+  },
+  "Bytedesk/bytedesk": {
+    "commit": "4c4ae47489173540f1ca24624d61036738888d13",
+    "run1": {
+      "diagrams/ai.mmd": "4fea01fe78bcf46c4c3a26b93bcfd638800ccbfe0cd83f0aca1afa03b03d7d12",
+      "diagrams/baidu.mmd": "05e5d20ce677ed41d7d69991958edb78a0273c412b2334d060f6ab6b734905ba",
+      "diagrams/bi.mmd": "fc8277493b2e826360103bab2ea786831f248689170ff93af0e10fe20446b4de",
+      "diagrams/bytedesk.mmd": "2bf7ae46895eb230d64c739300ee61980f76607af4b8d8a16ca91bdde713eca6",
+      "diagrams/call.mmd": "82c242d883d8df531a6b487eeaa16b8b60d0120b400b11bd673f574d801ac4d1",
+      "diagrams/core.mmd": "7859a6952b124e8fd75f147220bfb22db592cba2f8fd21d6599bc0ea6969059a",
+      "diagrams/fleet.puml": "f1ea8fe81fd015f20a613d6d1d944250e4868f112957d5d400293782cbaab7eb",
+      "diagrams/kanban.mmd": "995854892a7c574545fec7e4c28d4d683301e20dbdc0c5f2c4131e645515096a",
+      "diagrams/kbase.mmd": "ce6ddc20ee6024c39fe128de36afb70790c9257787464eb7d4ae1c34953b0509",
+      "diagrams/meet.mmd": "9a1bd9c0880cec63dd2d85d1a33270c7a8098ea7ee6bfcd24c47a294739daf25",
+      "diagrams/remote.mmd": "cafe0f8dd7b5082bfff785ef2163b21133d28fd39b653a362914c14d202fdf94",
+      "diagrams/service.mmd": "c9ed3cd57f3dac70fd5fc73f51b7f567ffe4b48972262ba3ddb9a1ae2a36abb7",
+      "diagrams/social.mmd": "30498547cb65369baaa22494d35c6dd1d477a457d03f15b698e0d94c6b299fbf",
+      "diagrams/team.mmd": "2e629b1eb492fcc2ab2fcb733328a9da54c66fd9541dd3e5f509ff228a231ee7",
+      "diagrams/ticket.mmd": "942548290366fbd506a1b4e61b60e004e6feac8a5f67213a471bf69adfa11aac",
+      "graph.json": "08bd4ec1e91205dd8b1c173555ba74296251edb740db31310cb9ccead588ecf4",
+      "index.md": "af310166660817c82af00059716fefea1751c12036489ae2a215d99054a10dff",
+      "services/ai.md": "a674df4e8009acbd9314e74ef015f7ac0685c09b4febe7766178b5abb295f091",
+      "services/baidu.md": "62d6ff7718363a141f9ff70bde9592b79d79a99f552a457247a508860cb1eeb9",
+      "services/bi.md": "cb1bf1b7f38eef2e06d79f5042ae6d8df6a7d589928536d7bf15272097930dfa",
+      "services/bytedesk.md": "542e7941b087c529482875c9cb982334aaada29b6edc1cb503c17c2bb218f4c9",
+      "services/call.md": "d80eee5aef8ef2c8fa757fa144304ab4b7edcd4c3758fbbe11163ea95f4738cd",
+      "services/core.md": "875ac00b2f9baa7c684b31575c1c7a806ef8cfb0fb620caf525fa4ba51fb59c6",
+      "services/kanban.md": "fd3c3e7ccba58ade4171f8c95cc1c6bb85b6ad8dcec5c7191edfe8557d11556d",
+      "services/kbase.md": "89b5cbe895be550f8d2c12ceba12d1b024a8b663434ec8980284539622de8bcb",
+      "services/meet.md": "3884fba42bda62730481566b50b95ad50b876ad0d653d3bff864400edf1c4fa6",
+      "services/remote.md": "16dbd0dc81eadf595aee347f64055f831184cbd1f7b2933c7a771f9b84a6e01b",
+      "services/service.md": "aa75770ef63896658219ad9f95d98cafb1825db39a2252b76a5531459755afdb",
+      "services/social.md": "f125dca545464e093b39182e984bbfca4d7e4f868ab6ba1b601e83e42bd53852",
+      "services/team.md": "4070a20e23f291e01d29b6c0d25de141b8e8532c8f506e15cf34890b4bf9dfa4",
+      "services/ticket.md": "ac5211b8dbdd84a2060fdb1d465ad756ee61e5cd885dce599f2af6d39ea0d756"
+    },
+    "run2": {
+      "diagrams/ai.mmd": "4fea01fe78bcf46c4c3a26b93bcfd638800ccbfe0cd83f0aca1afa03b03d7d12",
+      "diagrams/baidu.mmd": "05e5d20ce677ed41d7d69991958edb78a0273c412b2334d060f6ab6b734905ba",
+      "diagrams/bi.mmd": "fc8277493b2e826360103bab2ea786831f248689170ff93af0e10fe20446b4de",
+      "diagrams/bytedesk.mmd": "2bf7ae46895eb230d64c739300ee61980f76607af4b8d8a16ca91bdde713eca6",
+      "diagrams/call.mmd": "82c242d883d8df531a6b487eeaa16b8b60d0120b400b11bd673f574d801ac4d1",
+      "diagrams/core.mmd": "7859a6952b124e8fd75f147220bfb22db592cba2f8fd21d6599bc0ea6969059a",
+      "diagrams/fleet.puml": "f1ea8fe81fd015f20a613d6d1d944250e4868f112957d5d400293782cbaab7eb",
+      "diagrams/kanban.mmd": "995854892a7c574545fec7e4c28d4d683301e20dbdc0c5f2c4131e645515096a",
+      "diagrams/kbase.mmd": "ce6ddc20ee6024c39fe128de36afb70790c9257787464eb7d4ae1c34953b0509",
+      "diagrams/meet.mmd": "9a1bd9c0880cec63dd2d85d1a33270c7a8098ea7ee6bfcd24c47a294739daf25",
+      "diagrams/remote.mmd": "cafe0f8dd7b5082bfff785ef2163b21133d28fd39b653a362914c14d202fdf94",
+      "diagrams/service.mmd": "c9ed3cd57f3dac70fd5fc73f51b7f567ffe4b48972262ba3ddb9a1ae2a36abb7",
+      "diagrams/social.mmd": "30498547cb65369baaa22494d35c6dd1d477a457d03f15b698e0d94c6b299fbf",
+      "diagrams/team.mmd": "2e629b1eb492fcc2ab2fcb733328a9da54c66fd9541dd3e5f509ff228a231ee7",
+      "diagrams/ticket.mmd": "942548290366fbd506a1b4e61b60e004e6feac8a5f67213a471bf69adfa11aac",
+      "graph.json": "08bd4ec1e91205dd8b1c173555ba74296251edb740db31310cb9ccead588ecf4",
+      "index.md": "af310166660817c82af00059716fefea1751c12036489ae2a215d99054a10dff",
+      "services/ai.md": "a674df4e8009acbd9314e74ef015f7ac0685c09b4febe7766178b5abb295f091",
+      "services/baidu.md": "62d6ff7718363a141f9ff70bde9592b79d79a99f552a457247a508860cb1eeb9",
+      "services/bi.md": "cb1bf1b7f38eef2e06d79f5042ae6d8df6a7d589928536d7bf15272097930dfa",
+      "services/bytedesk.md": "542e7941b087c529482875c9cb982334aaada29b6edc1cb503c17c2bb218f4c9",
+      "services/call.md": "d80eee5aef8ef2c8fa757fa144304ab4b7edcd4c3758fbbe11163ea95f4738cd",
+      "services/core.md": "875ac00b2f9baa7c684b31575c1c7a806ef8cfb0fb620caf525fa4ba51fb59c6",
+      "services/kanban.md": "fd3c3e7ccba58ade4171f8c95cc1c6bb85b6ad8dcec5c7191edfe8557d11556d",
+      "services/kbase.md": "89b5cbe895be550f8d2c12ceba12d1b024a8b663434ec8980284539622de8bcb",
+      "services/meet.md": "3884fba42bda62730481566b50b95ad50b876ad0d653d3bff864400edf1c4fa6",
+      "services/remote.md": "16dbd0dc81eadf595aee347f64055f831184cbd1f7b2933c7a771f9b84a6e01b",
+      "services/service.md": "aa75770ef63896658219ad9f95d98cafb1825db39a2252b76a5531459755afdb",
+      "services/social.md": "f125dca545464e093b39182e984bbfca4d7e4f868ab6ba1b601e83e42bd53852",
+      "services/team.md": "4070a20e23f291e01d29b6c0d25de141b8e8532c8f506e15cf34890b4bf9dfa4",
+      "services/ticket.md": "ac5211b8dbdd84a2060fdb1d465ad756ee61e5cd885dce599f2af6d39ea0d756"
+    }
+  },
+  "apache/streampipes": {
+    "commit": "c4fd92635236427ed96b3aa7ce9f98bb36a07b64",
+    "run1": {
+      "diagrams/fleet.puml": "a248e905f218092b8a370cc9307ebce001436c5a1d33964cc0e17afaa74d549e",
+      "diagrams/streampipes-extensions-all-iiot.mmd": "194a5d8df1d5469b142436575cec4a81bb1f6f176218dd0319c93858ef366c8f",
+      "graph.json": "db821e2262df52fdc68813152e8d35cd6521ef1fc8e0e862aca24ea7ad5da0fa",
+      "index.md": "d36ad733e066d68bf766e10aecfc2e21bc00c46510ef7125e65d8b230c89b377",
+      "services/streampipes-extensions-all-iiot.md": "f2e76143df964fb43b871a5b1e5eafac0a56fa9d3c9026c436d87ccdc93d77c9"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "a248e905f218092b8a370cc9307ebce001436c5a1d33964cc0e17afaa74d549e",
+      "diagrams/streampipes-extensions-all-iiot.mmd": "194a5d8df1d5469b142436575cec4a81bb1f6f176218dd0319c93858ef366c8f",
+      "graph.json": "db821e2262df52fdc68813152e8d35cd6521ef1fc8e0e862aca24ea7ad5da0fa",
+      "index.md": "d36ad733e066d68bf766e10aecfc2e21bc00c46510ef7125e65d8b230c89b377",
+      "services/streampipes-extensions-all-iiot.md": "f2e76143df964fb43b871a5b1e5eafac0a56fa9d3c9026c436d87ccdc93d77c9"
+    }
+  },
+  "waelhe/app-java-v3": {
+    "commit": "ea0031a97db4452748a47582d3fed2c4d3ec1d52",
+    "run1": {
+      "diagrams/fleet.puml": "ef7b6c3bad101c1f500c0e3f3926a881653c582b7d9c9b35e59e012a30655a2e",
+      "diagrams/marketplace-edge.mmd": "f710a0995741eec152c322cd386b8aeef52ecd4f4a23350439e070b3083bdd6a",
+      "diagrams/marketplace.mmd": "cc9758a33017896e64f36b06d6915a849721849a89fece4336cabe52bdd4d1ea",
+      "graph.json": "7680869be98a5c92eb6e7393f8bbefe1af2a85ad2c1af2b339320a2dc1a716f9",
+      "index.md": "3f681ed40965728711bcbcecf506adfca8cd79ea0d3929d2b0847c1cf2a21452",
+      "services/marketplace-edge.md": "56b8e297242e49e07d512a3a1050a0f1dfa183884e4e1a5624a91a86cf34f968",
+      "services/marketplace.md": "b5e551c311821898f5e19f00c0c1465f7cc926cadcbed3471b6c096fa8c0ba84"
+    },
+    "run2": {
+      "diagrams/fleet.puml": "ef7b6c3bad101c1f500c0e3f3926a881653c582b7d9c9b35e59e012a30655a2e",
+      "diagrams/marketplace-edge.mmd": "f710a0995741eec152c322cd386b8aeef52ecd4f4a23350439e070b3083bdd6a",
+      "diagrams/marketplace.mmd": "cc9758a33017896e64f36b06d6915a849721849a89fece4336cabe52bdd4d1ea",
+      "graph.json": "7680869be98a5c92eb6e7393f8bbefe1af2a85ad2c1af2b339320a2dc1a716f9",
+      "index.md": "3f681ed40965728711bcbcecf506adfca8cd79ea0d3929d2b0847c1cf2a21452",
+      "services/marketplace-edge.md": "56b8e297242e49e07d512a3a1050a0f1dfa183884e4e1a5624a91a86cf34f968",
+      "services/marketplace.md": "b5e551c311821898f5e19f00c0c1465f7cc926cadcbed3471b6c096fa8c0ba84"
+    }
+  },
+  "dengxingzhi000/scm-platform": {
+    "commit": "fa2671c3280e93eef2644d39b97fbcc09e8ed71b",
+    "run1": {
+      "diagrams/auth-service.mmd": "8e76ae84ab52452b9865ada22b43a2d422203f1886cc5601ffa698a71b45a0b0",
+      "diagrams/fleet.puml": "71d374fb4c0e9f7185ccf425c845116f0d11d3a3e51fb622625b2e1faf1309fa",
+      "diagrams/gateway-service.mmd": "ae16f7c90894c2a8020689f605c29a797085549d44766c64675a6a220a2aac14",
+      "diagrams/scm-analytics.mmd": "997645bd0fd4e21c5efca4f0059efcb5c9a11e3717611e2a4164f076e3659fd6",
+      "diagrams/scm-approval.mmd": "a7cd0571b4d0224a3d602c801df119b29c53e14326b10d7922572dd1cb770425",
+      "diagrams/scm-audit.mmd": "21a342434517bb40a1940f9f1c65789765ffa1c18857a839099895dd2a42071c",
+      "diagrams/scm-document.mmd": "64f1831aae6777ee2ae05a143a6db9266685cf3626d168d370da76457f316417",
+      "diagrams/scm-file.mmd": "521e2340d4913da06c1983d5ea1a8a43b14dcb0ca31e8947ab7808b7bb158095",
+      "diagrams/scm-finance.mmd": "777a390f33af9ff0b7bf5bddc81ad970c01711612e2041df23fabf96441a3541",
+      "diagrams/scm-fulfillment.mmd": "d7aed07f65739ba4ff8eeb63a17d6fb34fa540ee797bbc53c993dc21987ab4cc",
+      "diagrams/scm-inventory.mmd": "d1c4eef478bacf51cc332b310eb21fc1780ca8d477f1b59cbb6c5b391f5d7891",
+      "diagrams/scm-mall.mmd": "c706fb8527b18be392b83e03a317e36edf18738c79d07a2e74e5de7e5553bd34",
+      "diagrams/scm-member.mmd": "ba615eb506e0906938ca47b5cbac58665008d0f5572dc02f759973d1ada0220f",
+      "diagrams/scm-message.mmd": "5d34e9bcb4bdb2ddb49b770c5165cbdcf136347c4574d11a20f871aaa07725f4",
+      "diagrams/scm-notify.mmd": "6ff6ab44518ba5c17399d2a90d2ffff7a2726042effe3b73f317129b6d637b91",
+      "diagrams/scm-order-center.mmd": "73754fccbddf7489077f2885b0ab6180460e53e4500f74f7aa9431c45c0d37f0",
+      "diagrams/scm-order.mmd": "4656b36a6d076f815b16db591111c94ec300a171808b3b24912da2dcea9560a1",
+      "diagrams/scm-payment.mmd": "d4e018e0e984bf6ccedf63de91c84c83a44495abbcfb422c8b869df6c165e04a",
+      "diagrams/scm-product.mmd": "79a0d4a995ca8807c6e1074f1fd9f86d093239d475be9565a0ef1aac2e43879e",
+      "diagrams/scm-promotion.mmd": "e884846b79e89e620d89fd0f4f15eff86b3679fb40e3ad337019348b0cff06f2",
+      "diagrams/scm-purchase.mmd": "abd76698efe2ba4e326df111ed8e7bbf194a4d32c4579e8c81a6e28601631a57",
+      "diagrams/scm-search.mmd": "4764e1181dda35e85865bf5b68421c0aada921f4b0825b944801a500f5f82cb9",
+      "diagrams/scm-tenant.mmd": "5e3141d505a83e5dac1819384186faa175fb752c1a459077ec7d1e8c08deb5cf",
+      "diagrams/system-service.mmd": "f771571bf4b149d4cb949ed838b3401abae63280aac940e7392c5ee6ec5a9584",
+      "graph.json": "fcbf439858b14a99965be8a9208dc5ce8f3be8854daf49cf4f1b9743a3e2097b",
+      "index.md": "02caa55629c07a27cf95c9804adec5f2567fa154af4b43bf2ba7cb533710f9cd",
+      "services/auth-service.md": "38b17122874bbcfa896a79d412f23071e1959d054113f5b240d4839d9ae773a9",
+      "services/gateway-service.md": "496d9512502ff83744c616c9f2f4f54ec4c49a95260ac8bb8af8c537f9e03277",
+      "services/scm-analytics.md": "fe7e80ce43567147a1d1dc1e4b5a968d07228f3afe419d937a922b5cec503c25",
+      "services/scm-approval.md": "ec8fd635e30f3d9d85068b8d008d81eb6ecdcd0dba49eac2b18ee5cbb7b083a9",
+      "services/scm-audit.md": "e3bcc791918895ddd61c0a11ee5501e437a726a77351e83e2899d5ebc48bebfc",
+      "services/scm-document.md": "dfccda4dc74e310f777612c379caab950b3423f9503214090a42bc51abf6d0d8",
+      "services/scm-file.md": "3fdf3dfa3099e72881bc20dc93c651bf818b80e0a97c8bab7821da2329afb2f7",
+      "services/scm-finance.md": "7c162e97a9845fa53c31f9dbcbd97a7d827d0dafdb3082d06302a83dae5a797c",
+      "services/scm-fulfillment.md": "adb2ddb96267429818c58746f6d853d7606e719e2afa10b6f98c9a1128cfa9bf",
+      "services/scm-inventory.md": "3bf48475e03b7d8e083419f8bc55114530df70b7bbeb672bf8bce463a16aa7d0",
+      "services/scm-mall.md": "861219eb25c953eb4550ae5f31c27a8f4efe8049957d280c62242a7322ee4064",
+      "services/scm-member.md": "cebca09121e8f81faa3a686b9d863442204b96ee73e51f94b80351f2773fe751",
+      "services/scm-message.md": "b22a62eebb695d7cbce859f9eb90eb44021538285b88aad38db45c35f3c53eb9",
+      "services/scm-notify.md": "bb47fcbbcb7b8e47b7c0ada7dd1cadd57ee994f6eecaee3d32997afb514033bf",
+      "services/scm-order-center.md": "36e1a5135d3bdc9444c4940ba55acd11a9c715da62c9302fc4c3882b2e981add",
+      "services/scm-order.md": "0d665a85b45ac23ca8b92f87d686c81cc51e7ddea158fdaa87c85d4507cb7b1d",
+      "services/scm-payment.md": "0dd10f5176e85fdec092ad6077a6ecf2d7f041dc948058858845efa428eb6b68",
+      "services/scm-product.md": "2a8317fb85f9971809e71bc8e8f227af92818364f9ed42a15361c42683fc9b49",
+      "services/scm-promotion.md": "ce000a8faf10a9fec700e3ada403b39b9450c9bdfd3df92c6954fdc49c865c7f",
+      "services/scm-purchase.md": "eed705272342ecf2cec8b570bba2fe1baddbad43fb01f647a0a224be0429f2d1",
+      "services/scm-search.md": "4fc07019b5efa7ecce45a985588ea246bee7e9fadc193a6a1588593325b3b665",
+      "services/scm-tenant.md": "9b7772b1b2b2d8d496bc0d8f22f7bd7c124d1433cc8bf90b2a2661f3c6195ce0",
+      "services/system-service.md": "f8614a60f51572822761bd7f5344a6d5677bcd5b606a71f1d203af1d42ffeb78"
+    },
+    "run2": {
+      "diagrams/auth-service.mmd": "8e76ae84ab52452b9865ada22b43a2d422203f1886cc5601ffa698a71b45a0b0",
+      "diagrams/fleet.puml": "71d374fb4c0e9f7185ccf425c845116f0d11d3a3e51fb622625b2e1faf1309fa",
+      "diagrams/gateway-service.mmd": "ae16f7c90894c2a8020689f605c29a797085549d44766c64675a6a220a2aac14",
+      "diagrams/scm-analytics.mmd": "997645bd0fd4e21c5efca4f0059efcb5c9a11e3717611e2a4164f076e3659fd6",
+      "diagrams/scm-approval.mmd": "a7cd0571b4d0224a3d602c801df119b29c53e14326b10d7922572dd1cb770425",
+      "diagrams/scm-audit.mmd": "21a342434517bb40a1940f9f1c65789765ffa1c18857a839099895dd2a42071c",
+      "diagrams/scm-document.mmd": "64f1831aae6777ee2ae05a143a6db9266685cf3626d168d370da76457f316417",
+      "diagrams/scm-file.mmd": "521e2340d4913da06c1983d5ea1a8a43b14dcb0ca31e8947ab7808b7bb158095",
+      "diagrams/scm-finance.mmd": "777a390f33af9ff0b7bf5bddc81ad970c01711612e2041df23fabf96441a3541",
+      "diagrams/scm-fulfillment.mmd": "d7aed07f65739ba4ff8eeb63a17d6fb34fa540ee797bbc53c993dc21987ab4cc",
+      "diagrams/scm-inventory.mmd": "d1c4eef478bacf51cc332b310eb21fc1780ca8d477f1b59cbb6c5b391f5d7891",
+      "diagrams/scm-mall.mmd": "c706fb8527b18be392b83e03a317e36edf18738c79d07a2e74e5de7e5553bd34",
+      "diagrams/scm-member.mmd": "ba615eb506e0906938ca47b5cbac58665008d0f5572dc02f759973d1ada0220f",
+      "diagrams/scm-message.mmd": "5d34e9bcb4bdb2ddb49b770c5165cbdcf136347c4574d11a20f871aaa07725f4",
+      "diagrams/scm-notify.mmd": "6ff6ab44518ba5c17399d2a90d2ffff7a2726042effe3b73f317129b6d637b91",
+      "diagrams/scm-order-center.mmd": "73754fccbddf7489077f2885b0ab6180460e53e4500f74f7aa9431c45c0d37f0",
+      "diagrams/scm-order.mmd": "4656b36a6d076f815b16db591111c94ec300a171808b3b24912da2dcea9560a1",
+      "diagrams/scm-payment.mmd": "d4e018e0e984bf6ccedf63de91c84c83a44495abbcfb422c8b869df6c165e04a",
+      "diagrams/scm-product.mmd": "79a0d4a995ca8807c6e1074f1fd9f86d093239d475be9565a0ef1aac2e43879e",
+      "diagrams/scm-promotion.mmd": "e884846b79e89e620d89fd0f4f15eff86b3679fb40e3ad337019348b0cff06f2",
+      "diagrams/scm-purchase.mmd": "abd76698efe2ba4e326df111ed8e7bbf194a4d32c4579e8c81a6e28601631a57",
+      "diagrams/scm-search.mmd": "4764e1181dda35e85865bf5b68421c0aada921f4b0825b944801a500f5f82cb9",
+      "diagrams/scm-tenant.mmd": "5e3141d505a83e5dac1819384186faa175fb752c1a459077ec7d1e8c08deb5cf",
+      "diagrams/system-service.mmd": "f771571bf4b149d4cb949ed838b3401abae63280aac940e7392c5ee6ec5a9584",
+      "graph.json": "fcbf439858b14a99965be8a9208dc5ce8f3be8854daf49cf4f1b9743a3e2097b",
+      "index.md": "02caa55629c07a27cf95c9804adec5f2567fa154af4b43bf2ba7cb533710f9cd",
+      "services/auth-service.md": "38b17122874bbcfa896a79d412f23071e1959d054113f5b240d4839d9ae773a9",
+      "services/gateway-service.md": "496d9512502ff83744c616c9f2f4f54ec4c49a95260ac8bb8af8c537f9e03277",
+      "services/scm-analytics.md": "fe7e80ce43567147a1d1dc1e4b5a968d07228f3afe419d937a922b5cec503c25",
+      "services/scm-approval.md": "ec8fd635e30f3d9d85068b8d008d81eb6ecdcd0dba49eac2b18ee5cbb7b083a9",
+      "services/scm-audit.md": "e3bcc791918895ddd61c0a11ee5501e437a726a77351e83e2899d5ebc48bebfc",
+      "services/scm-document.md": "dfccda4dc74e310f777612c379caab950b3423f9503214090a42bc51abf6d0d8",
+      "services/scm-file.md": "3fdf3dfa3099e72881bc20dc93c651bf818b80e0a97c8bab7821da2329afb2f7",
+      "services/scm-finance.md": "7c162e97a9845fa53c31f9dbcbd97a7d827d0dafdb3082d06302a83dae5a797c",
+      "services/scm-fulfillment.md": "adb2ddb96267429818c58746f6d853d7606e719e2afa10b6f98c9a1128cfa9bf",
+      "services/scm-inventory.md": "3bf48475e03b7d8e083419f8bc55114530df70b7bbeb672bf8bce463a16aa7d0",
+      "services/scm-mall.md": "861219eb25c953eb4550ae5f31c27a8f4efe8049957d280c62242a7322ee4064",
+      "services/scm-member.md": "cebca09121e8f81faa3a686b9d863442204b96ee73e51f94b80351f2773fe751",
+      "services/scm-message.md": "b22a62eebb695d7cbce859f9eb90eb44021538285b88aad38db45c35f3c53eb9",
+      "services/scm-notify.md": "bb47fcbbcb7b8e47b7c0ada7dd1cadd57ee994f6eecaee3d32997afb514033bf",
+      "services/scm-order-center.md": "36e1a5135d3bdc9444c4940ba55acd11a9c715da62c9302fc4c3882b2e981add",
+      "services/scm-order.md": "0d665a85b45ac23ca8b92f87d686c81cc51e7ddea158fdaa87c85d4507cb7b1d",
+      "services/scm-payment.md": "0dd10f5176e85fdec092ad6077a6ecf2d7f041dc948058858845efa428eb6b68",
+      "services/scm-product.md": "2a8317fb85f9971809e71bc8e8f227af92818364f9ed42a15361c42683fc9b49",
+      "services/scm-promotion.md": "ce000a8faf10a9fec700e3ada403b39b9450c9bdfd3df92c6954fdc49c865c7f",
+      "services/scm-purchase.md": "eed705272342ecf2cec8b570bba2fe1baddbad43fb01f647a0a224be0429f2d1",
+      "services/scm-search.md": "4fc07019b5efa7ecce45a985588ea246bee7e9fadc193a6a1588593325b3b665",
+      "services/scm-tenant.md": "9b7772b1b2b2d8d496bc0d8f22f7bd7c124d1433cc8bf90b2a2661f3c6195ce0",
+      "services/system-service.md": "f8614a60f51572822761bd7f5344a6d5677bcd5b606a71f1d203af1d42ffeb78"
+    }
+  }
+}

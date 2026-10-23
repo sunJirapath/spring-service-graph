@@ -1,5 +1,6 @@
 package io.github.sunjirapath.ssg.diff;
 
+import io.github.sunjirapath.ssg.link.PathMatch;
 import io.github.sunjirapath.ssg.model.Edge;
 import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Finding;
@@ -115,9 +116,10 @@ public final class GraphDiff {
         var lines = new ArrayList<String>();
         for (Node n : removedNodes.values()) {
             if (!(n instanceof Node.Endpoint) && !(n instanceof Node.Service)) continue;
-            // callers in base that still exist in head now call something that is gone
+            // A surviving service may have retired its call together with the endpoint.
             var callers = incoming(base, n.id(), Edge.Kind.CALLS).stream().map(e -> owner(baseNodes, e.from()))
                     .filter(c -> headNodes.containsKey(Node.Service.idOf(c)) && !c.equals(owner(baseNodes, n.id())))
+                    .filter(c -> head.edges().stream().anyMatch(e -> stillCalls(c, n, e)))
                     .collect(Collectors.toCollection(TreeSet::new));
             if (!callers.isEmpty()) lines.add("Removed " + label(n) + " is still called by " + String.join(", ", callers));
         }
@@ -135,6 +137,19 @@ public final class GraphDiff {
             if (f.kind() == Finding.Kind.CONTRACT_DRIFT) lines.add("New contract drift in " + f.service() + ": " + f.message() + " — " + ev(f.evidence()));
         }
         return lines.stream().sorted().toList();
+    }
+
+    private boolean stillCalls(String caller, Node removed, Edge call) {
+        if (call.kind() != Edge.Kind.CALLS || !owner(headNodes, call.from()).equals(caller)
+                || !owner(headNodes, call.to()).equalsIgnoreCase(owner(baseNodes, removed.id()))) return false;
+        if (removed instanceof Node.Service) return true;
+        if (headNodes.get(call.to()) instanceof Node.Endpoint) return false; // a replacement handler accepts this call
+        var endpoint = (Node.Endpoint) removed;
+        String method = call.attrs().get("method");
+        String path = call.attrs().get("path");
+        return method != null && path != null
+                && (method.equals("*") || endpoint.method().equals("*") || method.equalsIgnoreCase(endpoint.method()))
+                && PathMatch.matches(path, endpoint.path());
     }
 
     // ---------------------------------------------------------------- sections

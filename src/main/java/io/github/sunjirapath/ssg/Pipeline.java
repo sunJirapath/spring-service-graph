@@ -44,21 +44,23 @@ public final class Pipeline {
         var roots = new TreeMap<String, Path>();
         var all = new ArrayList<Linker.ServiceFacts>();
         var extra = new ArrayList<Finding>();
-        var seen = new TreeMap<String, String>();
-        if (o.configRepo() != null) roots.put(Repo.of(o.configRepo()).name(), Repo.of(o.configRepo()).root());
+        var seen = new TreeMap<String, Service>();
+        if (o.configRepo() != null) addRoot(roots, Repo.of(o.configRepo()));
+        for (Path p : o.repos()) addRoot(roots, Repo.of(p));
         for (Path p : o.repos()) {
             Repo repo = Repo.of(p);
-            roots.put(repo.name(), repo.root());
             JavaIndex index = JavaIndex.build(repo);
             List<Service> services = Discovery.discover(index, o.profile(), o.configRepo());
             if (services.isEmpty()) System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
             for (Service s : services) {
-                String prev = seen.put(s.name(), repo.name() + "/" + s.path());
+                Service previous = seen.put(s.name(), s);
+                String prev = previous == null ? null : previous.repo().name() + "/" + previous.path();
                 if (prev != null) {
                     System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
                     // two apps with one name merge into one graph node; say so instead of hiding it
                     extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
-                            + "' is used by " + prev + " and " + repo.name() + "/" + s.path(), List.of(new Evidence(repo.name(), s.path(), 1))));
+                            + "' is used by " + prev + " and " + repo.name() + "/" + s.path(),
+                            List.of(previous.nameEvidence(), s.nameEvidence())));
                 }
                 var facts = new ArrayList<Fact>();
                 for (Extractor x : Extractor.all(java.util.Set.copyOf(o.sqlMethods()))) facts.addAll(x.extract(s));
@@ -72,6 +74,13 @@ public final class Pipeline {
             }
         }
         return new Result(Linker.link(all, aliases(o.aliases()), extra), roots);
+    }
+
+    private static void addRoot(Map<String, Path> roots, Repo repo) {
+        Path previous = roots.putIfAbsent(repo.name(), repo.root());
+        if (previous != null && !previous.equals(repo.root()))
+            throw new IllegalArgumentException("repository name '" + repo.name() + "' is ambiguous: "
+                    + previous + " and " + repo.root() + "; use distinct checkout directory names");
     }
 
     /** aliases.yml: a flat map of host -> service name (or a name for an external system). */

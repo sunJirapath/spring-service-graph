@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.Position;
 import com.github.javaparser.Range;
+import com.github.javaparser.TokenMgrException;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
@@ -24,6 +25,8 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.validator.ProblemReporter;
+import com.github.javaparser.ast.validator.language_level_validations.chunks.RecordDeclarationValidator;
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Value;
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * All parsed Java sources of one repo, plus name lookup and constant folding.
@@ -52,6 +56,7 @@ public final class JavaIndex {
     public record Problem(Path file, int line, String message) {}
 
     private static final int MAX_DEPTH = 24;
+    private static final Pattern LEXICAL_LINE = Pattern.compile("^Lexical error at line ([1-9][0-9]*), column [0-9]+\\.");
 
     private final Repo repo;
     private final List<CompilationUnit> units = new ArrayList<>();
@@ -74,8 +79,9 @@ public final class JavaIndex {
         try {
             for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
                 var result = parser.parse(f);
-                result.getProblems().forEach(p -> idx.problems.add(new Problem(f,
-                        p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
+                result.getProblems().stream().filter(p -> result.getResult()
+                        .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
+                        problemLine(p),
                         p.getMessage().lines().findFirst().orElse("parse error"))));
                 result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
             }
@@ -85,14 +91,46 @@ public final class JavaIndex {
         return idx;
     }
 
+    private static int problemLine(com.github.javaparser.Problem problem) {
+        return problem.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElseGet(() -> {
+            // Lexical failures have no token range; JavaParser exposes their position only in this message.
+            if (problem.getCause().orElse(null) instanceof TokenMgrException) {
+                var match = LEXICAL_LINE.matcher(problem.getMessage());
+                if (match.find()) {
+                    try { return Integer.parseInt(match.group(1)); }
+                    catch (NumberFormatException ignored) { /* retain the fallback for an invalid position */ }
+                }
+            }
+            return 1;
+        });
+    }
+
+    /** Recheck JavaParser's annotation-sensitive accessor comparison without changing the indexed AST. */
+    private static boolean recordAnnotationProblem(com.github.javaparser.Problem problem, CompilationUnit cu) {
+        if (!problem.getMessage().startsWith("Incorrect component accessor return type.")) return false;
+        for (var record : cu.findAll(RecordDeclaration.class)) {
+            if (record.getTokenRange().isEmpty() || !record.getTokenRange().equals(problem.getLocation())) continue;
+            var normalized = record.clone();
+            normalized.findAll(AnnotationExpr.class).forEach(Node::remove);
+            var remaining = new ArrayList<com.github.javaparser.Problem>();
+            new RecordDeclarationValidator().accept(normalized, new ProblemReporter(remaining::add));
+            return remaining.stream().noneMatch(p -> p.getMessage().equals(problem.getMessage()));
+        }
+        return false;
+    }
+
     /** Main sources and generated sources (openapi-generator output); never tests. */
     private boolean isMainSource(Path f) {
         String p = rel(f);
-        if (!p.endsWith(".java") || p.contains("/.git/") || p.contains("/node_modules/") || p.contains("/src/test/")) {
+        int main = p.indexOf("/src/main/java/");
+        String layout = main < 0 ? p : p.substring(0, main + 1);
+        if (!p.endsWith(".java") || layout.contains("/.git/") || layout.contains("/node_modules/")
+                || layout.contains("/src/test/") || layout.contains("/src/main/resources/")) {
             return false;
         }
-        boolean inBuildDir = p.contains("/build/") || p.contains("/target/");
-        return inBuildDir ? p.contains("generated") : p.contains("/src/main/java/");
+        // Package segments such as com.target are inside the source root, not build directories.
+        boolean inBuildDir = layout.contains("/build/") || layout.contains("/target/");
+        return inBuildDir ? p.contains("generated") : main >= 0;
     }
 
     /** Repo-relative path with a leading slash, so markers never match the checkout location. */

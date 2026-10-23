@@ -9,6 +9,7 @@ import io.github.sunjirapath.ssg.model.Node;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +34,7 @@ class GraphDiffCompareTest {
         var gateway = service("gateway");
         var endpoint = endpoint("orders", "GET", "/orders");
         var base = graph(List.of(orders, gateway, endpoint), List.of(edge(Edge.Kind.CALLS, gateway.id(), endpoint.id())));
-        var head = graph(List.of(orders, gateway), List.of());
+        var head = graph(List.of(orders, gateway), List.of(remainingCall(gateway, orders, "/orders")));
 
         var result = GraphDiff.compare(base, head);
         var expected = "Removed `orders GET /orders` is still called by gateway";
@@ -55,7 +56,7 @@ class GraphDiffCompareTest {
                 edge(Edge.Kind.CONSUMES, billing.id(), topic.id())));
         var drift = new Finding(Finding.Kind.CONTRACT_DRIFT, "gateway", "GET /legacy", List.of(evidence()));
         var head = graph(List.of(orders, gateway, billing, topic),
-                List.of(edge(Edge.Kind.CONSUMES, billing.id(), topic.id())), List.of(drift));
+                List.of(edge(Edge.Kind.CONSUMES, billing.id(), topic.id()), remainingCall(gateway, orders, "/orders")), List.of(drift));
         var driftLine = "New contract drift in gateway: GET /legacy — `repo/App.java:1`";
         var endpointLine = "Removed `orders GET /orders` is still called by gateway";
         var topicLine = "Topic `orders.created` has no producer any more but is still consumed by billing";
@@ -74,6 +75,33 @@ class GraphDiffCompareTest {
         var graph = graph(List.of(service("orders")), List.of());
 
         assertThat(GraphDiff.report(graph, graph)).isEqualTo(GraphDiff.compare(graph, graph).markdown());
+    }
+
+    @Test
+    void retiredEndpointDoesNotBreakCallersThatChangedMethodPathOrTarget() {
+        var orders = service("orders");
+        var gateway = service("gateway");
+        var other = service("other");
+        var endpoint = endpoint("orders", "GET", "/orders");
+        var base = graph(List.of(orders, gateway, endpoint), List.of(edge(Edge.Kind.CALLS, gateway.id(), endpoint.id())));
+        for (Edge changed : List.of(
+                remainingCall(gateway, orders, "/new-orders"),
+                remainingCall(gateway, other, "/orders"),
+                new Edge(Edge.Kind.CALLS, gateway.id(), orders.id(), Confidence.EXACT,
+                        new TreeMap<>(Map.of("method", "POST", "path", "/orders")), List.of(evidence())))) {
+            assertThat(GraphDiff.compare(base, graph(List.of(orders, gateway, other), List.of(changed))).breaking()).isEmpty();
+        }
+    }
+
+    @Test
+    void renamedEndpointTemplateAcceptedByTheHeadIsNotBreaking() {
+        var orders = service("orders");
+        var gateway = service("gateway");
+        var before = endpoint("orders", "GET", "/orders/{id}");
+        var after = endpoint("orders", "GET", "/orders/{orderId}");
+        var base = graph(List.of(orders, gateway, before), List.of(edge(Edge.Kind.CALLS, gateway.id(), before.id())));
+        var head = graph(List.of(orders, gateway, after), List.of(edge(Edge.Kind.CALLS, gateway.id(), after.id())));
+        assertThat(GraphDiff.compare(base, head).breaking()).isEmpty();
     }
 
     private static Graph graph(List<Node> nodes, List<Edge> edges) {
@@ -102,5 +130,10 @@ class GraphDiffCompareTest {
 
     private static Evidence evidence() {
         return new Evidence("repo", "App.java", 1);
+    }
+
+    private static Edge remainingCall(Node.Service caller, Node.Service target, String path) {
+        return new Edge(Edge.Kind.CALLS, caller.id(), target.id(), Confidence.EXACT,
+                new TreeMap<>(Map.of("method", "GET", "path", path)), List.of(evidence()));
     }
 }

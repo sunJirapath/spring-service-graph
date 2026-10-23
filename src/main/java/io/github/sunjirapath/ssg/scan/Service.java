@@ -1,6 +1,7 @@
 package io.github.sunjirapath.ssg.scan;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.Expression;
 import io.github.sunjirapath.ssg.model.Evidence;
@@ -38,6 +39,16 @@ public record Service(String name, Repo repo, Path moduleRoot, Config config, Ja
 
     public Evidence evidence(Node n) {
         return index.evidence(n);
+    }
+
+    /** The configuration entry or launcher declaration responsible for this service's name. */
+    public Evidence nameEvidence() {
+        Config.Entry entry = config.get("spring.application.name");
+        if (entry != null && name.equals(config.valueOf("spring.application.name").text())) return entry.evidence();
+        return units.stream().filter(cu -> index.moduleOf(index.fileOf(cu)).equals(moduleRoot))
+                .flatMap(cu -> cu.findAll(ClassOrInterfaceDeclaration.class).stream()).filter(c -> Discovery.isApp(index, c))
+                .map(c -> Ann.find(c, "SpringBootApplication").map(this::evidence).orElseGet(() -> evidence(c.getName())))
+                .findFirst().orElseGet(() -> evidence(units.getFirst()));
     }
 
     /** Folds an expression, then resolves property placeholders against this service's config. */
