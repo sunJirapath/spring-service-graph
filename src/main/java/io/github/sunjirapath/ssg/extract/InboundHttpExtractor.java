@@ -1,6 +1,7 @@
 package io.github.sunjirapath.ssg.extract;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
@@ -107,22 +108,60 @@ public final class InboundHttpExtractor implements Extractor {
             MethodCallExpr root = routerRoot(call).orElse(null);
             if (root == null || call.getArguments().size() < 2) continue;
             Route route;
-            if (call == root || call.getNameAsString().equals("andRoute")) {
+            if ((call == root && call.getNameAsString().equals("route")) || call.getNameAsString().equals("andRoute")) {
                 route = routePredicate(call.getArgument(0), s).orElse(null);
             } else if (root.getArguments().isEmpty() && HTTP_METHODS.contains(call.getNameAsString())) {
                 route = new Route(call.getNameAsString(), s.eval(call.getArgument(0)));
             } else {
                 continue;
             }
-            if (route != null) facts.add(new Fact.Endpoint(route.method(), Mappings.joinValues(contextPath, route.path()),
+            if (route != null) facts.add(new Fact.Endpoint(route.method(), Mappings.joinValues(contextPath, nestedPath(call, route, s)),
                     s.evidence(call.getName()), "router", routeHandler(call.getArgument(call.getArguments().size() - 1), bean, s)));
         }
     }
 
     private static Optional<MethodCallExpr> routerRoot(MethodCallExpr call) {
-        if (call.getNameAsString().equals("route") && staticCall(call, WEBFLUX + "RouterFunctions")) return Optional.of(call);
+        if ((call.getNameAsString().equals("route") || call.getNameAsString().equals("nest"))
+                && staticCall(call, WEBFLUX + "RouterFunctions")) return Optional.of(call);
         return call.getScope().filter(Expression::isMethodCallExpr).map(Expression::asMethodCallExpr)
                 .flatMap(InboundHttpExtractor::routerRoot);
+    }
+
+    private static Value nestedPath(MethodCallExpr call, Route route, Service s) {
+        Value path = route.path();
+        for (Node child = call, parent = call.getParentNode().orElse(null); parent != null;
+                child = parent, parent = parent.getParentNode().orElse(null)) {
+            if (parent instanceof MethodCallExpr nest && nest.getNameAsString().equals("nest")
+                    && staticCall(nest, WEBFLUX + "RouterFunctions") && nest.getArguments().size() == 2
+                    && nest.getArgument(1) == child)
+                path = Mappings.joinValues(nestingPredicate(nest.getArgument(0), route.method(), s), path);
+        }
+        return path;
+    }
+
+    private static Value nestingPredicate(Expression expression, String method, Service s) {
+        if (expression.isEnclosedExpr()) return nestingPredicate(expression.asEnclosedExpr().getInner(), method, s);
+        var route = routePredicate(expression, s);
+        if (route.isPresent()) return route.get().method().equals(method) ? route.get().path() : Value.unresolved(expression.toString());
+        if (expression instanceof MethodCallExpr call) {
+            if (staticCall(call, WEBFLUX + "RequestPredicates")) {
+                if (call.getNameAsString().equals("path") && call.getArguments().size() == 1)
+                    return s.eval(call.getArgument(0));
+                if (call.getNameAsString().equals("method"))
+                    return call.getArguments().stream().flatMap(e -> Mappings.enumNames(e).stream()).anyMatch(method::equals)
+                            ? Value.exact("") : Value.unresolved(expression.toString());
+                if (Set.of("accept", "contentType", "headers", "queryParam", "all").contains(call.getNameAsString()))
+                    return Value.exact("");
+            }
+            if (call.getNameAsString().equals("and") && call.getArguments().size() == 1 && call.getScope().isPresent()) {
+                Value left = nestingPredicate(call.getScope().get(), method, s);
+                Value right = nestingPredicate(call.getArgument(0), method, s);
+                if (left.text().isEmpty()) return right;
+                if (right.text().isEmpty()) return left;
+            }
+        }
+        // Unknown/disjunctive nesting must not claim that the inner path is complete.
+        return Value.unresolved(expression.toString());
     }
 
     private static boolean staticCall(MethodCallExpr call, String owner) {

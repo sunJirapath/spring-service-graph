@@ -11,7 +11,7 @@ ROOT = HERE.parents[2]
 OUT = ROOT / 'build/fix-audit'
 CLONES = ROOT / 'bench/boot4-audit'
 TEMP = OUT / 'tmp'
-TEMP.mkdir(exist_ok=True)
+TEMP.mkdir(parents=True, exist_ok=True)
 CLONES.mkdir(parents=True, exist_ok=True)
 ENV = dict(os.environ, TEMP=str(TEMP), TMP=str(TEMP), GIT_TERMINAL_PROMPT='0')
 

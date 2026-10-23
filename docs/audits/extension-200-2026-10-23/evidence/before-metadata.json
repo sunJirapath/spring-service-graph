@@ -1,0 +1,44 @@
+{
+  "suite": "boot4-extension-to-200",
+  "updated_at": "2026-10-23T09:15:33.286843+00:00",
+  "scanner_jar_sha256": "30863a952bcc4c8acf034b2f64be71e34023b5bbda60ef3d844db4ec8975b333",
+  "distribution_sha256": "f34362d1091cbc8716fa6ec12e497c7717ec9e25aec3cafdd7d3a7028ec2de82",
+  "scanner_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+  "selected": 90,
+  "completed": 90,
+  "passed": 89,
+  "failed": 1,
+  "phase": "before",
+  "successful_scans": 180,
+  "deterministic_repositories": 90,
+  "output_files_per_run": 590,
+  "evidence_references_checked": 15263,
+  "mcp_passed": 89,
+  "diff_passed": 90,
+  "nodes": {
+    "endpoint": 2558,
+    "service": 160,
+    "table": 727,
+    "external": 51,
+    "topic": 37
+  },
+  "edges": {
+    "REACHES": 3221,
+    "EXPOSES": 2558,
+    "USES": 649,
+    "CALLS": 511,
+    "PRODUCES": 24,
+    "CONSUMES": 31,
+    "OWNS": 439
+  },
+  "findings": {
+    "UNRESOLVED": 195,
+    "DUPLICATE_SERVICE": 1,
+    "CONTRACT_DRIFT": 4,
+    "SHARED_TABLE": 12
+  },
+  "java_files": 14489,
+  "graph_archive": "before-scan-graphs.zip",
+  "logs_published": false,
+  "execution": "Source-only scanner checks. No downloaded application was built, tested or started."
+}

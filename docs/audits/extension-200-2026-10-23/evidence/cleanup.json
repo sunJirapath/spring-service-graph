@@ -1,0 +1,51 @@
+{
+  "status": "completed",
+  "completed_at": "2026-10-23T09:49:15.7229096+00:00",
+  "task_clone_directories_removed": 91,
+  "scanned_clone_directories": 90,
+  "rejected_acquisition_directories": 1,
+  "removed_targets": [
+    {
+      "path": "bench/audit200",
+      "files": 25566,
+      "bytes": 368997303.0
+    },
+    {
+      "path": "build/audit200",
+      "files": 5823,
+      "bytes": 58382280.0
+    },
+    {
+      "path": "build/github40-reproductions",
+      "files": 74,
+      "bytes": 29296.0
+    },
+    {
+      "path": "docs/audits/boot4-80-2026-10-23/__pycache__",
+      "files": 2,
+      "bytes": 55994.0
+    },
+    {
+      "path": "docs/audits/extension-200-2026-10-23/__pycache__",
+      "files": 2,
+      "bytes": 5581.0
+    },
+    {
+      "path": "bench/boot4-audit",
+      "files": 0,
+      "bytes": 0
+    },
+    {
+      "path": "build/fix-audit",
+      "files": 0,
+      "bytes": 0
+    }
+  ],
+  "preexisting_benchmark_directories_preserved": 15,
+  "private_run_history_retained": true,
+  "private_unique_repositories": 200,
+  "private_repository_scanner_records": 390,
+  "global_temp_settings_changed": false,
+  "standard_project_build_outputs_retained": true,
+  "public_evidence_retained": true
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "repository": "brasil-transparente/brasil-transparente-processor",
+    "commit": "d67f26990679a90dfd883b23c2e032b3574a9859",
+    "reason": "Checkout is dirty solely because gradlew.bat has inconsistent CRLF normalization; no scan counted. Replaced by a reserve that meets the clean-snapshot requirement."
+  }
+]

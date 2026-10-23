@@ -1,0 +1,13 @@
+{
+  "checks": 9,
+  "passed": 9,
+  "network": false,
+  "foreign_builds": false,
+  "covered": [
+    "original 80-repo tier balance",
+    "extension 90-repo build balance",
+    "duplicate pins",
+    "Boot4 floor",
+    "checkout containment"
+  ]
+}

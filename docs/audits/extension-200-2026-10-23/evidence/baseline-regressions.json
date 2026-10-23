@@ -1,0 +1,22 @@
+{
+  "scanner_source_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+  "tests": 3,
+  "failures": 3,
+  "cases": [
+    {
+      "name": "buildDirectoryNamesInsideProductionPackagesDoNotHideApps()",
+      "failure_type": "java.lang.AssertionError",
+      "message": "java.lang.AssertionError: \r\nExpected size: 1 but was: 0 in:\r\n[]"
+    },
+    {
+      "name": "unknownNestedPredicatesDoNotProduceConfidentUnprefixedEndpoints()",
+      "failure_type": "org.opentest4j.AssertionFailedError",
+      "message": "org.opentest4j.AssertionFailedError: \r\nExpecting actual:\r\n  [\"/items\"]\r\nto contain exactly (and in same order):\r\n  [\"/{?}/items\"]\r\nbut some elements were not found:\r\n  [\"/{?}/items\"]\r\nand others were not expected:\r\n  [\"/items\"]\r\n"
+    },
+    {
+      "name": "nestedWebFluxPathsComposeWithoutPrefixingOutsideRoutes()",
+      "failure_type": "java.lang.AssertionError",
+      "message": "java.lang.AssertionError: \r\nExpecting actual:\r\n  [\"GET /reactive/items\", \"POST /reactive/items\"]\r\nto contain exactly in any order:\r\n  [\"GET /reactive/api/v1/items\",\r\n    \"POST /reactive/api/v1/items\",\r\n    \"GET /reactive/outside\"]\r\nelements not found:\r\n  [\"GET /reactive/api/v1/items\",\r\n    \"POST /reactive/api/v1/items\",\r\n    \"GET /reactive/outside\"]\r\nand elements not expected:\r\n  [\"GET /reactive/items\", \"POST /reactive/items\"]\r\n"
+    }
+  ]
+}

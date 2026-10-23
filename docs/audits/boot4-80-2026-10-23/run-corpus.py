@@ -19,6 +19,10 @@ import time
 ROOT = Path(__file__).resolve().parent.parents[2]
 OUT = ROOT / "build/fix-audit"
 QUALIFIED = OUT / "qualified.json"
+CLONES = ROOT / "bench/boot4-audit"
+SUITE = "boot4-post-fix-80"
+EXPECTED_COUNT = 80
+EXPECTED_PER_GROUP = 10
 REGISTRY = ROOT / ".local-audits/registry.json"
 TEMP = OUT / "tmp"
 LIB = ROOT / "build/install/ssg/lib"
@@ -120,7 +124,7 @@ def source_checkout(row):
     raw = Path(row["path"])
     checkout = raw if raw.is_absolute() else ROOT / raw
     checkout = checkout.resolve()
-    allowed = (ROOT / "bench/boot4-audit").resolve()
+    allowed = CLONES.resolve()
     if not checkout.is_relative_to(allowed):
         raise RuntimeError(f"Qualified checkout is outside {allowed}: {checkout}")
     if not checkout.is_dir():
@@ -139,16 +143,19 @@ def load_candidates(manifest):
     rows = json.loads(manifest.read_text(encoding="utf-8"))
     if not isinstance(rows, list):
         raise RuntimeError("qualified.json must be a JSON array")
-    if len(rows) != 80:
-        raise RuntimeError(f"Expected 80 qualified repositories, found {len(rows)}")
+    if len(rows) != EXPECTED_COUNT:
+        raise RuntimeError(f"Expected {EXPECTED_COUNT} qualified repositories, found {len(rows)}")
     names = [r.get("repository", "").casefold() for r in rows]
-    if len(set(names)) != 80:
-        raise RuntimeError("qualified.json must contain 80 distinct repositories")
+    if len(set(names)) != EXPECTED_COUNT:
+        raise RuntimeError("qualified.json must contain distinct repositories")
     counts = Counter((r.get("tool"), r.get("tier")) for r in rows)
     for tool in ("maven", "gradle"):
-        for tier in TIERS:
-            if counts[(tool, tier)] != 10:
-                raise RuntimeError(f"Expected 10 {tool} {tier} candidates, found {counts[(tool, tier)]}")
+        if sum(r.get("tool") == tool for r in rows) != EXPECTED_COUNT // 2:
+            raise RuntimeError(f"Expected equal Maven and Gradle counts: {tool}")
+        if EXPECTED_PER_GROUP is not None:
+            for tier in TIERS:
+                if counts[(tool, tier)] != EXPECTED_PER_GROUP:
+                    raise RuntimeError(f"Expected {EXPECTED_PER_GROUP} {tool} {tier} candidates, found {counts[(tool, tier)]}")
     for row in rows:
         if not row.get("qualified"):
             raise RuntimeError(f"Unqualified candidate in final manifest: {row.get('repository')}")
@@ -156,6 +163,8 @@ def load_candidates(manifest):
             raise RuntimeError(f"Invalid tool/tier in candidate: {row.get('repository')}")
         if len(row.get("commit", "")) != 40:
             raise RuntimeError(f"Missing full source SHA for {row.get('repository')}")
+        if int(row.get("boot_version", "0").split(".")[0]) < 4:
+            raise RuntimeError(f"Spring Boot 4+ required: {row.get('repository')}")
         if not row.get("path"):
             raise RuntimeError(f"Missing qualified checkout path for {row.get('repository')}")
     return rows
@@ -500,7 +509,7 @@ def append_registry(row, result, scanner_hash, distribution_hash, scanner_commit
     record = {
         "repository": row["repository"],
         "source_commit": row["commit"],
-        "suite": "boot4-post-fix-80",
+        "suite": SUITE,
         "scanned_on": datetime.now(timezone.utc).date().isoformat(),
         "started_at": started,
         "finished_at": result.get("finished_at"),
@@ -684,7 +693,7 @@ def main():
             failed.append(result.get("repository"))
         json_write_atomic(run_root / "results.json", {
             "schema_version": 1,
-            "suite": "boot4-post-fix-80",
+            "suite": SUITE,
             "manifest": manifest.relative_to(ROOT).as_posix(),
             "started_at": started,
             "updated_at": utc_now(),

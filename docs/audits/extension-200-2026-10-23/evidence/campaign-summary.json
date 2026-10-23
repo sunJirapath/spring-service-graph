@@ -1,0 +1,283 @@
+{
+  "unique_repositories": 200,
+  "verified_boot4_repositories": 170,
+  "boot4_build_balance": {
+    "maven": 85,
+    "gradle": 85
+  },
+  "extension_repositories": 90,
+  "extension_tiers": {
+    "maven": {
+      "medium": 17,
+      "small": 20,
+      "large": 8
+    },
+    "gradle": {
+      "small": 15,
+      "medium": 25,
+      "large": 4,
+      "huge": 1
+    }
+  },
+  "extension_java_files": 14489,
+  "historical_source_scan_processes": 780,
+  "repository_scanner_records": 390,
+  "latest_scanner_repositories": 90,
+  "changed_graphs": [
+    {
+      "repository": "target/POSSUM",
+      "commit": "1cc04b0de3329adc0645b9dcaf967c8052925b37",
+      "before_nodes": {},
+      "after_nodes": {
+        "endpoint": 50,
+        "service": 1
+      },
+      "removed_endpoints": [],
+      "added_endpoints": [
+        "DELETE /v1/check",
+        "DELETE /v1/scan",
+        "GET /v1/cashdrawer/health",
+        "GET /v1/cashdrawer/healthstatus",
+        "GET /v1/check",
+        "GET /v1/check/health",
+        "GET /v1/check/healthstatus",
+        "GET /v1/deviceerror",
+        "GET /v1/health",
+        "GET /v1/linedisplay/health",
+        "GET /v1/linedisplay/healthstatus",
+        "GET /v1/liveweight",
+        "GET /v1/peripherals",
+        "GET /v1/printer/health",
+        "GET /v1/printer/healthstatus",
+        "GET /v1/scale/health",
+        "GET /v1/scale/healthstatus",
+        "GET /v1/scan",
+        "GET /v1/scan/{scannerType}",
+        "GET /v1/scanner/health",
+        "GET /v1/scanner/health/{scannerType}",
+        "GET /v1/scanner/healthstatus",
+        "GET /v1/simulate/available_device_models",
+        "GET /v1/simulate/lineDisplayText",
+        "GET /v1/simulate/register_type",
+        "GET /v1/stableweight",
+        "POST /v1/cashdrawer/open",
+        "POST /v1/cashdrawer/reconnect",
+        "POST /v1/check",
+        "POST /v1/check/reconnect",
+        "POST /v1/linedisplay/display",
+        "POST /v1/linedisplay/reconnect",
+        "POST /v1/print",
+        "POST /v1/printer/reconnect",
+        "POST /v1/scale/reconnect",
+        "POST /v1/scanner/reconnect",
+        "POST /v1/simulate/CheckMicrData",
+        "POST /v1/simulate/CheckPrintOutput",
+        "POST /v1/simulate/CheckPrinterState",
+        "POST /v1/simulate/cashdrawerState",
+        "POST /v1/simulate/cashdrawerStatus",
+        "POST /v1/simulate/custom_configuration",
+        "POST /v1/simulate/lineDisplayState",
+        "POST /v1/simulate/printOutput",
+        "POST /v1/simulate/printerState",
+        "POST /v1/simulate/register_type",
+        "POST /v1/simulate/scaleState",
+        "POST /v1/simulate/scaleWeight",
+        "POST /v1/simulate/scan",
+        "POST /v1/simulate/scannerState"
+      ]
+    },
+    {
+      "repository": "robalexlimas/franquicias-api",
+      "commit": "ee0c6206a3da054041aa8d67f78c9cae2a03af1e",
+      "before_nodes": {
+        "endpoint": 10,
+        "service": 1,
+        "table": 3
+      },
+      "after_nodes": {
+        "endpoint": 10,
+        "service": 1,
+        "table": 3
+      },
+      "removed_endpoints": [
+        "DELETE /products/{productId}",
+        "GET /franchises/{franchiseId}/top-products",
+        "PATCH /branches/{branchId}/name",
+        "PATCH /franchises/{franchiseId}/name",
+        "PATCH /products/{productId}/name",
+        "PATCH /products/{productId}/stock",
+        "POST /branches/{branchId}/products",
+        "POST /franchises",
+        "POST /franchises/{franchiseId}/branches"
+      ],
+      "added_endpoints": [
+        "DELETE /api/products/{productId}",
+        "GET /api/franchises/{franchiseId}/top-products",
+        "PATCH /api/branches/{branchId}/name",
+        "PATCH /api/franchises/{franchiseId}/name",
+        "PATCH /api/products/{productId}/name",
+        "PATCH /api/products/{productId}/stock",
+        "POST /api/branches/{branchId}/products",
+        "POST /api/franchises",
+        "POST /api/franchises/{franchiseId}/branches"
+      ]
+    }
+  ],
+  "phases": {
+    "before": {
+      "suite": "boot4-extension-to-200",
+      "updated_at": "2026-10-23T09:15:33.286843+00:00",
+      "scanner_jar_sha256": "30863a952bcc4c8acf034b2f64be71e34023b5bbda60ef3d844db4ec8975b333",
+      "distribution_sha256": "f34362d1091cbc8716fa6ec12e497c7717ec9e25aec3cafdd7d3a7028ec2de82",
+      "scanner_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+      "selected": 90,
+      "completed": 90,
+      "passed": 89,
+      "failed": 1,
+      "phase": "before",
+      "successful_scans": 180,
+      "deterministic_repositories": 90,
+      "output_files_per_run": 590,
+      "evidence_references_checked": 15263,
+      "mcp_passed": 89,
+      "diff_passed": 90,
+      "nodes": {
+        "endpoint": 2558,
+        "service": 160,
+        "table": 727,
+        "external": 51,
+        "topic": 37
+      },
+      "edges": {
+        "REACHES": 3221,
+        "EXPOSES": 2558,
+        "USES": 649,
+        "CALLS": 511,
+        "PRODUCES": 24,
+        "CONSUMES": 31,
+        "OWNS": 439
+      },
+      "findings": {
+        "UNRESOLVED": 195,
+        "DUPLICATE_SERVICE": 1,
+        "CONTRACT_DRIFT": 4,
+        "SHARED_TABLE": 12
+      },
+      "java_files": 14489,
+      "graph_archive": "before-scan-graphs.zip",
+      "logs_published": false,
+      "execution": "Source-only scanner checks. No downloaded application was built, tested or started."
+    },
+    "intermediate": {
+      "schema_version": 1,
+      "suite": "boot4-extension-to-200",
+      "manifest": "build/audit200/qualified.json",
+      "started_at": "2026-10-23T09:26:36.645085+00:00",
+      "updated_at": "2026-10-23T09:31:41.375975+00:00",
+      "scanner_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+      "scanner_jar_sha256": "fcd5c54fe59ab9dc586ea66eb55316e0efbf665a0e1cfed603a871aad4e32049",
+      "distribution_sha256": "27f560cb4c6332c9abe899906bbb508085e0985e089e3f9fbe5e05eecf6f131b",
+      "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+      "candidate_count": 90,
+      "passed": 90,
+      "failed": 0,
+      "execution_passed": 90,
+      "extraction_passed": 90,
+      "phase": "intermediate",
+      "completed": 90,
+      "successful_scans": 180,
+      "deterministic_repositories": 90,
+      "output_files_per_run": 592,
+      "evidence_references_checked": 15363,
+      "mcp_passed": 90,
+      "diff_passed": 90,
+      "nodes": {
+        "endpoint": 2608,
+        "service": 161,
+        "table": 727,
+        "external": 51,
+        "topic": 37
+      },
+      "edges": {
+        "REACHES": 3221,
+        "EXPOSES": 2608,
+        "USES": 649,
+        "CALLS": 511,
+        "PRODUCES": 24,
+        "CONSUMES": 31,
+        "OWNS": 439
+      },
+      "findings": {
+        "UNRESOLVED": 195,
+        "DUPLICATE_SERVICE": 1,
+        "CONTRACT_DRIFT": 4,
+        "SHARED_TABLE": 12
+      },
+      "java_files": 14489,
+      "graph_archive": "intermediate-scan-graphs.zip",
+      "logs_published": false,
+      "execution": "Source-only scanner checks. No downloaded application was built, tested or started."
+    },
+    "after": {
+      "schema_version": 1,
+      "suite": "boot4-extension-to-200",
+      "manifest": "build/audit200/qualified.json",
+      "started_at": "2026-10-23T09:39:31.515966+00:00",
+      "updated_at": "2026-10-23T09:45:26.902740+00:00",
+      "scanner_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+      "scanner_jar_sha256": "c0265ff65ec110a06b75b52c3ebf70f89011e3554202eafe2805fe759acf07b4",
+      "distribution_sha256": "208008249d565c316fe6f1fd9d35804e79a72223c706821046522e46c47c3a69",
+      "scanner_source_state": "branch:codex/github40-audit-fixes;working_tree_dirty:true",
+      "candidate_count": 90,
+      "passed": 90,
+      "failed": 0,
+      "execution_passed": 90,
+      "extraction_passed": 90,
+      "phase": "after",
+      "completed": 90,
+      "successful_scans": 180,
+      "deterministic_repositories": 90,
+      "output_files_per_run": 592,
+      "evidence_references_checked": 15363,
+      "mcp_passed": 90,
+      "diff_passed": 90,
+      "nodes": {
+        "endpoint": 2608,
+        "service": 161,
+        "table": 727,
+        "external": 51,
+        "topic": 37
+      },
+      "edges": {
+        "REACHES": 3221,
+        "EXPOSES": 2608,
+        "USES": 649,
+        "CALLS": 511,
+        "PRODUCES": 24,
+        "CONSUMES": 31,
+        "OWNS": 439
+      },
+      "findings": {
+        "UNRESOLVED": 195,
+        "DUPLICATE_SERVICE": 1,
+        "CONTRACT_DRIFT": 4,
+        "SHARED_TABLE": 12
+      },
+      "java_files": 14489,
+      "graph_archive": "after-scan-graphs.zip",
+      "logs_published": false,
+      "execution": "Source-only scanner checks. No downloaded application was built, tested or started."
+    }
+  },
+  "tests": {
+    "tests": 756,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "prior_cli_reproductions_passed": 8,
+  "foreign_builds_executed": 0,
+  "foreign_applications_started": 0,
+  "base_commit": "c667253b7bb36684825ba55f53dee51b23931395",
+  "scanner_build": "Built with uncommitted production fixes and five regression tests; identify it with JAR/distribution hashes and scanner-source-sha256.json."
+}

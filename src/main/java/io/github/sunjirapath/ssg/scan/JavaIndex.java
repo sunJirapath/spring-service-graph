@@ -88,11 +88,14 @@ public final class JavaIndex {
     /** Main sources and generated sources (openapi-generator output); never tests. */
     private boolean isMainSource(Path f) {
         String p = rel(f);
-        if (!p.endsWith(".java") || p.contains("/.git/") || p.contains("/node_modules/") || p.contains("/src/test/")) {
+        int main = p.indexOf("/src/main/java/");
+        String layout = main < 0 ? p : p.substring(0, main);
+        if (!p.endsWith(".java") || layout.contains("/.git/") || layout.contains("/node_modules/") || layout.contains("/src/test/")) {
             return false;
         }
-        boolean inBuildDir = p.contains("/build/") || p.contains("/target/");
-        return inBuildDir ? p.contains("generated") : p.contains("/src/main/java/");
+        // Package segments such as com.target are inside the source root, not build directories.
+        boolean inBuildDir = layout.contains("/build/") || layout.contains("/target/");
+        return inBuildDir ? p.contains("generated") : main >= 0;
     }
 
     /** Repo-relative path with a leading slash, so markers never match the checkout location. */
