@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "suite": "boot4-post-fix-80-source-to-graph-spotchecks",
+  "created_on": "2026-10-23",
+  "status": "complete",
+  "rule": "Source facts are not counted as graph-verified until the pinned run1 graph exists and its node/edge evidence matches the stated fact.",
+  "checks": [
+    {
+      "repo": "spring-guides/gs-rest-service",
+      "source": "complete/src/main/java/com/example/restservice/GreetingController.java",
+      "source_lines": [
+        15
+      ],
+      "fact": "GET /greeting endpoint",
+      "expected": {
+        "kind": "endpoint",
+        "method": "GET",
+        "path": "/greeting",
+        "evidence_file": "complete/src/main/java/com/example/restservice/GreetingController.java"
+      },
+      "commit": "3f4cef01152596c19bc4d37939409358812b1421",
+      "build_system": "gradle",
+      "tier": "small",
+      "checkout": "bench/boot4-audit/spring-guides--gs-rest-service",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/spring-guides--gs-rest-service/graph.json",
+      "observed": {
+        "service_count": 1,
+        "graph_match": {
+          "edge_kind": "EXPOSES",
+          "from": "service:initial",
+          "to": "endpoint:initial:GET /greeting",
+          "node": {
+            "kind": "endpoint",
+            "id": "endpoint:initial:GET /greeting",
+            "service": "initial",
+            "method": "GET",
+            "path": "/greeting"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "complete/src/main/java/com/example/restservice/GreetingController.java",
+            "line": 15
+          },
+          {
+            "file": "complete/src/main/java/com/example/restservice/GreetingController.java",
+            "line": 16
+          }
+        ]
+      }
+    },
+    {
+      "repo": "spring-guides/gs-accessing-data-mongodb",
+      "source": "complete/src/main/java/com/example/accessingdatamongodb/CustomerRepository.java",
+      "source_lines": [
+        8
+      ],
+      "fact": "MongoRepository<Customer, String> with unannotated Customer domain; convention collection is customer",
+      "expected": {
+        "kind": "table-use",
+        "store": "mongo",
+        "name": "customer",
+        "evidence_file": "complete/src/main/java/com/example/accessingdatamongodb/CustomerRepository.java"
+      },
+      "commit": "1b095970bf66642800d57c54d33cd12e7652440f",
+      "build_system": "gradle",
+      "tier": "small",
+      "checkout": "bench/boot4-audit/spring-guides--gs-accessing-data-mongodb",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/spring-guides--gs-accessing-data-mongodb/graph.json",
+      "observed": {
+        "service_count": 2,
+        "graph_match": {
+          "edge_kind": "USES",
+          "from": "service:complete",
+          "to": "table:complete/customer",
+          "node": {
+            "kind": "table",
+            "id": "table:complete/customer",
+            "service": "complete",
+            "name": "customer",
+            "store": "mongo"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "complete/src/main/java/com/example/accessingdatamongodb/CustomerRepository.java",
+            "line": 8
+          }
+        ]
+      }
+    },
+    {
+      "repo": "FAForever/faf-java-api",
+      "source": "src/main/java/com/faforever/api/event/EventsController.java",
+      "source_lines": [
+        17
+      ],
+      "related_source": "src/main/java/com/faforever/api/config/RabbitConfiguration.java",
+      "related_lines": [
+        36
+      ],
+      "fact": "Rabbit consumer resolves QUEUE_EVENT to faf-lobby.api.event.update",
+      "expected": {
+        "kind": "consumes-topic",
+        "name": "faf-lobby.api.event.update",
+        "evidence_file": "src/main/java/com/faforever/api/event/EventsController.java"
+      },
+      "commit": "caed91e0e6f969ea49177c76a3fad93b0b755397",
+      "build_system": "gradle",
+      "tier": "large",
+      "checkout": "bench/boot4-audit/FAForever--faf-java-api",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/FAForever--faf-java-api/graph.json",
+      "observed": {
+        "service_count": 1,
+        "graph_match": {
+          "edge_kind": "CONSUMES",
+          "from": "service:FAForever--faf-java-api",
+          "to": "topic:faf-lobby.api.event.update",
+          "node": {
+            "kind": "topic",
+            "id": "topic:faf-lobby.api.event.update",
+            "name": "faf-lobby.api.event.update"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "src/main/java/com/faforever/api/event/EventsController.java",
+            "line": 17
+          }
+        ]
+      }
+    },
+    {
+      "repo": "shuigedeng/taotao-cloud-sys",
+      "source": "taotao-cloud-sys-interfaces/src/main/java/com/taotao/cloud/sys/interfaces/controller/buyer/DictBuyerController.java",
+      "source_lines": [
+        42,
+        49
+      ],
+      "fact": "GET /buyer/sys/dict/query/type (class request mapping plus method mapping)",
+      "expected": {
+        "kind": "endpoint",
+        "method": "GET",
+        "path": "/buyer/sys/dict/query/type",
+        "evidence_file": "taotao-cloud-sys-interfaces/src/main/java/com/taotao/cloud/sys/interfaces/controller/buyer/DictBuyerController.java"
+      },
+      "commit": "98f3345c647f735dc11b9e46569bd4d666dcf368",
+      "build_system": "gradle",
+      "tier": "large",
+      "checkout": "bench/boot4-audit/shuigedeng--taotao-cloud-sys",
+      "graph_status": "unsupported_app_pattern",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/shuigedeng--taotao-cloud-sys/graph.json",
+      "observed": {
+        "service_count": 0,
+        "graph_match": null,
+        "matching_evidence": [],
+        "reason": "No services discovered. Selected launcher uses @TaoTaoBootApplication and new StartupSpringApplication(...), outside documented @SpringBootApplication/direct SpringApplication detection patterns."
+      }
+    },
+    {
+      "repo": "spring-petclinic/spring-petclinic-microservices",
+      "source": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+      "source_lines": [
+        56,
+        67
+      ],
+      "related_source": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/model/VisitRepository.java",
+      "related_lines": [
+        33
+      ],
+      "fact": "POST and GET owners/*/pets/{petId}/visits routes; JPA Visit repository in same service",
+      "expected": {
+        "kind": "endpoint",
+        "method": "GET",
+        "path": "/owners/*/pets/{petId}/visits",
+        "evidence_file": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java"
+      },
+      "commit": "1d76b00d683e86b62867a6bf59530f8ab301244f",
+      "build_system": "maven",
+      "tier": "medium",
+      "checkout": "bench/boot4-audit/spring-petclinic--spring-petclinic-microservices",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/spring-petclinic--spring-petclinic-microservices/graph.json",
+      "observed": {
+        "service_count": 8,
+        "graph_match": {
+          "edge_kind": "EXPOSES",
+          "from": "service:visits-service",
+          "to": "endpoint:visits-service:GET /owners/*/pets/{petId}/visits",
+          "node": {
+            "kind": "endpoint",
+            "id": "endpoint:visits-service:GET /owners/*/pets/{petId}/visits",
+            "service": "visits-service",
+            "method": "GET",
+            "path": "/owners/*/pets/{petId}/visits"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 67
+          },
+          {
+            "file": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 68
+          }
+        ]
+      }
+    },
+    {
+      "repo": "dromara/RuoYi-Cloud-Plus",
+      "source": "ruoyi-example/ruoyi-test-mq/src/main/java/org/dromara/stream/consumer/KafkaNormalConsumer.java",
+      "source_lines": [
+        17
+      ],
+      "fact": "Kafka consumer subscribes to test-topic",
+      "expected": {
+        "kind": "consumes-topic",
+        "name": "test-topic",
+        "evidence_file": "ruoyi-example/ruoyi-test-mq/src/main/java/org/dromara/stream/consumer/KafkaNormalConsumer.java"
+      },
+      "commit": "a319a6861d8bbfa5dbc4422d27743325b8c817ef",
+      "build_system": "maven",
+      "tier": "large",
+      "checkout": "bench/boot4-audit/dromara--RuoYi-Cloud-Plus",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/dromara--RuoYi-Cloud-Plus/graph.json",
+      "observed": {
+        "service_count": 13,
+        "graph_match": {
+          "edge_kind": "CONSUMES",
+          "from": "service:ruoyi-test-mq",
+          "to": "topic:test-topic",
+          "node": {
+            "kind": "topic",
+            "id": "topic:test-topic",
+            "name": "test-topic"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "ruoyi-example/ruoyi-test-mq/src/main/java/org/dromara/stream/consumer/KafkaNormalConsumer.java",
+            "line": 17
+          }
+        ]
+      }
+    },
+    {
+      "repo": "jeecgboot/JeecgBoot",
+      "source": "jeecg-boot/jeecg-module-system/jeecg-system-biz/src/main/java/org/jeecg/modules/api/controller/SystemApiController.java",
+      "source_lines": [
+        32,
+        33,
+        128
+      ],
+      "fact": "GET /sys/api/getUserById controller mapping",
+      "expected": {
+        "kind": "endpoint",
+        "method": "GET",
+        "path": "/sys/api/getUserById",
+        "evidence_file": "jeecg-boot/jeecg-module-system/jeecg-system-biz/src/main/java/org/jeecg/modules/api/controller/SystemApiController.java"
+      },
+      "commit": "4998e645db547ff614b6568df3895bf5586effbf",
+      "build_system": "maven",
+      "tier": "large",
+      "checkout": "bench/boot4-audit/jeecgboot--JeecgBoot",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/jeecgboot--JeecgBoot/graph.json",
+      "observed": {
+        "service_count": 10,
+        "graph_match": {
+          "edge_kind": "EXPOSES",
+          "from": "service:jeecg-system",
+          "to": "endpoint:jeecg-system:GET /sys/api/getUserById",
+          "node": {
+            "kind": "endpoint",
+            "id": "endpoint:jeecg-system:GET /sys/api/getUserById",
+            "service": "jeecg-system",
+            "method": "GET",
+            "path": "/sys/api/getUserById"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "jeecg-boot/jeecg-module-system/jeecg-system-biz/src/main/java/org/jeecg/modules/api/controller/SystemApiController.java",
+            "line": 128
+          },
+          {
+            "file": "jeecg-boot/jeecg-module-system/jeecg-system-biz/src/main/java/org/jeecg/modules/api/controller/SystemApiController.java",
+            "line": 129
+          }
+        ]
+      }
+    },
+    {
+      "repo": "datahub-project/datahub",
+      "source": "metadata-service/auth-servlet-impl/src/main/java/com/datahub/auth/authentication/AuthServiceController.java",
+      "source_lines": [
+        71,
+        72,
+        158
+      ],
+      "fact": "POST /auth/generateSessionTokenForUser controller mapping",
+      "expected": {
+        "kind": "endpoint",
+        "method": "POST",
+        "path": "/auth/generateSessionTokenForUser",
+        "evidence_file": "metadata-service/auth-servlet-impl/src/main/java/com/datahub/auth/authentication/AuthServiceController.java"
+      },
+      "commit": "53b0a20bd56695590cc38c736f12fce8365b126a",
+      "build_system": "gradle",
+      "tier": "huge",
+      "checkout": "bench/boot4-audit/datahub-project--datahub",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/datahub-project--datahub/graph.json",
+      "observed": {
+        "service_count": 4,
+        "graph_match": {
+          "edge_kind": "EXPOSES",
+          "from": "service:war",
+          "to": "endpoint:war:POST /auth/generateSessionTokenForUser",
+          "node": {
+            "kind": "endpoint",
+            "id": "endpoint:war:POST /auth/generateSessionTokenForUser",
+            "service": "war",
+            "method": "POST",
+            "path": "/auth/generateSessionTokenForUser"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "metadata-service/auth-servlet-impl/src/main/java/com/datahub/auth/authentication/AuthServiceController.java",
+            "line": 158
+          },
+          {
+            "file": "metadata-service/auth-servlet-impl/src/main/java/com/datahub/auth/authentication/AuthServiceController.java",
+            "line": 159
+          }
+        ]
+      }
+    },
+    {
+      "repo": "pig-mesh/pig",
+      "source": "pig-auth/src/main/java/com/pig4cloud/pig/auth/endpoint/ImageCodeEndpoint.java",
+      "source_lines": [
+        28,
+        40
+      ],
+      "fact": "GET /code/image controller route",
+      "expected": {
+        "kind": "endpoint",
+        "method": "GET",
+        "path": "/code/image",
+        "evidence_file": "pig-auth/src/main/java/com/pig4cloud/pig/auth/endpoint/ImageCodeEndpoint.java"
+      },
+      "commit": "a0d273afd3adc6678b065c0f2d25433541343ad7",
+      "build_system": "maven",
+      "tier": "large",
+      "checkout": "bench/boot4-audit/pig-mesh--pig",
+      "graph_status": "verified",
+      "graph_output": "build/fix-audit/runs/f34362d1091cbc87/run1/pig-mesh--pig/graph.json",
+      "observed": {
+        "service_count": 8,
+        "graph_match": {
+          "edge_kind": "EXPOSES",
+          "from": "service:pig-auth",
+          "to": "endpoint:pig-auth:GET /code/image",
+          "node": {
+            "kind": "endpoint",
+            "id": "endpoint:pig-auth:GET /code/image",
+            "service": "pig-auth",
+            "method": "GET",
+            "path": "/code/image"
+          }
+        },
+        "matching_evidence": [
+          {
+            "file": "pig-auth/src/main/java/com/pig4cloud/pig/auth/endpoint/ImageCodeEndpoint.java",
+            "line": 40
+          },
+          {
+            "file": "pig-auth/src/main/java/com/pig4cloud/pig/auth/endpoint/ImageCodeEndpoint.java",
+            "line": 41
+          }
+        ]
+      }
+    }
+  ]
+}

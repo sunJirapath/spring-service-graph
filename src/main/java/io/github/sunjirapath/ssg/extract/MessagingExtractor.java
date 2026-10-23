@@ -78,10 +78,10 @@ public final class MessagingExtractor implements Extractor {
         int args = call.getArguments().size();
         if (RABBIT_SENDS.contains(name) && args >= 2 && (Receivers.isReceiver(s, scope, RABBIT, "rabbittemplate")
                 || Receivers.isReceiver(s, scope, RABBIT, "amqptemplate"))) {
-            // (routingKey, msg) or (exchange, routingKey, msg, ...): with 3+ args the second is the key
-            Value key = s.eval(call.getArgument(args >= 3 ? 1 : 0));
+            int keyArg = rabbitKey(s, call);
+            Value key = keyArg < 0 ? Value.unresolved(call.toString()) : s.eval(call.getArgument(keyArg));
             var queues = new LinkedHashMap<String, Value>();
-            route(binds, args >= 3 ? s.eval(call.getArgument(0)) : null, key, queues);
+            route(binds, keyArg == 1 ? s.eval(call.getArgument(0)) : null, key, queues);
             for (Value q : queues.values()) facts.add(new Fact.TopicUse(true, q, s.evidence(call), "RabbitTemplate"));
         } else if (ROCKET_SENDS.contains(name) && args >= 2 && Receivers.isReceiver(s, scope, ROCKET, "rocketmqtemplate")) {
             facts.add(new Fact.TopicUse(true, withoutTag(s.eval(call.getArgument(0))), s.evidence(call), "RocketMQTemplate"));
@@ -89,6 +89,36 @@ public final class MessagingExtractor implements Extractor {
                 Set.of("DefaultMQPushConsumer", "DefaultLitePullConsumer", "DefaultMQPullConsumer"), "mqconsumer")) {
             facts.add(new Fact.TopicUse(false, s.eval(call.getArgument(0)), s.evidence(call), "RocketMQ subscribe"));
         }
+    }
+
+    /** Metadata overloads keep the routing key first, or use the template's runtime default. */
+    private static int rabbitKey(Service s, MethodCallExpr call) {
+        int count = call.getArguments().size();
+        boolean converts = call.getNameAsString().startsWith("convert");
+        if (count == 2) return rabbitMetadata(s, call.getArgument(1)) ? -1 : 0;
+        if (count == 3) {
+            Expression last = call.getArgument(2);
+            if (rabbitMetadata(s, last)) return converts && rabbitMetadata(s, call.getArgument(1)) ? -1 : 0;
+            return argumentType(s, last).isPresent() ? 1 : -1;
+        }
+        if (count == 4 && converts && rabbitMetadata(s, call.getArgument(2))) return 0;
+        return count <= 5 ? 1 : -1;
+    }
+
+    private static boolean rabbitMetadata(Service s, Expression value) {
+        return value.isLambdaExpr() || value.isMethodReferenceExpr()
+                || argumentType(s, value).filter(t -> t.equals("MessagePostProcessor") || t.equals("CorrelationData")).isPresent();
+    }
+
+    private static java.util.Optional<String> argumentType(Service s, Expression value) {
+        java.util.Optional<String> type;
+        if (value.isObjectCreationExpr()) type = java.util.Optional.of(value.asObjectCreationExpr().getType().getNameAsString());
+        else if (value.isCastExpr()) type = java.util.Optional.of(value.asCastExpr().getType().asString());
+        else if (value.isNameExpr()) type = s.index().declaredType(value.asNameExpr().getNameAsString(), value);
+        else if (value.isFieldAccessExpr()) type = s.index().declaredType(value.asFieldAccessExpr().getNameAsString(), value);
+        else if (value.isLiteralExpr()) type = java.util.Optional.of("literal");
+        else type = java.util.Optional.empty();
+        return type.map(t -> t.substring(t.lastIndexOf('.') + 1));
     }
 
     private record Queue(Value name, Value deadExchange, Value deadKey) {}

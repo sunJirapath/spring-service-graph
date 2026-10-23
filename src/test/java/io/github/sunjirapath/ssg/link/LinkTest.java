@@ -26,4 +26,16 @@ class LinkTest {
         assertThat(Linker.parse("{?}/reports/{?}").host()).isNull();
         assertThat(Linker.parse("{?}/reports/{?}").path()).isEqualTo("{?}/reports/{?}");
     }
+
+    @Test
+    void rootUrlDelimitersIpv6AndUnknownPlaceholdersRemainSeparate() {
+        for (String url : new String[]{"http://target?x=1", "http://target#fragment", "http://target/?x=1#fragment"}) {
+            assertThat(Linker.parse(url).host()).isEqualTo("target");
+            assertThat(Linker.parse(url).path()).isEqualTo("/");
+        }
+        assertThat(Linker.parse("http://[::1]").host()).isEqualTo("[::1]");
+        assertThat(Linker.parse("http://[2001:db8::1]:8080/x").host()).isEqualTo("[2001:db8::1]");
+        assertThat(Linker.parse("http://{?}.svc?x=1").host()).isEqualTo("{?}.svc");
+        assertThat(Linker.parse("/owners/{?}?x=1").path()).isEqualTo("/owners/{?}");
+    }
 }

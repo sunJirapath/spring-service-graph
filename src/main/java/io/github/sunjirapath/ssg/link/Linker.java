@@ -222,19 +222,24 @@ public final class Linker {
 
     /** Splits {@code scheme://user@host:port/path?q} into host and path; host is null for relative URLs. */
     static Url parse(String url) {
-        int i = url.indexOf("://");
+        String rest = url.replace(Value.UNKNOWN, "\0"); // protect the '?' in unresolved placeholders
+        int i = rest.indexOf("://");
         String host = null;
-        String rest = url;
-        if (i >= 0 && !url.substring(0, i).contains(Value.UNKNOWN)) {
-            rest = url.substring(i + 3);
-            int slash = rest.indexOf('/');
-            String authority = slash < 0 ? rest : rest.substring(0, slash);
-            rest = slash < 0 ? "/" : rest.substring(slash);
+        if (i >= 0 && !rest.substring(0, i).contains("\0")) {
+            rest = rest.substring(i + 3);
+            int end = rest.length();
+            for (char delimiter : new char[]{'/', '?', '#'}) {
+                int at = rest.indexOf(delimiter);
+                if (at >= 0) end = Math.min(end, at);
+            }
+            String authority = rest.substring(0, end);
+            rest = end == rest.length() ? "/" : rest.substring(end);
             authority = USERINFO.matcher(authority).replaceFirst(""); // never keep credentials
             int colon = authority.lastIndexOf(':');
-            host = colon > 0 ? authority.substring(0, colon) : authority;
+            int bracket = authority.startsWith("[") ? authority.indexOf(']') : -1;
+            host = bracket >= 0 ? authority.substring(0, bracket + 1) : colon > 0 ? authority.substring(0, colon) : authority;
+            host = host.replace("\0", Value.UNKNOWN);
         }
-        rest = rest.replace(Value.UNKNOWN, "\0"); // the '?' in {?} is not a query string
         int q = rest.indexOf('?');
         if (q >= 0) rest = rest.substring(0, q);
         int h = rest.indexOf('#');

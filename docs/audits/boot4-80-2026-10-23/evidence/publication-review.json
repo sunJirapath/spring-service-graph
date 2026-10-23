@@ -1,0 +1,65 @@
+{
+  "reviewDate": "2026-10-23",
+  "scope": [
+    "docs/audits/boot4-80-2026-10-23",
+    "docs/audits/github40-2026-10-23"
+  ],
+  "scannedTextFilesAndArchiveEntries": 265,
+  "checks": [
+    "AWS access key IDs, GitHub token formats, JWT-shaped values, bearer tokens, private-key markers, credential-like assignments, and absolute personal/workspace paths",
+    "Text files and readable text entries in ZIP archives; compiled Python bytecode excluded"
+  ],
+  "categoryCounts": {
+    "aws_access_key_id": 0,
+    "github_token_format": 0,
+    "jwt_format": 0,
+    "bearer_token_format": 0,
+    "private_key_marker": 0,
+    "windows_personal_home_path": 0,
+    "macos_personal_home_path": 0,
+    "workspace_absolute_path": 0,
+    "credential_like_query_parameter_interpolations": 33,
+    "linux_home_or_users_route_strings": 217
+  },
+  "reviewedIndicators": [
+    {
+      "category": "credential_like_query_parameter_interpolations",
+      "count": 33,
+      "classification": "False positive for credential exposure. The matches are query parameter names followed by source variable interpolation in generated graph evidence; the graph output replaces dynamic values with placeholders. No concrete credential value was present.",
+      "locations": [
+        "docs/audits/boot4-80-2026-10-23/evidence/scan-graphs.zip!jrjohn--arcana-cloud-springboot/graph.json",
+        "docs/audits/github40-2026-10-23/evidence/scan-graphs.zip!koushikkothagal--spring-boot-microservices-workshop/graph.json",
+        "docs/audits/github40-2026-10-23/evidence/scan-graphs.zip!thingsboard--thingsboard/graph.json"
+      ]
+    },
+    {
+      "category": "linux_home_or_users_route_strings",
+      "count": 217,
+      "classification": "False positive for personal path disclosure. Matches occur in public API route strings and graph evidence derived from those routes, including endpoint paths such as /home/... and /users/.... They are not filesystem paths.",
+      "locations": [
+        "docs/audits/boot4-80-2026-10-23/evidence/scan-graphs.zip!FAForever--faf-java-api/graph.json",
+        "docs/audits/boot4-80-2026-10-23/evidence/scan-graphs.zip!urlaubsverwaltung--zeiterfassung/graph.json",
+        "docs/audits/boot4-80-2026-10-23/evidence/scan-graphs.zip!battcn--wemirr-platform/graph.json",
+        "docs/audits/github40-2026-10-23/evidence/scan-graphs.zip!macrozheng--mall-swarm/graph.json",
+        "docs/audits/github40-2026-10-23/evidence/scan-graphs.zip!thingsboard--thingsboard/graph.json"
+      ]
+    }
+  ],
+  "findings": [],
+  "assessment": "No actual credential or personal operating-system home path was found in the reviewed public audit documents or packaged evidence. The flagged path and credential-like strings are API routes and variable interpolations, respectively. Safe to publish the reviewed scope.",
+  "post_review_path_normalization": {
+    "reason": "Make historical command and cleanup paths portable; graph bytes and graph/output hashes are unchanged.",
+    "files": [
+      {
+        "path": "docs/audits/github40-2026-10-23/evidence/scan-results.json",
+        "replacements": 242
+      },
+      {
+        "path": "docs/audits/github40-2026-10-23/evidence/cleanup.json",
+        "replacements": 9
+      }
+    ],
+    "source_check_checkout_paths": 9,
+    "result": "Workspace paths normalized to relative paths; no credentials were removed or introduced."
+  }
+}

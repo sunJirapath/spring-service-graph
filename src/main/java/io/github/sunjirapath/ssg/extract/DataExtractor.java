@@ -114,11 +114,17 @@ public final class DataExtractor implements Extractor {
         if (table.isPresent()) return Optional.of(new Mapped(normalized(s.eval(table.get())), "sql", "Table"));
         var doc = Ann.find(c, "Document");
         if (doc.isPresent()) {
-            Value name = Ann.attr(doc.get(), "collection", "value").map(s::eval)
-                    .orElse(Value.exact(Character.toLowerCase(c.getNameAsString().charAt(0)) + c.getNameAsString().substring(1)));
-            return Optional.of(new Mapped(name, elastic(c) ? "elasticsearch" : "mongo", "Document"));
+            boolean elastic = elastic(c);
+            Value name = Ann.attr(doc.get(), elastic ? new String[]{"indexName"} : new String[]{"collection", "value"}).map(s::eval)
+                    .orElse(Value.exact(collection(c)));
+            return Optional.of(new Mapped(name, elastic ? "elasticsearch" : "mongo", "Document"));
         }
         return Optional.empty();
+    }
+
+    private static String collection(TypeDeclaration<?> c) {
+        String name = c.getNameAsString();
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 
     /** Lower-cased entity class name to table, for resolving JPQL entity names. */
@@ -140,16 +146,16 @@ public final class DataExtractor implements Extractor {
         if (Ann.has(c, "NoRepositoryBean")) return;
         var typeParameters = c.getTypeParameters().stream().map(p -> p.getNameAsString()).toList();
         for (ClassOrInterfaceType st : c.getExtendedTypes()) {
-            if (st.getTypeArguments().map(a -> a.isEmpty()).orElse(true)) continue;
-            var base = repositoryBase(s, st, c, 0);
+            var base = repositoryBase(s, st, c, Map.of(), 0);
             if (base.isEmpty()) continue;
-            var arg = st.getTypeArguments().get().get(0);
-            String entity = arg instanceof ClassOrInterfaceType t ? t.getNameWithScope() : arg.asString();
+            String entity = base.get().entity();
             if (typeParameters.contains(entity)) continue; // a generic base like BaseRepo<T, ID>: its subtypes name the entity
             var type = s.index().resolveType(entity, c);
             var mapped = type.flatMap(t -> table(s, t));
-            if (mapped.isEmpty() && type.isPresent() && base.get().endsWith("BaseMapper")) // MyBatis-Plus needs no @TableName
+            if (mapped.isEmpty() && type.isPresent() && base.get().name().endsWith("BaseMapper")) // MyBatis-Plus needs no @TableName
                 mapped = Optional.of(new Mapped(Value.exact(snake(type.get().getNameAsString())), "sql", "BaseMapper"));
+            if (mapped.isEmpty() && type.isPresent() && Set.of("MongoRepository", "ReactiveMongoRepository").contains(base.get().name()))
+                mapped = Optional.of(new Mapped(Value.exact(collection(type.get())), "mongo", base.get().name()));
             if (mapped.isPresent()) {
                 facts.add(new Fact.TableUse(false, mapped.get().name, mapped.get().store, s.evidence(c),
                         "repository " + c.getNameAsString()));
@@ -164,13 +170,31 @@ public final class DataExtractor implements Extractor {
      * A Spring Data *Repository or a MyBatis-Plus BaseMapper (MPJBaseMapper from mybatis-plus-join), directly or
      * through custom base interfaces found in sources, such as yudao's BaseMapperX. Returns that framework base's name.
      */
-    private static Optional<String> repositoryBase(Service s, ClassOrInterfaceType t, com.github.javaparser.ast.Node context, int depth) {
-        String name = t.getNameAsString();
-        if (name.endsWith("Repository") || name.equals("BaseMapper") || name.equals("MPJBaseMapper")) return Optional.of(name);
+    private record RepositoryType(String name, String entity) {}
+
+    private static Optional<RepositoryType> repositoryBase(Service s, ClassOrInterfaceType t,
+            com.github.javaparser.ast.Node context, Map<String, String> arguments, int depth) {
         if (depth > 64) return Optional.empty(); // only a guard against illegal cyclic extends in broken code
-        return s.index().resolveType(t, context).filter(ClassOrInterfaceDeclaration.class::isInstance)
-                .flatMap(d -> ((ClassOrInterfaceDeclaration) d).getExtendedTypes().stream()
-                        .flatMap(x -> repositoryBase(s, x, d, depth + 1).stream()).findFirst());
+        String name = t.getNameAsString();
+        var args = t.getTypeArguments().stream().flatMap(List::stream).map(a -> {
+            String value = a.asString();
+            if (arguments.containsKey(value)) return arguments.get(value);
+            return s.index().resolveType(value, context).flatMap(TypeDeclaration::getFullyQualifiedName).orElse(value);
+        }).toList();
+        var source = s.index().resolveType(t, context).filter(ClassOrInterfaceDeclaration.class::isInstance)
+                .map(ClassOrInterfaceDeclaration.class::cast);
+        if (!args.isEmpty() && (name.equals("BaseMapper") || name.equals("MPJBaseMapper")))
+            return Optional.of(new RepositoryType(name, args.getFirst()));
+        if (source.isPresent()) {
+            var bindings = new HashMap<String, String>();
+            var declaration = source.get();
+            for (int i = 0; i < Math.min(args.size(), declaration.getTypeParameters().size()); i++)
+                bindings.put(declaration.getTypeParameter(i).getNameAsString(), args.get(i));
+            return declaration.getExtendedTypes().stream()
+                    .flatMap(parent -> repositoryBase(s, parent, declaration, bindings, depth + 1).stream()).findFirst();
+        }
+        return !args.isEmpty() && (name.endsWith("Repository") || name.equals("BaseMapper") || name.equals("MPJBaseMapper"))
+                ? Optional.of(new RepositoryType(name, args.getFirst())) : Optional.empty();
     }
 
     // ---------------------------------------------------------------- migrations

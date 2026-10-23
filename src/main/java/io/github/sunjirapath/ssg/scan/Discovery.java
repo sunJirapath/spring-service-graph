@@ -3,6 +3,7 @@ package io.github.sunjirapath.ssg.scan;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
@@ -10,6 +11,8 @@ import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.ClassExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -120,7 +123,7 @@ public final class Discovery {
         return p.subpath(Math.max(0, c - n), c).toString().replace('\\', '-').replace('/', '-');
     }
 
-    private static boolean isApp(ClassOrInterfaceDeclaration c) {
+    static boolean isApp(ClassOrInterfaceDeclaration c) {
         if (Ann.has(c, "SpringBootApplication")) return true;
         return c.getMethodsByName("main").stream().filter(m -> m.isStatic()).flatMap(m -> m.getBody().stream()).anyMatch(b ->
                 b.findAll(ObjectCreationExpr.class).stream().anyMatch(o -> o.getType().getNameAsString().startsWith("SpringApplication"))
@@ -162,7 +165,8 @@ public final class Discovery {
             for (TypeDeclaration<?> st : index.superTypes(supers.pop())) if (implemented.add(st)) supers.push(st);
         }
         var units = new LinkedHashSet<>(own);
-        units.addAll(roots);
+        units.addAll(roots.stream().filter(cu -> types(cu).stream()
+                .noneMatch(t -> Ann.has(t, "FeignClient") && implemented.contains(t))).toList());
         var queue = new ArrayDeque<>(units);
         var mine = new HashSet<>(libraries);
         mine.add(module);
@@ -189,29 +193,39 @@ public final class Discovery {
     private static List<CompilationUnit> loaded(JavaIndex index, Config config, List<CompilationUnit> own,
                                                 List<CompilationUnit> library, Set<CompilationUnit> beans, Set<Path> libraries) {
         var packages = new ArrayList<Pattern>();
+        var feignPackages = new ArrayList<Pattern>();
         var named = new HashSet<String>();
         libraries.forEach(lib -> named.addAll(autoConfigs(lib)));
         var pending = new ArrayDeque<TypeDeclaration<?>>();
-        own.forEach(cu -> pending.addAll(types(cu)));
+        own.forEach(cu -> types(cu).stream().filter(t -> t instanceof ClassOrInterfaceDeclaration c && isApp(c))
+                .forEach(pending::add));
+        var candidates = new ArrayList<>(own);
+        candidates.addAll(library);
         var roots = new HashSet<CompilationUnit>();
         while (!pending.isEmpty()) {
-            while (!pending.isEmpty()) if (!read(index, config, pending.pop(), packages, named)) return null;
-            for (CompilationUnit cu : library) {
+            while (!pending.isEmpty()) if (!read(index, config, pending.pop(), packages, feignPackages, named)) return null;
+            for (CompilationUnit cu : candidates) {
                 String pkg = cu.getPackageDeclaration().map(p -> p.getNameAsString()).orElse("");
                 boolean hit = types(cu).stream().anyMatch(t -> t.getFullyQualifiedName().filter(named::contains).isPresent())
-                        || beans.contains(cu) && packages.stream().anyMatch(p -> p.matcher(pkg).matches());
+                        || (beans.contains(cu) || own.contains(cu) && types(cu).stream().anyMatch(t -> Ann.has(t, BEANS)))
+                            && packages.stream().anyMatch(p -> p.matcher(pkg).matches())
+                        || types(cu).stream().anyMatch(t -> Ann.has(t, "FeignClient"))
+                            && feignPackages.stream().anyMatch(p -> p.matcher(pkg).matches());
                 if (hit && roots.add(cu)) pending.addAll(types(cu));
             }
         }
-        return packages.isEmpty() ? null : library.stream().filter(roots::contains).toList();
+        return packages.isEmpty() && feignPackages.isEmpty() && named.isEmpty()
+                ? null : library.stream().filter(roots::contains).toList();
     }
 
     private static List<TypeDeclaration<?>> types(CompilationUnit cu) {
-        return cu.findAll(TypeDeclaration.class).stream().<TypeDeclaration<?>>map(t -> t).toList();
+        return cu.findAll(TypeDeclaration.class).stream().filter(t -> !(t instanceof AnnotationDeclaration))
+                .<TypeDeclaration<?>>map(t -> t).toList();
     }
 
     /** Adds the packages {@code t} scans and the classes it imports; false when one cannot be read. */
-    private static boolean read(JavaIndex index, Config config, TypeDeclaration<?> t, List<Pattern> packages, Set<String> named) {
+    private static boolean read(JavaIndex index, Config config, TypeDeclaration<?> t, List<Pattern> packages,
+                                List<Pattern> feignPackages, Set<String> named) {
         String home = t.findCompilationUnit().flatMap(CompilationUnit::getPackageDeclaration).map(p -> p.getNameAsString()).orElse("");
         var queue = new ArrayDeque<AnnotationExpr>(t.getAnnotations());
         var seen = new HashSet<TypeDeclaration<?>>();
@@ -219,7 +233,25 @@ public final class Discovery {
             AnnotationExpr a = queue.pop();
             String name = a.getName().getIdentifier();
             List<String> scan = null;
-            if (name.equals("ComponentScan") || name.equals("MapperScan")) {
+            if (name.equals("EnableFeignClients")) {
+                List<Expression> clients = items(Ann.attr(a, "clients").orElse(null));
+                if (!clients.isEmpty()) {
+                    for (Expression e : clients) if (e instanceof ClassExpr c && c.getType() instanceof ClassOrInterfaceType type)
+                        index.resolveType(type, a).flatMap(TypeDeclaration::getFullyQualifiedName).ifPresent(named::add);
+                    continue; // explicit clients replace Feign's package scan
+                }
+                var scanPackages = strings(config, a, "value", "basePackages");
+                if (scanPackages == null) continue; // unknown Feign roots must not load every library client
+                scanPackages.removeIf(String::isBlank);
+                for (Expression e : items(Ann.attr(a, "basePackageClasses").orElse(null))) {
+                    if (e instanceof ClassExpr c && c.getType() instanceof ClassOrInterfaceType type)
+                        index.resolveType(type, a).flatMap(Node::findCompilationUnit)
+                                .flatMap(CompilationUnit::getPackageDeclaration).ifPresent(p -> scanPackages.add(p.getNameAsString()));
+                }
+                if (scanPackages.isEmpty()) scanPackages.add(home);
+                scanPackages.forEach(p -> feignPackages.add(glob(p)));
+                continue;
+            } else if (name.equals("ComponentScan") || name.equals("MapperScan")) {
                 if (Ann.attr(a, "basePackageClasses").isPresent()) return false;
                 scan = strings(config, a, "value", "basePackages");
             } else if (name.equals("SpringBootApplication")) {
@@ -235,7 +267,8 @@ public final class Discovery {
                 continue;
             } else {
                 index.resolveType(a.getNameAsString(), a).filter(d -> d instanceof AnnotationDeclaration && seen.add(d))
-                        .ifPresent(d -> queue.addAll(d.getAnnotations()));
+                        .ifPresent(d -> d.getAnnotations().forEach(meta ->
+                                queue.add(feignAnnotation(index, a, (AnnotationDeclaration) d, meta))));
                 continue;
             }
             if (scan == null) return false;
@@ -243,6 +276,38 @@ public final class Discovery {
             scan.forEach(p -> packages.add(glob(p)));
         }
         return true;
+    }
+
+    /** Apply a composed annotation's explicit Feign aliases without changing the indexed source AST. */
+    private static AnnotationExpr feignAnnotation(JavaIndex index, AnnotationExpr use,
+                                                   AnnotationDeclaration declaration, AnnotationExpr meta) {
+        if (!meta.getName().getIdentifier().equals("EnableFeignClients")) return meta;
+        var effective = new NormalAnnotationExpr();
+        effective.setName(meta.getName().clone());
+        if (meta instanceof NormalAnnotationExpr normal) normal.getPairs().forEach(p -> effective.getPairs().add(p.clone()));
+        else if (meta instanceof SingleMemberAnnotationExpr single) effective.addPair("value", single.getMemberValue().clone());
+        for (var member : declaration.getMembers()) {
+            if (!(member instanceof AnnotationMemberDeclaration attribute)) continue;
+            var alias = Ann.find(attribute, "AliasFor");
+            if (alias.isEmpty() || !Ann.attr(alias.get(), "annotation").map(Object::toString)
+                    .filter(x -> x.endsWith("EnableFeignClients.class")).isPresent()) continue;
+            String target = Ann.attr(alias.get(), "attribute", "value").filter(Expression::isStringLiteralExpr)
+                    .map(e -> e.asStringLiteralExpr().asString()).filter(x -> !x.isBlank()).orElse(attribute.getNameAsString());
+            var value = Ann.attr(use, attribute.getNameAsString()).or(attribute::getDefaultValue);
+            if (value.isEmpty()) continue;
+            Expression copy = value.get().clone();
+            for (ClassExpr literal : copy.findAll(ClassExpr.class)) {
+                if (literal.getType() instanceof ClassOrInterfaceType type)
+                    index.resolveType(type, use).flatMap(TypeDeclaration::getFullyQualifiedName)
+                            .ifPresent(fqn -> literal.setType(com.github.javaparser.StaticJavaParser.parseType(fqn)));
+            }
+            // EnableFeignClients.value and basePackages are the same Spring alias group.
+            effective.getPairs().removeIf(p -> p.getNameAsString().equals(target)
+                    || (target.equals("value") || target.equals("basePackages"))
+                    && (p.getNameAsString().equals("value") || p.getNameAsString().equals("basePackages")));
+            effective.addPair(target, copy);
+        }
+        return effective;
     }
 
     /** String-literal attribute values with {@code ${}} resolved; null when one is not a literal or does not resolve. */
@@ -329,7 +394,10 @@ public final class Discovery {
         var files = new ArrayList<Path>();
         for (String base : List.of("application", app)) {
             for (String suffix : List.of("", "-" + profile)) {
-                for (Path dir : dirs) for (String ext : EXTENSIONS) files.add(dir.resolve(base + suffix + "." + ext));
+                for (Path dir : dirs) for (String ext : EXTENSIONS) {
+                    Path file = dir.resolve(base + suffix + "." + ext);
+                    if (inside(root, file)) files.add(file);
+                }
             }
         }
         return Config.load(repo, files, profile);
@@ -363,15 +431,31 @@ public final class Discovery {
         int slash = rel.lastIndexOf('/');
         String last = rel.substring(slash + 1); // resolved apart: Windows rejects '*' in a path
         Path parent = slash < 0 ? root : root.resolve(rel.substring(0, slash));
-        if (!last.contains("*")) return List.of(parent.resolve(last));
+        if (!inside(root, parent)) return List.of();
+        if (!last.contains("*")) {
+            Path candidate = parent.resolve(last);
+            return inside(root, candidate) ? List.of(candidate) : List.of();
+        }
         var glob = Pattern.compile(Pattern.quote(last).replace("*", "\\E.*\\Q"));
         try (var dirs = Files.newDirectoryStream(parent, Files::isDirectory)) {
             var out = new ArrayList<Path>();
-            for (Path d : dirs) if (glob.matcher(d.getFileName().toString()).matches()) out.add(d);
+            for (Path d : dirs) if (glob.matcher(d.getFileName().toString()).matches() && inside(root, d)) out.add(d);
             out.sort(null);
             return out;
         } catch (IOException e) {
             return List.of(); // no such folder
+        }
+    }
+
+    /** Search locations and application names may only select files inside the configured checkout. */
+    private static boolean inside(Path root, Path path) {
+        Path base = root.toAbsolutePath().normalize();
+        Path candidate = path.toAbsolutePath().normalize();
+        if (!candidate.startsWith(base)) return false;
+        try {
+            return !Files.exists(candidate) || candidate.toRealPath().startsWith(base.toRealPath());
+        } catch (IOException e) {
+            return false;
         }
     }
 }

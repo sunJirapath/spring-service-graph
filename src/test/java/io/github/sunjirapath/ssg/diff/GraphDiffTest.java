@@ -9,6 +9,7 @@ import io.github.sunjirapath.ssg.model.Node;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,8 @@ class GraphDiffTest {
     void reportsRemovedEndpointStillCalledByLiveService() {
         var a = service("a"); var b = service("b"); var endpoint = endpoint("a", "GET", "/x");
         var base = graph(List.of(a, b, endpoint), List.of(edge(Edge.Kind.CALLS, b.id(), endpoint.id(), Confidence.EXACT, 1)));
-        var head = graph(List.of(a, b), List.of());
+        var head = graph(List.of(a, b), List.of(new Edge(Edge.Kind.CALLS, b.id(), a.id(), Confidence.EXACT,
+                new TreeMap<>(Map.of("method", "GET", "path", "/x")), List.of(evidence(1)))));
 
         var report = GraphDiff.report(base, head);
         assertThat(report).contains("## Breaking changes", "Removed `a GET /x` is still called by b")

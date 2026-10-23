@@ -174,7 +174,7 @@ public final class InboundHttpExtractor implements Extractor {
         String fqn = c.findCompilationUnit().flatMap(cu -> cu.getImports().stream()
                         .filter(i -> !i.isStatic() && !i.isAsterisk() && i.getName().getIdentifier().equals(name)).findFirst())
                 .map(i -> i.getNameAsString()).orElse(name);
-        return fqn.matches("(org\\.springframework|javax?|jakarta)\\..*");
+        return fqn.matches("(org\\.springframework\\.(web|boot|security|context|beans|core)|javax?|jakarta)\\..*");
     }
 
     /** The controller's own method overriding {@code m} (same name and parameter types), else {@code m}. */
