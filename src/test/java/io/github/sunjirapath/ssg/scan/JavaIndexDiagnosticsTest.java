@@ -66,6 +66,36 @@ class JavaIndexDiagnosticsTest {
     }
 
     @Test
+    void lexicalErrorsRetainTheirActualSourceLineAlongsideParseErrors() {
+        var repo = TempRepo.at(tmp.resolve("diagnostics"))
+                .java("dto/Lexical.java", """
+                        package dto;
+                        class Lexical {
+                            String value = "valid";
+
+                            String split(String input) { return input.split("\\:"); }
+                        }
+                        """)
+                .java("dto/Syntax.java", """
+                        package dto;
+                        class Syntax {
+                            void broken( }
+                        }
+                        """);
+
+        var problems = repo.index().problems();
+        assertThat(problems).anySatisfy(problem -> {
+            assertThat(problem.file().getFileName().toString()).isEqualTo("Lexical.java");
+            assertThat(problem.line()).isEqualTo(5);
+            assertThat(problem.message()).contains("Lexical error");
+        });
+        assertThat(problems).anySatisfy(problem -> {
+            assertThat(problem.file().getFileName().toString()).isEqualTo("Syntax.java");
+            assertThat(problem.message()).doesNotContain("Lexical error");
+        });
+    }
+
+    @Test
     void resourceTemplatesAreNotIndexedAsProductionJava() {
         var repo = TempRepo.at(tmp.resolve("templates")).app()
                 .file("archetypes/src/main/resources/archetype-resources/src/main/java/__package__/Init.java",

@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.Position;
 import com.github.javaparser.Range;
+import com.github.javaparser.TokenMgrException;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * All parsed Java sources of one repo, plus name lookup and constant folding.
@@ -54,6 +56,7 @@ public final class JavaIndex {
     public record Problem(Path file, int line, String message) {}
 
     private static final int MAX_DEPTH = 24;
+    private static final Pattern LEXICAL_LINE = Pattern.compile("^Lexical error at line ([1-9][0-9]*), column [0-9]+\\.");
 
     private final Repo repo;
     private final List<CompilationUnit> units = new ArrayList<>();
@@ -78,7 +81,7 @@ public final class JavaIndex {
                 var result = parser.parse(f);
                 result.getProblems().stream().filter(p -> result.getResult()
                         .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
-                        p.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElse(1),
+                        problemLine(p),
                         p.getMessage().lines().findFirst().orElse("parse error"))));
                 result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
             }
@@ -86,6 +89,20 @@ public final class JavaIndex {
             throw new UncheckedIOException(e);
         }
         return idx;
+    }
+
+    private static int problemLine(com.github.javaparser.Problem problem) {
+        return problem.getLocation().flatMap(l -> l.toRange()).map(r -> r.begin.line).orElseGet(() -> {
+            // Lexical failures have no token range; JavaParser exposes their position only in this message.
+            if (problem.getCause().orElse(null) instanceof TokenMgrException) {
+                var match = LEXICAL_LINE.matcher(problem.getMessage());
+                if (match.find()) {
+                    try { return Integer.parseInt(match.group(1)); }
+                    catch (NumberFormatException ignored) { /* retain the fallback for an invalid position */ }
+                }
+            }
+            return 1;
+        });
     }
 
     /** Recheck JavaParser's annotation-sensitive accessor comparison without changing the indexed AST. */
