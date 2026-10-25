@@ -40,7 +40,21 @@ public final class GraphDiff {
     public record Result(String markdown, List<String> breaking) {}
 
     public static Result compare(Graph base, Graph head) {
+        boolean legacy = java.util.stream.Stream.concat(base.nodes().stream(), head.nodes().stream())
+                .anyMatch(GraphDiff::legacyResource);
+        boolean qualified = java.util.stream.Stream.concat(base.nodes().stream(), head.nodes().stream())
+                .anyMatch(n -> (n instanceof Node.Topic || n instanceof Node.Table) && !legacyResource(n));
+        if (legacy && qualified) throw new IllegalArgumentException(
+                "Cannot diff legacy and backend-qualified resource IDs; rescan both base and head with the same scanner version");
         return new GraphDiff(base, head).render();
+    }
+
+    private static boolean legacyResource(Node n) {
+        return switch (n) {
+            case Node.Topic t -> t.id().equals(Node.Topic.idOf(t.name()));
+            case Node.Table t -> t.id().equals(Node.Table.idOf(t.service(), t.name()));
+            default -> false;
+        };
     }
 
     public static String report(Graph base, Graph head) {
@@ -130,7 +144,8 @@ public final class GraphDiff {
             var consumers = incoming(head, t.id(), Edge.Kind.CONSUMES).stream().map(e -> owner(headNodes, e.from()))
                     .collect(Collectors.toCollection(TreeSet::new));
             if (producedBefore && !producedNow && !consumers.isEmpty()) {
-                lines.add("Topic `" + t.name() + "` has no producer any more but is still consumed by " + String.join(", ", consumers));
+                lines.add("Topic `" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.broker() + ")")
+                        + " has no producer any more but is still consumed by " + String.join(", ", consumers));
             }
         }
         for (Finding f : newFindings.values()) {
@@ -258,8 +273,8 @@ public final class GraphDiff {
         return switch (n) {
             case Node.Service s -> "service `" + s.name() + "`";
             case Node.Endpoint e -> "`" + e.service() + " " + e.method() + " " + e.path() + "`";
-            case Node.Topic t -> "topic `" + t.name() + "`";
-            case Node.Table t -> "table `" + t.service() + "/" + t.name() + "`";
+            case Node.Topic t -> "topic `" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.broker() + ")");
+            case Node.Table t -> "table `" + t.service() + "/" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.store() + ")");
             case Node.External x -> "external `" + x.name() + "`";
         };
     }

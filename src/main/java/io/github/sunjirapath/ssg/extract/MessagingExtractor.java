@@ -51,7 +51,7 @@ public final class MessagingExtractor implements Extractor {
                 // org.apache.rocketmq.common.message.Message(topic, tags, body); Spring's Message has no such constructor
                 if (o.getType().getNameAsString().equals("Message") && o.getArguments().size() >= 2
                         && cu.getImports().stream().anyMatch(i -> i.getNameAsString().startsWith("org.apache.rocketmq"))) {
-                    facts.add(new Fact.TopicUse(true, s.eval(o.getArgument(0)), s.evidence(o), "RocketMQ Message"));
+                    facts.add(new Fact.TopicUse(true, s.eval(o.getArgument(0)), s.evidence(o), "RocketMQ Message", "rocketmq"));
                 }
             }
         }
@@ -62,12 +62,12 @@ public final class MessagingExtractor implements Extractor {
         var ev = s.evidence((Node) n);
         Ann.find(n, "RabbitListener").ifPresent(a -> {
             var queues = Ann.attr(a, "queues", "value");
-            if (queues.isPresent()) for (Value v : s.evalAll(queues.get())) facts.add(new Fact.TopicUse(false, v, ev, "RabbitListener"));
-            else facts.add(new Fact.TopicUse(false, Value.unresolved(a.toString()), ev, "RabbitListener")); // bindings/queuesToDeclare
+            if (queues.isPresent()) for (Value v : s.evalAll(queues.get())) facts.add(new Fact.TopicUse(false, v, ev, "RabbitListener", "rabbit"));
+            else facts.add(new Fact.TopicUse(false, Value.unresolved(a.toString()), ev, "RabbitListener", "rabbit")); // bindings/queuesToDeclare
         });
         Ann.find(n, "RocketMQMessageListener").ifPresent(a -> {
             Value topic = Ann.attr(a, "topic").map(s::eval).orElse(Value.unresolved(a.toString()));
-            facts.add(new Fact.TopicUse(false, topic, ev, "RocketMQMessageListener"));
+            facts.add(new Fact.TopicUse(false, topic, ev, "RocketMQMessageListener", "rocketmq"));
         });
     }
 
@@ -82,12 +82,12 @@ public final class MessagingExtractor implements Extractor {
             Value key = keyArg < 0 ? Value.unresolved(call.toString()) : s.eval(call.getArgument(keyArg));
             var queues = new LinkedHashMap<String, Value>();
             route(binds, keyArg == 1 ? s.eval(call.getArgument(0)) : null, key, queues);
-            for (Value q : queues.values()) facts.add(new Fact.TopicUse(true, q, s.evidence(call), "RabbitTemplate"));
+            for (Value q : queues.values()) facts.add(new Fact.TopicUse(true, q, s.evidence(call), "RabbitTemplate", "rabbit"));
         } else if (ROCKET_SENDS.contains(name) && args >= 2 && Receivers.isReceiver(s, scope, ROCKET, "rocketmqtemplate")) {
-            facts.add(new Fact.TopicUse(true, withoutTag(s.eval(call.getArgument(0))), s.evidence(call), "RocketMQTemplate"));
+            facts.add(new Fact.TopicUse(true, withoutTag(s.eval(call.getArgument(0))), s.evidence(call), "RocketMQTemplate", "rocketmq"));
         } else if (name.equals("subscribe") && args == 2 && Receivers.isReceiver(s, scope,
                 Set.of("DefaultMQPushConsumer", "DefaultLitePullConsumer", "DefaultMQPullConsumer"), "mqconsumer")) {
-            facts.add(new Fact.TopicUse(false, s.eval(call.getArgument(0)), s.evidence(call), "RocketMQ subscribe"));
+            facts.add(new Fact.TopicUse(false, s.eval(call.getArgument(0)), s.evidence(call), "RocketMQ subscribe", "rocketmq"));
         }
     }
 

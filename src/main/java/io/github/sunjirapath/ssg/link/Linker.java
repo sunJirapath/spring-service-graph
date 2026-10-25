@@ -71,13 +71,13 @@ public final class Linker {
     static List<ServiceFacts> singleOwners(List<ServiceFacts> all) {
         var owners = new HashMap<String, List<ServiceFacts>>();
         for (var sf : all)
-            sf.facts().stream().filter(f -> f instanceof Fact.TableUse t && t.owns()).map(f -> ((Fact.TableUse) f).table().text())
+            sf.facts().stream().filter(f -> f instanceof Fact.TableUse t && t.owns()).map(f -> ((Fact.TableUse) f).store() + ":" + ((Fact.TableUse) f).table().text())
                     .distinct().forEach(t -> owners.computeIfAbsent(t, k -> new ArrayList<>()).add(sf));
         var demote = new HashMap<String, java.util.Set<String>>(); // service -> tables it only uses
         owners.forEach((table, list) -> {
             if (list.size() < 2) return;
             var own = list.stream().filter(sf -> sf.facts().stream().anyMatch(f -> f instanceof Fact.TableUse t
-                    && t.table().text().equals(table) && inModule(sf, t.evidence()))).toList();
+                    && (t.store() + ":" + t.table().text()).equals(table) && inModule(sf, t.evidence()))).toList();
             if (own.size() != 1) return;
             for (var sf : list) if (sf != own.get(0)) demote.computeIfAbsent(sf.service(), k -> new java.util.HashSet<>()).add(table);
         });
@@ -85,7 +85,7 @@ public final class Linker {
         return all.stream().map(sf -> {
             var tables = demote.get(sf.service());
             if (tables == null) return sf;
-            var facts = sf.facts().stream().map(f -> f instanceof Fact.TableUse t && t.owns() && tables.contains(t.table().text())
+            var facts = sf.facts().stream().map(f -> f instanceof Fact.TableUse t && t.owns() && tables.contains(t.store() + ":" + t.table().text())
                     ? (Fact) new Fact.TableUse(false, t.table(), t.store(), t.evidence(), t.via()) : f).toList();
             return new ServiceFacts(sf.service(), sf.repo(), sf.path(), facts);
         }).toList();
@@ -140,8 +140,8 @@ public final class Linker {
                 case Fact.Call c -> sinkTargets.computeIfAbsent(c.evidence(), k -> new ArrayList<>()).addAll(call(sf.service(), from, c));
                 case Fact.TopicUse t -> {
                     String name = t.topic().resolved() ? t.topic().text() : "?" + t.topic().raw();
-                    String tid = Node.Topic.idOf(name);
-                    nodes.putIfAbsent(tid, new Node.Topic(tid, name));
+                    String tid = Node.Topic.idOf(t.broker(), name);
+                    nodes.putIfAbsent(tid, new Node.Topic(tid, name, t.broker()));
                     var kind = t.produce() ? Edge.Kind.PRODUCES : Edge.Kind.CONSUMES;
                     edge(kind, from, tid, t.topic(), t.evidence(), attrs("via", t.via()));
                     sinkTargets.computeIfAbsent(t.evidence(), k -> new ArrayList<>()).add(tid);
@@ -150,9 +150,8 @@ public final class Linker {
                     }
                 }
                 case Fact.TableUse t -> {
-                    String tid = Node.Table.idOf(sf.service(), t.table().text());
-                    nodes.merge(tid, new Node.Table(tid, sf.service(), t.table().text(), t.store()),
-                            (old, neu) -> t.store().equals("mongo") ? neu : old);
+                    String tid = Node.Table.idOf(sf.service(), t.table().text(), t.store());
+                    nodes.putIfAbsent(tid, new Node.Table(tid, sf.service(), t.table().text(), t.store()));
                     edge(t.owns() ? Edge.Kind.OWNS : Edge.Kind.USES, from, tid, t.table(), t.evidence(), new TreeMap<>());
                     sinkTargets.computeIfAbsent(t.evidence(), k -> new ArrayList<>()).add(tid);
                     if (!t.table().resolved()) unresolved(sf.service(), "table", t.table(), t.evidence());

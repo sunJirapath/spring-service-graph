@@ -88,27 +88,27 @@ class FleetTest {
 
     @Test
     void topicFromConstantInAnotherModuleLinksProducerToConsumer() {
-        assertThat(edges(Edge.Kind.PRODUCES, "service:account", "topic:account.created")).singleElement().satisfies(e -> {
+        assertThat(edges(Edge.Kind.PRODUCES, "service:account", "topic:kafka:account.created")).singleElement().satisfies(e -> {
             assertThat(e.confidence()).isEqualTo(Confidence.RESOLVED);
             assertThat(e.evidence().getFirst().file()).endsWith("AccountEvents.java");
             assertThat(e.evidence()).anyMatch(ev -> ev.file().endsWith("account-api/src/main/java/demo/account/api/Topics.java"));
         });
         // ${topics.account-created:account.created} resolves through its default
-        assertThat(edges(Edge.Kind.CONSUMES, "service:notification", "topic:account.created")).singleElement()
+        assertThat(edges(Edge.Kind.CONSUMES, "service:notification", "topic:kafka:account.created")).singleElement()
                 .satisfies(e -> assertThat(e.confidence()).isEqualTo(Confidence.RESOLVED));
     }
 
     @Test
     void cloudStreamBindingIsConsumed() {
-        assertThat(edges(Edge.Kind.CONSUMES, "service:notification", "topic:audit.events")).singleElement()
+        assertThat(edges(Edge.Kind.CONSUMES, "service:notification", "topic:unknown:audit.events")).singleElement()
                 .satisfies(e -> assertThat(e.attrs()).containsEntry("via", "cloud-stream:audit-in-0"));
     }
 
     @Test
     void liquibaseChangesetOwnsTableAndRepositoryWithDerivedQueryUsesIt() {
-        assertThat(edges(Edge.Kind.OWNS, "service:account", "table:account/accounts")).singleElement()
+        assertThat(edges(Edge.Kind.OWNS, "service:account", "table:sql:account/accounts")).singleElement()
                 .satisfies(e -> assertThat(e.evidence().getFirst().file()).endsWith("db.changelog-master.yaml"));
-        assertThat(edges(Edge.Kind.USES, "service:account", "table:account/accounts")).singleElement()
+        assertThat(edges(Edge.Kind.USES, "service:account", "table:sql:account/accounts")).singleElement()
                 .satisfies(e -> assertThat(e.evidence()).extracting(ev -> ev.file().replaceAll(".*/", ""))
                         .containsExactly("AccountEntity.java", "AccountRepository.java"));
     }

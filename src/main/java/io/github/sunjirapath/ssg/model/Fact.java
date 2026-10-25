@@ -22,8 +22,12 @@ public sealed interface Fact {
      */
     record Call(String client, String method, Value url, Evidence evidence) implements Fact {}
 
-    /** A Kafka topic or Cloud Stream destination this service produces to or consumes from. */
-    record TopicUse(boolean produce, Value topic, Evidence evidence, String via) implements Fact {}
+    /** A broker destination; unknown means its backend could not be established statically. */
+    record TopicUse(boolean produce, Value topic, Evidence evidence, String via, String broker) implements Fact {
+        public TopicUse(boolean produce, Value topic, Evidence evidence, String via) {
+            this(produce, topic, evidence, via, "unknown");
+        }
+    }
 
     /** A table or collection this service creates in a migration ({@code owns}) or maps ({@code uses}). */
     record TableUse(boolean owns, Value table, String store, Evidence evidence, String via) implements Fact {}

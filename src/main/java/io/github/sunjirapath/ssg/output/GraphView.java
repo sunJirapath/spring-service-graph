@@ -4,6 +4,7 @@ import io.github.sunjirapath.ssg.model.Edge;
 import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,16 @@ final class GraphView {
     final Graph graph;
     final Map<String, Node> nodes;
     private final Map<String, String> fileNames = new HashMap<>();
+    private final Map<String, List<Edge>> outgoing = new HashMap<>();
+    private final Map<String, List<Edge>> incoming = new HashMap<>();
 
     GraphView(Graph graph) {
         this.graph = graph;
         this.nodes = graph.nodes().stream().collect(Collectors.toMap(Node::id, Function.identity()));
+        for (Edge edge : graph.edges()) {
+            outgoing.computeIfAbsent(edge.from(), id -> new ArrayList<>()).add(edge);
+            incoming.computeIfAbsent(edge.to(), id -> new ArrayList<>()).add(edge);
+        }
         var used = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         // Reserve familiar names first; sorted allocation keeps collisions stable on every filesystem.
         var names = services().stream().map(Node.Service::name)
@@ -47,11 +54,11 @@ final class GraphView {
     }
 
     List<Edge> from(String id, Edge.Kind kind) {
-        return graph.edges().stream().filter(e -> e.from().equals(id) && e.kind() == kind).toList();
+        return outgoing.getOrDefault(id, List.of()).stream().filter(e -> e.kind() == kind).toList();
     }
 
     List<Edge> to(String id, Edge.Kind kind) {
-        return graph.edges().stream().filter(e -> e.to().equals(id) && e.kind() == kind).toList();
+        return incoming.getOrDefault(id, List.of()).stream().filter(e -> e.kind() == kind).toList();
     }
 
     /** The service or external system a node belongs to, for service-level views. */

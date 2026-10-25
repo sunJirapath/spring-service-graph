@@ -52,13 +52,16 @@ final class NacosSeed {
         var rows = new ArrayList<Row>();
         Matcher m = INSERT.matcher(sql);
         int pos = 0;
+        int lineCursor = 0;
+        int line = 1;
         while (m.find(pos)) {
             var cols = Arrays.stream(m.group(1).split(",")).map(c -> c.replace("`", "").strip()).toList();
             int idCol = cols.indexOf("data_id");
             int contentCol = cols.indexOf("content");
             pos = m.end();
             while (idCol >= 0 && contentCol >= 0 && (pos = skipSpace(sql, pos)) < sql.length() && sql.charAt(pos) == '(') {
-                int line = 1 + (int) sql.substring(0, pos).chars().filter(c -> c == '\n').count();
+                for (int i = lineCursor; i < pos; i++) if (sql.charAt(i) == '\n') line++;
+                lineCursor = pos;
                 var values = new ArrayList<String>();
                 pos = tuple(sql, pos + 1, values);
                 if (values.size() > Math.max(idCol, contentCol)) {

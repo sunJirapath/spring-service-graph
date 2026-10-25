@@ -66,8 +66,10 @@ public final class GatewayExtractor implements Extractor {
         Value uri = s.config().resolve(uriEntry.value()).withConfidence(Confidence.EXACT, uriEntry.evidence());
         var predicates = defs(s, route, "predicates");
         var filters = defs(s, route, "filters");
-        List<String> methods = predicates.stream().filter(d -> d.name.equals("Method")).findFirst()
-                .map(d -> d.args.stream().map(String::toUpperCase).toList()).orElse(List.of("*"));
+        List<String> methods = predicates.stream().filter(d -> d.name.equals("Method"))
+                .map(d -> d.args.stream().map(String::toUpperCase).toList())
+                .reduce((left, right) -> left.stream().filter(right::contains).toList()).orElse(List.of("*"));
+        if (methods.isEmpty()) return;
         for (Def p : predicates) {
             if (!p.name.equals("Path")) continue;
             for (String pattern : p.args) {

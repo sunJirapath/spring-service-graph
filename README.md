@@ -175,6 +175,22 @@ out/
 
 Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services).
 
+Resource IDs include their backend: `topic:kafka:orders`, `topic:rabbit:orders`, `topic:rocketmq:orders`,
+`table:sql:orders-service/orders`, and `table:mongo:orders-service/orders`. Topic nodes also carry `broker`.
+Cloud Stream resolves the binding binder, common binding default, then global default (including named
+binder types and relaxed global property spellings). StreamBridge explicit binders apply to dynamic
+destinations; configured `output-bindings` and known simple function outputs retain their binding's binder.
+Unresolved channel definitions remain conservative. Without enough configuration
+its broker is `unknown`, never assumed to be Kafka. Resources remain scoped to a backend
+family, not an individual broker cluster or database instance.
+
+Older `graph.json` files still load with their original IDs. Missing topic broker metadata becomes `unknown`;
+ssg does not guess or split legacy nodes because earlier scans may have merged several brokers or stores.
+Legacy graphs can be compared with each other, but a diff containing both legacy and backend-qualified
+resource IDs fails with a rescan instruction. Rescan **both base and head** with the same scanner version
+when upgrading. MCP accepts exact IDs; bare resource names and legacy ID aliases return all matching
+backends, so use the qualified ID when you need a single resource.
+
 Service page and diagram filenames are sanitized and get deterministic suffixes when names would collide, including on case-insensitive filesystems. The index links to the assigned filenames.
 
 A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):

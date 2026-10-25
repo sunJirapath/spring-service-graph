@@ -55,11 +55,12 @@ public final class InboundHttpExtractor implements Extractor {
                 List<Value> classPaths = classPaths(c, s);
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
+                    var methods = combinedMethods(c, mapping, s);
                     var handler = s.evidence(override(c, m).getName()); // the method line itself, below any @Override
                     for (Value cp : classPaths) {
                         for (Value mp : mapping.paths()) {
                             Value path = Mappings.joinValues(contextPath, prefix, cp, mp);
-                            for (String verb : mapping.methods()) {
+                            for (String verb : methods) {
                                 // evidence: the mapping annotation, not the first of possibly many annotations
                                 facts.add(new Fact.Endpoint(verb, path, s.evidence(mapping.annotation()), "controller", handler));
                             }
@@ -91,7 +92,7 @@ public final class InboundHttpExtractor implements Extractor {
         if (c.isInterface() || !Ann.has(c, "Path")) return;
         Value classPath = Ann.find(c, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
         for (var m : c.getMethods()) {
-            var verb = Ann.find(m, "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD");
+            var verb = Ann.find(m, "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS");
             if (verb.isEmpty()) continue; // @Path without an HTTP method is a sub-resource locator
             Value methodPath = Ann.find(m, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
             facts.add(new Fact.Endpoint(verb.get().getName().getIdentifier(),
@@ -220,6 +221,20 @@ public final class InboundHttpExtractor implements Extractor {
     private static MethodDeclaration override(ClassOrInterfaceDeclaration c, MethodDeclaration m) {
         return c.getMethodsByName(m.getNameAsString()).stream()
                 .filter(o -> Mappings.signature(o).equals(Mappings.signature(m))).findFirst().orElse(m);
+    }
+
+    /** Spring combines constrained class and method RequestMethodsRequestConditions by union. */
+    private static List<String> combinedMethods(ClassOrInterfaceDeclaration c, Mappings.Mapping method, Service s) {
+        List<String> classMethods = classMapping(c, s).map(Mappings.Mapping::methods).orElse(List.of("*"));
+        if (classMethods.contains("*")) return method.methods();
+        if (method.methods().contains("*")) return classMethods;
+        return java.util.stream.Stream.concat(classMethods.stream(), method.methods().stream()).distinct().toList();
+    }
+
+    private static Optional<Mappings.Mapping> classMapping(TypeDeclaration<?> type, Service s) {
+        Optional<Mappings.Mapping> own = Mappings.mvc(type, s);
+        if (own.isPresent()) return own;
+        return s.index().superTypes(type).stream().map(t -> classMapping(t, s)).flatMap(Optional::stream).findFirst();
     }
 
     /** Class-level paths: on the controller, else on the first super type that declares one. */

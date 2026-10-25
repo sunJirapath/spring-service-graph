@@ -16,10 +16,10 @@ class GraphQueriesTest {
     @Test
     void resolvesSupportedTargetForms() {
         assertThat(queries.resolve("account")).containsExactly("service:account");
-        assertThat(queries.resolve("account.created")).containsExactly("topic:account.created");
+        assertThat(queries.resolve("account.created")).containsExactly("topic:kafka:account.created");
         assertThat(queries.resolve("POST /api/accounts")).containsExactly("endpoint:account:POST /api/accounts");
         assertThat(queries.resolve("account POST /api/accounts")).containsExactly("endpoint:account:POST /api/accounts");
-        assertThat(queries.resolve("accounts")).containsExactly("table:account/accounts");
+        assertThat(queries.resolve("accounts")).containsExactly("table:sql:account/accounts");
         assertThatThrownBy(() -> queries.resolve("nope")).isInstanceOf(IllegalArgumentException.class);
     }
 

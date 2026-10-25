@@ -212,7 +212,7 @@ class LinkerEdgeCasesTest {
         Value topic = new Value(Value.UNKNOWN, Confidence.UNRESOLVED, "topicFor(tenant)", List.of());
         Graph graph = link(service("events", new Fact.TopicUse(true, topic, ev(1), "kafka-template")));
 
-        assertThat(graph.nodes()).contains(new Node.Topic(Node.Topic.idOf("?topicFor(tenant)"), "?topicFor(tenant)"));
+        assertThat(graph.nodes()).contains(new Node.Topic(Node.Topic.idOf("unknown", "?topicFor(tenant)"), "?topicFor(tenant)"));
     }
 
     @Test
@@ -222,18 +222,19 @@ class LinkerEdgeCasesTest {
                 table(false, "orders", "sql", ev("Order.java", 2))));
 
         assertThat(graph.nodes()).filteredOn(Node.Table.class::isInstance).hasSize(1);
-        assertThat(graph.edges()).filteredOn(e -> e.to().equals(Node.Table.idOf("orders", "orders")))
+        assertThat(graph.edges()).filteredOn(e -> e.to().equals(Node.Table.idOf("orders", "orders", "sql")))
                 .extracting(Edge::kind).containsExactlyInAnyOrder(Edge.Kind.OWNS, Edge.Kind.USES);
     }
 
     @Test
-    void mongoStoreWinsWhenSqlAndMongoFactsMerge() {
+    void sqlAndMongoWithSameNameRemainSeparate() {
         Graph graph = link(service("catalog",
                 table(true, "products", "sql", ev("V1.sql", 1)),
                 table(false, "products", "mongo", ev("Product.java", 2))));
 
-        assertThat(graph.nodes()).filteredOn(Node.Table.class::isInstance).singleElement()
-                .isEqualTo(new Node.Table(Node.Table.idOf("catalog", "products"), "catalog", "products", "mongo"));
+        assertThat(graph.nodes()).filteredOn(Node.Table.class::isInstance).containsExactlyInAnyOrder(
+                new Node.Table(Node.Table.idOf("catalog", "products", "sql"), "catalog", "products", "sql"),
+                new Node.Table(Node.Table.idOf("catalog", "products", "mongo"), "catalog", "products", "mongo"));
     }
 
     @Test
@@ -262,8 +263,8 @@ class LinkerEdgeCasesTest {
                 service("orders", endpoint("GET", "/orders", ev(9))));
 
         assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.REACHES).extracting(Edge::to)
-                .containsExactlyInAnyOrder(Node.Endpoint.idOf("orders", "GET", "/orders"), Node.Topic.idOf("events"),
-                        Node.Table.idOf("api", "accounts"), Node.External.idOf("weather.example"));
+                .containsExactlyInAnyOrder(Node.Endpoint.idOf("orders", "GET", "/orders"), Node.Topic.idOf("unknown", "events"),
+                        Node.Table.idOf("api", "accounts", "sql"), Node.External.idOf("weather.example"));
     }
 
     @Test
