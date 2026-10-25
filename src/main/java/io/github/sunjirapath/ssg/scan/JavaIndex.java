@@ -61,7 +61,7 @@ public final class JavaIndex {
     private final Repo repo;
     private final List<CompilationUnit> units = new ArrayList<>();
     private final Map<String, List<TypeDeclaration<?>>> typesByFqn = new HashMap<>(); // same FQN may live in several modules
-    private final Map<CompilationUnit, Path> files = new HashMap<>();
+    private final Map<CompilationUnit, Path> files = new IdentityHashMap<>(); // identical copies still belong to different files
     private final List<Problem> problems = new ArrayList<>();
     private final Map<VariableDeclarator, Boolean> singleValued = new IdentityHashMap<>(); // nodes compare by structure
 

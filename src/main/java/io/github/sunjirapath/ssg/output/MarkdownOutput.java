@@ -46,7 +46,7 @@ public final class MarkdownOutput {
     public static void write(Graph graph, Map<String, Path> repoRoots, Path out, String linkBase) throws IOException {
         var w = new MarkdownOutput(graph, repoRoots, out, linkBase);
         for (Node.Service s : w.g.services()) {
-            TextFile.write(w.out.resolve("services/" + GraphView.fileName(s.name()) + ".md"), w.servicePage(s));
+            TextFile.write(w.out.resolve("services/" + w.g.fileName(s.name()) + ".md"), w.servicePage(s));
         }
         TextFile.write(w.out.resolve("index.md"), w.index());
     }
@@ -151,7 +151,7 @@ public final class MarkdownOutput {
 
         md.append("## Services\n\n");
         table(md, List.of("Service", "Repo", "Module", "Exposes", "Calls", "Publishes", "Consumes", "Findings"), services, s -> Arrays.asList(
-                "[" + s.name() + "](services/" + GraphView.fileName(s.name()) + ".md)", s.repo(), code(s.path()),
+                "[" + s.name() + "](services/" + g.fileName(s.name()) + ".md)", s.repo(), code(s.path()),
                 count(s.id(), Edge.Kind.EXPOSES), count(s.id(), Edge.Kind.CALLS), count(s.id(), Edge.Kind.PRODUCES),
                 count(s.id(), Edge.Kind.CONSUMES),
                 String.valueOf(g.graph.findings().stream().filter(f -> f.service().equals(s.name())).count())));

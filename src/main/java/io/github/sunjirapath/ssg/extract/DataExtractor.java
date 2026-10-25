@@ -61,7 +61,7 @@ public final class DataExtractor implements Extractor {
 
     private static final Map<Path, List<Ddl>> ROOT_DDL = new ConcurrentHashMap<>(); // parsed once per repo, shared by all services
 
-    /** CREATE TABLEs in .sql files outside any src/ (yudao's sql/, mall.sql): owned by services that use the table. */
+    /** Root .sql files outside src/ and test fixtures: owned by services that use the table. */
     private static void rootDdl(Service s, List<Fact> facts) {
         var used = new HashSet<String>();
         var owned = new HashSet<String>();
@@ -80,6 +80,7 @@ public final class DataExtractor implements Extractor {
             for (Path f : s.repo().files(s.repo().root())) {
                 if (!f.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".sql")) continue;
                 if (("/" + s.repo().relative(f)).contains("/src/")) continue; // module resources are read by migrations()
+                if (("/" + s.repo().relative(f)).matches("(?i).*/tests?/.*")) continue;
                 try {
                     String code = blankComments(Files.readString(f));
                     Matcher m = CREATE_TABLE.matcher(code);
@@ -204,7 +205,7 @@ public final class DataExtractor implements Extractor {
      * sources. A library mapper XML counts only when its namespace is a mapper interface among the service's units.
      */
     private static void migrations(Service s, List<Fact> facts) {
-        Set<String> types = null; // FQNs declared in the service's units, for library mapper XML
+        Map<String, TypeDeclaration<?>> types = null; // FQNs declared in the service's units, for mapper XML
         for (Path module : s.modules()) {
             for (Path dir : List.of(module.resolve("src/main/resources"), module.resolve("src/main/java"))) {
                 boolean javaDir = dir.endsWith("java");
@@ -216,11 +217,12 @@ public final class DataExtractor implements Extractor {
                             if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
                             else if (name.endsWith(".xml")) {
                                 String text = Files.readString(f);
-                                if (!module.equals(s.moduleRoot()) && text.contains("<mapper")) {
+                                if (text.contains("<mapper")) {
+                                    text = XML_COMMENT.matcher(text).replaceAll(m -> m.group().replaceAll("[^\\n]", " "));
                                     if (types == null) types = declaredTypes(s);
-                                    if (!types.contains(namespace(text))) continue; // a shared mapper this service never uses
+                                    if (!module.equals(s.moduleRoot()) && !types.containsKey(namespace(text))) continue; // a shared mapper this service never uses
                                 }
-                                xml(s, f, text, facts);
+                                xml(s, f, text, facts, types == null ? Map.of() : types);
                             } else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
                         } catch (IOException | RuntimeException e) {
                             System.err.println("warn: cannot read " + f + ": " + e.getMessage());
@@ -255,24 +257,26 @@ public final class DataExtractor implements Extractor {
         return m.appendTail(sb).toString();
     }
 
-    private static void xml(Service s, Path f, String text, List<Fact> facts) {
-        if (text.contains("<mapper")) mapper(s, f, text, facts);
+    private static void xml(Service s, Path f, String text, List<Fact> facts, Map<String, TypeDeclaration<?>> types) {
+        if (text.contains("<mapper")) mapper(s, f, text, facts, types);
         if (!text.contains("databaseChangeLog")) return;
         Matcher m = XML_CREATE_TABLE.matcher(text);
         while (m.find()) facts.add(own(s, f, text, m.start(), m.group(1), "liquibase"));
     }
 
     private static final Pattern NAMESPACE = Pattern.compile("<mapper\\b[^>]*\\bnamespace\\s*=\\s*[\"']([^\"']+)");
+    private static final Pattern XML_COMMENT = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
+    private static final Pattern RESULT_MAP = Pattern.compile("<resultMap\\b[^>]*\\btype\\s*=\\s*[\"']([^\"']+)[\"']");
 
     private static String namespace(String mapperXml) {
         Matcher m = NAMESPACE.matcher(mapperXml);
         return m.find() ? m.group(1).trim() : "";
     }
 
-    private static Set<String> declaredTypes(Service s) {
-        var out = new HashSet<String>();
+    private static Map<String, TypeDeclaration<?>> declaredTypes(Service s) {
+        var out = new HashMap<String, TypeDeclaration<?>>();
         for (CompilationUnit cu : s.units())
-            for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) t.getFullyQualifiedName().ifPresent(out::add);
+            for (TypeDeclaration<?> t : cu.findAll(TypeDeclaration.class)) t.getFullyQualifiedName().ifPresent(name -> out.putIfAbsent(name, t));
         return out;
     }
 
@@ -285,9 +289,22 @@ public final class DataExtractor implements Extractor {
      * MyBatis mapper XML: tables used by each statement, with {@code <include>} fragments of the same mapper folded in.
      * shortcut: fragments of other mappers ({@code other.ns.id}) are not folded in, upgrade when fleets share SQL fragments across mappers.
      */
-    private static void mapper(Service s, Path f, String text, List<Fact> facts) {
+    private static void mapper(Service s, Path f, String text, List<Fact> facts, Map<String, TypeDeclaration<?>> types) {
         var fragments = new HashMap<String, String>();
         String ns = namespace(text);
+        if (types.get(ns) instanceof ClassOrInterfaceDeclaration mapper && mapper.isInterface()) {
+            var modules = new HashSet<>(s.modules());
+            Matcher mapped = RESULT_MAP.matcher(text);
+            while (mapped.find()) {
+                String name = mapped.group(1).trim();
+                if (!name.contains(".")) continue; // shortcut: aliases need configured lookup when XML aliases are required
+                s.index().resolveType(name, mapper).map(t -> s.index().preferring(t, modules))
+                        .filter(t -> t.getFullyQualifiedName().filter(name::equals).isPresent())
+                        .filter(t -> modules.contains(s.index().moduleOf(s.index().fileOf(t.findCompilationUnit().orElseThrow()))))
+                        .ifPresent(t -> table(s, t).ifPresent(table -> facts.add(new Fact.TableUse(false,
+                                table.name, table.store, s.evidence(t), "@" + table.via))));
+            }
+        }
         Matcher fm = SQL_FRAGMENT.matcher(text);
         while (fm.find()) {
             fragments.put(fm.group(1), fm.group(2));

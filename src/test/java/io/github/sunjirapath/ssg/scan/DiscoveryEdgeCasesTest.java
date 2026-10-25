@@ -424,7 +424,8 @@ class DiscoveryEdgeCasesTest {
         // Names directly, Helper through Names; nobody uses Unused
         assertThat(service.units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
                 .containsExactlyInAnyOrder("App.java", "Names.java", "Helper.java");
-        assertThat(repo.service("other").units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
+        var other = repo.service("other");
+        assertThat(other.units()).extracting(cu -> other.index().fileOf(cu).getFileName().toString())
                 .containsExactly("App.java");
         assertThat(service.eval(path.getInitializer().orElseThrow())).satisfies(value -> {
             assertThat(value.text()).isEqualTo("/from-library");
@@ -469,7 +470,7 @@ class DiscoveryEdgeCasesTest {
     }
 
     @Test
-    void singleApplicationRepositoryAttributesSourcesFromAllModules() {
+    void singleApplicationWithoutBuildMetadataFallsBackToAllSources() {
         var repo = repo("single-app-multi-module")
                 .file("service/src/main/java/app/App.java", "package app; @SpringBootApplication class App {}")
                 .file("library/src/main/java/common/Helper.java", "package common; class Helper {}")
@@ -479,6 +480,19 @@ class DiscoveryEdgeCasesTest {
 
         assertThat(service.units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
                 .containsExactlyInAnyOrder("App.java", "Helper.java", "Legacy.java");
+    }
+
+    @Test
+    void singleModuleApplicationWithBuildMetadataKeepsItsOwnSources() {
+        for (String descriptor : java.util.List.of("pom.xml", "build.gradle", "build.gradle.kts")) {
+            var repo = repo("single-module-" + descriptor).app()
+                    .file(descriptor, descriptor.equals("pom.xml") ? "<project><artifactId>app</artifactId></project>" : "")
+                    .java("other/Helper.java", "package other; class Helper {}");
+            Service service = repo.service();
+
+            assertThat(service.units()).extracting(cu -> service.index().fileOf(cu).getFileName().toString())
+                    .containsExactlyInAnyOrder("App.java", "Helper.java");
+        }
     }
 
     @Test

@@ -44,6 +44,8 @@ final class Modules {
     private static final Pattern VERSION = Pattern.compile("<version>\\s*([^<\\s]+)\\s*</version>");
     private static final Pattern TEST_SCOPE = Pattern.compile("<scope>\\s*test\\s*</scope>");
     private static final Pattern CODE_COMMENT = Pattern.compile("//[^\\n]*|/\\*.*?\\*/", Pattern.DOTALL);
+    private static final Pattern GRADLE_APPLY = Pattern.compile(
+            "\\bapply\\s*(?:\\(\\s*)?from\\s*[:=]\\s*([\"'])([^\"'\\r\\n]+)\\1");
     private static final Pattern GRADLE_PROJECT = Pattern.compile("(\\w+)\\s*\\(?\\s*project\\s*\\(\\s*(?:path\\s*[:=]\\s*)?[\"'](:[^\"']*)[\"']");
     private static final Pattern GRADLE_EXCLUDES = Pattern.compile("\\s*\\)\\s*\\)?\\s*\\{([^{}]*)}");
     private static final Pattern GRADLE_EXCLUDE = Pattern.compile("exclude\\b[^\\n}]*?module\\s*[:=]\\s*[\"']([^\"']+)[\"']");
@@ -63,6 +65,7 @@ final class Modules {
     private final Map<Path, Set<Path>> direct = new HashMap<>();
     private final Map<Path, Map<Path, Set<Path>>> excluded = new HashMap<>(); // declaring module -> dependency -> dropped below it
     private final Map<Path, Path> parent = new HashMap<>();
+    private boolean hasBuildMetadata;
 
     private Modules() {}
 
@@ -93,6 +96,7 @@ final class Modules {
         } catch (IOException e) {
             System.err.println("warn: cannot list " + repo.root() + ": " + e.getMessage());
         }
+        m.hasBuildMetadata = !m.poms.isEmpty() || !builds.isEmpty() || !settings.isEmpty();
         m.maven();
         builds.forEach((dir, build) -> m.gradle(repo, dir, build, settings, builds.keySet()));
         return m;
@@ -218,7 +222,8 @@ final class Modules {
             }
         }
         Map<String, Path> remaps = settings.getOrDefault(root, Map.of());
-        Matcher m = GRADLE_PROJECT.matcher(build);
+        String scripts = gradleScripts(repo, dir, root, build);
+        Matcher m = GRADLE_PROJECT.matcher(scripts);
         while (m.find()) {
             if (m.group(1).startsWith("test")) continue;
             Path dep = root;
@@ -231,7 +236,7 @@ final class Modules {
             dep = dep.normalize();
             if (dep.equals(dir)) continue;
             direct.computeIfAbsent(dir, k -> new LinkedHashSet<>()).add(dep);
-            Matcher block = GRADLE_EXCLUDES.matcher(build).region(m.end(), build.length());
+            Matcher block = GRADLE_EXCLUDES.matcher(scripts).region(m.end(), scripts.length());
             if (!block.lookingAt()) continue;
             var dropped = new HashSet<Path>();
             for (Matcher ex = GRADLE_EXCLUDE.matcher(block.group(1)); ex.find(); ) {
@@ -240,6 +245,39 @@ final class Modules {
             }
             if (!dropped.isEmpty()) excluded.computeIfAbsent(dir, k -> new HashMap<>()).put(dep, dropped);
         }
+    }
+
+    /** Literal applied scripts use the target project's directory, even when another script applies them. */
+    private static String gradleScripts(Repo repo, Path project, Path root, String build) {
+        var text = new StringBuilder(build);
+        var pending = new ArrayDeque<String>();
+        pending.add(build);
+        var seen = new HashSet<Path>();
+        while (!pending.isEmpty()) {
+            Matcher apply = GRADLE_APPLY.matcher(pending.pop());
+            while (apply.find()) {
+                String location = apply.group(2).replace("${rootDir}", root.toString()).replace("$rootDir", root.toString())
+                        .replace("${projectDir}", project.toString()).replace("$projectDir", project.toString());
+                if (location.contains("$") || location.contains("://")) continue;
+                try {
+                    Path file = project.resolve(location).normalize();
+                    if (!file.startsWith(repo.root()) || !Files.isRegularFile(file)) continue;
+                    Path canonical = file.toRealPath();
+                    if (!canonical.startsWith(repo.root().toRealPath()) || !seen.add(canonical)) continue;
+                    String script = CODE_COMMENT.matcher(Files.readString(file)).replaceAll(" ");
+                    text.append('\n').append(script);
+                    pending.add(script);
+                } catch (IOException | RuntimeException e) {
+                    System.err.println("warn: cannot read applied Gradle script in " + project + ": " + e.getMessage());
+                }
+            }
+        }
+        return text.toString();
+    }
+
+    /** Whether any Maven or Gradle build/settings descriptor was read from this repo. */
+    boolean hasBuildMetadata() {
+        return hasBuildMetadata;
     }
 
     /** The modules {@code module} declares itself or through its parent poms. */

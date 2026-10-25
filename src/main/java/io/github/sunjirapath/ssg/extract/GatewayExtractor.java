@@ -115,9 +115,13 @@ public final class GatewayExtractor implements Extractor {
         for (Def f : filters) {
             switch (f.name) {
                 case "StripPrefix" -> {
-                    int n = f.args.isEmpty() ? 1 : Integer.parseInt(f.args.getFirst());
-                    var segs = Arrays.stream(path.split("/")).filter(x -> !x.isEmpty()).skip(n).toList();
-                    path = "/" + String.join("/", segs);
+                    try {
+                        int n = f.args.isEmpty() ? 1 : Integer.parseInt(f.args.getFirst());
+                        var segs = Arrays.stream(path.split("/")).filter(x -> !x.isEmpty()).skip(n).toList();
+                        path = "/" + String.join("/", segs);
+                    } catch (IllegalArgumentException e) { // unresolved, invalid or negative count
+                        return Value.unresolved("StripPrefix=" + String.join(", ", f.args));
+                    }
                 }
                 case "PrefixPath" -> path = Mappings.join(f.args.isEmpty() ? "" : f.args.getFirst(), path);
                 case "SetPath" -> path = f.args.isEmpty() ? path : f.args.getFirst();
