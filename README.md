@@ -216,6 +216,8 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 - In a repo with Maven or Gradle build metadata, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively, with Gradle `projectDir` remaps, `${}` and managed versions, profiles active by default and exclusions below the dependency that declares them. Literal local Gradle `apply from` scripts are followed. Only library beans under the app's component-scan packages, or registered as auto-configurations or through `@Import`, count; inherited configuration and literal programmatic Boot sources are followed too. JPA repositories and entities follow their registration packages, including Boot defaults; profiles switched on any other way are not read. A repo with one app and no build metadata falls back to attributing all sources to that app.
 - Spring XML: literal local `@ImportResource`, bean classes and imports are followed. XML profiles, custom namespaces and factory execution are not evaluated; DTD and external resources are rejected.
 - Profile expressions such as `!dev` or `a & b` are not evaluated, only plain profile lists.
+- Gateway configuration Method predicates are intersected. Repeated Method predicates in the Java DSL are still collected together and can overstate accepted methods when they conflict.
+- Cloud Stream inference covers source-visible bindings and functions. Conditional/custom/external function registrations and insufficient expression type information can leave the broker unknown.
 - Config repo: only the repo root is read, not per-app subfolders or custom search locations.
 - A non-final field or local variable that is reassigned later still folds to its initializer.
 - OpenAPI specs: `${openapi.<name>.base-path}` overrides are not applied; the spec's server path is used.
@@ -228,7 +230,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 
 ## Testing and benchmark
 
-There are 826 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 92%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
+The latest verification at `ff12939` passed **893 tests**, the full build and installed distributions. Suites include extractor edge cases, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. See [testing and validation](docs/testing.md) for evidence, remaining gaps and untested behavior. Coverage was not remeasured for that build; run `./gradlew test jacocoTestReport` for a coverage report.
 
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 

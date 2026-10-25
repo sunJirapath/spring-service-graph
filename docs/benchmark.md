@@ -1,5 +1,11 @@
 # Benchmark: public fleets
 
+This document records historical field runs; its counts and timings are not a
+fresh benchmark of `ff12939` or current `master`. PR #5's final review fixes did
+not rerun these fleets or profile peak heap. See [testing and validation](testing.md)
+for the latest verification scope and remaining gaps, and [the audit summary](audits/README.md)
+for the separately pinned 200-repository campaign.
+
 Run on 2026-10-18 with `ssg` 0.1.0-SNAPSHOT. Recreate the clones with `sh scripts/bench-clone.sh`;
 they land in the git-ignored `bench/` folder at pinned commits.
 

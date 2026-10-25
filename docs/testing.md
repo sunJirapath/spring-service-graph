@@ -1,4 +1,52 @@
-# Test campaign (2026-10-19)
+# Testing and validation
+
+## Latest verification (2026-10-25)
+
+[PR #5](https://github.com/sunJirapath/spring-service-graph/pull/5) was verified at
+[`ff12939`](https://github.com/sunJirapath/spring-service-graph/commit/ff12939653aba55963a6e3840161f115654059bd)
+and merged into `master` as `ef2947c`. Local Java 21 verification completed with
+**893 tests, zero failures, errors or skips**, plus successful build and installed
+distributions:
+
+```powershell
+.\gradlew.bat test build installDist --rerun-tasks --offline --console=plain --max-workers=4
+```
+
+Both `build` and `impact-action` passed in the
+[PR CI run](https://github.com/sunJirapath/spring-service-graph/actions/runs/40177269334).
+These are recorded results for that source commit; this documentation update did
+not rerun the suite. Coverage percentages below are historical, not measurements
+of the 893-test build.
+
+| Area | Verified behavior and regression coverage |
+|---|---|
+| Configuration and diagnostics | List replacement, empty roots, indexed scalar fallback, profile/embedded layers, relaxed aliases, properties-over-YAML precedence, YAML merges and credential-safe malformed-input diagnostics (`ConfigLayeringRegressionTest`, `ConfigPrecedenceRegressionTest`, `ConfigTest`). |
+| Cloud Stream | Binder precedence, typed StreamBridge overloads and local MIME factories, precreated versus dynamic outputs, aliases and conservative unknown broker attribution (`StreamBinderRegressionTest`). |
+| HTTP | MVC method-condition union, interface/superclass mapping precedence, concrete overrides, explicit JAX-RS OPTIONS and intersection of Gateway configuration Method predicates (`ConfirmedHttpMappingRegressionTest`). |
+| Constants and SQL evidence | Numeric literal normalization and unresolved unsupported arithmetic; Nacos SQL line attribution (`NumericFoldingRegressionTest`, `NacosSeedLineNumberTest`, `NacosSeedTest`). |
+| Resource identity and consumers | Backend-qualified IDs, legacy JSON, mixed-format diff rejection, MCP aliases and distinct colliding topic labels (`ResourceIdentityTest`, `OutputCoverageTest`). Rescan both diff inputs with the same scanner version when upgrading. |
+| Graph indexes | Adjacency lookup preserves input edge order (`GraphViewIndexTest`); output suites cover Markdown and diagrams. |
+
+Framework probes exercised Spring Framework **7.0.10** MVC mappings and Spring Boot
+**4.1.2** YAML loading, Binder and placeholder behavior on Java 21. They do not
+establish compatibility with every Spring or Cloud Stream version.
+
+## Remaining gaps and untested behavior
+
+| Status | Scope and consequence |
+|---|---|
+| Not tested | Deployed application startup, live Kafka/RabbitMQ or databases, service discovery and live traffic. Unit and source-scan results do not establish runtime integration correctness. |
+| Not tested | A multi-version Java/Spring/Cloud Stream runtime matrix or external CLI/MCP client implementations. JSON/diff/MCP regression coverage is local to this project. |
+| Not rerun at `ff12939` | The complete 200-repository corpus. Its results remain pinned to the scanner in [the audit summary](audits/README.md). Four pinned-input repeat scans recorded at `cd43ff3` predate the final review fixes. |
+| Not measured at `ff12939` | Fresh performance comparisons or peak heap. Earlier Nacos/Markdown synthetic measurements are recorded in PR #5 at `cd43ff3`; GraphView indexes retain O(E) edge references. |
+| Known extraction limit | Repeated Gateway Java DSL Method predicates are collected together; only configuration predicates have the intersection fix. Conflicting DSL predicates can overstate accepted methods. |
+| Known extraction limit | Conditional/custom/external function registrations and expressions without sufficient source type information can leave StreamBridge binder selection unknown. |
+
+See [Known limits](../README.md#known-limits) for other supported-analysis boundaries.
+The [benchmark report](benchmark.md) retains historical field observations; green
+regressions do not imply whole-corpus precision/recall or production readiness.
+
+## Historical test campaign (2026-10-19)
 
 Codex (`gpt-5.6-sol`, high or medium effort) wrote the tests, split into seven workstreams that each owned their own files. Claude designed the case lists, reviewed every test and triaged every failure into one of three outcomes:
 - a code bug, fixed in `src/main`
@@ -7,7 +55,7 @@ Codex (`gpt-5.6-sol`, high or medium effort) wrote the tests, split into seven w
 
 Run everything with `./gradlew test`. Add `jacocoTestReport` for coverage; the report lands in `build/reports/jacoco/test/html`.
 
-| | Before | After | Now (after field tests) |
+| | Before | After | After the historical field tests |
 |---|---|---|---|
 | Tests | 70 | 547 | 684 |
 | Line coverage | 87.3% | 98.3% | 98.2% |
@@ -66,7 +114,7 @@ All of them build their fake repos with `TempRepo`, a shared helper.
 - **Evidence lines** pointed at the start of the declaration, i.e. its first annotation, for inbound and outbound alike. This was revised after the first field test: they now point at the mapping annotation itself, and endpoints also cite their handler method.
 - **Same-line methods:** two methods on one source line cannot be told apart by reach, because evidence has no column. This is documented as a shortcut in `ReachAnalysis`. It is not worth adding columns to every evidence entry.
 - **Untyped receivers:** an `Object`-typed receiver calling `.delete().uri(..)` is not an HTTP call.
-- **Class-level `@RequestMapping`** is resolved on the controller class across all of its interfaces, matching Spring. So `/api` from one interface applies to handlers declared in another.
+- **Class-level `@RequestMapping`** is resolved on the controller hierarchy, so `/api` from one interface can apply to handlers declared in another. PR #5 regression coverage refines conflicting mappings: use the complete first applicable type mapping, with interfaces before the superclass, rather than merging independent hierarchy mappings.
 
 ## Process note
 

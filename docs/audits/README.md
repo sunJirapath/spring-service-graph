@@ -1,5 +1,23 @@
 # Public repository audit summary
 
+## Latest follow-up (2026-10-25)
+
+[PR #5](https://github.com/sunJirapath/spring-service-graph/pull/5) is merged into
+`master` as `ef2947c`. Verification at its source commit `ff12939` passed 893 tests,
+the build, installed distributions and both PR CI checks. It covers configuration
+layering and safe diagnostics, backend resource identity and compatibility, HTTP
+mapping semantics, StreamBridge binder selection, numeric folding, Nacos line
+attribution and GraphView ordering/output regressions.
+
+The **200-repository campaign below was not rerun at `ff12939`**. Four pinned-input
+repeat scans and synthetic Nacos/Markdown measurements recorded at `cd43ff3` also
+predate the final review fixes. Keep those results attached to their original
+scanner builds. [Testing and validation](../testing.md) records the current gaps,
+including live integrations, the version matrix, conflicting Gateway Java DSL
+Method predicates and dynamic function registration.
+
+## Historical field campaign (2026-10-23)
+
 On **2026-10-23**, the final `spring-service-graph` scanner was tested against
 **200 pinned public repositories**: **195 validation passes, five known unsupported
 inputs, zero unexpected failures**. All **16 confirmed scanner defects** were fixed
@@ -10,7 +28,7 @@ started or tested against live services.
 
 ## Coverage and verification
 
-| Check | Final audited build |
+| Check | Final audited build (2026-10-23) |
 |---|---:|
 | Unique repository/commit pairs | 200 |
 | Qualified Spring Boot 4+ inputs | 170: 85 Maven, 85 Gradle |
