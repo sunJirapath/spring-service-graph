@@ -9,3 +9,9 @@ Public audit reports and their explicitly selected evidence are separate artifac
 
 Keep task temporary files under this workspace's `build/` directory. Do not change global
 TEMP/TMP or delete pre-existing benchmark checkouts when cleaning up task-created clones.
+
+<!-- initium:start -->
+## Initium harness
+
+Start with `python3 tools/harness.py context --query "<task>" --scope tiny|bounded|system` and load only the MCP servers its Budget footer lists. Finish by updating affected `brain/` notes, then `harness.py complete` (write `not run` for anything unrun) and `harness.py check`. Run `harness.py preflight` before any push. On Windows use `python`.
+<!-- initium:end -->
