@@ -30,7 +30,7 @@ public final class DiagramOutput {
         TextFile.write(out.resolve("diagrams/fleet.puml"), fleet(g, arrows));
         for (Node.Service s : g.services()) {
             var mine = arrows.stream().filter(a -> a.from.equals(s.id()) || a.to.equals(s.id())).toList();
-            TextFile.write(out.resolve("diagrams/" + GraphView.fileName(s.name()) + ".mmd"), mermaid(g, s, mine));
+            TextFile.write(out.resolve("diagrams/" + g.fileName(s.name()) + ".mmd"), mermaid(g, s, mine));
         }
     }
 

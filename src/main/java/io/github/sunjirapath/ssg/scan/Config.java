@@ -6,6 +6,7 @@ import io.github.sunjirapath.ssg.model.Value;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.MappingNode;
+import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.SequenceNode;
@@ -17,10 +18,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -52,7 +56,7 @@ public final class Config {
         if (!Files.isRegularFile(file)) return;
         try {
             String text = readText(file);
-            if (file.toString().endsWith(".properties")) addProperties(repo, file, text);
+            if (file.toString().endsWith(".properties")) addProperties(repo, file, text, profile);
             else addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
             // A malformed config file must not stop the scan; its keys are simply absent.
@@ -64,7 +68,7 @@ public final class Config {
     void addEmbedded(Repo repo, Path file, int line, boolean properties, String text, String profile) {
         var inner = new Config();
         try {
-            if (properties) inner.addProperties(repo, file, text);
+            if (properties) inner.addProperties(repo, file, text, profile);
             else inner.addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
             System.err.println("warn: cannot read config embedded in " + file + ":" + line + ": " + e.getMessage());
@@ -167,21 +171,42 @@ public final class Config {
 
     // --- .properties: parsed line by line so every key keeps its line number
 
-    private void addProperties(Repo repo, Path file, String text) throws IOException {
+    private void addProperties(Repo repo, Path file, String text, String profile) throws IOException {
         String[] lines = text.split("\\R", -1);
+        var doc = new LinkedHashMap<String, Entry>();
+        int previousComment = 0;
         for (int i = 0; i < lines.length; i++) {
+            if (propertiesSeparator(lines, i, previousComment)) {
+                addDocument(doc, profile);
+                doc.clear();
+                previousComment = 0;
+                continue;
+            }
+            String t = lines[i].strip();
+            if (t.isEmpty() || t.startsWith("#") || t.startsWith("!")) {
+                previousComment = t.isEmpty() ? 0 : t.charAt(0);
+                continue;
+            }
+            previousComment = 0;
             int first = i;
             var logical = new StringBuilder(lines[i]);
             while (endsWithContinuation(logical) && i + 1 < lines.length) {
                 logical.setLength(logical.length() - 1);
                 logical.append(lines[++i].stripLeading());
             }
-            String t = logical.toString().strip();
-            if (t.isEmpty() || t.startsWith("#") || t.startsWith("!")) continue;
             var p = new Properties();
             p.load(new StringReader(logical.toString())); // reuse the JDK's escaping rules
-            for (String k : p.stringPropertyNames()) put(k, p.getProperty(k), repo.evidence(file, first + 1));
+            for (String k : p.stringPropertyNames()) doc.put(k, new Entry(p.getProperty(k), repo.evidence(file, first + 1)));
         }
+        addDocument(doc, profile);
+    }
+
+    private static boolean propertiesSeparator(String[] lines, int i, int previousComment) {
+        String line = lines[i].stripTrailing();
+        if (!line.equals("#---") && !line.equals("!---")) return false;
+        String prefix = line.substring(0, 1);
+        return line.charAt(0) != previousComment
+                && (i + 1 == lines.length || !lines[i + 1].stripLeading().startsWith(prefix));
     }
 
     private static boolean endsWithContinuation(CharSequence s) {
@@ -197,10 +222,13 @@ public final class Config {
         for (var doc : yaml.composeAll(new StringReader(unfiltered(repo, file, text)))) {
             if (doc == null) continue; // empty document between --- separators
             var flat = new LinkedHashMap<String, Entry>();
-            flatten(repo, file, "", doc, flat);
-            if (!activeFor(flat, profile)) continue;
-            flat.forEach((k, v) -> put(k, v.value(), v.evidence()));
+            flatten(repo, file, "", doc, flat, Collections.newSetFromMap(new IdentityHashMap<>()));
+            addDocument(flat, profile);
         }
+    }
+
+    private void addDocument(Map<String, Entry> doc, String profile) {
+        if (activeFor(doc, profile)) doc.forEach((k, v) -> put(k, v.value(), v.evidence()));
     }
 
     private static final Pattern MAVEN_TOKEN = Pattern.compile("@([A-Za-z][\\w.-]*)@");
@@ -284,32 +312,37 @@ public final class Config {
         }
     }
 
-    private static void flatten(Repo repo, Path file, String prefix, org.yaml.snakeyaml.nodes.Node node,
-                                Map<String, Entry> out) {
+    private static void flatten(Repo repo, Path file, String prefix, Node node,
+                                Map<String, Entry> out, Set<Node> ancestors) {
         int line = node.getStartMark().getLine() + 1;
-        switch (node) {
-            case MappingNode m -> {
-                // merge keys (<<: *defaults) first, so keys written explicitly in this mapping override them
-                for (NodeTuple t : m.getValue()) {
-                    if (t.getKeyNode() instanceof ScalarNode k && k.getValue().equals("<<")) {
-                        var merged = t.getValueNode() instanceof SequenceNode s ? s.getValue() : List.of(t.getValueNode());
-                        merged.forEach(n -> flatten(repo, file, prefix, n, out));
+        if (!ancestors.add(node)) throw new IllegalArgumentException("recursive YAML alias at line " + line);
+        try {
+            switch (node) {
+                case MappingNode m -> {
+                    // merge keys (<<: *defaults) first, so keys written explicitly in this mapping override them
+                    for (NodeTuple t : m.getValue()) {
+                        if (t.getKeyNode() instanceof ScalarNode k && k.getValue().equals("<<")) {
+                            var merged = t.getValueNode() instanceof SequenceNode s ? s.getValue() : List.of(t.getValueNode());
+                            merged.forEach(n -> flatten(repo, file, prefix, n, out, ancestors));
+                        }
+                    }
+                    for (NodeTuple t : m.getValue()) {
+                        if (!(t.getKeyNode() instanceof ScalarNode k) || k.getValue().equals("<<")) continue;
+                        flatten(repo, file, prefix.isEmpty() ? k.getValue() : prefix + "." + k.getValue(),
+                                t.getValueNode(), out, ancestors);
                     }
                 }
-                for (NodeTuple t : m.getValue()) {
-                    if (!(t.getKeyNode() instanceof ScalarNode k) || k.getValue().equals("<<")) continue;
-                    flatten(repo, file, prefix.isEmpty() ? k.getValue() : prefix + "." + k.getValue(),
-                            t.getValueNode(), out);
+                case SequenceNode s -> {
+                    List<Node> items = s.getValue();
+                    for (int i = 0; i < items.size(); i++) flatten(repo, file, prefix + "[" + i + "]", items.get(i), out, ancestors);
                 }
+                case ScalarNode sc -> {
+                    if (!prefix.isEmpty()) out.put(prefix, new Entry(sc.getValue(), repo.evidence(file, line)));
+                }
+                default -> { }
             }
-            case SequenceNode s -> {
-                List<org.yaml.snakeyaml.nodes.Node> items = s.getValue();
-                for (int i = 0; i < items.size(); i++) flatten(repo, file, prefix + "[" + i + "]", items.get(i), out);
-            }
-            case ScalarNode sc -> {
-                if (!prefix.isEmpty()) out.put(prefix, new Entry(sc.getValue(), repo.evidence(file, line)));
-            }
-            default -> { }
+        } finally {
+            ancestors.remove(node);
         }
     }
 

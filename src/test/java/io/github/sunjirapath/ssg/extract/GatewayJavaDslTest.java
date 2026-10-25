@@ -1,5 +1,6 @@
 package io.github.sunjirapath.ssg.extract;
 
+import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.scan.Discovery;
 import io.github.sunjirapath.ssg.scan.JavaIndex;
@@ -7,6 +8,8 @@ import io.github.sunjirapath.ssg.scan.Repo;
 import io.github.sunjirapath.ssg.scan.Service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,6 +43,31 @@ class GatewayJavaDslTest {
                 }""");
 
         assertThat(new OutboundHttpExtractor().extract(service)).noneMatch(Fact.Call.class::isInstance);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"count", "-1"})
+    void invalidStripPrefixKeepsJavaRouteAsUnresolved(String count, @TempDir Path repo) throws IOException {
+        var service = service(repo, """
+                package x;
+                @Configuration class Routes {
+                    @Bean RouteLocator routes(RouteLocatorBuilder b, int count) {
+                        return b.routes().route(r -> r.path("/api/orders/**")
+                            .filters(f -> f.stripPrefix(%s)).uri("lb://orders")).build();
+                    }
+                }""".formatted(count));
+
+        var facts = new GatewayExtractor().extract(service);
+
+        assertThat(facts).filteredOn(Fact.Endpoint.class::isInstance).singleElement()
+                .isInstanceOfSatisfying(Fact.Endpoint.class,
+                        e -> assertThat(e.path().text()).isEqualTo("/api/orders/**"));
+        assertThat(facts).filteredOn(Fact.Call.class::isInstance).singleElement()
+                .isInstanceOfSatisfying(Fact.Call.class, c -> {
+                    assertThat(c.url().text()).isEqualTo("lb://orders/{?}");
+                    assertThat(c.url().confidence()).isEqualTo(Confidence.UNRESOLVED);
+                    assertThat(c.url().raw()).contains("StripPrefix=");
+                });
     }
 
     @Test

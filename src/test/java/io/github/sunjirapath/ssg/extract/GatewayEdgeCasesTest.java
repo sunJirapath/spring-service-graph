@@ -2,9 +2,13 @@ package io.github.sunjirapath.ssg.extract;
 
 import io.github.sunjirapath.ssg.TempRepo;
 import io.github.sunjirapath.ssg.model.Confidence;
+import io.github.sunjirapath.ssg.model.Edge;
 import io.github.sunjirapath.ssg.model.Fact;
+import io.github.sunjirapath.ssg.model.Finding;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -102,6 +106,44 @@ class GatewayEdgeCasesTest {
     void stripPrefixDefaultsToOneAndAcceptsExplicitCount(@TempDir Path tmp) {
         assertThat(GatewayExtractor.rewrite("/api/orders/**", List.of(def("StripPrefix"))).text()).isEqualTo("/orders/**");
         assertThat(GatewayExtractor.rewrite("/api/v1/orders/**", List.of(def("StripPrefix", "2"))).text()).isEqualTo("/orders/**");
+        assertThat(GatewayExtractor.rewrite("/api/orders/**", List.of(def("StripPrefix", "0"))).text()).isEqualTo("/api/orders/**");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"${STRIP_PREFIX}", "many", "-1", "2147483648"})
+    void invalidStripPrefixKeepsTargetsAndReportsUnresolvedPaths(String parts, @TempDir Path tmp) {
+        var repo = repo(tmp, "package x; class Empty {}")
+                .resource("application.properties", """
+                        spring.cloud.gateway.routes[0].uri=lb://shortcut
+                        spring.cloud.gateway.routes[0].predicates[0]=Path=/api/orders/**
+                        spring.cloud.gateway.routes[0].filters[0]=StripPrefix=%s
+                        spring.cloud.gateway.routes[1].uri=lb://long-form
+                        spring.cloud.gateway.routes[1].predicates[0]=Path=/api/orders/**
+                        spring.cloud.gateway.routes[1].filters[0].name=StripPrefix
+                        spring.cloud.gateway.routes[1].filters[0].args.parts=%s
+                        spring.cloud.gateway.routes[2].uri=lb://healthy
+                        spring.cloud.gateway.routes[2].predicates[0]=Path=/api/orders/**
+                        spring.cloud.gateway.routes[2].filters[0]=StripPrefix=1
+                        """.formatted(parts, parts));
+
+        var graph = TempRepo.scan(repo);
+
+        assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS).hasSize(3)
+                .filteredOn(e -> !e.to().equals("external:healthy"))
+                .extracting(Edge::to).containsExactlyInAnyOrder("external:shortcut", "external:long-form");
+        assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS && !e.to().equals("external:healthy"))
+                .allSatisfy(e -> {
+                    assertThat(e.confidence()).isEqualTo(Confidence.UNRESOLVED);
+                    assertThat(e.attrs()).containsEntry("path", "/{?}");
+                    assertThat(e.attrs().get("raw")).contains("StripPrefix=");
+                });
+        assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.CALLS && e.to().equals("external:healthy"))
+                .singleElement().satisfies(e -> {
+                    assertThat(e.confidence()).isEqualTo(Confidence.EXACT);
+                    assertThat(e.attrs()).containsEntry("path", "/orders/**");
+                });
+        assertThat(graph.findings()).filteredOn(f -> f.kind() == Finding.Kind.UNRESOLVED).hasSize(2)
+                .allSatisfy(f -> assertThat(f.message()).contains("StripPrefix="));
     }
 
     @Test

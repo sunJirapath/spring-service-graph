@@ -8,6 +8,8 @@ import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -69,6 +71,61 @@ class OutputEdgeCasesTest {
 
         assertThat(tmp.resolve("services/sales_api_v2.md")).isRegularFile();
         assertThat(tmp.resolve("diagrams/sales_api_v2.mmd")).isRegularFile();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"orders:blue, orders_blue, orders_blue-2, orders_blue",
+            "Orders, orders, Orders, orders-2", "café, cafè, caf_-2, caf_",
+            "CON, CON-2, CON-3, CON-2", "aUx.log, aux-2.log, aUx-3.log, aux-2.log",
+            "com1, com1-2, com1-3, com1-2", "LPT9, lpt9-2, LPT9-3, lpt9-2"})
+    void collidingServiceNamesKeepSeparatePagesDiagramsAndLinks(String first, String second,
+                                                               String firstFile, String secondFile,
+                                                               @TempDir Path tmp) throws IOException {
+        var graph = new Graph(List.of(service(first), service(second)), List.of(), List.of());
+        var reversed = new GraphView(new Graph(List.of(service(second), service(first)), List.of(), List.of()));
+        assertThat(reversed.fileName(first)).isEqualTo(firstFile);
+        assertThat(reversed.fileName(second)).isEqualTo(secondFile);
+        var expected = Map.of(first, firstFile, second, secondFile);
+        Path one = tmp.resolve("one");
+        Path two = tmp.resolve("two");
+
+        for (Path out : List.of(one, two)) {
+            writeAll(graph, out);
+            try (var pages = Files.list(out.resolve("services"))) {
+                assertThat(pages.map(p -> p.getFileName().toString()))
+                        .containsExactlyInAnyOrder(firstFile + ".md", secondFile + ".md");
+            }
+            try (var diagrams = Files.list(out.resolve("diagrams"))) {
+                assertThat(diagrams.map(p -> p.getFileName().toString()))
+                        .containsExactlyInAnyOrder("fleet.puml", firstFile + ".mmd", secondFile + ".mmd");
+            }
+            String index = Files.readString(out.resolve("index.md"));
+            for (var entry : expected.entrySet()) {
+                assertThat(index).contains("[" + entry.getKey() + "](services/" + entry.getValue() + ".md)");
+                assertThat(Files.readString(out.resolve("services/" + entry.getValue() + ".md")))
+                        .contains("# " + entry.getKey() + "\n");
+                assertThat(Files.readString(out.resolve("diagrams/" + entry.getValue() + ".mmd")))
+                        .contains("[\"" + entry.getKey() + "\"]");
+            }
+        }
+        try (var files = Files.walk(one)) {
+            for (Path relative : files.filter(Files::isRegularFile).map(one::relativize).toList()) {
+                assertThat(Files.readAllBytes(two.resolve(relative))).as(relative.toString())
+                        .isEqualTo(Files.readAllBytes(one.resolve(relative)));
+            }
+        }
+    }
+
+    @Test
+    void collisionSuffixesDoNotTakeExistingServiceNames() {
+        var graph = new Graph(List.of(service("orders:blue"), service("orders_blue"),
+                service("orders_blue-2"), service("ORDERS_BLUE-3")), List.of(), List.of());
+        var view = new GraphView(graph);
+
+        assertThat(view.fileName("orders_blue")).isEqualTo("orders_blue");
+        assertThat(view.fileName("orders_blue-2")).isEqualTo("orders_blue-2");
+        assertThat(view.fileName("ORDERS_BLUE-3")).isEqualTo("ORDERS_BLUE-3");
+        assertThat(view.fileName("orders:blue")).isEqualTo("orders_blue-4");
     }
 
     @Test

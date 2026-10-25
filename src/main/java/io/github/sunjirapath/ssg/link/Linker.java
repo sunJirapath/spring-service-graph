@@ -173,21 +173,22 @@ public final class Linker {
 
     /** Links one call and returns the node ids it now points to. */
     private List<String> call(String service, String from, Fact.Call c) {
-        Url url = parse(c.url().text());
+        Value value = new Value(redactUrl(c.url().text()), c.url().confidence(), redactUrl(c.url().raw()), c.url().via());
+        Url url = parse(value.text());
         var attrs = attrs("client", c.client(), "method", c.method(), "path", url.path());
-        if (!c.url().resolved()) attrs.put("raw", c.url().raw());
-        if (!c.url().resolved()) unresolved(service, c.client() + " call " + c.method() + " " + c.url().text(), c.url(), c.evidence());
+        if (!value.resolved()) attrs.put("raw", value.raw());
+        if (!value.resolved()) unresolved(service, c.client() + " call " + c.method() + " " + value.text(), value, c.evidence());
 
         String target = url.host() == null ? null : resolveHost(url.host());
         if (target == null) {
-            attrs.put("raw", c.url().raw()); // without a target, the source expression is all a reader has
+            attrs.put("raw", value.raw()); // without a target, the source expression is all a reader has
             nodes.putIfAbsent(UNRESOLVED_TARGET, new Node.External(UNRESOLVED_TARGET, "unresolved"));
-            edge(Edge.Kind.CALLS, from, UNRESOLVED_TARGET, c.url(), c.evidence(), attrs);
+            edge(Edge.Kind.CALLS, from, UNRESOLVED_TARGET, value, c.evidence(), attrs);
             return List.of(UNRESOLVED_TARGET);
         }
         if (target.startsWith("external:")) {
             nodes.putIfAbsent(target, new Node.External(target, target.substring("external:".length())));
-            edge(Edge.Kind.CALLS, from, target, c.url(), c.evidence(), attrs);
+            edge(Edge.Kind.CALLS, from, target, value, c.evidence(), attrs);
             return List.of(target);
         }
         var matched = endpoints.getOrDefault(target, List.of()).stream()
@@ -195,9 +196,9 @@ public final class Linker {
                 .toList();
         if (matched.stream().anyMatch(e -> e.path().equals(url.path()))) // an exact literal beats a template sibling
             matched = matched.stream().filter(e -> e.path().equals(url.path())).toList();
-        for (EndpointRef e : matched) edge(Edge.Kind.CALLS, from, e.id(), c.url(), c.evidence(), attrs);
+        for (EndpointRef e : matched) edge(Edge.Kind.CALLS, from, e.id(), value, c.evidence(), attrs);
         if (!matched.isEmpty()) return matched.stream().map(EndpointRef::id).toList();
-        edge(Edge.Kind.CALLS, from, Node.Service.idOf(target), c.url(), c.evidence(), attrs);
+        edge(Edge.Kind.CALLS, from, Node.Service.idOf(target), value, c.evidence(), attrs);
         if (!url.path().contains(Value.UNKNOWN)) {
             findings.add(new Finding(Finding.Kind.CONTRACT_DRIFT, service, c.client() + " call " + c.method() + " "
                     + url.path() + " matches no endpoint exposed by " + target, List.of(c.evidence())));
@@ -219,6 +220,20 @@ public final class Linker {
     }
 
     private static final Pattern USERINFO = Pattern.compile("^[^@/]*@");
+    private static final Pattern URL_USERINFO = Pattern.compile("(?<=://)[^/?#]*@");
+
+    /** Also covers raw concatenations: a query's later operands may contain credentials. */
+    private static String redactUrl(String value) {
+        String safe = value.replace(Value.UNKNOWN, "\0");
+        safe = URL_USERINFO.matcher(safe).replaceAll("[redacted]@");
+        int end = safe.length();
+        for (char delimiter : new char[]{'?', '#'}) {
+            int at = safe.indexOf(delimiter);
+            if (at >= 0) end = Math.min(end, at);
+        }
+        if (end < safe.length()) safe = safe.substring(0, end) + safe.charAt(end) + "[redacted]";
+        return safe.replace("\0", Value.UNKNOWN);
+    }
 
     /** Splits {@code scheme://user@host:port/path?q} into host and path; host is null for relative URLs. */
     static Url parse(String url) {

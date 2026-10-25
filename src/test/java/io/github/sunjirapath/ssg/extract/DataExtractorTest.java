@@ -11,6 +11,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,6 +73,42 @@ class DataExtractorTest {
                     assertThat(t.table().text()).isEqualTo("used_t");
                     assertThat(t.evidence().line()).isEqualTo(2);
                 });
+    }
+
+    @Test
+    void rootDdlIgnoresTestFixturesForMappedTablesButKeepsRuntimeSchemas(@TempDir Path repo) throws IOException {
+        for (var script : Map.of(
+                "test/schema.sql", "test_fixture",
+                "metadata-ingestion/TeStS/integration/setup.sql", "integration_fixture",
+                "schema.sql", "root_table",
+                "sql/schema.sql", "sql_table",
+                "test-support/schema.sql", "support_table").entrySet()) {
+            Path file = repo.resolve(script.getKey());
+            Files.createDirectories(file.getParent());
+            Files.writeString(file, "CREATE TABLE " + script.getValue() + " (id int);\n");
+        }
+        var facts = extract(repo, """
+                package x;
+                @Entity class TestFixture {}
+                @Entity class IntegrationFixture {}
+                @Entity class RootTable {}
+                @Entity class SqlTable {}
+                @Entity class SupportTable {}
+                @Entity class RuntimeTable {}
+                """, "db/migration/TESTS/V1__runtime.sql", "CREATE TABLE runtime_table (id int);\n");
+
+        assertThat(facts).filteredOn(f -> f instanceof Fact.TableUse t && !t.owns())
+                .extracting(f -> ((Fact.TableUse) f).table().text())
+                .containsExactlyInAnyOrder("test_fixture", "integration_fixture", "root_table", "sql_table",
+                        "support_table", "runtime_table");
+        assertThat(facts).filteredOn(f -> f instanceof Fact.TableUse t && t.owns())
+                .extracting(f -> {
+                    var t = (Fact.TableUse) f;
+                    return t.table().text() + ":" + t.evidence().file();
+                })
+                .containsExactlyInAnyOrder("root_table:schema.sql", "sql_table:sql/schema.sql",
+                        "support_table:test-support/schema.sql",
+                        "runtime_table:src/main/resources/db/migration/TESTS/V1__runtime.sql");
     }
 
     @Test

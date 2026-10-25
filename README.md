@@ -78,7 +78,7 @@ Source-defined composed `@SpringBootApplication` annotations are recognized when
 |---|---|
 | `@Entity` / `@Table`, MyBatis-Plus `@TableName`, `@Document` (Mongo) | Service USES the table or collection. |
 | Spring Data repositories, MyBatis-Plus `BaseMapper<T>` mappers | Taken from the entity type argument only; derived query methods are not interpreted. |
-| Liquibase `createTable`, Flyway migrations, `schema.sql` | Service OWNS the table. |
+| Liquibase `createTable`, Flyway migrations, `schema.sql` | Service OWNS the table. Root SQL under `test`/`tests` directories is excluded. |
 | `@Query(value = "...", nativeQuery = true)` | Service USES each table in the SQL. JPQL queries are skipped (they name entities). |
 | SQL passed to `JdbcTemplate`, `NamedParameterJdbcTemplate`, `JdbcOperations`, `JdbcClient` or a `--sql-methods` wrapper | Service USES each table after `FROM`/`JOIN`/`INTO`/`UPDATE`. The SQL is folded through constants and text blocks; CTEs, comments, literals, `FOR UPDATE` and `EXTRACT(.. FROM ..)` are not mistaken for tables. |
 
@@ -175,6 +175,8 @@ out/
 
 Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services).
 
+Service page and diagram filenames are sanitized and get deterministic suffixes when names would collide, including on case-insensitive filesystems. The index links to the assigned filenames.
+
 A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):
 
 ```json
@@ -195,7 +197,8 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 ## Known limits
 
 - Tables are scoped per service: two services using the same table name get separate nodes.
-- In a repo with several Spring Boot apps, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively, with Gradle `projectDir` remaps, `${}` and managed versions, profiles active by default and exclusions below the dependency that declares them. Only library beans under the app's component-scan packages, or registered as auto-configurations or through `@Import`, count; profiles switched on any other way are not read.
+- In a repo with Maven or Gradle build metadata, a library module (no `@SpringBootApplication`) counts for the services whose `pom.xml` or `build.gradle` depends on it, transitively, with Gradle `projectDir` remaps, `${}` and managed versions, profiles active by default and exclusions below the dependency that declares them. Literal local Gradle `apply from` scripts are followed. Only library beans under the app's component-scan packages, or registered as auto-configurations or through `@Import`, count; inherited configuration and literal programmatic Boot sources are followed too. JPA repositories and entities follow their registration packages, including Boot defaults; profiles switched on any other way are not read. A repo with one app and no build metadata falls back to attributing all sources to that app.
+- Spring XML: literal local `@ImportResource`, bean classes and imports are followed. XML profiles, custom namespaces and factory execution are not evaluated; DTD and external resources are rejected.
 - Profile expressions such as `!dev` or `a & b` are not evaluated, only plain profile lists.
 - Config repo: only the repo root is read, not per-app subfolders or custom search locations.
 - A non-final field or local variable that is reassigned later still folds to its initializer.
@@ -209,7 +212,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 
 ## Testing and benchmark
 
-There are about 630 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 94%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
+There are 826 tests: edge-case suites per extractor, a deliberately messy fleet in `src/test/resources/messy`, and golden tests. Line coverage is 98% and branch coverage 92%; see `docs/testing.md` for the bugs the campaign found. Run `./gradlew test jacocoTestReport` for a coverage report.
 
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 
