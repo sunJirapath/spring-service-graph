@@ -365,7 +365,10 @@ public final class JavaIndex {
 
     /** Simple name of the declared type of {@code name} at {@code context}, e.g. "RestTemplate". */
     public Optional<String> declaredType(String name, Node context) {
-        return declarationOf(name, context).map(d -> switch (d) {
+        Optional<? extends Node> declaration = context instanceof FieldAccessExpr field && field.getNameAsString().equals(name)
+                ? fieldDeclaration(field) : declarationOf(name, context).or(() -> context instanceof NameExpr n
+                ? importedField(n).map(v -> (Node) v) : Optional.empty());
+        return declaration.map(d -> switch (d) {
             case VariableDeclarator v -> simpleName(v.getType());
             case Parameter p -> simpleName(p.getType());
             default -> "";
@@ -477,6 +480,9 @@ public final class JavaIndex {
     private Optional<VariableDeclarator> fieldDeclaration(FieldAccessExpr f) {
         Optional<TypeDeclaration<?>> type = f.getScope() instanceof ThisExpr
                 ? f.findAncestor(TypeDeclaration.class).map(t -> (TypeDeclaration<?>) t)
+                : f.getScope() instanceof SuperExpr
+                ? f.findAncestor(ClassOrInterfaceDeclaration.class).flatMap(c -> c.getExtendedTypes().stream()
+                        .findFirst().flatMap(parent -> resolveType(parent, c)))
                 : resolveType(f.getScope().toString(), f);
         return type.flatMap(t -> fieldOf(t, f.getNameAsString(), 0));
     }

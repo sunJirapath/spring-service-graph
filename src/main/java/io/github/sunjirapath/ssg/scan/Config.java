@@ -389,6 +389,7 @@ public final class Config {
                     var index = LIST_INDEX.matcher(prefix);
                     lists.add(index.find() ? prefix.substring(0, index.start()) : prefix);
                     List<Node> items = s.getValue();
+                    if (items.isEmpty() && !prefix.isEmpty()) out.put(prefix, new Entry("", repo.evidence(file, line)));
                     for (int i = 0; i < items.size(); i++) flatten(repo, file, prefix + "[" + i + "]", items.get(i), out, lists, ancestors);
                 }
                 case ScalarNode sc -> {

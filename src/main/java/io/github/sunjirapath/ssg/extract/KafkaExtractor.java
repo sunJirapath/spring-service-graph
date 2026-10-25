@@ -3,6 +3,8 @@ package io.github.sunjirapath.ssg.extract;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.CastExpr;
 import com.github.javaparser.ast.expr.EnclosedExpr;
@@ -16,6 +18,7 @@ import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Value;
 import io.github.sunjirapath.ssg.scan.Ann;
 import io.github.sunjirapath.ssg.scan.Config;
+import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Service;
 
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public final class KafkaExtractor implements Extractor {
     public List<Fact> extract(Service s) {
         var facts = new ArrayList<Fact>();
         var bridgeBindings = new HashSet<String>();
+        var beans = declaredBeans(s);
         for (CompilationUnit cu : s.units()) {
             for (var c : cu.findAll(ClassOrInterfaceDeclaration.class)) listener(s, c, facts);
             for (var m : cu.findAll(MethodDeclaration.class)) {
@@ -60,7 +64,7 @@ public final class KafkaExtractor implements Extractor {
                     for (Value v : s.evalAll(e)) facts.add(new Fact.TopicUse(true, v, s.evidence(m), "SendTo", broker));
                 });
             }
-            for (MethodCallExpr call : cu.findAll(MethodCallExpr.class)) send(s, call, facts, bridgeBindings);
+            for (MethodCallExpr call : cu.findAll(MethodCallExpr.class)) send(s, call, facts, bridgeBindings, beans);
         }
         cloudStream(s, facts, bridgeBindings);
         return facts;
@@ -80,7 +84,8 @@ public final class KafkaExtractor implements Extractor {
         }
     }
 
-    private static void send(Service s, MethodCallExpr call, List<Fact> facts, Set<String> bridgeBindings) {
+    private static void send(Service s, MethodCallExpr call, List<Fact> facts, Set<String> bridgeBindings,
+                             Optional<Set<String>> beans) {
         if (call.getScope().isEmpty()) return;
         Expression scope = call.getScope().get();
         String name = call.getNameAsString();
@@ -100,7 +105,10 @@ public final class KafkaExtractor implements Extractor {
             // StreamBridge falls back to a destination named after the binding
             Value topic = s.config().get(key) != null ? s.config().valueOf(key) : binding;
             String broker = streamBroker(s, binding.text());
-            if (explicitBinder(s, call)) {
+            var explicit = explicitBinder(s, call);
+            if (explicit.isEmpty()) {
+                if (!precreatedOutput(s, binding.text()).orElse(false)) broker = "unknown";
+            } else if (explicit.get()) {
                 Expression binder = call.getArgument(1);
                 if (!binder.isNullLiteralExpr()) {
                     var precreated = precreatedOutput(s, binding.text());
@@ -108,6 +116,8 @@ public final class KafkaExtractor implements Extractor {
                     else if (!precreated.get()) broker = binderBroker(s, s.eval(binder));
                 }
             }
+            if (!broker.equals("unknown") && beans.map(names -> names.contains(binding.text())).orElse(true)
+                    && !precreatedOutput(s, binding.text()).orElse(false)) broker = "unknown";
             facts.add(new Fact.TopicUse(true, topic, s.evidence(call), "StreamBridge", broker));
         }
     }
@@ -151,6 +161,22 @@ public final class KafkaExtractor implements Extractor {
             return outputs.resolved() ? functional : Optional.empty();
         }
         return functional;
+    }
+
+    private static Optional<Set<String>> declaredBeans(Service s) {
+        var beans = new HashSet<String>();
+        for (var unit : s.units()) for (var method : unit.findAll(MethodDeclaration.class)) {
+            var bean = Ann.find(method, "Bean");
+            if (bean.isEmpty()) continue;
+            var names = Ann.attr(bean.get(), "name", "value").map(s::evalAll)
+                    .filter(values -> !values.isEmpty())
+                    .orElseGet(() -> List.of(Value.exact(method.getNameAsString())));
+            for (Value name : names) {
+                if (!name.resolved()) return Optional.empty();
+                beans.add(name.text());
+            }
+        }
+        return Optional.of(beans);
     }
 
     private static Optional<Boolean> functionOutput(Service s, String binding) {
@@ -215,11 +241,30 @@ public final class KafkaExtractor implements Extractor {
         return Optional.of(false);
     }
 
-    private static boolean explicitBinder(Service s, MethodCallExpr call) {
-        if (call.getArguments().size() == 4) return true;
-        if (call.getArguments().size() != 3 || mimeType(s, call.getArgument(2))) return false;
-        return !(call.getArgument(1) instanceof NameExpr n
-                && s.index().declaredType(n.getNameAsString(), n).filter(t -> !t.equals("String")).isPresent());
+    private static Optional<Boolean> explicitBinder(Service s, MethodCallExpr call) {
+        if (call.getArguments().size() == 4) return Optional.of(true);
+        if (call.getArguments().size() != 3 || mimeType(s, call.getArgument(2))) return Optional.of(false);
+        return stringArgument(s, call.getArgument(1), 0);
+    }
+
+    private static Optional<Boolean> stringArgument(Service s, Expression e, int depth) {
+        if (depth > 24) return Optional.empty();
+        if (e.isLiteralExpr()) return Optional.of(e.isStringLiteralExpr() || e.isTextBlockLiteralExpr());
+        return switch (e) {
+            case EnclosedExpr enclosed -> stringArgument(s, enclosed.getInner(), depth);
+            case CastExpr cast -> Optional.of(JavaIndex.simpleName(cast.getType()).equals("String"));
+            case ObjectCreationExpr object -> Optional.of(object.getType().getNameAsString().equals("String"));
+            case NameExpr name -> {
+                var type = s.index().declaredType(name.getNameAsString(), name);
+                if (type.filter("var"::equals).isEmpty()) yield type.map("String"::equals);
+                yield s.index().declarationOf(name.getNameAsString(), name)
+                        .filter(VariableDeclarator.class::isInstance).map(VariableDeclarator.class::cast)
+                        .flatMap(VariableDeclarator::getInitializer).flatMap(init -> stringArgument(s, init, depth + 1));
+            }
+            case FieldAccessExpr field ->
+                    s.index().declaredType(field.getNameAsString(), field).map("String"::equals);
+            default -> Optional.empty();
+        };
     }
 
     private static boolean mimeType(Service s, Expression e) {
@@ -232,8 +277,15 @@ public final class KafkaExtractor implements Extractor {
             case FieldAccessExpr field -> field.getScope().toString().matches("(?:.*\\.)?(?:MimeTypeUtils|MediaType)")
                     && !field.getNameAsString().endsWith("_VALUE") && !field.getNameAsString().endsWith("COMPARATOR")
                     || s.index().declaredType(field.getNameAsString(), field).filter(MIME_TYPES::contains).isPresent();
-            case MethodCallExpr call -> Set.of("valueOf", "parseMimeType", "parseMediaType").contains(call.getNameAsString())
-                    && call.getScope().map(Object::toString).orElse("").matches("(?:.*\\.)?(?:MimeType(?:Utils)?|MediaType)");
+            case MethodCallExpr call -> {
+                if (Set.of("valueOf", "parseMimeType", "parseMediaType").contains(call.getNameAsString())
+                        && call.getScope().map(Object::toString).orElse("").matches("(?:.*\\.)?(?:MimeType(?:Utils)?|MediaType)")) yield true;
+                if (call.getScope().isPresent() && !call.getScope().get().toString().equals("this")) yield false;
+                var helpers = call.findAncestor(TypeDeclaration.class).stream()
+                        .flatMap(t -> ((TypeDeclaration<?>) t).getMethodsByName(call.getNameAsString()).stream())
+                        .filter(m -> m.getParameters().size() == call.getArguments().size()).toList();
+                yield !helpers.isEmpty() && helpers.stream().allMatch(m -> MIME_TYPES.contains(JavaIndex.simpleName(m.getType())));
+            }
             default -> false;
         };
     }

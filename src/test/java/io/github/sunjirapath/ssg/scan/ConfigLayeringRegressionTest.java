@@ -105,6 +105,21 @@ class ConfigLayeringRegressionTest {
     }
 
     @Test
+    void emptyYamlListReplacesTheRootPropertyAsWellAsBoundItems() throws Exception {
+        Repo repo = Repo.of(dir);
+        Path base = Files.writeString(dir.resolve("base.properties"), "values=old\n");
+        Path empty = Files.writeString(dir.resolve("empty.yml"), "values: []\n");
+        Config loaded = Config.load(repo, List.of(base, empty), "default");
+        assertThat(loaded.valueOf("values").text()).isEmpty();
+        assertThat(loaded.resolve("${values:fallback}").text()).isEmpty();
+        Config merged = Config.load(repo, List.of(base), "default");
+        merged.putAll(Config.load(repo, List.of(empty), "default"));
+        assertThat(merged.valueOf("values").text()).isEmpty();
+        merged.addEmbedded(repo, dir.resolve("seed.sql"), 12, false, "values: []\n", "default");
+        assertThat(merged.get("values").evidence().line()).isEqualTo(12);
+    }
+
+    @Test
     void aliasLookupPreservesPrecedenceAcrossPutAllEmbeddedAndInactiveDocuments() throws Exception {
         Repo repo = Repo.of(dir);
         String canonical = "spring.cloud.stream.default-binder";

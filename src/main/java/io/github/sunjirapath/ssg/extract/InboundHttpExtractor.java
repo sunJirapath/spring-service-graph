@@ -52,7 +52,7 @@ public final class InboundHttpExtractor implements Extractor {
                 jaxRsResources(c, s, contextPath, jaxRsPath, facts);
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
                 Value prefix = prefixes.stream().filter(p -> p.applies().test(c)).map(Prefix::path).findFirst().orElse(Value.exact(""));
-                List<Value> classPaths = classPaths(c, s);
+                List<Value> classPaths = classMapping(c, s).map(Mappings.Mapping::paths).orElse(List.of(Value.exact("")));
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
                     var methods = combinedMethods(c, mapping, s);
@@ -234,18 +234,8 @@ public final class InboundHttpExtractor implements Extractor {
     private static Optional<Mappings.Mapping> classMapping(TypeDeclaration<?> type, Service s) {
         Optional<Mappings.Mapping> own = Mappings.mvc(type, s);
         if (own.isPresent()) return own;
-        return s.index().superTypes(type).stream().map(t -> classMapping(t, s)).flatMap(Optional::stream).findFirst();
-    }
-
-    /** Class-level paths: on the controller, else on the first super type that declares one. */
-    private static List<Value> classPaths(TypeDeclaration<?> type, Service s) {
-        Optional<Mappings.Mapping> own = Mappings.mvc(type, s);
-        if (own.isPresent()) return own.get().paths();
-        for (var st : s.index().superTypes(type)) {
-            List<Value> inherited = classPaths(st, s);
-            if (!(inherited.size() == 1 && inherited.getFirst().text().isEmpty())) return inherited;
-        }
-        return List.of(Value.exact(""));
+        return Mappings.annotationSuperTypes(type, s).stream()
+                .map(t -> classMapping(t, s)).flatMap(Optional::stream).findFirst();
     }
 
     static Value contextPath(Service s) {

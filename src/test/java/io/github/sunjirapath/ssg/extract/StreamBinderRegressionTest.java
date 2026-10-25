@@ -24,7 +24,7 @@ class StreamBinderRegressionTest {
                     StreamBridge bridge;
                     static final String EVENTS = "events";
                     void send(Object payload, MimeType contentType, MediaType mediaType, String binder) {
-                """ + calls + "\n}}\n").resource("application.properties", properties);
+                """ + calls + "\n} MimeType contentTypeFactory() { return null; } }\n").resource("application.properties", properties);
     }
 
     private static List<Fact.TopicUse> topics(TempRepo repo) {
@@ -113,6 +113,66 @@ class StreamBinderRegressionTest {
         assertThat(topics(repo)).hasSize(7).extracting(Fact.TopicUse::broker).containsOnly("kafka");
     }
 
+    @Test
+    void inferredStringBinderSelectsTheExplicitBinder() {
+        var repo = repo("""
+                var explicit = "rabbit";
+                bridge.send("orders", explicit, payload);
+                """, "spring.cloud.stream.default-binder=kafka\n");
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("rabbit");
+    }
+
+    @Test
+    void qualifiedAndImportedStringConstantsKeepExplicitBinderSelection() {
+        var repo = repo("", "spring.cloud.stream.default-binder=kafka\n")
+                .java("app/Binders.java", "package app; class Binders { static final String NAME = \"rabbit\"; }")
+                .java("app/Messaging.java", """
+                        package app;
+                        import static app.Binders.NAME;
+                        class Messaging {
+                            StreamBridge bridge;
+                            void send(Object payload) {
+                                bridge.send("qualified", Binders.NAME, payload);
+                                bridge.send("imported", NAME, payload);
+                            }
+                        }
+                        """);
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("rabbit", "rabbit");
+    }
+
+    @Test
+    void objectPayloadWithCustomContentTypeFactoryIsNotABinder() {
+        var repo = repo("""
+                Message<?> message = MessageBuilder.withPayload("rabbit").build();
+                var objectPayload = (Object) "rabbit";
+                bridge.send("orders", (Object) "rabbit", contentTypeFactory());
+                bridge.send("parenthesized", (payload), contentTypeFactory());
+                bridge.send("inferredPayload", objectPayload, contentTypeFactory());
+                bridge.send("message", message, contentTypeFactory());
+                bridge.send("fourMessage", "rabbit", message, contentTypeFactory());
+                """, "spring.cloud.stream.default-binder=kafka\n");
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("kafka", "kafka", "kafka", "kafka", "rabbit");
+    }
+
+    @Test
+    void localMimeTypeFactoriesDisambiguateMethodCallPayloads() {
+        var repo = repo("", "spring.cloud.stream.default-binder=kafka\n")
+                .java("app/Messaging.java", """
+                        package app;
+                        class Messaging {
+                            StreamBridge bridge;
+                            Object payload() { return "rabbit"; }
+                            MimeType contentType() { return MimeType.valueOf("application/json"); }
+                            void send() {
+                                bridge.send("orders", payload(), contentType());
+                                bridge.send("qualified", payload(), this.contentType());
+                                bridge.send("unresolved", External.payload(), External.contentType());
+                            }
+                        }
+                        """);
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("kafka", "kafka", "unknown");
+    }
+
     @ParameterizedTest
     @CsvSource({"output-bindings", "outputBindings"})
     void precreatedOutputIgnoresExplicitBinderButUnlistedDestinationDoesNot(String key) {
@@ -154,10 +214,31 @@ class StreamBinderRegressionTest {
     }
 
     @Test
+    void customChannelBeanDoesNotProveABrokerUnlessItIsABoundOutput() {
+        var repo = repo("""
+                bridge.send("orders", payload);
+                bridge.send("orders", "rabbit", payload);
+                bridge.send("alias", "rabbit", payload, contentType);
+                """, "spring.cloud.stream.default-binder=kafka\n")
+                .java("app/Channels.java", """
+                        package app;
+                        @Configuration class Channels {
+                            @Bean({"orders", "alias"}) MessageChannel channel() { return new DirectChannel(); }
+                        }
+                        """);
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("unknown", "unknown", "unknown");
+        repo.resource("application.properties", """
+                spring.cloud.stream.default-binder=kafka
+                spring.cloud.stream.output-bindings=orders;alias
+                """);
+        assertThat(topics(repo)).extracting(Fact.TopicUse::broker).containsExactly("kafka", "kafka", "kafka");
+    }
+
+    @Test
     void mimeSubtypeIsContentTypeButMimeStringsAndListsArePayloads() {
         var repo = repo("""
-                bridge.send("media", "payload", MediaType.APPLICATION_JSON);
-                bridge.send("typedMedia", "payload", mediaType);
+                bridge.send("media", (Object) "payload", MediaType.APPLICATION_JSON);
+                bridge.send("typedMedia", (Object) "payload", mediaType);
                 bridge.send("string", "rabbit", MimeTypeUtils.APPLICATION_JSON_VALUE);
                 bridge.send("list", "rabbit", MimeTypeUtils.parseMimeTypes("application/json"));
                 """, "spring.cloud.stream.default-binder=kafka\n");

@@ -52,6 +52,47 @@ class ConfirmedHttpMappingRegressionTest {
     }
 
     @Test
+    void emptyInheritedPathStillSelectsTheWholeFirstMapping(@TempDir Path tmp) {
+        var facts = TempRepo.at(tmp.resolve("empty-path")).app()
+                .java("x/C.java", """
+                        package x;
+                        @RequestMapping(method = RequestMethod.POST) interface Verb {}
+                        @RequestMapping(path = "/api", method = RequestMethod.GET) interface Path {}
+                        @RestController class C implements Verb, Path {
+                            @RequestMapping("/x") public void x() {}
+                        }
+                        """).facts(new InboundHttpExtractor());
+        assertThat(endpoints(facts)).containsExactly("POST /x");
+    }
+
+    @Test
+    void interfaceTypeMappingPrecedesSuperclassMapping(@TempDir Path tmp) {
+        var facts = TempRepo.at(tmp.resolve("hierarchy")).app()
+                .java("x/C.java", """
+                        package x;
+                        @RequestMapping(path = "/base", method = RequestMethod.DELETE) class Base {}
+                        @RequestMapping(path = "/api", method = RequestMethod.GET) interface Api {}
+                        @RestController class C extends Base implements Api {
+                            @PostMapping("/x") public void x() {}
+                        }
+                        """).facts(new InboundHttpExtractor());
+        assertThat(endpoints(facts)).containsExactlyInAnyOrder("GET /api/x", "POST /api/x");
+    }
+
+    @Test
+    void conflictingMethodMappingsFollowTheConcreteMethodDeclaration(@TempDir Path tmp) {
+        var facts = TempRepo.at(tmp.resolve("method-hierarchy")).app()
+                .java("x/C.java", """
+                        package x;
+                        interface Api { @GetMapping("/interface") void x(); }
+                        class Base { @PostMapping("/super") public void x() {} }
+                        @RestController class Override extends Base implements Api { public void x() {} }
+                        @RestController class Inherited extends Base implements Api {}
+                        """).facts(new InboundHttpExtractor());
+        assertThat(endpoints(facts)).containsExactlyInAnyOrder("GET /interface", "POST /super");
+    }
+
+    @Test
     void intersectsGatewayMethodPredicatesAndSkipsEmptyIntersections(@TempDir Path tmp) {
         var repo = TempRepo.at(tmp.resolve("gateway")).app().java("x/Empty.java", "package x; class Empty {}")
                 .resource("application.properties", """

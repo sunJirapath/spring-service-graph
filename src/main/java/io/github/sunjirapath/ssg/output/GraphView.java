@@ -7,8 +7,10 @@ import io.github.sunjirapath.ssg.model.Node;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -24,10 +26,18 @@ final class GraphView {
     private final Map<String, String> fileNames = new HashMap<>();
     private final Map<String, List<Edge>> outgoing = new HashMap<>();
     private final Map<String, List<Edge>> incoming = new HashMap<>();
+    private final Set<String> ambiguousTopics = new HashSet<>();
 
     GraphView(Graph graph) {
         this.graph = graph;
         this.nodes = graph.nodes().stream().collect(Collectors.toMap(Node::id, Function.identity()));
+        var brokers = new HashMap<String, String>();
+        for (Node node : graph.nodes()) {
+            if (node instanceof Node.Topic topic) {
+                String previous = brokers.putIfAbsent(topic.name(), topic.broker());
+                if (previous != null && !previous.equals(topic.broker())) ambiguousTopics.add(topic.name());
+            }
+        }
         for (Edge edge : graph.edges()) {
             outgoing.computeIfAbsent(edge.from(), id -> new ArrayList<>()).add(edge);
             incoming.computeIfAbsent(edge.to(), id -> new ArrayList<>()).add(edge);
@@ -79,7 +89,7 @@ final class GraphView {
             case Node.Endpoint e -> e.service() + " " + e.method() + " " + e.path();
             case Node.Table t -> t.name();
             case Node.External x -> x.name();
-            case Node.Topic t -> t.name();
+            case Node.Topic t -> ambiguousTopics.contains(t.name()) ? t.name() + " [" + t.broker() + "]" : t.name();
             case null -> id;
         };
     }
