@@ -81,9 +81,29 @@ final class Mappings {
         if (!visited.add(type)) return; // the visited set already stops cycles
         for (MethodDeclaration m : type.getMethods()) {
             String sig = signature(m);
-            if (mapped.test(m) && seen.add(sig)) out.add(m);
+            if (seen.contains(sig)) continue;
+            var mapping = mapped.test(m) ? Optional.of(m) : inheritedMapping(type, s, mapped, sig, new HashSet<>());
+            mapping.ifPresent(found -> { seen.add(sig); out.add(found); });
         }
         for (var st : s.index().superTypes(type)) collect(st, s, mapped, out, seen, visited, depth + 1);
+    }
+
+    private static Optional<MethodDeclaration> inheritedMapping(TypeDeclaration<?> type, Service s,
+            java.util.function.Predicate<MethodDeclaration> mapped, String signature, java.util.Set<TypeDeclaration<?>> visited) {
+        if (!visited.add(type)) return Optional.empty();
+        for (var parent : annotationSuperTypes(type, s)) {
+            var own = parent.getMethods().stream().filter(m -> signature(m).equals(signature) && mapped.test(m)).findFirst();
+            var found = own.or(() -> inheritedMapping(parent, s, mapped, signature, visited));
+            if (found.isPresent()) return found;
+        }
+        return Optional.empty();
+    }
+
+    /** Spring's TYPE_HIERARCHY searches interfaces before the superclass. */
+    static List<TypeDeclaration<?>> annotationSuperTypes(TypeDeclaration<?> type, Service s) {
+        return s.index().superTypes(type).stream()
+                .sorted(java.util.Comparator.comparing(t -> !(t instanceof com.github.javaparser.ast.body.ClassOrInterfaceDeclaration c
+                        && c.isInterface()))).toList();
     }
 
     /** Name + parameter types, so overloads stay distinct while overrides match. */

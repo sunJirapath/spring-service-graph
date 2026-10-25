@@ -28,14 +28,24 @@ public sealed interface Node {
     }
 
     @JsonTypeName("topic")
-    record Topic(String id, String name) implements Node {
+    record Topic(String id, String name, String broker) implements Node {
+        public Topic {
+            if (broker == null) broker = "unknown"; // legacy JSON has no broker provenance
+        }
+        public Topic(String id, String name) { this(id, name, "unknown"); }
+        /** Legacy id, retained for reading and querying saved graphs. */
         public static String idOf(String name) { return "topic:" + name; }
+        public static String idOf(String broker, String name) { return "topic:" + broker + ":" + name; }
     }
 
-    /** Tables are scoped by service: static scanning cannot tell whether two services share a database. */
+    /** Tables are scoped by store and service: static scanning cannot tell whether two services share a database. */
     @JsonTypeName("table")
     record Table(String id, String service, String name, String store) implements Node {
+        /** Legacy id, retained for reading and querying saved graphs. */
         public static String idOf(String service, String name) { return "table:" + service + "/" + name; }
+        public static String idOf(String service, String name, String store) {
+            return "table:" + store + ":" + service + "/" + name;
+        }
     }
 
     @JsonTypeName("external")

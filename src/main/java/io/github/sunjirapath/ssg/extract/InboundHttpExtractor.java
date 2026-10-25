@@ -52,14 +52,15 @@ public final class InboundHttpExtractor implements Extractor {
                 jaxRsResources(c, s, contextPath, jaxRsPath, facts);
                 if (c.isInterface() || !Ann.has(c, "RestController", "Controller")) continue;
                 Value prefix = prefixes.stream().filter(p -> p.applies().test(c)).map(Prefix::path).findFirst().orElse(Value.exact(""));
-                List<Value> classPaths = classPaths(c, s);
+                List<Value> classPaths = classMapping(c, s).map(Mappings.Mapping::paths).orElse(List.of(Value.exact("")));
                 for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.mvc(md, s).isPresent())) {
                     var mapping = Mappings.mvc(m, s).orElseThrow();
+                    var methods = combinedMethods(c, mapping, s);
                     var handler = s.evidence(override(c, m).getName()); // the method line itself, below any @Override
                     for (Value cp : classPaths) {
                         for (Value mp : mapping.paths()) {
                             Value path = Mappings.joinValues(contextPath, prefix, cp, mp);
-                            for (String verb : mapping.methods()) {
+                            for (String verb : methods) {
                                 // evidence: the mapping annotation, not the first of possibly many annotations
                                 facts.add(new Fact.Endpoint(verb, path, s.evidence(mapping.annotation()), "controller", handler));
                             }
@@ -91,7 +92,7 @@ public final class InboundHttpExtractor implements Extractor {
         if (c.isInterface() || !Ann.has(c, "Path")) return;
         Value classPath = Ann.find(c, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
         for (var m : c.getMethods()) {
-            var verb = Ann.find(m, "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD");
+            var verb = Ann.find(m, "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS");
             if (verb.isEmpty()) continue; // @Path without an HTTP method is a sub-resource locator
             Value methodPath = Ann.find(m, "Path").flatMap(a -> Ann.attr(a, "value")).map(s::eval).orElse(Value.exact(""));
             facts.add(new Fact.Endpoint(verb.get().getName().getIdentifier(),
@@ -222,15 +223,19 @@ public final class InboundHttpExtractor implements Extractor {
                 .filter(o -> Mappings.signature(o).equals(Mappings.signature(m))).findFirst().orElse(m);
     }
 
-    /** Class-level paths: on the controller, else on the first super type that declares one. */
-    private static List<Value> classPaths(TypeDeclaration<?> type, Service s) {
+    /** Spring combines constrained class and method RequestMethodsRequestConditions by union. */
+    private static List<String> combinedMethods(ClassOrInterfaceDeclaration c, Mappings.Mapping method, Service s) {
+        List<String> classMethods = classMapping(c, s).map(Mappings.Mapping::methods).orElse(List.of("*"));
+        if (classMethods.contains("*")) return method.methods();
+        if (method.methods().contains("*")) return classMethods;
+        return java.util.stream.Stream.concat(classMethods.stream(), method.methods().stream()).distinct().toList();
+    }
+
+    private static Optional<Mappings.Mapping> classMapping(TypeDeclaration<?> type, Service s) {
         Optional<Mappings.Mapping> own = Mappings.mvc(type, s);
-        if (own.isPresent()) return own.get().paths();
-        for (var st : s.index().superTypes(type)) {
-            List<Value> inherited = classPaths(st, s);
-            if (!(inherited.size() == 1 && inherited.getFirst().text().isEmpty())) return inherited;
-        }
-        return List.of(Value.exact(""));
+        if (own.isPresent()) return own;
+        return Mappings.annotationSuperTypes(type, s).stream()
+                .map(t -> classMapping(t, s)).flatMap(Optional::stream).findFirst();
     }
 
     static Value contextPath(Service s) {

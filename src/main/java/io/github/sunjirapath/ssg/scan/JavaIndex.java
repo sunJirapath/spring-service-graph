@@ -365,7 +365,10 @@ public final class JavaIndex {
 
     /** Simple name of the declared type of {@code name} at {@code context}, e.g. "RestTemplate". */
     public Optional<String> declaredType(String name, Node context) {
-        return declarationOf(name, context).map(d -> switch (d) {
+        Optional<? extends Node> declaration = context instanceof FieldAccessExpr field && field.getNameAsString().equals(name)
+                ? fieldDeclaration(field) : declarationOf(name, context).or(() -> context instanceof NameExpr n
+                ? importedField(n).map(v -> (Node) v) : Optional.empty());
+        return declaration.map(d -> switch (d) {
             case VariableDeclarator v -> simpleName(v.getType());
             case Parameter p -> simpleName(p.getType());
             default -> "";
@@ -395,20 +398,93 @@ public final class JavaIndex {
             case StringLiteralExpr s -> Value.exact(s.asString());
             case TextBlockLiteralExpr t -> Value.exact(t.asString());
             case CharLiteralExpr c -> Value.exact(c.asChar() + "");
-            case IntegerLiteralExpr i -> Value.exact(i.getValue());
-            case LongLiteralExpr l -> Value.exact(l.getValue().replaceAll("[lL]$", ""));
+            case IntegerLiteralExpr i -> integer(i);
+            case LongLiteralExpr l -> longInteger(l);
             case BooleanLiteralExpr b -> Value.exact(b.getValue() + "");
             // syntactic nesting is finite, so only name and call hops count against MAX_DEPTH (cycle guard)
             case EnclosedExpr en -> eval(en.getInner(), depth);
-            case CastExpr c -> eval(c.getExpression(), depth);
+            case CastExpr c -> cast(c, depth);
             case BinaryExpr b when b.getOperator() == BinaryExpr.Operator.PLUS ->
-                    raw(eval(b.getLeft(), depth).concat(eval(b.getRight(), depth), b.toString()), e);
+                    numericExpression(b.getLeft(), depth) && numericExpression(b.getRight(), depth)
+                            ? Value.unresolved(e.toString())
+                            : raw(eval(b.getLeft(), depth).concat(eval(b.getRight(), depth), b.toString()), e);
             case NameExpr n -> evalDeclaration(declarationOf(n.getNameAsString(), n), n, depth)
                     .orElseGet(() -> staticImport(n, depth));
             case FieldAccessExpr f -> evalFieldAccess(f, depth);
             case MethodCallExpr m -> evalCall(m, depth);
             default -> Value.unresolved(e.toString());
         };
+    }
+
+    private static Value integer(IntegerLiteralExpr i) {
+        try {
+            return Value.exact(Integer.toString(i.asInt()));
+        } catch (NumberFormatException e) {
+            return Value.unresolved(i.toString());
+        }
+    }
+
+    private static Value longInteger(LongLiteralExpr l) {
+        try {
+            return Value.exact(Long.toString(l.asLong()));
+        } catch (NumberFormatException e) {
+            return Value.unresolved(l.toString());
+        }
+    }
+
+    private Value cast(CastExpr c, int depth) {
+        if (!c.getType().isPrimitiveType()) return eval(c.getExpression(), depth);
+        Expression value = c.getExpression();
+        try {
+            if (simpleName(c.getType()).equals("int") && value instanceof IntegerLiteralExpr i)
+                return Value.exact(Integer.toString(i.asInt()));
+            if (simpleName(c.getType()).equals("long")) {
+                if (value instanceof IntegerLiteralExpr i) return Value.exact(Long.toString(i.asInt()));
+                if (value instanceof LongLiteralExpr l) return Value.exact(Long.toString(l.asLong()));
+            }
+        } catch (NumberFormatException ignored) { }
+        return Value.unresolved(c.toString());
+    }
+
+    // shortcut: numeric arithmetic stays unresolved; extend folding only when real inputs need it.
+    private boolean numericExpression(Expression e, int depth) {
+        if (depth > MAX_DEPTH) return false;
+        return switch (e) {
+            case IntegerLiteralExpr i -> true;
+            case LongLiteralExpr l -> true;
+            case DoubleLiteralExpr d -> true;
+            case CharLiteralExpr c -> true;
+            case EnclosedExpr en -> numericExpression(en.getInner(), depth);
+            case CastExpr c -> numericType(c.getType());
+            case UnaryExpr u -> numericExpression(u.getExpression(), depth);
+            case NameExpr n -> declarationOf(n.getNameAsString(), n).or(() -> importedField(n).map(v -> (Node) v))
+                    .map(d -> d instanceof VariableDeclarator v && (numericType(v.getType())
+                            || v.getType().isVarType() && v.getInitializer().map(i -> numericExpression(i, depth + 1)).orElse(false))
+                            || d instanceof Parameter p && numericType(p.getType())).orElse(false);
+            case FieldAccessExpr f -> fieldDeclaration(f).map(v -> numericType(v.getType())).orElse(false);
+            case MethodCallExpr m -> enumGetterArg(m).map(arg -> numericExpression(arg, depth + 1)).orElseGet(() ->
+                    m.getArguments().isEmpty() && (m.getScope().isEmpty() || m.getScope().get() instanceof ThisExpr)
+                            && m.findAncestor(TypeDeclaration.class).stream().flatMap(t -> ((TypeDeclaration<?>) t).getMethodsByName(m.getNameAsString()).stream())
+                            .filter(md -> md.getParameters().isEmpty()).anyMatch(md -> numericType(md.getType())));
+            case BinaryExpr b when b.getOperator() == BinaryExpr.Operator.PLUS ->
+                    numericExpression(b.getLeft(), depth) && numericExpression(b.getRight(), depth);
+            default -> false;
+        };
+    }
+
+    private static boolean numericType(Type type) {
+        return Set.of("byte", "short", "int", "long", "float", "double", "char",
+                "Byte", "Short", "Integer", "Long", "Float", "Double", "Character").contains(simpleName(type));
+    }
+
+    private Optional<VariableDeclarator> fieldDeclaration(FieldAccessExpr f) {
+        Optional<TypeDeclaration<?>> type = f.getScope() instanceof ThisExpr
+                ? f.findAncestor(TypeDeclaration.class).map(t -> (TypeDeclaration<?>) t)
+                : f.getScope() instanceof SuperExpr
+                ? f.findAncestor(ClassOrInterfaceDeclaration.class).flatMap(c -> c.getExtendedTypes().stream()
+                        .findFirst().flatMap(parent -> resolveType(parent, c)))
+                : resolveType(f.getScope().toString(), f);
+        return type.flatMap(t -> fieldOf(t, f.getNameAsString(), 0));
     }
 
     private static Value raw(Value v, Expression e) {
@@ -497,9 +573,14 @@ public final class JavaIndex {
     }
 
     private Value staticImport(NameExpr n, int depth) {
+        return evalDeclaration(importedField(n).map(v -> (Node) v), n, depth)
+                .orElseGet(() -> Value.unresolved(n.getNameAsString()));
+    }
+
+    private Optional<VariableDeclarator> importedField(NameExpr n) {
         String name = n.getNameAsString();
         CompilationUnit cu = n.findCompilationUnit().orElse(null);
-        if (cu == null) return Value.unresolved(name);
+        if (cu == null) return Optional.empty();
         for (ImportDeclaration imp : cu.getImports()) {
             if (!imp.isStatic()) continue;
             String type;
@@ -508,21 +589,13 @@ public final class JavaIndex {
             else continue;
             var t = Optional.ofNullable(type(type, n));
             var v = t.flatMap(td -> fieldOf(td, name, 0));
-            if (v.isPresent()) return evalDeclaration(v.map(x -> (Node) x), n, depth).orElseThrow();
+            if (v.isPresent()) return v;
         }
-        return Value.unresolved(name);
+        return Optional.empty();
     }
 
     private Value evalFieldAccess(FieldAccessExpr f, int depth) {
-        String name = f.getNameAsString();
-        if (f.getScope() instanceof ThisExpr) {
-            var t = f.findAncestor(TypeDeclaration.class);
-            return t.flatMap(td -> fieldOf((TypeDeclaration<?>) td, name, 0))
-                    .flatMap(v -> evalDeclaration(Optional.of(v), f, depth))
-                    .orElseGet(() -> Value.unresolved(f.toString()));
-        }
-        return resolveType(f.getScope().toString(), f)
-                .flatMap(t -> fieldOf(t, name, 0))
+        return fieldDeclaration(f)
                 .flatMap(v -> evalDeclaration(Optional.of(v), f, depth))
                 .orElseGet(() -> Value.unresolved(f.toString()));
     }
@@ -553,20 +626,24 @@ public final class JavaIndex {
             return new Value(text, v.confidence(), m.toString(), v.via());
         }
         // Enum.CONST.getTopic(): the constant's constructor argument that the getter's field is assigned from
-        if (m.getArguments().isEmpty() && name.length() > 3 && name.startsWith("get")
-                && m.getScope().orElse(null) instanceof FieldAccessExpr f) {
-            String field = Character.toLowerCase(name.charAt(3)) + name.substring(4);
-            var arg = resolveType(f.getScope().toString(), m)
-                    .filter(EnumDeclaration.class::isInstance).map(EnumDeclaration.class::cast)
-                    .flatMap(en -> en.getEntries().stream().filter(c -> c.getNameAsString().equals(f.getNameAsString())).findFirst()
-                            .flatMap(c -> enumArg(en, c, field)));
-            if (arg.isPresent()) return raw(eval(arg.get(), depth + 1).withConfidence(Confidence.RESOLVED, evidence(arg.get())), m);
-        }
+        var arg = enumGetterArg(m);
+        if (arg.isPresent()) return raw(eval(arg.get(), depth + 1).withConfidence(Confidence.RESOLVED, evidence(arg.get())), m);
         if (m.getScope().map(Object::toString).orElse("").equals("String") && name.equals("valueOf")
                 && m.getArguments().size() == 1) {
             return raw(eval(m.getArgument(0), depth + 1), m);
         }
         return Value.unresolved(m.toString());
+    }
+
+    private Optional<Expression> enumGetterArg(MethodCallExpr m) {
+        String name = m.getNameAsString();
+        if (!m.getArguments().isEmpty() || name.length() <= 3 || !name.startsWith("get")
+                || !(m.getScope().orElse(null) instanceof FieldAccessExpr f)) return Optional.empty();
+        String field = Character.toLowerCase(name.charAt(3)) + name.substring(4);
+        return resolveType(f.getScope().toString(), m)
+                .filter(EnumDeclaration.class::isInstance).map(EnumDeclaration.class::cast)
+                .flatMap(en -> en.getEntries().stream().filter(c -> c.getNameAsString().equals(f.getNameAsString())).findFirst()
+                        .flatMap(c -> enumArg(en, c, field)));
     }
 
     private static Optional<Expression> enumArg(EnumDeclaration en, EnumConstantDeclaration c, String field) {

@@ -596,9 +596,9 @@ class ModuleDependencyTest {
                         """);
 
         assertThat(edges(repo, Edge.Kind.OWNS))
-                .contains("service:system -> table:system/accounts", "service:users -> table:users/accounts");
+                .contains("service:system -> table:sql:system/accounts", "service:users -> table:sql:users/accounts");
         assertThat(edges(repo, Edge.Kind.USES))
-                .contains("service:system -> table:system/audit", "service:users -> table:users/audit")
+                .contains("service:system -> table:sql:system/audit", "service:users -> table:sql:users/audit")
                 .noneMatch(e -> e.contains("legacy"));
     }
 
@@ -643,7 +643,7 @@ class ModuleDependencyTest {
 
         assertThat(loaded(repo)).contains("PlainMapper.java")
                 .doesNotContain("UnrelatedComponent.java", "OtherMapper.java", "SiblingMapper.java");
-        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:system/registered_table");
+        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:sql:system/registered_table");
     }
 
     @ParameterizedTest
@@ -666,7 +666,7 @@ class ModuleDependencyTest {
 
         assertThat(loaded(repo)).contains("MapperConfiguration.java", "PlainMapper.java", "ExtraComponent.java")
                 .doesNotContain("InScan.java", "OutOfScan.java");
-        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:system/registered_table");
+        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:sql:system/registered_table");
     }
 
     @Test
@@ -685,7 +685,7 @@ class ModuleDependencyTest {
                         """);
 
         assertThat(loaded(repo)).contains("PlainMapper.java").doesNotContain("OutOfScan.java");
-        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:system/registered_table");
+        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:sql:system/registered_table");
     }
 
     @Test
@@ -733,7 +733,7 @@ class ModuleDependencyTest {
                 "AliasEntity.java", "UnregisteredEntity.java", "OtherMapper.java", "UnusedEntity.java");
         var uses = TempRepo.scan(repo).edges().stream().filter(e -> e.kind() == Edge.Kind.USES).toList();
         assertThat(uses).singleElement().satisfies(edge -> {
-            assertThat(edge.to()).isEqualTo("table:system/registered_table");
+            assertThat(edge.to()).isEqualTo("table:sql:system/registered_table");
             assertThat(edge.evidence()).extracting(e -> e.file() + ":" + e.line()).containsExactlyInAnyOrder(
                     "lib/src/main/java/entities/ActiveEntity.java:2", "lib/src/main/resources/mappers/PlainMapper.xml:7");
         });
@@ -771,11 +771,11 @@ class ModuleDependencyTest {
                         + "\"><select id=\"find\">select * from " + mapper.toLowerCase(java.util.Locale.ROOT) + "</select></mapper>");
 
             var uses = edges(repo, Edge.Kind.USES);
-            assertThat(uses).as(filters).contains("service:system -> table:system/bothmapper")
+            assertThat(uses).as(filters).contains("service:system -> table:sql:system/bothmapper")
                     .noneMatch(e -> e.contains("neithermapper"));
-            assertThat(uses.contains("service:system -> table:system/taggedmapper")).as(filters)
+            assertThat(uses.contains("service:system -> table:sql:system/taggedmapper")).as(filters)
                     .isEqualTo(filters.contains("annotationClass"));
-            assertThat(uses.contains("service:system -> table:system/markedmapper")).as(filters)
+            assertThat(uses.contains("service:system -> table:sql:system/markedmapper")).as(filters)
                     .isEqualTo(filters.contains("markerInterface"));
         }
     }
@@ -808,7 +808,7 @@ class ModuleDependencyTest {
 
         assertThat(loaded(repo)).contains("MongoDBRepository.java", "FranchiseDocument.java")
                 .doesNotContain("IgnoredRepository.java", "OtherRepository.java", "OtherDocument.java");
-        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:system/franchises");
+        assertThat(edges(repo, Edge.Kind.USES)).containsExactly("service:system -> table:mongo:system/franchises");
     }
 
     @Test
@@ -844,8 +844,8 @@ class ModuleDependencyTest {
 
         assertThat(loaded(repo)).contains("RegisteredRepository.java", "DefaultReactiveRepository.java", "DefaultJpaRepository.java")
                 .doesNotContain("UnregisteredRepository.java", "ForeignReactiveRepository.java");
-        assertThat(edges(repo, Edge.Kind.USES)).containsExactlyInAnyOrder("service:system -> table:system/registered",
-                "service:system -> table:system/reactive_default", "service:system -> table:system/jpa_default");
+        assertThat(edges(repo, Edge.Kind.USES)).containsExactlyInAnyOrder("service:system -> table:mongo:system/registered",
+                "service:system -> table:mongo:system/reactive_default", "service:system -> table:sql:system/jpa_default");
     }
 
     @Test
@@ -1180,7 +1180,7 @@ class ModuleDependencyTest {
 
         assertThat(loaded(repo)).contains("CoreConfiguration.java", "UserServiceImpl.java")
                 .doesNotContain("UnusedImplementation.java");
-        assertThat(edges(repo, Edge.Kind.REACHES)).containsExactly("endpoint:system:GET /xml -> table:system/xml_users");
+        assertThat(edges(repo, Edge.Kind.REACHES)).containsExactly("endpoint:system:GET /xml -> table:sql:system/xml_users");
     }
 
     @Test

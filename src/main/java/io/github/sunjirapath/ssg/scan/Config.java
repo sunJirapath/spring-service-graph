@@ -5,6 +5,7 @@ import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Value;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.MarkedYAMLException;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,11 @@ public final class Config {
     private static final int MAX_DEPTH = 16;
 
     private final Map<String, Entry> entries = new TreeMap<>();
+    private final Map<String, Entry> boundEntries = new TreeMap<>();
+    private final Map<String, Integer> precedence = new HashMap<>();
+    private int sources;
+    private final Set<String> listRoots = new HashSet<>();
+    private static final Pattern LIST_INDEX = Pattern.compile("\\[\\d+]");
 
     public Config() {}
 
@@ -60,7 +68,7 @@ public final class Config {
             else addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
             // A malformed config file must not stop the scan; its keys are simply absent.
-            System.err.println("warn: cannot read " + file + ": " + e.getMessage());
+            System.err.println("warn: cannot read " + file + ": " + safeError(e));
         }
     }
 
@@ -71,10 +79,22 @@ public final class Config {
             if (properties) inner.addProperties(repo, file, text, profile);
             else inner.addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
-            System.err.println("warn: cannot read config embedded in " + file + ":" + line + ": " + e.getMessage());
+            System.err.println("warn: cannot read config embedded in " + file + ":" + line + ": " + safeError(e));
             return;
         }
-        inner.entries.forEach((k, e) -> put(k, e.value(), repo.evidence(file, line)));
+        inner.entries.replaceAll((k, e) -> new Entry(e.value(), repo.evidence(file, line)));
+        inner.boundEntries.replaceAll((k, e) -> new Entry(e.value(), repo.evidence(file, line)));
+        putAll(inner);
+    }
+
+    private static String safeError(Exception error) {
+        // Parser messages include source snippets, which may contain credentials.
+        if (error instanceof MarkedYAMLException yaml && yaml.getProblemMark() != null) {
+            var mark = yaml.getProblemMark();
+            return error.getClass().getSimpleName() + " at line " + (mark.getLine() + 1)
+                    + ", column " + (mark.getColumn() + 1);
+        }
+        return error.getClass().getSimpleName();
     }
 
     /** UTF-8 without BOM; legacy files that are not valid UTF-8 are read as ISO-8859-1, as Spring does for .properties. */
@@ -90,17 +110,23 @@ public final class Config {
     }
 
     public void putAll(Config other) {
+        if (other == this) return;
         entries.putAll(other.entries);
+        other.precedence.forEach((k, rank) -> precedence.put(k, sources + rank));
+        sources += other.sources;
+        replaceLists(other.listRoots, other.boundEntries);
+        boundEntries.putAll(other.boundEntries);
+        listRoots.addAll(other.listRoots);
     }
 
     public Entry get(String key) {
         return entries.get(key);
     }
 
-    /** Entries whose key starts with {@code prefix}, in key order. */
+    /** Bound entries in key order: higher-precedence lists replace the entire lower-precedence list. */
     public Map<String, Entry> withPrefix(String prefix) {
         var out = new LinkedHashMap<String, Entry>();
-        entries.forEach((k, v) -> { if (k.startsWith(prefix)) out.put(k, v); });
+        boundEntries.forEach((k, v) -> { if (k.startsWith(prefix)) out.put(k, v); });
         return out;
     }
 
@@ -118,6 +144,15 @@ public final class Config {
         if (e == null || e.value() == null) return Value.unresolved("${" + key + "}");
         Value v = resolve(e.value()).withConfidence(Confidence.RESOLVED, e.evidence());
         return new Value(v.text(), v.confidence(), "${" + key + "}", v.via());
+    }
+
+    /** Alias lookup keeps source precedence; the first spelling wins within the same source. */
+    public Value valueOfAny(String... keys) {
+        String selected = null;
+        for (String key : keys) {
+            if (entries.containsKey(key) && (selected == null || precedence.get(key) > precedence.get(selected))) selected = key;
+        }
+        return valueOf(selected == null ? keys[0] : selected);
     }
 
     private Value resolve(String text, int depth) {
@@ -222,13 +257,38 @@ public final class Config {
         for (var doc : yaml.composeAll(new StringReader(unfiltered(repo, file, text)))) {
             if (doc == null) continue; // empty document between --- separators
             var flat = new LinkedHashMap<String, Entry>();
-            flatten(repo, file, "", doc, flat, Collections.newSetFromMap(new IdentityHashMap<>()));
-            addDocument(flat, profile);
+            var lists = new HashSet<String>();
+            flatten(repo, file, "", doc, flat, lists, Collections.newSetFromMap(new IdentityHashMap<>()));
+            addDocument(flat, lists, profile);
         }
     }
 
     private void addDocument(Map<String, Entry> doc, String profile) {
-        if (activeFor(doc, profile)) doc.forEach((k, v) -> put(k, v.value(), v.evidence()));
+        addDocument(doc, Set.of(), profile);
+    }
+
+    private void addDocument(Map<String, Entry> doc, Set<String> lists, String profile) {
+        if (!activeFor(doc, profile)) return;
+        int source = ++sources;
+        var replaced = new HashSet<>(lists);
+        doc.keySet().forEach(key -> {
+            var index = LIST_INDEX.matcher(key);
+            if (index.find()) replaced.add(key.substring(0, index.start()));
+        });
+        replaceLists(replaced, doc);
+        doc.forEach((k, v) -> {
+            put(k, v.value(), v.evidence());
+            precedence.put(k, source);
+            boundEntries.put(k, entries.get(k));
+        });
+        listRoots.addAll(replaced);
+    }
+
+    private void replaceLists(Set<String> roots, Map<String, Entry> overrides) {
+        // Scalar property lookup still falls back across sources; collection binding does not.
+        var replaced = new HashSet<>(roots);
+        for (String root : listRoots) if (overrides.containsKey(root)) replaced.add(root);
+        for (String root : replaced) boundEntries.keySet().removeIf(k -> k.equals(root) || k.startsWith(root + "["));
     }
 
     private static final Pattern MAVEN_TOKEN = Pattern.compile("@([A-Za-z][\\w.-]*)@");
@@ -313,28 +373,24 @@ public final class Config {
     }
 
     private static void flatten(Repo repo, Path file, String prefix, Node node,
-                                Map<String, Entry> out, Set<Node> ancestors) {
+                                Map<String, Entry> out, Set<String> lists, Set<Node> ancestors) {
         int line = node.getStartMark().getLine() + 1;
         if (!ancestors.add(node)) throw new IllegalArgumentException("recursive YAML alias at line " + line);
         try {
             switch (node) {
                 case MappingNode m -> {
-                    // merge keys (<<: *defaults) first, so keys written explicitly in this mapping override them
-                    for (NodeTuple t : m.getValue()) {
-                        if (t.getKeyNode() instanceof ScalarNode k && k.getValue().equals("<<")) {
-                            var merged = t.getValueNode() instanceof SequenceNode s ? s.getValue() : List.of(t.getValueNode());
-                            merged.forEach(n -> flatten(repo, file, prefix, n, out, ancestors));
-                        }
-                    }
-                    for (NodeTuple t : m.getValue()) {
-                        if (!(t.getKeyNode() instanceof ScalarNode k) || k.getValue().equals("<<")) continue;
+                    for (NodeTuple t : mappingEntries(m, ancestors).values()) {
+                        ScalarNode k = (ScalarNode) t.getKeyNode();
                         flatten(repo, file, prefix.isEmpty() ? k.getValue() : prefix + "." + k.getValue(),
-                                t.getValueNode(), out, ancestors);
+                                t.getValueNode(), out, lists, ancestors);
                     }
                 }
                 case SequenceNode s -> {
+                    var index = LIST_INDEX.matcher(prefix);
+                    lists.add(index.find() ? prefix.substring(0, index.start()) : prefix);
                     List<Node> items = s.getValue();
-                    for (int i = 0; i < items.size(); i++) flatten(repo, file, prefix + "[" + i + "]", items.get(i), out, ancestors);
+                    if (items.isEmpty() && !prefix.isEmpty()) out.put(prefix, new Entry("", repo.evidence(file, line)));
+                    for (int i = 0; i < items.size(); i++) flatten(repo, file, prefix + "[" + i + "]", items.get(i), out, lists, ancestors);
                 }
                 case ScalarNode sc -> {
                     if (!prefix.isEmpty()) out.put(prefix, new Entry(sc.getValue(), repo.evidence(file, line)));
@@ -344,6 +400,30 @@ public final class Config {
         } finally {
             ancestors.remove(node);
         }
+    }
+
+    private static Map<String, NodeTuple> mappingEntries(MappingNode mapping, Set<Node> ancestors) {
+        var fields = new LinkedHashMap<String, NodeTuple>();
+        // Resolve whole YAML keys before flattening: merge sequences prefer the first mapping.
+        for (NodeTuple tuple : mapping.getValue()) {
+            if (!(tuple.getKeyNode() instanceof ScalarNode key) || !key.getValue().equals("<<")) continue;
+            var merged = tuple.getValueNode() instanceof SequenceNode s ? s.getValue() : List.of(tuple.getValueNode());
+            for (Node node : merged) {
+                if (!(node instanceof MappingNode source)) throw new IllegalArgumentException("invalid YAML merge");
+                if (!ancestors.add(source)) throw new IllegalArgumentException("recursive YAML alias");
+                try {
+                    mappingEntries(source, ancestors).forEach(fields::putIfAbsent);
+                } finally {
+                    ancestors.remove(source);
+                }
+            }
+        }
+        for (NodeTuple tuple : mapping.getValue()) {
+            if (tuple.getKeyNode() instanceof ScalarNode key && !key.getValue().equals("<<")) {
+                fields.put(key.getValue(), tuple);
+            }
+        }
+        return fields;
     }
 
     /** Reads a whole YAML/JSON file as SnakeYAML nodes, for extractors that walk non-config YAML. */

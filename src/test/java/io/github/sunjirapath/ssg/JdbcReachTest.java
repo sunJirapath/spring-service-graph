@@ -37,13 +37,13 @@ class JdbcReachTest {
 
         assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.USES && e.from().equals("service:orders-service"))
                 .extracting(Edge::to)
-                .containsExactlyInAnyOrder("table:orders-service/orders", "table:orders-service/order_lines");
+                .containsExactlyInAnyOrder("table:sql:orders-service/orders", "table:sql:orders-service/order_lines");
         assertThat(graph.edges()).filteredOn(e -> e.kind() == Edge.Kind.REACHES
                         && e.from().equals("endpoint:orders-service:GET /orders/{id}"))
                 .hasSize(2)
                 .allSatisfy(e -> assertThat(e.attrs()).containsEntry("chain", "OrdersController.get → OrdersService.load"))
                 .extracting(Edge::to)
-                .containsExactlyInAnyOrder("table:orders-service/orders", "table:orders-service/order_lines");
+                .containsExactlyInAnyOrder("table:sql:orders-service/orders", "table:sql:orders-service/order_lines");
     }
 
     @Test
@@ -72,7 +72,7 @@ class JdbcReachTest {
         assertThat(graph.edges()).anySatisfy(e -> {
             assertThat(e.kind()).isEqualTo(Edge.Kind.REACHES);
             assertThat(e.from()).isEqualTo("endpoint:wrapper-service:GET /orders");
-            assertThat(e.to()).isEqualTo("table:wrapper-service/wrapped_orders");
+            assertThat(e.to()).isEqualTo("table:sql:wrapper-service/wrapped_orders");
             assertThat(e.attrs()).containsEntry("chain", "OrdersController.get → OrdersService.load");
         });
         assertThat(graph.findings()).noneMatch(f -> f.kind() == Finding.Kind.UNRESOLVED);
@@ -93,9 +93,9 @@ class JdbcReachTest {
 
         Graph graph = TempRepo.scan(repo);
 
-        assertThat(graph.nodes()).filteredOn(n -> n.id().equals("table:inventory-service/orders"))
+        assertThat(graph.nodes()).filteredOn(n -> n.id().equals("table:sql:inventory-service/orders"))
                 .singleElement().isInstanceOf(Node.Table.class);
-        assertThat(graph.edges()).filteredOn(e -> e.to().equals("table:inventory-service/orders"))
+        assertThat(graph.edges()).filteredOn(e -> e.to().equals("table:sql:inventory-service/orders"))
                 .extracting(Edge::kind)
                 .containsExactlyInAnyOrder(Edge.Kind.OWNS, Edge.Kind.USES);
     }
@@ -125,6 +125,6 @@ class JdbcReachTest {
 
         assertThat(exit).isZero();
         assertThat(graph.nodes()).filteredOn(Node.Table.class::isInstance).extracting(Node::id)
-                .contains("table:cli-service/cli_orders", "table:cli-service/cli_audit");
+                .contains("table:sql:cli-service/cli_orders", "table:sql:cli-service/cli_audit");
     }
 }

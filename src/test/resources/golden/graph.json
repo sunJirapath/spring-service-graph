@@ -70,27 +70,29 @@
     },
     {
       "kind" : "table",
-      "id" : "table:account/accounts",
+      "id" : "table:sql:account/accounts",
       "service" : "account",
       "name" : "accounts",
       "store" : "sql"
     },
     {
       "kind" : "topic",
-      "id" : "topic:account.created",
-      "name" : "account.created"
+      "id" : "topic:kafka:account.created",
+      "name" : "account.created",
+      "broker" : "kafka"
     },
     {
       "kind" : "topic",
-      "id" : "topic:audit.events",
-      "name" : "audit.events"
+      "id" : "topic:unknown:audit.events",
+      "name" : "audit.events",
+      "broker" : "unknown"
     }
   ],
   "edges" : [
     {
       "kind" : "REACHES",
       "from" : "endpoint:account:POST /api/accounts",
-      "to" : "topic:account.created",
+      "to" : "topic:kafka:account.created",
       "confidence" : "RESOLVED",
       "attrs" : {
         "chain" : "AccountController.createAccount → AccountEvents.accountCreated"
@@ -153,7 +155,7 @@
     {
       "kind" : "PRODUCES",
       "from" : "service:account",
-      "to" : "topic:account.created",
+      "to" : "topic:kafka:account.created",
       "confidence" : "RESOLVED",
       "attrs" : {
         "via" : "KafkaTemplate"
@@ -179,7 +181,7 @@
     {
       "kind" : "OWNS",
       "from" : "service:account",
-      "to" : "table:account/accounts",
+      "to" : "table:sql:account/accounts",
       "confidence" : "EXACT",
       "attrs" : { },
       "evidence" : [
@@ -193,7 +195,7 @@
     {
       "kind" : "USES",
       "from" : "service:account",
-      "to" : "table:account/accounts",
+      "to" : "table:sql:account/accounts",
       "confidence" : "EXACT",
       "attrs" : { },
       "evidence" : [
@@ -379,7 +381,7 @@
     {
       "kind" : "CONSUMES",
       "from" : "service:notification",
-      "to" : "topic:account.created",
+      "to" : "topic:kafka:account.created",
       "confidence" : "RESOLVED",
       "attrs" : {
         "via" : "KafkaListener"
@@ -395,7 +397,7 @@
     {
       "kind" : "CONSUMES",
       "from" : "service:notification",
-      "to" : "topic:audit.events",
+      "to" : "topic:unknown:audit.events",
       "confidence" : "EXACT",
       "attrs" : {
         "via" : "cloud-stream:audit-in-0"

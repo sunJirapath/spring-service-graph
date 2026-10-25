@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  */
 public final class Discovery {
 
-    private static final List<String> EXTENSIONS = List.of("properties", "yml", "yaml");
+    private static final List<String> EXTENSIONS = List.of("yml", "yaml", "properties");
     /** Library classes Spring instantiates in the service that depends on them. */
     private static final String[] BEANS = {"Component", "Service", "Repository", "Configuration", "AutoConfiguration",
             "Mapper", "Controller", "RestController", "ControllerAdvice", "RestControllerAdvice"};

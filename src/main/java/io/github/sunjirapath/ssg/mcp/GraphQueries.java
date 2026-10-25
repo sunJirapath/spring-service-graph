@@ -34,12 +34,14 @@ public final class GraphQueries {
     public List<String> resolve(String target) {
         String t = target.strip();
         if (nodes.containsKey(t)) return List.of(t);
-        for (String id : List.of(Node.Service.idOf(t), Node.Topic.idOf(t), Node.External.idOf(t))) {
+        for (String id : List.of(Node.Service.idOf(t), Node.External.idOf(t))) {
             if (nodes.containsKey(id)) return List.of(id);
         }
         var out = new ArrayList<String>(endpoints(t));
         for (Node n : g.nodes()) {
-            if (n instanceof Node.Table tb && (t.equals(tb.name()) || t.equals(tb.service() + "/" + tb.name()))) out.add(n.id());
+            if (n instanceof Node.Topic topic && (t.equals(topic.name()) || t.equals(Node.Topic.idOf(topic.name())))) out.add(n.id());
+            if (n instanceof Node.Table tb && (t.equals(tb.name()) || t.equals(tb.service() + "/" + tb.name())
+                    || t.equals(Node.Table.idOf(tb.service(), tb.name())))) out.add(n.id());
         }
         if (out.isEmpty()) throw new IllegalArgumentException("no node matches '" + target
                 + "'; use a service or topic name, 'METHOD /path', a table name, or a node id from graph.json");

@@ -34,6 +34,23 @@ class JavaIndexTest {
     }
 
     @Test
+    void qualifiedSuperFieldUsesTheSuperclassDeclaration() throws IOException {
+        src("a/A.java", """
+                package a;
+                class Base { String binder = "rabbit"; }
+                class Child extends Base {
+                    Object binder = new Object();
+                    void send() { use(super.binder); use(this.binder); }
+                }
+                """);
+        var index = JavaIndex.build(Repo.of(repo));
+        var fields = index.units().stream().flatMap(u -> u.findAll(MethodCallExpr.class).stream())
+                .filter(m -> m.getNameAsString().equals("use")).map(m -> m.getArgument(0)).toList();
+        assertThat(index.declaredType("binder", fields.get(0))).contains("String");
+        assertThat(index.declaredType("binder", fields.get(1))).contains("Object");
+    }
+
+    @Test
     void compactedTreesKeepLinesNamesAndStructure() throws IOException {
         src("a/A.java", "package a;\nclass A {\n  void m() { use(1); }\n}\n");
         src("a/B.java", "package a;\nclass B {\n\n  void m() { use(2); }\n}\n");

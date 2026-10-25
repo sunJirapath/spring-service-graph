@@ -63,9 +63,9 @@ class MessyFleetTest {
 
     @Test
     void modernKafkaProducerAndEventsConsumerShareResolvedTopic() {
-        assertThat(edges(Edge.Kind.PRODUCES, "service:modern-svc", "topic:orders.changed"))
+        assertThat(edges(Edge.Kind.PRODUCES, "service:modern-svc", "topic:kafka:orders.changed"))
                 .singleElement().satisfies(e -> assertThat(e.confidence()).isEqualTo(Confidence.RESOLVED));
-        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:orders.changed"))
+        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:kafka:orders.changed"))
                 .anySatisfy(e -> {
                     assertThat(e.attrs()).containsEntry("via", "KafkaListener");
                     assertThat(e.confidence()).isEqualTo(Confidence.RESOLVED);
@@ -175,10 +175,11 @@ class MessyFleetTest {
 
     @Test
     void cloudStreamHandlesCommaSeparatedDestinationsAndReportsUnknownDirection() {
-        assertThat(edges(Edge.Kind.PRODUCES, "service:events-svc", "topic:audit.events")).hasSize(1);
-        assertThat(edges(Edge.Kind.PRODUCES, "service:events-svc", "topic:orphan.produced")).hasSize(2);
-        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:audit.events")).hasSize(1);
-        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:orphan.consumed")).hasSize(1);
+        assertThat(edges(Edge.Kind.PRODUCES, "service:events-svc", "topic:unknown:audit.events")).hasSize(1);
+        assertThat(edges(Edge.Kind.PRODUCES, "service:events-svc", "topic:unknown:orphan.produced")).hasSize(1);
+        assertThat(edges(Edge.Kind.PRODUCES, "service:events-svc", "topic:kafka:orphan.produced")).hasSize(1);
+        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:unknown:audit.events")).hasSize(1);
+        assertThat(edges(Edge.Kind.CONSUMES, "service:events-svc", "topic:unknown:orphan.consumed")).hasSize(1);
         assertThat(graph.findings())
                 .filteredOn(f -> f.kind() == Finding.Kind.UNRESOLVED && f.service().equals("events-svc"))
                 .anySatisfy(f -> assertThat(f.message()).contains("legacyBinding").contains("direction is unknown"));
@@ -187,11 +188,11 @@ class MessyFleetTest {
     @Test
     void sqlAndMongoDataSurviveQuotedSchemaAndMultilineChangelog() {
         assertThat(graph.nodes()).filteredOn(Node.Table.class::isInstance).extracting(Node::id)
-                .contains("table:modern-svc/order_item", "table:modern-svc/event_log",
-                        "table:events-svc/event_outbox", "table:events-svc/audit_events");
-        assertThat(edges(Edge.Kind.OWNS, "service:events-svc", "table:events-svc/event_outbox"))
+                .contains("table:sql:modern-svc/order_item", "table:sql:modern-svc/event_log",
+                        "table:sql:events-svc/event_outbox", "table:mongo:events-svc/audit_events");
+        assertThat(edges(Edge.Kind.OWNS, "service:events-svc", "table:sql:events-svc/event_outbox"))
                 .singleElement().satisfies(e -> assertThat(e.evidence().getFirst().line()).isEqualTo(3));
-        assertThat(edges(Edge.Kind.USES, "service:events-svc", "table:events-svc/audit_events"))
+        assertThat(edges(Edge.Kind.USES, "service:events-svc", "table:mongo:events-svc/audit_events"))
                 .singleElement().satisfies(e -> assertThat(e.evidence()).hasSize(2));
     }
 
