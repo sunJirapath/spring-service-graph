@@ -102,10 +102,16 @@ public final class Linker {
                     if (owners.computeIfAbsent(key, k -> new java.util.TreeSet<>()).add(sf.service()))
                         evidence.computeIfAbsent(key, k -> new ArrayList<>()).add(t.evidence());
                 }
+        // one finding per set of owners: a shared -dao module would otherwise repeat it for every table
+        var groups = new java.util.LinkedHashMap<java.util.TreeSet<String>, List<String>>();
         owners.forEach((key, services) -> {
-            if (services.size() < 2) return;
-            findings.add(new Finding(Finding.Kind.SHARED_TABLE, services.first(), "table `" + key.substring(key.indexOf(':') + 1)
-                    + "` is owned by " + services.size() + " services: " + String.join(", ", services), evidence.get(key)));
+            if (services.size() >= 2) groups.computeIfAbsent(services, k -> new ArrayList<>()).add(key);
+        });
+        groups.forEach((services, keys) -> {
+            var tables = keys.stream().map(k -> "`" + k.substring(k.indexOf(':') + 1) + "`").distinct().toList();
+            findings.add(new Finding(Finding.Kind.SHARED_TABLE, services.first(), (tables.size() == 1 ? "table " : "tables ")
+                    + String.join(", ", tables) + (tables.size() == 1 ? " is" : " are") + " owned by " + services.size()
+                    + " services: " + String.join(", ", services), keys.stream().flatMap(k -> evidence.get(k).stream()).toList()));
         });
     }
 
@@ -152,7 +158,8 @@ public final class Linker {
                 case Fact.TableUse t -> {
                     String tid = Node.Table.idOf(sf.service(), t.table().text(), t.store());
                     nodes.putIfAbsent(tid, new Node.Table(tid, sf.service(), t.table().text(), t.store()));
-                    edge(t.owns() ? Edge.Kind.OWNS : Edge.Kind.USES, from, tid, t.table(), t.evidence(), new TreeMap<>());
+                    edge(t.owns() ? Edge.Kind.OWNS : Edge.Kind.USES, from, tid, t.table(), t.evidence(),
+                        "@Query".equals(t.via()) ? attrs("via", "@Query") : new TreeMap<>());
                     sinkTargets.computeIfAbsent(t.evidence(), k -> new ArrayList<>()).add(tid);
                     if (!t.table().resolved()) unresolved(sf.service(), "table", t.table(), t.evidence());
                 }

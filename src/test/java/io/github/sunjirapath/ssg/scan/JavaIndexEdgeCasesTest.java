@@ -440,8 +440,43 @@ class JavaIndexEdgeCasesTest {
         assertThat(afterQuery.text()).isEqualTo("/items?a=1&");
         assertThat(sqlClause.text()).isEqualTo("SELECT * FROM t");
         assertThat(sqlCall.text()).isEqualTo("SELECT * FROM t");
-        assertThat(selfPath.confidence()).isEqualTo(Confidence.UNRESOLVED);
+        assertThat(selfPath.text()).isEqualTo("/items/more"); // a straight-line reassignment folds in order
         assertThat(otherBase.confidence()).isEqualTo(Confidence.UNRESOLVED);
+    }
+
+    @Test
+    void reassignedLocalFoldsTheValueAssignedLastBeforeEachUse() {
+        var index = index(repo("reassigned-local").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(String w) {
+                        String sql = " SELECT a FROM t1 ";
+                        sql += w;
+                        use(sql);
+                        sql = " SELECT b FROM t2 ";
+                        sql += w;
+                        use(sql);
+                    }
+                }
+                """));
+        var uses = index.units().stream().flatMap(u -> u.findAll(MethodCallExpr.class).stream())
+                .filter(c -> c.getNameAsString().equals("use")).map(c -> index.eval(c.getArgument(0)).text()).toList();
+        var branch = fold(repo("reassigned-branch").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(boolean f) { String sql = "SELECT * FROM t1"; if (f) sql = "SELECT * FROM t2"; use(sql); }
+                }
+                """));
+        var loop = fold(repo("reassigned-loop").java("x/Use.java", """
+                package x;
+                class Use {
+                    void m(boolean f) { String sql = "SELECT * FROM t1"; while (f) { use(sql); sql = "SELECT * FROM t2"; } }
+                }
+                """));
+
+        assertThat(uses).containsExactly(" SELECT a FROM t1 ", " SELECT b FROM t2 ");
+        assertThat(branch.confidence()).isEqualTo(Confidence.UNRESOLVED);
+        assertThat(loop.confidence()).isEqualTo(Confidence.UNRESOLVED);
     }
 
     @Test

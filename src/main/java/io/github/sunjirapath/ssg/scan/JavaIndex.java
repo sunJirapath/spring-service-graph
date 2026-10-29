@@ -504,7 +504,9 @@ public final class JavaIndex {
         }
         if (d instanceof VariableDeclarator v && v.getInitializer().isPresent()) {
             // past MAX_DEPTH the initializer does not fold anyway; skipping the check there stops a = b; b = a recursing
-            if (depth < MAX_DEPTH && !singleValued.computeIfAbsent(v, this::singleValued)) return Optional.of(Value.unresolved(use.toString()));
+            if (depth < MAX_DEPTH && !singleValued.computeIfAbsent(v, this::singleValued))
+                return Optional.of(reaching(v, use).map(e -> raw(eval(e, depth + 1).withConfidence(Confidence.RESOLVED, evidence(e)), use))
+                        .orElseGet(() -> Value.unresolved(use.toString())));
             return Optional.of(raw(eval(v.getInitializer().get(), depth + 1).withConfidence(Confidence.RESOLVED, at), use));
         }
         return Optional.of(Value.unresolved(use.toString()));
@@ -525,19 +527,43 @@ public final class JavaIndex {
         String name = v.getNameAsString();
         String initial = eval(v.getInitializer().orElseThrow(), MAX_DEPTH).text();
         for (AssignExpr a : scope.findAll(AssignExpr.class)) {
-            boolean target = switch (a.getTarget()) {
-                case NameExpr n -> n.getNameAsString().equals(name) && declarationOf(name, n).orElse(null) == v;
-                case FieldAccessExpr f -> field && f.getScope() instanceof ThisExpr && f.getNameAsString().equals(name)
-                        && f.findAncestor(TypeDeclaration.class).orElse(null) == scope;
-                default -> false;
-            };
-            if (!target || suffixAppend(a, name, initial) || field && injected(a)) continue;
+            if (!assigns(a, v, field, scope) || suffixAppend(a, name, initial) || field && injected(a)) continue;
             // only a literal counts as the same value; MAX_DEPTH stops the fold at the first name hop
             Value assigned = eval(a.getValue(), MAX_DEPTH);
             if (a.getOperator() != AssignExpr.Operator.ASSIGN || assigned.confidence() == Confidence.UNRESOLVED
                     || !assigned.text().equals(initial)) return false;
         }
         return true;
+    }
+
+    private boolean assigns(AssignExpr a, VariableDeclarator v, boolean field, Node scope) {
+        String name = v.getNameAsString();
+        return switch (a.getTarget()) {
+            case NameExpr n -> n.getNameAsString().equals(name) && declarationOf(name, n).orElse(null) == v;
+            case FieldAccessExpr f -> field && f.getScope() instanceof ThisExpr && f.getNameAsString().equals(name)
+                    && f.findAncestor(TypeDeclaration.class).orElse(null) == scope;
+            default -> false;
+        };
+    }
+
+    /**
+     * The value a reassigned local holds at {@code use}: the last {@code =} before it, else the initializer, when every
+     * reassignment is a statement of the declaring block and later appends are ones {@link #suffixAppend} drops.
+     * shortcut: a reassignment in a branch or loop stays unresolved; fold per path if a fleet needs it.
+     */
+    private Optional<Expression> reaching(VariableDeclarator v, Expression use) {
+        if (!(v.getParentNode().orElse(null) instanceof VariableDeclarationExpr x
+                && x.getParentNode().orElse(null) instanceof ExpressionStmt decl
+                && decl.getParentNode().orElse(null) instanceof BlockStmt block) || use.getBegin().isEmpty()) return Optional.empty();
+        Expression value = v.getInitializer().orElseThrow();
+        // every reassignment, before the use or after it, must be straight-line: one after it in a loop reaches it too
+        for (AssignExpr a : block.findAll(AssignExpr.class)) {
+            if (!assigns(a, v, false, block) || suffixAppend(a, v.getNameAsString(), eval(value, MAX_DEPTH).text())) continue;
+            boolean straight = a.getParentNode().orElse(null) instanceof ExpressionStmt s && s.getParentNode().orElse(null) == block;
+            if (a.getOperator() != AssignExpr.Operator.ASSIGN || !straight || a.getEnd().isEmpty()) return Optional.empty();
+            if (a.getEnd().get().isBefore(use.getBegin().get())) value = a.getValue();
+        }
+        return Optional.of(value);
     }
 
     /**
