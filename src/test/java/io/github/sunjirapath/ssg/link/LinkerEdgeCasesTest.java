@@ -328,6 +328,27 @@ class LinkerEdgeCasesTest {
         });
     }
 
+    @Test
+    void tablesSharedByTheSameServicesAreOneFinding() {
+        var findings = link(service("a", table(true, "orders", "sql", ev("a/V1.sql", 1)), table(true, "items", "sql", ev("a/V1.sql", 2))),
+                service("b", table(true, "orders", "sql", ev("b/V1.sql", 1)), table(true, "items", "sql", ev("b/V1.sql", 2)))).findings().stream()
+                .filter(f -> f.kind() == Finding.Kind.SHARED_TABLE).toList();
+
+        assertThat(findings).singleElement().satisfies(f -> {
+            assertThat(f.message()).isEqualTo("tables `items`, `orders` are owned by 2 services: a, b");
+            assertThat(f.evidence()).hasSize(4);
+        });
+    }
+
+    @Test
+    void queryTableUseKeepsViaOnTheEdge() {
+        var query = new Fact.TableUse(false, exact("orders"), "sql", ev("a/Repo.java", 3), "@Query");
+        var entity = table(false, "items", "sql", ev("a/Item.java", 1));
+
+        assertThat(link(service("a", query, entity)).edges()).filteredOn(e -> e.kind() == Edge.Kind.USES)
+                .extracting(e -> e.attrs().get("via")).containsExactlyInAnyOrder("@Query", null);
+    }
+
     private static Graph link(Linker.ServiceFacts... services) {
         return link(Map.of(), services);
     }
