@@ -1,6 +1,6 @@
 # Project
 
-Name: **spring-service-graph**
+Name: **wt-ssg**
 
 Purpose: Static cross-service dependency graph for Spring Boot microservice fleets with file:line evidence
 
