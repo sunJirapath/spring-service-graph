@@ -38,6 +38,14 @@ class PathMatchEdgeCasesTest {
     }
 
     @Test
+    void captureRestVariableMatchesMultipleSegments() {
+        assertThat(PathMatch.matches("/files/a/b/c", "/files/{*rest}")).isTrue();
+        assertThat(PathMatch.matches("/files/{*rest}", "/files/a/b/c")).isTrue();
+        assertThat(PathMatch.matches("/files/a", "/files/{*rest}")).isTrue();
+        assertThat(PathMatch.matches("/other/a/b", "/files/{*rest}")).isFalse();
+    }
+
+    @Test
     void doubleStarAtEndMatchesZeroOrMoreSegments() {
         assertThat(PathMatch.matches("/api/**", "/api")).isTrue();
         assertThat(PathMatch.matches("/api", "/api/**")).isTrue();

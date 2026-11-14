@@ -31,6 +31,11 @@ public final class Main {
                    ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
             """;
 
+    private static final Map<String, java.util.Set<String>> KNOWN_OPTIONS = Map.of(
+            "scan", java.util.Set.of("--repos", "--profile", "--aliases", "--config-repo", "--link-base", "--sql-methods", "--out"),
+            "diff", java.util.Set.of("--base", "--head", "--fail-on-breaking"),
+            "mcp", java.util.Set.of("--graph"));
+
     private Main() {}
 
     public static void main(String[] args) {
@@ -52,6 +57,12 @@ public final class Main {
             return 0;
         }
         Map<String, List<String>> opts = parse(args);
+        var known = KNOWN_OPTIONS.get(args[0]);
+        if (known != null) {
+            for (String name : opts.keySet()) {
+                if (!known.contains(name)) throw new IllegalArgumentException("unknown option for " + args[0] + ": " + name);
+            }
+        }
         return switch (args[0]) {
             case "scan" -> scan(opts);
             case "diff" -> {

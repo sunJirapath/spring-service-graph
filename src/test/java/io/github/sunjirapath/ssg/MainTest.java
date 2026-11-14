@@ -69,6 +69,16 @@ class MainTest {
     }
 
     @Test
+    void unknownOptionIsRejectedPerCommand() {
+        assertThatThrownBy(() -> Main.run(new String[]{"scan", "--repos", "x", "--out", "y", "--profiles", "prod"}))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("unknown option for scan: --profiles");
+        assertThatThrownBy(() -> Main.run(new String[]{"diff", "--base", "a", "--head", "b", "--fail-on-breaking-change"}))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("unknown option for diff: --fail-on-breaking-change");
+        assertThatThrownBy(() -> Main.run(new String[]{"mcp", "--graph", "g", "--port", "1"}))
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("unknown option for mcp: --port");
+    }
+
+    @Test
     void reposGlobExpandsSortedDirectoriesOnly(@TempDir Path tmp) throws IOException {
         Path z = Files.createDirectory(tmp.resolve("z-repo"));
         Path a = Files.createDirectory(tmp.resolve("a-repo"));

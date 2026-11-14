@@ -24,17 +24,22 @@ public final class PathMatch {
 
     private static boolean match(String[] a, int i, String[] b, int j) {
         // ** swallows zero or more segments; whatever follows it must still match
-        if (i < a.length && a[i].equals("**")) {
+        if (i < a.length && isRest(a[i])) {
             for (int k = j; k <= b.length; k++) if (match(a, i + 1, b, k)) return true;
             return false;
         }
-        if (j < b.length && b[j].equals("**")) {
+        if (j < b.length && isRest(b[j])) {
             for (int k = i; k <= a.length; k++) if (match(a, k, b, j + 1)) return true;
             return false;
         }
         if (i == a.length || j == b.length) return i == a.length && j == b.length;
         if (a[i].equals(Value.UNKNOWN) && i == a.length - 1) return true;
         return segment(a[i], b[j]) && match(a, i + 1, b, j + 1);
+    }
+
+    /** {@code **} and Spring's {@code {*rest}} capture-the-rest variable. */
+    private static boolean isRest(String s) {
+        return s.equals("**") || (s.startsWith("{*") && s.endsWith("}"));
     }
 
     private static boolean segment(String x, String y) {
