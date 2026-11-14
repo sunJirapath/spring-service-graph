@@ -40,7 +40,8 @@ jobs:
         with:
           path: ssg/head/${{ github.event.repository.name }}
 
-      # the rest of the fleet (private repos need a token that can read them)
+      # the rest of the fleet (private repos need a token that can read them;
+      # FLEET_READ_TOKEN is unavailable to normal fork PR workflows)
       - uses: actions/checkout@v7
         with:
           repository: my-org/gateway
@@ -86,7 +87,7 @@ jobs:
 ### Notes
 
 - By default `actions/checkout` checks out the PR's merge commit as the head, which is what will land once the PR merges.
-- **Fork PRs:** fork pull requests get a read-only token, so the comment step only logs a warning. The job summary and the gate still work.
+- **Fork PRs:** normal fork `pull_request` workflows do not receive `FLEET_READ_TOKEN`; the example's private-fleet checkouts fail before scanning, so no impact summary or gate result is produced. Public fleet repositories can be checked out with `github.token` instead. The summary and gate require successful checkouts and action steps; use `comment: 'false'` with a read-only token to avoid the comment step. A reduced fleet does not establish impact on omitted private services. Do not switch to `pull_request_target` to expose secrets to untrusted PR code.
 - **Long reports:** comments longer than GitHub's 65536-character limit are truncated. The job summary keeps the full report.
 - **Testing:** this repo's CI runs the action against its own test fleet (job `impact-action`).
 

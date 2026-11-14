@@ -39,13 +39,15 @@ public final class Pipeline {
     /** @param repoRoots repo name -> checkout root, for evidence links */
     public record Result(Graph graph, Map<String, Path> repoRoots) {}
 
+    private record SeenService(String location, Evidence evidence) {}
+
     private Pipeline() {}
 
     public static Result scan(Options o) throws IOException {
         var roots = new TreeMap<String, Path>();
         var all = new ArrayList<Linker.ServiceFacts>();
         var extra = new ArrayList<Finding>();
-        var seen = new TreeMap<String, Service>();
+        var seen = new TreeMap<String, SeenService>();
         if (o.configRepo() != null) addRoot(roots, Repo.of(o.configRepo()));
         for (Path p : o.repos()) addRoot(roots, Repo.of(p));
         for (Path p : o.repos()) {
@@ -58,14 +60,14 @@ public final class Pipeline {
                         "no Spring Boot application discovered in input repository", List.of()));
             }
             for (Service s : services) {
-                Service previous = seen.put(s.name(), s);
-                String prev = previous == null ? null : previous.repo().name() + "/" + previous.path();
+                SeenService previous = seen.put(s.name(), new SeenService(repo.name() + "/" + s.path(), s.nameEvidence()));
+                String prev = previous == null ? null : previous.location();
                 if (prev != null) {
                     System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
                     // two apps with one name merge into one graph node; say so instead of hiding it
                     extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
                             + "' is used by " + prev + " and " + repo.name() + "/" + s.path(),
-                            List.of(previous.nameEvidence(), s.nameEvidence())));
+                            List.of(previous.evidence(), s.nameEvidence())));
                 }
                 var facts = new ArrayList<Fact>();
                 for (Extractor x : Extractor.all(java.util.Set.copyOf(o.sqlMethods()))) facts.addAll(x.extract(s));
