@@ -31,7 +31,7 @@ started or tested against live services.
 | Check | Final audited build (2026-10-23) |
 |---|---:|
 | Unique repository/commit pairs | 200 |
-| Qualified Spring Boot 4+ inputs | 170: 85 Maven, 85 Gradle |
+| Inputs classified as Boot 4+ (exact versions not recorded) | 170: 85 Maven, 85 Gradle |
 | Other historical inputs | 30; Boot versions unspecified |
 | Selected build descriptors across all inputs | 111 Maven, 89 Gradle |
 | Measured tiers: small / medium / large / huge | 62 / 69 / 38 / 31 |
@@ -47,7 +47,9 @@ started or tested against live services.
 
 Tiers count tracked Java paths beneath `src/main/java`: small 1–49, medium 50–249,
 large 250–999, huge 1,000+. Resource templates remain excluded from scanning.
-The original Boot 4+ campaign had ten repositories per tier for each build system;
+The original inputs were classified as Boot 4+ but exact versions were not retained;
+this corpus does not establish a Boot minor/patch compatibility range. The campaign
+had ten repositories per tier for each build system;
 the expanded 200-repository corpus is not balanced across tiers. Four historical
 inputs contain both build descriptor types. Selection was purposive, including
 related projects, so these results are not a random-sample accuracy estimate.

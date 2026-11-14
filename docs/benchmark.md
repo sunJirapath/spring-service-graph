@@ -6,7 +6,7 @@ not rerun these fleets or profile peak heap. See [testing and validation](testin
 for the latest verification scope and remaining gaps, and [the audit summary](audits/README.md)
 for the separately pinned 200-repository campaign.
 
-Run on 2026-10-18 with `ssg` 0.1.0-SNAPSHOT. Recreate the clones with `sh scripts/bench-clone.sh`;
+Run on 2026-10-18 with `ssg` 0.1.0-SNAPSHOT. The Piggymetrics Boot 2.0.3 row below is historical input evidence, not a support claim; its Zuul routes are unsupported. Recreate the clones with `sh scripts/bench-clone.sh`;
 they land in the git-ignored `bench/` folder at pinned commits.
 
 | Fleet | Commit | Command |
@@ -67,7 +67,7 @@ they land in the git-ignored `bench/` folder at pinned commits.
 | 1 | petclinic | False CONTRACT_DRIFT: `GET /pets/visits` on visits-service | `VisitResource` has two `read(..)` overloads. Handler methods were de-duplicated by name and arity, so one was dropped. | **Fixed.** The key now includes parameter types. Test `overloadedHandlerMethodsAreAllExposed`. |
 | 2 | petclinic | 3 genai calls `UNRESOLVED` to `external:unresolved` | The base URL comes from a zero-arg helper, `getCustomerServiceUri() { return discoveryClient.getInstances(..)...; }` | **Fixed.** Zero-arg same-class helpers with a single `return` are folded. Test `zeroArgHelperReturningAnExpressionIsFolded`. |
 | 3 | piggymetrics | 3 false CONTRACT_DRIFT findings (e.g. `POST /uaa/users`) | Context paths live in the config server module (`config/src/main/resources/shared`), not in each service. | **Works with `--config-repo` pointing at that folder.** Without it, drift is reported, which is honest but noisy. |
-| 4 | piggymetrics | Gateway shows no routes | It uses Netflix Zuul (`zuul.routes.*`, Boot 2.0) | **Not supported.** Zuul is end-of-life, and Spring Cloud Gateway (D1) is covered. |
+| 4 | piggymetrics | Gateway shows no routes | It uses Netflix Zuul (`zuul.routes.*`, Boot 2.0.3) | **Not supported.** Zuul is end-of-life, and Spring Cloud Gateway is covered. |
 | 5 | petclinic | Config server is named `spring-petclinic-config-server` | It has no `spring.application.name`, so the directory name is used (D8) | Harmless; as designed. |
 | 6 | petclinic | 14 of the gateway's 15 CALLS edges come from 4 routes | A `/**` route links to every endpoint of its target | By design, for impact analysis ("who can reach X"). The page groups them by target, so it stays readable. |
 
@@ -112,7 +112,7 @@ Endpoints without reach are:
 
 ## Field test 1: a private one-repo service (2026-10-19, snapshot 56e97fa)
 
-An agent ran ssg on a real Spring Boot 4 / Java 21 service that is not public. The fleet was one repo with one service, 124 endpoints (116 of them on openapi-generator `interfaceOnly` interfaces), 35 Flyway tables and `JdbcTemplate` data access. It followed `docs/field-test-prompt.md`, and only anonymized results were kept.
+An agent ran ssg on a real Spring Boot service using Java 21 whose exact Boot version was not recorded. The fleet was one repo with one service, 124 endpoints (116 of them on openapi-generator `interfaceOnly` interfaces), 35 Flyway tables and `JdbcTemplate` data access. It followed `docs/field-test-prompt.md`, and only anonymized results were kept; this is not version-specific compatibility evidence.
 
 What already worked:
 - endpoints: 124/124 with 0 false positives, built or unbuilt

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: boot3-modern-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - uri: lb://boot3-api
+              predicates:
+                - Path=/modern/items
+              filters:
+                - StripPrefix=1

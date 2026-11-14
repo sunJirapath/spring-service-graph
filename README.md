@@ -8,6 +8,10 @@
 
 It never needs a build or a classpath. Sources are parsed with JavaParser (parse only, no symbol solver) and constants are folded by ssg's own index, so unbuilt checkouts work. Only Java sources are read.
 
+## Spring Boot source compatibility
+
+The repository contains a Java-only multi-service source fixture and assertions targeting Spring Boot **3.5.16** (`src/test/resources/boot3.5-fleet`, `Boot35FleetTest`; not run in this change). The Boot **4.0.1** Petclinic field fixture is documented in [the benchmark](docs/benchmark.md); framework behavior probes cover Boot **4.1.2** YAML loading, Binder and placeholders. These exact inputs do not establish support for every Boot 3.5 or Boot 4 release, nor runtime compatibility. Boot **2.x is not supported**; the documented Piggymetrics Boot 2.0.3 run is historical evidence only, and its Zuul routes are unsupported. The ssg executable requires Java 21; scanned projects can use any Java version because ssg does not build them.
+
 ## Build and run
 
 Requires JDK 21.
