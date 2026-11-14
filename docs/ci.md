@@ -14,6 +14,7 @@ The gate also fails on **incomplete analysis** (exit 4), taking precedence over 
 Use fresh base/head scans from the same scanner and fleet/profile/config inputs. Legacy snapshots may lack completeness diagnostics; snapshot freshness is not checked. The gate covers observed static evidence within the [known limits](../README.md#known-limits), not all runtime behavior.
 
 The action builds ssg from source at the commit you pin, so it needs no release.
+It configures the Gradle user-home cache with `gradle/actions/setup-gradle`; it still builds on every invocation. A cold runner needs network access for Temurin, the Gradle distribution and Maven Central dependencies. Prepare runner proxy settings and permitted downloads/caches before running the action; cache hits do not guarantee offline operation. No cold-run elapsed-time guarantee is established.
 
 ## GitHub Actions
 
@@ -70,7 +71,7 @@ jobs:
 |---|---|---|
 | `base-path` | required | Base checkout of the changed repo. |
 | `head-path` | required | Head checkout. It must have the same folder name as `base-path`. |
-| `fleet` | empty | Other repo checkouts, separated by spaces or newlines. Without them you only see impact inside the changed repo. |
+| `fleet` | empty | Other repo checkouts, one literal path per line; spaces are preserved and empty lines ignored. Without them you only see impact inside the changed repo. |
 | `profile` | `default` | Spring profile. |
 | `aliases` | empty | `aliases.yml` for hosts that are not service names. |
 | `config-repo` | empty | Spring Cloud Config repo checkout. |
@@ -89,6 +90,7 @@ jobs:
 - By default `actions/checkout` checks out the PR's merge commit as the head, which is what will land once the PR merges.
 - **Fork PRs:** normal fork `pull_request` workflows do not receive `FLEET_READ_TOKEN`; the example's private-fleet checkouts fail before scanning, so no impact summary or gate result is produced. Public fleet repositories can be checked out with `github.token` instead. The summary and gate require successful checkouts and action steps; use `comment: 'false'` with a read-only token to avoid the comment step. A reduced fleet does not establish impact on omitted private services. Do not switch to `pull_request_target` to expose secrets to untrusted PR code.
 - **Long reports:** comments longer than GitHub's 65536-character limit are truncated. The job summary keeps the full report.
+- **Comment failures:** missing `gh`, failed comment lookup and failed writes produce warnings. The final gate still runs after a failed comment step when the scan produced an incomplete/breaking result.
 - **Testing:** this repo's CI runs the action against its own test fleet (job `impact-action`).
 
 ## Other CI systems
@@ -100,7 +102,9 @@ jobs:
 3. Run the script:
 
 ```bash
-SSG=build/install/ssg/bin/ssg SSG_BASE=base/orders SSG_HEAD=head/orders SSG_FLEET="fleet/gateway fleet/billing" SSG_FAIL_ON_BREAKING=true bash scripts/ssg-impact.sh
+SSG=build/install/ssg/bin/ssg SSG_BASE=base/orders SSG_HEAD=head/orders SSG_FLEET=$'fleet/gateway\nfleet/Order Service' SSG_FAIL_ON_BREAKING=true bash scripts/ssg-impact.sh
 ```
 
 It writes `ssg-impact/impact.md`, `ssg-impact/breaking` and `ssg-impact/incomplete` (the latter two contain `true` or `false`). With the gate on, it exits 4 for incomplete analysis, otherwise 3 for breaking changes. With the gate off, either outcome writes the report and exits 0; scanner/infrastructure errors still fail the script. Posting the report as a merge-request note, for example with GitLab's API, is up to the pipeline.
+
+`SSG_FLEET` and the action's `fleet` input now use one path per line, including a single path with spaces. Migrate old space-separated lists to newlines. Each line is passed as one argument without shell quote parsing or variable expansion; ssg still expands trailing repository globs as documented in the CLI. CRLF line endings are accepted. Scanner errors use exit 1 for I/O and 2 for invalid input; preserve all other failures too.

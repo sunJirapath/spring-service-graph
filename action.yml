@@ -12,7 +12,7 @@ inputs:
     description: Checkout of the merge-request (head) commit of the changed repo.
     required: true
   fleet:
-    description: Other repo checkouts in the fleet, separated by spaces or newlines. Gives cross-service impact.
+    description: Other repo checkouts in the fleet, one path per line (spaces in paths are supported). Gives cross-service impact.
     default: ''
   profile:
     description: Spring profile passed to ssg scan.
@@ -55,6 +55,8 @@ runs:
         distribution: temurin
         java-version: 21
 
+    - uses: gradle/actions/setup-gradle@v6
+
     - name: Build ssg
       shell: bash
       run: '"$GITHUB_ACTION_PATH/gradlew" -p "$GITHUB_ACTION_PATH" installDist -q --console=plain'
@@ -89,6 +91,10 @@ runs:
         PR: ${{ github.event.pull_request.number }}
         REPORT: ${{ steps.impact.outputs.report }}
       run: |
+        if ! command -v gh > /dev/null; then
+          echo "::warning::gh is unavailable; skipping the ssg impact comment"
+          exit 0
+        fi
         marker='<!-- ssg-impact -->'
         body="$RUNNER_TEMP/ssg-impact/comment.md"
         { echo "$marker"; cat "$REPORT"; } > "$body"
@@ -96,7 +102,10 @@ runs:
         if [ "$(wc -c < "$body")" -gt 65000 ]; then
           head -c 64000 "$body" > "$body.cut" && printf '\n\n_Report truncated; the full report is in the job summary._\n' >> "$body.cut" && mv "$body.cut" "$body"
         fi
-        id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | tail -n 1)
+        if ! id=$(gh api "repos/$REPO/issues/$PR/comments" --paginate --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | tail -n 1); then
+          echo "::warning::could not list PR comments; skipping the ssg impact comment"
+          exit 0
+        fi
         if [ -n "$id" ]; then
           gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@"$body" > /dev/null \
             || echo "::warning::could not update the ssg impact comment (fork pull requests get a read-only token)"
@@ -106,7 +115,7 @@ runs:
         fi
 
     - name: Fail on incomplete analysis or breaking changes
-      if: inputs.fail-on-breaking == 'true' && (steps.impact.outputs.incomplete == 'true' || steps.impact.outputs.breaking == 'true')
+      if: always() && inputs.fail-on-breaking == 'true' && (steps.impact.outputs.incomplete == 'true' || steps.impact.outputs.breaking == 'true')
       shell: bash
       env:
         INCOMPLETE: ${{ steps.impact.outputs.incomplete }}

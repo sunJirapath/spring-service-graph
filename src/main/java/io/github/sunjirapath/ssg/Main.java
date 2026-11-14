@@ -1,7 +1,6 @@
 package io.github.sunjirapath.ssg;
 
 import io.github.sunjirapath.ssg.diff.GraphDiff;
-import io.github.sunjirapath.ssg.mcp.GraphQueries;
 import io.github.sunjirapath.ssg.mcp.McpServer;
 import io.github.sunjirapath.ssg.output.DiagramOutput;
 import io.github.sunjirapath.ssg.output.JsonOutput;
@@ -82,11 +81,10 @@ public final class Main {
                 yield 0;
             }
             case "mcp" -> {
-                var graph = JsonOutput.read(Path.of(single(opts, "--graph", null)));
                 String version = java.util.Objects.requireNonNullElse(Main.class.getPackage().getImplementationVersion(), "dev");
-                System.err.println("ssg mcp: serving " + graph.nodes().size() + " nodes on stdio");
-                new McpServer(new GraphQueries(graph), version)
-                        .serve(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)), utf8Stdout());
+                var server = McpServer.fromSnapshot(Path.of(single(opts, "--graph", null)), version);
+                System.err.println("ssg mcp: serving a static snapshot on stdio; source freshness is unknown");
+                server.serve(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)), utf8Stdout());
                 yield 0;
             }
             default -> throw new IllegalArgumentException("unknown command: " + args[0]);

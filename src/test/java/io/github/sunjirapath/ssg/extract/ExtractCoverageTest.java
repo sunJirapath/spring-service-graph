@@ -452,7 +452,12 @@ class ExtractCoverageTest {
         var facts = repo(tmp, "package x; class C { void call() { restTemplate().getForObject(\"https://api/items\"); } }")
                 .facts(new OutboundHttpExtractor());
 
-        assertThat(callFacts(facts)).singleElement().satisfies(call -> assertThat(call.method()).isEqualTo("GET"));
+        assertThat(callFacts(facts)).singleElement().satisfies(call -> {
+            assertThat(call.method()).isEqualTo("GET");
+            assertThat(call.client()).isEqualTo("rest-template");
+            assertThat(call.url().text()).isEqualTo("https://api/items");
+            assertThat(call.url().confidence()).isEqualTo(Confidence.EXACT);
+        });
     }
 
     @Test

@@ -5,7 +5,7 @@
 # Environment:
 #   SSG_BASE              base checkout of the changed repo (required)
 #   SSG_HEAD              head checkout of the changed repo (required, same folder name as SSG_BASE)
-#   SSG_FLEET             other repo checkouts, space separated (optional; gives cross-service impact)
+#   SSG_FLEET             other repo checkouts, one literal path per line (optional; spaces supported)
 #   SSG_PROFILE           Spring profile (optional)
 #   SSG_ALIASES           aliases.yml (optional)
 #   SSG_CONFIG_REPO       Spring Cloud Config repo checkout (optional)
@@ -27,7 +27,11 @@ if [ "$(basename "$SSG_BASE")" != "$(basename "$SSG_HEAD")" ]; then
   exit 2
 fi
 
-read -r -d '' -a fleet <<< "${SSG_FLEET:-}" || true # splits on spaces and newlines
+fleet=()
+while IFS= read -r repo; do
+  repo="${repo%$'\r'}" # also accept CRLF input
+  [ -z "$repo" ] || fleet+=("$repo")
+done <<< "${SSG_FLEET:-}"
 opts=()
 [ -n "${SSG_PROFILE:-}" ] && opts+=(--profile "$SSG_PROFILE")
 [ -n "${SSG_ALIASES:-}" ] && opts+=(--aliases "$SSG_ALIASES")

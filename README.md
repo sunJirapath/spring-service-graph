@@ -20,6 +20,8 @@ build/install/ssg/bin/ssg scan --repos ./fleet/* --profile default \
 
 Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`. Releases are built by `.github/workflows/release.yml` when a `v*` tag is pushed.
 
+Download the release's `SHA256SUMS` alongside the archives and run `sha256sum --check --ignore-missing SHA256SUMS` in that directory (requires `sha256sum`). Check that your downloaded archive reports `OK`. Checksums detect corruption; they are not signatures or attestations and do not authenticate a compromised release. Distributions require Java 21 on PATH or through `JAVA_HOME`; Windows uses `bin/ssg.bat`.
+
 `./gradlew build` compiles and runs the tests. Kotlin sources are not parsed; detected main Kotlin sources produce `INCOMPLETE_ANALYSIS` findings and block the impact gate.
 
 ## Options
@@ -139,6 +141,8 @@ Then it lists what was added or removed: endpoints, calls, messaging, data and r
 
 With `--fail-on-breaking`, exit **4** means **incomplete analysis**, exit **3** means proven breaking changes, and exit **0** means neither was detected. Incomplete analysis takes precedence when both occur. Without the flag, a successfully rendered diff exits 0, including advisory reports with incomplete analysis. Uncertainty in **either** scan blocks the gate, even when unchanged: `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `INCOMPLETE_ANALYSIS`, unresolved edges, or a decrease in an otherwise matching edge's confidence. Malformed configuration is recorded as `PARSE_ERROR`; inputs with no discovered application and detected main Kotlin sources produce `INCOMPLETE_ANALYSIS`.
 
+CLI error exits apply to every command: **2** for invalid arguments or incompatible legacy/qualified diff inputs; **1** for I/O failures. Uncaught runtime exceptions/errors use JVM termination (ordinarily 1); external termination such as an OOM kill can have another status. Wrappers must treat every nonzero status as failure, including values other than 3/4.
+
 Rescan both inputs with this scanner and the same fleet/profile/config inputs. Old snapshots cannot recover omitted diagnostics, and snapshots do not verify source freshness. A green result covers the supplied static evidence within the known limits below; it is not proof of complete runtime compatibility. A missing generated contract cannot prove endpoint removal or contract drift; observed matching endpoints remain usable.
 
 To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on incomplete analysis or breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
@@ -149,7 +153,11 @@ To run this on every pull request, use the GitHub action in this repo (`uses: su
 ssg mcp --graph out
 ```
 
-This serves the graph to an MCP client over stdio (JSON-RPC 2.0). The server is read-only and exposes three tools:
+This serves the graph to an MCP client over stdio (JSON-RPC 2.0). The server is read-only and exposes three tools.
+
+The graph is loaded once. Initialization and each tool result include `_meta.snapshot` with its SHA-256 and load time; every successful tool result also includes a provenance warning. The running server version is not the scan version. Snapshots do not record scan version, profile or source revisions; these and source freshness/completeness are explicitly `unknown`, including for legacy graphs. Answers are advisory static evidence. The server hashes the file before each tool call: replacement or deletion returns a tool error until you restart with a valid snapshot. It does not reload automatically or compare the snapshot with live source checkouts; an unchanged file can still describe stale sources.
+
+Requests are limited to 65,536 Java characters per line; oversized lines are drained and rejected with JSON-RPC `-32600`. Queries reject more than 200 matches, incoming edges, affected nodes or evidence entries per edge, and tool text above 65,536 characters. Limit errors return no partial result. Use a specific node ID or offline outputs; pagination is not implemented. To bound Markdown rendering, `service_card` conservatively rejects graphs whose pretty-printed JSON exceeds 65,536 characters, even if the requested service is small. The graph and lookup indexes remain in memory; these limits bound query output, not fleet loading or total heap.
 
 | Tool | Arguments | Answers |
 |---|---|---|
@@ -243,8 +251,10 @@ The latest verification at `ff12939` passed **893 tests**, the full build and in
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 
 ```
-./gradlew test -PupdateGolden
+./gradlew test -PupdateGolden=true
 ```
+
+Only an explicit `true` enables regeneration; `-PupdateGolden=false` and a bare `-PupdateGolden` keep comparisons read-only. Regeneration fails when `CI` is set to a nonempty value other than `false`. CI must compare committed golden files rather than rewrite them.
 
 Real-world benchmark: `scripts/bench-clone.sh` clones spring-petclinic-microservices, its config repo, piggymetrics and ewolff/microservice-kafka at pinned commits into a git-ignored `bench/` folder (clone and read only, never built). Findings are recorded in `docs/benchmark.md`. Design background and decisions D1-D8 are in `docs/research.md`.
 
