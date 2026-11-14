@@ -29,7 +29,7 @@ public final class MarkdownOutput {
     private final String linkBase;
 
     private MarkdownOutput(Graph graph, Map<String, Path> repoRoots, Path out, String linkBase) {
-        this.linkBase = linkBase == null || linkBase.isBlank() ? null : linkBase;
+        this.linkBase = linkBase == null || linkBase.isBlank() ? null : safeLinkBase(linkBase);
         this.g = new GraphView(graph);
         this.repoRoots = repoRoots;
         this.out = out.toAbsolutePath().normalize();
@@ -100,7 +100,8 @@ public final class MarkdownOutput {
         table(md, List.of("Target", "Method", "Path", "Client", "Matched", "Confidence", "Evidence"), calls, e -> {
             Node target = g.nodes.get(e.to());
             String matched = target instanceof Node.Endpoint ep ? code(ep.method() + " " + ep.path())
-                    : target instanceof Node.Service ? "**no matching endpoint**" : "-";
+                    : target instanceof Node.Service ? ("unavailable".equals(e.attrs().get("contract"))
+                    ? "**contract unavailable**" : "**no matching endpoint**") : "-";
             return Arrays.asList(g.owner(e.to()), e.attrs().get("method"), code(e.attrs().get("path")), e.attrs().get("client"),
                     matched, e.confidence().name(), evidence(dir, e.evidence()));
         });
@@ -184,6 +185,26 @@ public final class MarkdownOutput {
     }
 
     // ---------------------------------------------------------------- helpers
+
+    private static String safeLinkBase(String template) {
+        String safe = template.replaceAll("(?<=//)[^/?#]*@", "[redacted]@");
+        int fragment = safe.indexOf('#');
+        if (fragment >= 0 && !safe.substring(fragment + 1).matches("L?\\{line}")) {
+            safe = safe.substring(0, fragment + 1) + "[redacted]";
+        }
+        int query = safe.indexOf('?');
+        if (query < 0) return safe;
+        int end = safe.indexOf('#', query);
+        if (end < 0) end = safe.length();
+        // Only placeholder query values are needed for evidence; literal values may be credentials.
+        String fields = Arrays.stream(safe.substring(query + 1, end).split("&", -1)).map(field -> {
+            int equals = field.indexOf('=');
+            String value = equals < 0 ? "" : field.substring(equals + 1);
+            return equals < 0 ? "[redacted]"
+                    : field.substring(0, equals + 1) + (value.matches("\\{(repo|file|line)}") ? value : "[redacted]");
+        }).collect(Collectors.joining("&"));
+        return safe.substring(0, query + 1) + fields + safe.substring(end);
+    }
 
     private static <T> void table(StringBuilder md, List<String> header, List<T> rows, Function<T, List<String>> cells) {
         if (rows.isEmpty()) {

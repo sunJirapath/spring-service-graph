@@ -1,6 +1,9 @@
 package io.github.sunjirapath.ssg.link;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sunjirapath.ssg.Pipeline;
+import io.github.sunjirapath.ssg.TempRepo;
+import io.github.sunjirapath.ssg.diff.GraphDiff;
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Fact;
@@ -9,8 +12,15 @@ import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
 import io.github.sunjirapath.ssg.model.Value;
 import io.github.sunjirapath.ssg.output.MarkdownOutput;
+import io.github.sunjirapath.ssg.output.JsonOutput;
+import io.github.sunjirapath.ssg.output.DiagramOutput;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +31,33 @@ class LinkerUrlRedactionTest {
     private static final String AUTHORITY = "demo-user:FAKE_PASSWORD_CANARY@";
     private static final String QUERY = "?token=FAKE_TOKEN_CANARY#FAKE_FRAGMENT_CANARY";
     private static final Evidence CALL = new Evidence("repo", "Calls.java", 7);
+
+    @ParameterizedTest
+    @ValueSource(strings = {"https:", ""})
+    void aliasUrlCredentialsStayOutOfPipelineOutputsAndDiff(String scheme, @TempDir Path tmp) throws Exception {
+        var repo = TempRepo.at(tmp.resolve("caller")).app()
+                .resource("application.properties", "spring.application.name=caller\n")
+                .java("app/Client.java", """
+                        package app;
+                        @FeignClient(name="vendor") interface Client {
+                            @GetMapping("/orders") Object orders();
+                        }
+                        """)
+                .file("aliases.yml", "vendor: " + scheme + "//" + AUTHORITY + "api.example" + QUERY + "\n");
+        Graph graph = TempRepo.scan(new Pipeline.Options(List.of(repo.root()), "default", repo.root().resolve("aliases.yml"), null));
+
+        assertThat(graph.nodes()).filteredOn(Node.External.class::isInstance).singleElement()
+                .satisfies(n -> assertThat(n.id()).contains("api.example", "[redacted]"));
+        assertSafeOutputs(graph);
+        Path out = tmp.resolve("out");
+        JsonOutput.write(graph, out);
+        MarkdownOutput.write(graph, Map.of(), out);
+        DiagramOutput.write(graph, out);
+        try (var files = Files.walk(out)) {
+            for (Path file : files.filter(Files::isRegularFile).toList()) assertNoCredentials(Files.readString(file));
+        }
+        assertNoCredentials(GraphDiff.report(new Graph(List.of(), List.of(), List.of()), graph));
+    }
 
     @Test
     void exactUrlDoesNotExposeUserInfoQueryOrFragment() throws Exception {
@@ -111,7 +148,11 @@ class LinkerUrlRedactionTest {
     private static void assertSafeOutputs(Graph graph) throws Exception {
         for (String output : List.of(new ObjectMapper().writeValueAsString(graph),
                 MarkdownOutput.servicePage(graph, "caller"))) {
-            assertThat(output).doesNotContain("demo-user", "FAKE_PASSWORD_CANARY", "FAKE_TOKEN_CANARY", "FAKE_FRAGMENT_CANARY");
+            assertNoCredentials(output);
         }
+    }
+
+    private static void assertNoCredentials(String output) {
+        assertThat(output).doesNotContain("demo-user", "FAKE_PASSWORD_CANARY", "FAKE_TOKEN_CANARY", "FAKE_FRAGMENT_CANARY");
     }
 }

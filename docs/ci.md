@@ -9,6 +9,10 @@
    - a topic that lost its last producer but is still consumed
    - new contract drift
 
+The gate also fails on **incomplete analysis** (exit 4), taking precedence over proven breaking changes (exit 3). Unresolved findings/edges, parse or config failures, missing generated contracts, duplicate services, unsupported main Kotlin sources, inputs with no discovered app, and confidence loss prevent a green gate. Existing uncertainty in either input also blocks it. Missing generated contracts produce unverified calls rather than proven drift. Without the gate, these reports remain advisory.
+
+Use fresh base/head scans from the same scanner and fleet/profile/config inputs. Legacy snapshots may lack completeness diagnostics; snapshot freshness is not checked. The gate covers observed static evidence within the [known limits](../README.md#known-limits), not all runtime behavior.
+
 The action builds ssg from source at the commit you pin, so it needs no release.
 
 ## GitHub Actions
@@ -69,13 +73,14 @@ jobs:
 | `profile` | `default` | Spring profile. |
 | `aliases` | empty | `aliases.yml` for hosts that are not service names. |
 | `config-repo` | empty | Spring Cloud Config repo checkout. |
-| `fail-on-breaking` | `false` | Fail the job (exit 3) when there are breaking changes. The comment is posted first. |
+| `fail-on-breaking` | `false` | Fail on incomplete analysis (exit 4), otherwise breaking changes (exit 3). The comment is posted first. |
 | `comment` | `true` | Post or update the PR comment. The report is always written to the job summary. |
 | `github-token` | `github.token` | Token for the comment. |
 
 ### Outputs
 
 - `breaking`: `"true"` or `"false"`.
+- `incomplete`: `"true"` or `"false"`; when true the gate exits 4, even if `breaking` is also true.
 - `report`: the path of the Markdown report.
 
 ### Notes
@@ -97,4 +102,4 @@ jobs:
 SSG=build/install/ssg/bin/ssg SSG_BASE=base/orders SSG_HEAD=head/orders SSG_FLEET="fleet/gateway fleet/billing" SSG_FAIL_ON_BREAKING=true bash scripts/ssg-impact.sh
 ```
 
-It writes `ssg-impact/impact.md` and `ssg-impact/breaking`, and exits 3 on breaking changes when the gate is on. Posting the report as a merge-request note, for example with GitLab's API, is up to the pipeline.
+It writes `ssg-impact/impact.md`, `ssg-impact/breaking` and `ssg-impact/incomplete` (the latter two contain `true` or `false`). With the gate on, it exits 4 for incomplete analysis, otherwise 3 for breaking changes. With the gate off, either outcome writes the report and exits 0; scanner/infrastructure errors still fail the script. Posting the report as a merge-request note, for example with GitLab's API, is up to the pipeline.

@@ -63,6 +63,7 @@ public final class JavaIndex {
     private final Map<String, List<TypeDeclaration<?>>> typesByFqn = new HashMap<>(); // same FQN may live in several modules
     private final Map<CompilationUnit, Path> files = new IdentityHashMap<>(); // identical copies still belong to different files
     private final List<Problem> problems = new ArrayList<>();
+    private final List<Path> unsupportedSources = new ArrayList<>();
     private final Map<VariableDeclarator, Boolean> singleValued = new IdentityHashMap<>(); // nodes compare by structure
 
     private JavaIndex(Repo repo) {
@@ -78,6 +79,10 @@ public final class JavaIndex {
         var shared = new HashMap<Object, Object>(); // equal positions and names, one copy each
         try {
             for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
+                if (f.toString().endsWith(".kt")) {
+                    idx.unsupportedSources.add(f);
+                    continue;
+                }
                 var result = parser.parse(f);
                 result.getProblems().stream().filter(p -> result.getResult()
                         .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
@@ -119,12 +124,13 @@ public final class JavaIndex {
         return false;
     }
 
-    /** Main sources and generated sources (openapi-generator output); never tests. */
+    /** Java/Kotlin main sources and generated sources; never tests. Kotlin is detected, not parsed. */
     private boolean isMainSource(Path f) {
         String p = rel(f);
-        int main = p.indexOf("/src/main/java/");
+        int main = p.indexOf(p.endsWith(".kt") ? "/src/main/kotlin/" : "/src/main/java/");
+        if (main < 0 && p.endsWith(".kt")) main = p.indexOf("/src/main/java/");
         String layout = main < 0 ? p : p.substring(0, main + 1);
-        if (!p.endsWith(".java") || layout.contains("/.git/") || layout.contains("/node_modules/")
+        if (!(p.endsWith(".java") || p.endsWith(".kt")) || layout.contains("/.git/") || layout.contains("/node_modules/")
                 || layout.contains("/src/test/") || layout.contains("/src/main/resources/")) {
             return false;
         }
@@ -214,6 +220,7 @@ public final class JavaIndex {
     public Repo repo() { return repo; }
     public List<CompilationUnit> units() { return units; }
     public List<Problem> problems() { return problems; }
+    public List<Path> unsupportedSources() { return List.copyOf(unsupportedSources); }
     public Path fileOf(CompilationUnit cu) { return files.get(cu); }
 
     public Evidence evidence(Node n) {

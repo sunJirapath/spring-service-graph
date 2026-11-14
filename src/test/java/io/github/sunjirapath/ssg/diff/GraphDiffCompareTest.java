@@ -17,6 +17,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GraphDiffCompareTest {
 
     @Test
+    void confidenceLossMakesAnOtherwiseUnchangedGraphIncomplete() {
+        var orders = service("orders");
+        var gateway = service("gateway");
+        Edge exact = remainingCall(gateway, orders, "/orders");
+        Edge resolved = new Edge(exact.kind(), exact.from(), exact.to(), Confidence.RESOLVED, exact.attrs(), exact.evidence());
+
+        var result = GraphDiff.compare(graph(List.of(orders, gateway), List.of(exact)),
+                graph(List.of(orders, gateway), List.of(resolved)));
+
+        assertThat(result.breaking()).isEmpty();
+        assertThat(result.incomplete()).anySatisfy(line -> assertThat(line).contains("confidence decreased", "EXACT -> RESOLVED"));
+        assertThat(result.markdown()).contains("## Incomplete analysis").doesNotContain("_None found._");
+    }
+
+    @Test
+    void unresolvedEdgesWithoutFindingsStillMakeBothScansIncomplete() {
+        var orders = service("orders");
+        var gateway = service("gateway");
+        Edge call = remainingCall(gateway, orders, "/orders");
+        Edge unresolved = new Edge(call.kind(), call.from(), call.to(), Confidence.UNRESOLVED, call.attrs(), call.evidence());
+        Graph graph = graph(List.of(orders, gateway), List.of(unresolved));
+
+        assertThat(GraphDiff.compare(graph, graph).incomplete()).anySatisfy(line -> assertThat(line).contains("Base unresolved"))
+                .anySatisfy(line -> assertThat(line).contains("Head unresolved"));
+    }
+
+    @Test
     void compareReturnsNoBreakingChangesForIdenticalGraphs() {
         var orders = service("orders");
         var endpoint = endpoint("orders", "GET", "/orders");

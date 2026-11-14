@@ -20,7 +20,7 @@ build/install/ssg/bin/ssg scan --repos ./fleet/* --profile default \
 
 Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`. Releases are built by `.github/workflows/release.yml` when a `v*` tag is pushed.
 
-`./gradlew build` compiles and runs the tests. Kotlin sources are not scanned yet.
+`./gradlew build` compiles and runs the tests. Kotlin sources are not parsed; detected main Kotlin sources produce `INCOMPLETE_ANALYSIS` findings and block the impact gate.
 
 ## Options
 
@@ -48,7 +48,7 @@ Source-defined composed `@SpringBootApplication` annotations are recognized when
 | JAX-RS `@Path` resources with `@GET`, `@POST` etc. | `@ApplicationPath` and the context path are prepended. |
 | WebFlux `RouterFunction` beans | `RouterFunctions.route(GET("/x"), h)`, `.andRoute(...)` and `route().GET("/x", h)` builders. |
 | Mappings on implemented interfaces | openapi-generator `interfaceOnly` interfaces, including `target/` and `build/generated-sources`. |
-| OpenAPI 3 / Swagger 2 spec in the module (YAML or JSON) | Fallback when the generated interface is not in the checkout. If no spec exists either, a `MISSING_INTERFACE` finding is raised. |
+| OpenAPI 3 / Swagger 2 spec in the module (YAML or JSON) | Fallback when the generated interface is not in the checkout. If no spec exists either, `MISSING_INTERFACE` marks the contract incomplete; unmatched calls are unverified, not proven contract drift. |
 
 **Outbound HTTP**
 
@@ -130,14 +130,18 @@ ssg scan --repos ... --out out-head     # on the MR branch
 ssg diff --base out-base --head out-head > impact.md
 ```
 
-The report is Markdown on stdout. It opens with **Breaking changes**:
+The report is Markdown on stdout. **Incomplete analysis**, when present, appears before **Breaking changes**:
 - removed endpoints or services that are still called
 - topics that lost their last producer but still have consumers
 - new contract drift
 
-Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported. The exit code is 0, or 3 when `--fail-on-breaking` is given and there are breaking changes.
+Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported.
 
-To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
+With `--fail-on-breaking`, exit **4** means **incomplete analysis**, exit **3** means proven breaking changes, and exit **0** means neither was detected. Incomplete analysis takes precedence when both occur. Without the flag, a successfully rendered diff exits 0, including advisory reports with incomplete analysis. Uncertainty in **either** scan blocks the gate, even when unchanged: `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `INCOMPLETE_ANALYSIS`, unresolved edges, or a decrease in an otherwise matching edge's confidence. Malformed configuration is recorded as `PARSE_ERROR`; inputs with no discovered application and detected main Kotlin sources produce `INCOMPLETE_ANALYSIS`.
+
+Rescan both inputs with this scanner and the same fleet/profile/config inputs. Old snapshots cannot recover omitted diagnostics, and snapshots do not verify source freshness. A green result covers the supplied static evidence within the known limits below; it is not proof of complete runtime compatibility. A missing generated contract cannot prove endpoint removal or contract drift; observed matching endpoints remain usable.
+
+To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on incomplete analysis or breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
 
 ## MCP server
 
@@ -177,7 +181,7 @@ out/
   diagrams/<service>.mmd  Mermaid diagram per service
 ```
 
-Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services).
+Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services), `INCOMPLETE_ANALYSIS` (unsupported sources or undiscovered applications).
 
 Resource IDs include their backend: `topic:kafka:orders`, `topic:rabbit:orders`, `topic:rocketmq:orders`,
 `table:sql:orders-service/orders`, and `table:mongo:orders-service/orders`. Topic nodes also carry `broker`.
@@ -212,7 +216,7 @@ A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):
 }
 ```
 
-Output is deterministic. Values of secret-looking config keys (`password`, `secret`, `token`, `credential`, `api-key`, `private-key`) are never read into the output. Parts that cannot be resolved statically are shown as `{?}`, e.g. `GET {?}/reports/{?}`.
+Output is deterministic. Values of secret-looking config keys (`password`, `secret`, `token`, `credential`, `api-key`, `private-key`) are never read into the output. HTTP call URLs and alias-derived external URLs redact userinfo, query values and fragments. Unresolved Gateway URI diagnostics include locations without raw expressions. Evidence `--link-base` templates redact userinfo, literal query values and fragments, preserving exact query placeholder values (`{repo}`, `{file}`, `{line}`) and line fragments (`#L{line}` or `#{line}`). Put fixed evidence-link parameters in the URL path instead when possible. This is not general-purpose secret detection in arbitrary source strings. Parts that cannot be resolved statically are shown as `{?}`, e.g. `GET {?}/reports/{?}`.
 
 ## Known limits
 
@@ -226,7 +230,7 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 - A non-final field or local variable that is reassigned later still folds to its initializer.
 - OpenAPI specs: `${openapi.<name>.base-path}` overrides are not applied; the spec's server path is used.
 - Values built by method calls (other than zero-argument helpers in the same class that only `return` an expression), `String.format` or `static {}` blocks are `UNRESOLVED`. Constants inherited from super types found in sources are resolved.
-- Java only; Kotlin sources are not scanned.
+- Java only; main `.kt` sources under `src/main/kotlin`, `src/main/java`, or supported generated-source layouts are detected but not parsed. They produce `INCOMPLETE_ANALYSIS`, including Kotlin-only inputs without a discovered Java launcher. Custom Kotlin source roots are not detected.
 - Memory: a scan holds the syntax trees of one repo at a time, under 20 MB of heap per MB of Java source (a 28 MB repo fits in 352 MB, a 12 MB repo in 256 MB). Raise it with `JAVA_OPTS=-Xmx1g` if needed.
 - Nested checkouts are skipped: any folder below a repo root with its own `.git` (worktrees, submodules, vendored clones).
 - JDBC: an implicit comma join (`FROM a, b`) yields only the first table; SQL built at runtime is reported as `UNRESOLVED`.

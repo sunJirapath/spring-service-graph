@@ -39,12 +39,14 @@ public final class Config {
 
     /** {@code value} is null for secret keys. */
     public record Entry(String value, Evidence evidence) {}
+    public record Problem(String message, Evidence evidence) {}
 
     private static final Pattern SECRET = Pattern.compile(
             "(?i).*(password|passwd|secret|token|credential|api[-_.]?key|private[-_.]?key).*");
     private static final int MAX_DEPTH = 16;
 
     private final Map<String, Entry> entries = new TreeMap<>();
+    private final List<Problem> problems = new ArrayList<>();
     private final Map<String, Entry> boundEntries = new TreeMap<>();
     private final Map<String, Integer> precedence = new HashMap<>();
     private int sources;
@@ -67,7 +69,7 @@ public final class Config {
             if (file.toString().endsWith(".properties")) addProperties(repo, file, text, profile);
             else addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
-            // A malformed config file must not stop the scan; its keys are simply absent.
+            problems.add(new Problem("cannot read configuration: " + safeError(e), repo.evidence(file, 1)));
             System.err.println("warn: cannot read " + file + ": " + safeError(e));
         }
     }
@@ -79,6 +81,7 @@ public final class Config {
             if (properties) inner.addProperties(repo, file, text, profile);
             else inner.addYaml(repo, file, text, profile);
         } catch (IOException | RuntimeException e) {
+            problems.add(new Problem("cannot read embedded configuration: " + safeError(e), repo.evidence(file, line)));
             System.err.println("warn: cannot read config embedded in " + file + ":" + line + ": " + safeError(e));
             return;
         }
@@ -111,6 +114,7 @@ public final class Config {
 
     public void putAll(Config other) {
         if (other == this) return;
+        problems.addAll(other.problems);
         entries.putAll(other.entries);
         other.precedence.forEach((k, rank) -> precedence.put(k, sources + rank));
         sources += other.sources;
@@ -122,6 +126,8 @@ public final class Config {
     public Entry get(String key) {
         return entries.get(key);
     }
+
+    public List<Problem> problems() { return List.copyOf(problems); }
 
     /** Bound entries in key order: higher-precedence lists replace the entire lower-precedence list. */
     public Map<String, Entry> withPrefix(String prefix) {

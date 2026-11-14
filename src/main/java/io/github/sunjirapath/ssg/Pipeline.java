@@ -7,6 +7,7 @@ import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Finding;
 import io.github.sunjirapath.ssg.model.Graph;
+import io.github.sunjirapath.ssg.scan.Config;
 import io.github.sunjirapath.ssg.scan.Discovery;
 import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Repo;
@@ -51,7 +52,11 @@ public final class Pipeline {
             Repo repo = Repo.of(p);
             JavaIndex index = JavaIndex.build(repo);
             List<Service> services = Discovery.discover(index, o.profile(), o.configRepo());
-            if (services.isEmpty()) System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
+            if (services.isEmpty()) {
+                System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
+                extra.add(new Finding(Finding.Kind.INCOMPLETE_ANALYSIS, repo.name(),
+                        "no Spring Boot application discovered in input repository", List.of()));
+            }
             for (Service s : services) {
                 Service previous = seen.put(s.name(), s);
                 String prev = previous == null ? null : previous.repo().name() + "/" + previous.path();
@@ -66,6 +71,15 @@ public final class Pipeline {
                 for (Extractor x : Extractor.all(java.util.Set.copyOf(o.sqlMethods()))) facts.addAll(x.extract(s));
                 facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
+                for (Config.Problem pr : s.config().problems()) {
+                    extra.add(new Finding(Finding.Kind.PARSE_ERROR, s.name(), pr.message(), List.of(pr.evidence())));
+                }
+            }
+            for (Path file : index.unsupportedSources()) {
+                String owner = services.stream().filter(s -> file.toAbsolutePath().normalize().startsWith(s.moduleRoot()))
+                        .map(Service::name).findFirst().orElse(repo.name());
+                extra.add(new Finding(Finding.Kind.INCOMPLETE_ANALYSIS, owner,
+                        "Kotlin source is not analyzed; callers and endpoints may be missing", List.of(repo.evidence(file, 1))));
             }
             for (JavaIndex.Problem pr : index.problems()) {
                 String owner = services.stream().filter(s -> pr.file().toAbsolutePath().normalize().startsWith(s.moduleRoot()))

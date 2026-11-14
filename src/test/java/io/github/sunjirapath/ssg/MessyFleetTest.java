@@ -152,9 +152,10 @@ class MessyFleetTest {
     }
 
     @Test
-    void kotlinSourceIsIgnoredWithoutProducingGraphEvidence() {
+    void kotlinSourceIsNotParsedButProducesIncompleteAnalysisEvidence() {
         assertThat(endpointIds()).noneMatch(id -> id.contains("/kotlin"));
-        assertThat(allEvidenceFiles()).noneMatch(file -> file.endsWith("KotlinController.kt"));
+        assertThat(graph.findings()).filteredOn(f -> f.kind() == Finding.Kind.INCOMPLETE_ANALYSIS)
+                .anySatisfy(f -> assertThat(f.evidence()).anySatisfy(e -> assertThat(e.file()).endsWith("KotlinController.kt")));
     }
 
     @Test

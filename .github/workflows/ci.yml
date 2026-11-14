@@ -43,9 +43,11 @@ jobs:
       - name: Report lists the removed endpoints
         env:
           BREAKING: ${{ steps.report.outputs.breaking }}
+          INCOMPLETE: ${{ steps.report.outputs.incomplete }}
           REPORT: ${{ steps.report.outputs.report }}
         run: |
           test "$BREAKING" = true
+          test "$INCOMPLETE" = true # gateway contains an unresolved runtime URL in both scans
           grep -F 'Removed `account GET /api/accounts/{id}` is still called by gateway' "$REPORT"
       - id: gate
         uses: ./

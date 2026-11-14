@@ -27,7 +27,7 @@ public final class Main {
                             [--config-repo <dir>] [--link-base <url with {repo} {file} {line}>]
                             [--sql-methods <method|Type.method>...] --out <dir>
                    ssg diff --base <dir|graph.json> --head <dir|graph.json> [--fail-on-breaking]
-                            (Markdown impact report on stdout; exit 3 on breaking changes with the flag)
+                            (Markdown on stdout; with the flag: exit 4 if incomplete, else 3 if breaking)
                    ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
             """;
 
@@ -71,6 +71,10 @@ public final class Main {
                 boolean gate = flag(opts, "--fail-on-breaking");
                 var result = GraphDiff.compare(base, head);
                 utf8Stdout().print(result.markdown());
+                if (gate && !result.incomplete().isEmpty()) {
+                    System.err.println("ssg diff: incomplete analysis; see impact report");
+                    yield 4;
+                }
                 if (gate && !result.breaking().isEmpty()) {
                     System.err.println("ssg diff: " + result.breaking().size() + " breaking change(s)");
                     yield 3;
