@@ -1,5 +1,9 @@
 # spring-service-graph (ssg)
 
+[![CI](https://github.com/sunJirapath/spring-service-graph/actions/workflows/ci.yml/badge.svg)](https://github.com/sunJirapath/spring-service-graph/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/sunJirapath/spring-service-graph)](LICENSE)
+![Java 21](https://img.shields.io/badge/Java-21-blue)
+
 `ssg` is a Java 21 CLI that statically scans a fleet of Spring Boot microservice repositories and writes a cross-service dependency graph: which service exposes which endpoints, who calls them, which Kafka, RabbitMQ and RocketMQ topics are produced and consumed, and which tables each service owns or uses. Every edge carries `file:line` evidence and a confidence level (`EXACT`, `RESOLVED` or `UNRESOLVED`). Use it for impact analysis ("what breaks if I change this endpoint?"), for generated onboarding pages per service, and to catch contract drift (a client calling a path that no service exposes).
 
 It never needs a build or a classpath. Sources are parsed with JavaParser (parse only, no symbol solver) and constants are folded by ssg's own index, so unbuilt checkouts work. Only Java sources are read.
