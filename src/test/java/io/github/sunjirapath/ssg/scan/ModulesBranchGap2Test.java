@@ -47,7 +47,7 @@ class ModulesBranchGap2Test {
     }
 
     @Test
-    @Timeout(5)
+    @Timeout(value = 5, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     void dependencyManagementParentCycleStopsAfterVisitingEachPom() {
         var repo = TempRepo.at(tmp.resolve("parent-cycle"))
                 .file("v1/lib/pom.xml", "<project><groupId>g</groupId><artifactId>lib</artifactId><version>1</version></project>")

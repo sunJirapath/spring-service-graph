@@ -75,6 +75,8 @@ class JavaIndexBranchGap2Test {
                 }
                 """);
 
+        // FINDING (pins current behaviour, not endorsed; invert when fixed): long + int through a non-`this` receiver
+        // or an overloaded call is not recognised as numeric, so it renders as string concatenation "{?}1".
         assertThat(values(index)).extracting(Value::text).containsExactly("{?}", "71", "{?}1", "{?}1");
     }
 
@@ -96,6 +98,7 @@ class JavaIndexBranchGap2Test {
         code.append("use(n23 + 1); use(n25 + 1); } }");
         var index = source(code.toString());
 
+        // n23 is inside the numeric-lookup depth limit; n25 is beyond it and falls back to "{?}1" (documented limit, not endorsed).
         assertThat(values(index)).extracting(Value::text).containsExactly("{?}", "{?}1");
     }
 

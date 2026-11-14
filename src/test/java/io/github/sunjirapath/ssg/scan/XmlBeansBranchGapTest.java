@@ -37,7 +37,10 @@ class XmlBeansBranchGapTest {
                 .resource("spring/child.xml", "<beans><bean class=\"example.Child\"/></beans>")
                 .resource("absolute.xml", "<beans><bean class=\"example.Absolute\"/></beans>")
                 .resource("shared.xml", "<beans><bean class=\"example.Shared\"/></beans>")
-                .resource("shared-star.xml", "<beans><bean class=\"example.Star\"/></beans>");
+                .resource("shared-star.xml", "<beans><bean class=\"example.Star\"/></beans>")
+                // real files behind the unsafe names: they must stay unreachable, so the skip checks are what keep them out
+                .resource("network.xml", "<beans><bean class=\"example.Network\"/></beans>")
+                .resource("outside.xml", "<beans><bean class=\"example.Outside\"/></beans>");
         Path root = repo.root().resolve("src/main/resources");
 
         var classes = new XmlBeans(new Config(), List.of(root)).classes("classpath:/spring/root.xml");

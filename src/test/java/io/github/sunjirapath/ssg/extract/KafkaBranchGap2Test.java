@@ -105,7 +105,8 @@ class KafkaBranchGap2Test {
         assertThat(resolved).extracting(Fact.TopicUse::broker).containsExactly("kafka");
     }
 
-    // FINDING: an empty @Bean name array falls back to the method name for bean detection but not function output lookup.
+    // FINDING (asserts current behaviour, not endorsed; invert when fixed): an empty @Bean name array falls back to the
+    // method name for bean detection but not function output lookup.
     @Test
     void emptyFunctionBeanNames() {
         String call = "bridge.send(\"generate-out-0\", \"rabbit\", payload);";
@@ -135,7 +136,8 @@ class KafkaBranchGap2Test {
                 .containsExactly(tuple("convert-out-0", "kafka"));
     }
 
-    // FINDING: Flux<Void> is treated as a function output even though it cannot emit values.
+    // FINDING (asserts current behaviour, not endorsed; invert when fixed): only the Flux<Void> row is the bug (it is
+    // treated as a function output though it cannot emit values); the other rows pin intended behaviour.
     @ParameterizedTest
     @CsvSource(delimiter = '|', value = {
             "BiFunction<String, String, Void> | rabbit",
@@ -203,7 +205,8 @@ class KafkaBranchGap2Test {
                 .containsExactly(tuple("known", "kafka"), tuple("dynamic", "unknown"));
     }
 
-    // FINDING: a constructed String selects the explicit binder overload but its binder value remains unresolved.
+    // FINDING (asserts current behaviour, not endorsed; invert when fixed): a constructed String selects the explicit
+    // binder overload but its binder value remains unresolved.
     @Test
     void stringArgumentShapes() {
         var facts = topics(repo("strings", "", """

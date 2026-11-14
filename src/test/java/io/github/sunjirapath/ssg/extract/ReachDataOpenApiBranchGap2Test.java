@@ -124,7 +124,8 @@ class ReachDataOpenApiBranchGap2Test {
                         "sql:false:interface_rows", "sql:false:ignored_class", "sql:false:ignored_interface", "sql:true:yaml_rows");
     }
 
-    // FINDING: OpenAPI path keys that are YAML collections become an empty path and are exposed as root endpoints.
+    // FINDING (asserts current behaviour, not endorsed; invert when fixed): OpenAPI path keys that are YAML collections
+    // become an empty path and are exposed as root endpoints.
     @Test
     void openApiSkipsBuildTargetTestsAndHandlesRootContextAndNonScalarNodes() {
         var repo = TempRepo.at(tmp.resolve("openapi")).app()

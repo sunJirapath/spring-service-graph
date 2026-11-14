@@ -70,6 +70,5 @@ class DiscoveryBranchGap2Test {
                 .filter(service -> service.name().equals("orders")).findFirst().orElseThrow();
 
         assertThat(orders.config().get("owner").value()).isEqualTo("inside");
-        assertThat(orders.config().get("owner").value()).isNotEqualTo("outside");
     }
 }

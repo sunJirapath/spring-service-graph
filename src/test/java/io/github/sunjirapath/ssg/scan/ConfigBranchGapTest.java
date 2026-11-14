@@ -65,8 +65,8 @@ class ConfigBranchGapTest {
     }
 
     @Test
-    void mavenFilteringUsesNearestAncestorPomAndStopsAtRepoRoot() {
-        var repo = TempRepo.at(tmp)
+    void mavenFilteringUsesNearestAncestorPomAndStopsAtRepoRoot() throws java.io.IOException {
+        var repo = TempRepo.at(tmp.resolve("repo"))
                 .file("pom.xml", "<project><artifactId>outer</artifactId></project>")
                 .file("nested/pom.xml", "<project><parent><artifactId>ignored-parent</artifactId></parent><artifactId>inner</artifactId></project>")
                 .resource("nested/src/main/resources/application.yml", "name: @project.artifactId@\n");
@@ -77,5 +77,11 @@ class ConfigBranchGapTest {
                 .isEqualTo("name: inner");
         assertThat(Config.unfiltered(Repo.of(repo.root()), outside, "name: @project.artifactId@"))
                 .isEqualTo("name: ${project.artifactId}");
+
+        // a pom above the repo root must never be used: the in-repo config has no in-repo pom, so it stays unfiltered
+        java.nio.file.Files.writeString(tmp.resolve("pom.xml"), "<project><artifactId>above-root</artifactId></project>");
+        var bare = TempRepo.at(tmp.resolve("repo2")).resource("application.yml", "name: @project.artifactId@\n");
+        assertThat(Config.unfiltered(Repo.of(bare.root()), bare.root().resolve("src/main/resources/application.yml"),
+                "name: @project.artifactId@")).isEqualTo("name: ${project.artifactId}");
     }
 }
