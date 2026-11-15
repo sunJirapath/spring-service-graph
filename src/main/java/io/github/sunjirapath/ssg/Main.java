@@ -1,7 +1,6 @@
 package io.github.sunjirapath.ssg;
 
 import io.github.sunjirapath.ssg.diff.GraphDiff;
-import io.github.sunjirapath.ssg.mcp.GraphQueries;
 import io.github.sunjirapath.ssg.mcp.McpServer;
 import io.github.sunjirapath.ssg.output.DiagramOutput;
 import io.github.sunjirapath.ssg.output.JsonOutput;
@@ -27,7 +26,7 @@ public final class Main {
                             [--config-repo <dir>] [--link-base <url with {repo} {file} {line}>]
                             [--sql-methods <method|Type.method>...] --out <dir>
                    ssg diff --base <dir|graph.json> --head <dir|graph.json> [--fail-on-breaking]
-                            (Markdown impact report on stdout; exit 3 on breaking changes with the flag)
+                            (Markdown on stdout; with the flag: exit 4 if incomplete, else 3 if breaking)
                    ssg mcp  --graph <dir|graph.json>                           (MCP server on stdio)
             """;
 
@@ -71,6 +70,10 @@ public final class Main {
                 boolean gate = flag(opts, "--fail-on-breaking");
                 var result = GraphDiff.compare(base, head);
                 utf8Stdout().print(result.markdown());
+                if (gate && !result.incomplete().isEmpty()) {
+                    System.err.println("ssg diff: incomplete analysis; see impact report");
+                    yield 4;
+                }
                 if (gate && !result.breaking().isEmpty()) {
                     System.err.println("ssg diff: " + result.breaking().size() + " breaking change(s)");
                     yield 3;
@@ -78,11 +81,10 @@ public final class Main {
                 yield 0;
             }
             case "mcp" -> {
-                var graph = JsonOutput.read(Path.of(single(opts, "--graph", null)));
                 String version = java.util.Objects.requireNonNullElse(Main.class.getPackage().getImplementationVersion(), "dev");
-                System.err.println("ssg mcp: serving " + graph.nodes().size() + " nodes on stdio");
-                new McpServer(new GraphQueries(graph), version)
-                        .serve(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)), utf8Stdout());
+                var server = McpServer.fromSnapshot(Path.of(single(opts, "--graph", null)), version);
+                System.err.println("ssg mcp: serving a static snapshot on stdio; source freshness is unknown");
+                server.serve(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)), utf8Stdout());
                 yield 0;
             }
             default -> throw new IllegalArgumentException("unknown command: " + args[0]);

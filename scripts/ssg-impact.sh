@@ -5,16 +5,16 @@
 # Environment:
 #   SSG_BASE              base checkout of the changed repo (required)
 #   SSG_HEAD              head checkout of the changed repo (required, same folder name as SSG_BASE)
-#   SSG_FLEET             other repo checkouts, space separated (optional; gives cross-service impact)
+#   SSG_FLEET             other repo checkouts, one literal path per line (optional; spaces supported)
 #   SSG_PROFILE           Spring profile (optional)
 #   SSG_ALIASES           aliases.yml (optional)
 #   SSG_CONFIG_REPO       Spring Cloud Config repo checkout (optional)
 #   SSG_SQL_METHODS       in-house wrapper methods that take SQL, e.g. "SqlRunner.query Db.exec" (optional)
 #   SSG_OUT               output directory (default ./ssg-impact)
-#   SSG_FAIL_ON_BREAKING  "true" to exit 3 when breaking changes are found
+#   SSG_FAIL_ON_BREAKING  "true" to exit 4 if incomplete, else 3 if breaking
 #   SSG                   ssg launcher (default: ssg on PATH)
 #
-# Writes $SSG_OUT/impact.md, $SSG_OUT/breaking ("true"/"false") and the two scans in $SSG_OUT/base|head.
+# Writes impact.md, breaking and incomplete ("true"/"false"), and base|head scans under $SSG_OUT.
 set -euo pipefail
 
 ssg="${SSG:-ssg}"
@@ -27,7 +27,11 @@ if [ "$(basename "$SSG_BASE")" != "$(basename "$SSG_HEAD")" ]; then
   exit 2
 fi
 
-read -r -d '' -a fleet <<< "${SSG_FLEET:-}" || true # splits on spaces and newlines
+fleet=()
+while IFS= read -r repo; do
+  repo="${repo%$'\r'}" # also accept CRLF input
+  [ -z "$repo" ] || fleet+=("$repo")
+done <<< "${SSG_FLEET:-}"
 opts=()
 [ -n "${SSG_PROFILE:-}" ] && opts+=(--profile "$SSG_PROFILE")
 [ -n "${SSG_ALIASES:-}" ] && opts+=(--aliases "$SSG_ALIASES")
@@ -43,11 +47,18 @@ set +e
 code=$?
 set -e
 case "$code" in
-  0) echo false > "$out/breaking" ;;
-  3) echo true > "$out/breaking" ;;
+  0|3|4) ;;
   *) echo "ssg-impact: ssg diff failed with exit code $code" >&2; exit "$code" ;;
 esac
+# Exit 4 takes precedence, so a report can be incomplete and also contain proven breaks.
+if awk '/^## Breaking changes$/ { section=1; next } /^## / { section=0 }
+        section && /^- / { found=1 } END { exit !found }' "$out/impact.md"; then
+  echo true > "$out/breaking"
+else
+  echo false > "$out/breaking"
+fi
+if [ "$code" = 4 ]; then echo true > "$out/incomplete"; else echo false > "$out/incomplete"; fi
 
-echo "ssg-impact: report in $out/impact.md (breaking: $(cat "$out/breaking"))"
-if [ "$code" = 3 ] && [ "${SSG_FAIL_ON_BREAKING:-false}" = true ]; then exit 3; fi
+echo "ssg-impact: report in $out/impact.md (breaking: $(cat "$out/breaking"), incomplete: $(cat "$out/incomplete"))"
+if [ "$code" != 0 ] && [ "${SSG_FAIL_ON_BREAKING:-false}" = true ]; then exit "$code"; fi
 exit 0

@@ -37,6 +37,7 @@ public final class Linker {
     private final Map<String, String> aliases;
     private final Map<String, String> serviceByName = new HashMap<>();
     private final Map<String, List<EndpointRef>> endpoints = new HashMap<>();
+    private final java.util.Set<String> incompleteContracts = new java.util.HashSet<>();
     private final Map<String, Node> nodes = new TreeMap<>();
     private final Map<String, EdgeAcc> edges = new TreeMap<>();
     private final List<Finding> findings = new ArrayList<>();
@@ -123,6 +124,13 @@ public final class Linker {
         String id = Node.Service.idOf(sf.service());
         nodes.put(id, new Node.Service(id, sf.service(), sf.repo(), sf.path()));
         serviceByName.put(sf.service().toLowerCase(Locale.ROOT), sf.service());
+        if (sf.facts().stream().anyMatch(f -> f instanceof Fact.Problem p && p.kind().equals("MISSING_INTERFACE")
+                || f instanceof Fact.Endpoint e && !e.path().resolved())
+                || findings.stream().anyMatch(f -> f.service().equals(sf.service())
+                && (f.kind() == Finding.Kind.MISSING_INTERFACE || f.kind() == Finding.Kind.PARSE_ERROR
+                || f.kind() == Finding.Kind.INCOMPLETE_ANALYSIS))) {
+            incompleteContracts.add(sf.service());
+        }
         for (Fact f : sf.facts()) {
             if (!(f instanceof Fact.Endpoint e)) continue;
             String path = e.path().text();
@@ -204,10 +212,14 @@ public final class Linker {
             matched = matched.stream().filter(e -> e.path().equals(url.path())).toList();
         for (EndpointRef e : matched) edge(Edge.Kind.CALLS, from, e.id(), value, c.evidence(), attrs);
         if (!matched.isEmpty()) return matched.stream().map(EndpointRef::id).toList();
+        boolean incomplete = incompleteContracts.contains(target);
+        if (incomplete) attrs.put("contract", "unavailable");
         edge(Edge.Kind.CALLS, from, Node.Service.idOf(target), value, c.evidence(), attrs);
         if (!url.path().contains(Value.UNKNOWN)) {
-            findings.add(new Finding(Finding.Kind.CONTRACT_DRIFT, service, c.client() + " call " + c.method() + " "
-                    + url.path() + " matches no endpoint exposed by " + target, List.of(c.evidence())));
+            findings.add(new Finding(incomplete ? Finding.Kind.UNRESOLVED : Finding.Kind.CONTRACT_DRIFT, service,
+                    c.client() + " call " + c.method() + " " + url.path()
+                    + (incomplete ? " cannot be verified against incomplete contract of " : " matches no endpoint exposed by ")
+                    + target, List.of(c.evidence())));
         }
         return List.of(Node.Service.idOf(target));
     }
@@ -220,13 +232,13 @@ public final class Linker {
         String alias = aliases.get(host);
         if (alias != null) {
             svc = serviceByName.get(alias.toLowerCase(Locale.ROOT));
-            return svc != null ? svc : Node.External.idOf(alias);
+            return svc != null ? svc : Node.External.idOf(redactUrl(alias));
         }
         return Node.External.idOf(host);
     }
 
     private static final Pattern USERINFO = Pattern.compile("^[^@/]*@");
-    private static final Pattern URL_USERINFO = Pattern.compile("(?<=://)[^/?#]*@");
+    private static final Pattern URL_USERINFO = Pattern.compile("(?<=//)[^/?#]*@");
 
     /** Also covers raw concatenations: a query's later operands may contain credentials. */
     private static String redactUrl(String value) {

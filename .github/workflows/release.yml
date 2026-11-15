@@ -20,6 +20,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Build distributions
         run: ./gradlew build distZip distTar -PreleaseVersion="${GITHUB_REF_NAME#v}" --console=plain
+      - name: Checksum distributions
+        working-directory: build/distributions
+        run: sha256sum -- *.zip *.tar > SHA256SUMS
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}

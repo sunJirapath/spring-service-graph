@@ -39,6 +39,7 @@ tasks.jacocoTestReport {
 
 tasks.test {
     useJUnitPlatform()
-    // regenerate golden files with: ./gradlew test -PupdateGolden
-    systemProperty("ssg.updateGolden", project.hasProperty("updateGolden").toString())
+    // regenerate golden files explicitly: ./gradlew test -PupdateGolden=true
+    systemProperty("ssg.updateGolden", providers.gradleProperty("updateGolden")
+        .map { it.equals("true", ignoreCase = true) }.getOrElse(false).toString())
 }

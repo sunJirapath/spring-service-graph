@@ -1,5 +1,11 @@
 # Testing and validation
 
+## Round 3 source-only hardening (2026-11-14)
+
+Added regressions for release checksums and Gradle cache configuration, best-effort comment lookup/missing `gh`, newline-delimited fleet paths with spaces/CRLF (`CiConfigurationTest`); snapshot replacement/deletion and explicit unknown provenance, bounded MCP requests/results/text (`McpEdgeCasesTest`); explicit golden-update opt-in and CI refusal (`GoldenTest`); and real JVM exit statuses 0/1/2/3/4 (`MainProcessTest`). `ExtractCoverageTest.methodCallReceiverNamedRestTemplateIsRecognizedByHint` now checks the URL, client kind and confidence as well as the verb. The previous 2,000-edge MCP success assertion now expects a limit error and checks that a specific endpoint still works.
+
+These changes were reviewed from source only: no build, test suite, shell regression or external client was run. Shell regressions require Bash (Git Bash at `C:/Program Files/Git/bin/bash.exe` on Windows, otherwise `bash` on PATH). The existing `PipelineMemoryTest` and P0/P1 gate/redaction regressions were retained. The historical counts below do not describe this revision. MCP uses conservative failure limits and restart-on-file-change, not pagination, live-source verification or automatic reload; scan provenance remains explicitly unknown.
+
 ## Latest verification (2026-10-25)
 
 [PR #5](https://github.com/sunJirapath/spring-service-graph/pull/5) was verified at

@@ -16,6 +16,20 @@ class ConfigTest {
     @TempDir
     Path dir;
 
+    @Test
+    void malformedEmbeddedAndMergedConfigRetainSafeDiagnostics() throws IOException {
+        var malformed = load("bad.yml", "spring: [CANARY_SECRET\n", "default");
+        var merged = new Config();
+        merged.putAll(malformed);
+        merged.addEmbedded(Repo.of(dir), dir.resolve("seed.sql"), 42, false, "spring: [CANARY_SECRET\n", "default");
+
+        assertThat(merged.problems()).hasSize(2).allSatisfy(p -> assertThat(p.message()).doesNotContain("CANARY_SECRET"));
+        assertThat(merged.problems()).anySatisfy(p -> {
+            assertThat(p.evidence().file()).isEqualTo("seed.sql");
+            assertThat(p.evidence().line()).isEqualTo(42);
+        });
+    }
+
     private Config load(String file, String text, String profile) throws IOException {
         Path f = dir.resolve(file);
         Files.writeString(f, text);

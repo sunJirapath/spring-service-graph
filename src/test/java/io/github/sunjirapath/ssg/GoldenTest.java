@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Every output file for the synthetic fleet must match src/test/resources/golden byte for byte.
- * After an intended change, regenerate with {@code ./gradlew test -PupdateGolden} and review the diff.
+ * After an intended change, regenerate with {@code ./gradlew test -PupdateGolden=true} and review the diff.
  */
 class GoldenTest {
 
@@ -26,13 +27,14 @@ class GoldenTest {
 
     @Test
     void outputMatchesGoldenFiles() throws IOException {
+        boolean update = updateRequested(System.getProperty("ssg.updateGolden"), System.getenv("CI"));
         var result = TestFleet.scan();
         deleteRecursively(OUT);
         JsonOutput.write(result.graph(), OUT);
         MarkdownOutput.write(result.graph(), result.repoRoots(), OUT);
         DiagramOutput.write(result.graph(), OUT);
 
-        if (Boolean.getBoolean("ssg.updateGolden")) {
+        if (update) {
             deleteRecursively(GOLDEN);
             for (Path f : files(OUT)) {
                 Path target = GOLDEN.resolve(OUT.relativize(f).toString());
@@ -46,6 +48,26 @@ class GoldenTest {
             Path golden = GOLDEN.resolve(OUT.relativize(f).toString());
             assertThat(Files.readString(f)).as(OUT.relativize(f).toString()).isEqualTo(Files.readString(golden));
         }
+    }
+
+    @Test
+    void goldenUpdatesRequireExplicitTrueAndAreForbiddenInCi() throws IOException {
+        assertThat(updateRequested(null, null)).isFalse();
+        assertThat(updateRequested("", null)).isFalse();
+        assertThat(updateRequested("false", "true")).isFalse();
+        assertThat(updateRequested("true", null)).isTrue();
+        assertThatThrownBy(() -> updateRequested("true", "true"))
+                .isInstanceOf(IllegalStateException.class).hasMessageContaining("CI");
+        assertThat(Files.readString(Path.of("build.gradle.kts")))
+                .contains("providers.gradleProperty(\"updateGolden\")", "it.equals(\"true\", ignoreCase = true)")
+                .doesNotContain("project.hasProperty(\"updateGolden\")");
+    }
+
+    private static boolean updateRequested(String value, String ci) {
+        boolean update = Boolean.parseBoolean(value);
+        if (update && ci != null && !ci.isBlank() && !ci.equalsIgnoreCase("false"))
+            throw new IllegalStateException("golden regeneration is forbidden in CI");
+        return update;
     }
 
     @Test

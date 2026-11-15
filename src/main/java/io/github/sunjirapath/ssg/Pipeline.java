@@ -7,6 +7,7 @@ import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Fact;
 import io.github.sunjirapath.ssg.model.Finding;
 import io.github.sunjirapath.ssg.model.Graph;
+import io.github.sunjirapath.ssg.scan.Config;
 import io.github.sunjirapath.ssg.scan.Discovery;
 import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Repo;
@@ -38,34 +39,49 @@ public final class Pipeline {
     /** @param repoRoots repo name -> checkout root, for evidence links */
     public record Result(Graph graph, Map<String, Path> repoRoots) {}
 
+    private record SeenService(String location, Evidence evidence) {}
+
     private Pipeline() {}
 
     public static Result scan(Options o) throws IOException {
         var roots = new TreeMap<String, Path>();
         var all = new ArrayList<Linker.ServiceFacts>();
         var extra = new ArrayList<Finding>();
-        var seen = new TreeMap<String, Service>();
+        var seen = new TreeMap<String, SeenService>();
         if (o.configRepo() != null) addRoot(roots, Repo.of(o.configRepo()));
         for (Path p : o.repos()) addRoot(roots, Repo.of(p));
         for (Path p : o.repos()) {
             Repo repo = Repo.of(p);
             JavaIndex index = JavaIndex.build(repo);
             List<Service> services = Discovery.discover(index, o.profile(), o.configRepo());
-            if (services.isEmpty()) System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
+            if (services.isEmpty()) {
+                System.err.println("warn: no Spring Boot app (@SpringBootApplication or SpringApplication in main) in " + repo.root());
+                extra.add(new Finding(Finding.Kind.INCOMPLETE_ANALYSIS, repo.name(),
+                        "no Spring Boot application discovered in input repository", List.of()));
+            }
             for (Service s : services) {
-                Service previous = seen.put(s.name(), s);
-                String prev = previous == null ? null : previous.repo().name() + "/" + previous.path();
+                SeenService previous = seen.put(s.name(), new SeenService(repo.name() + "/" + s.path(), s.nameEvidence()));
+                String prev = previous == null ? null : previous.location();
                 if (prev != null) {
                     System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
                     // two apps with one name merge into one graph node; say so instead of hiding it
                     extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
                             + "' is used by " + prev + " and " + repo.name() + "/" + s.path(),
-                            List.of(previous.nameEvidence(), s.nameEvidence())));
+                            List.of(previous.evidence(), s.nameEvidence())));
                 }
                 var facts = new ArrayList<Fact>();
                 for (Extractor x : Extractor.all(java.util.Set.copyOf(o.sqlMethods()))) facts.addAll(x.extract(s));
                 facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
+                for (Config.Problem pr : s.config().problems()) {
+                    extra.add(new Finding(Finding.Kind.PARSE_ERROR, s.name(), pr.message(), List.of(pr.evidence())));
+                }
+            }
+            for (Path file : index.unsupportedSources()) {
+                String owner = services.stream().filter(s -> file.toAbsolutePath().normalize().startsWith(s.moduleRoot()))
+                        .map(Service::name).findFirst().orElse(repo.name());
+                extra.add(new Finding(Finding.Kind.INCOMPLETE_ANALYSIS, owner,
+                        "Kotlin source is not analyzed; callers and endpoints may be missing", List.of(repo.evidence(file, 1))));
             }
             for (JavaIndex.Problem pr : index.problems()) {
                 String owner = services.stream().filter(s -> pr.file().toAbsolutePath().normalize().startsWith(s.moduleRoot()))

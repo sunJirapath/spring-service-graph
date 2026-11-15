@@ -1,7 +1,15 @@
 package io.github.sunjirapath.ssg.extract;
 
+import io.github.sunjirapath.ssg.Pipeline;
+import io.github.sunjirapath.ssg.TempRepo;
+import io.github.sunjirapath.ssg.diff.GraphDiff;
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Fact;
+import io.github.sunjirapath.ssg.model.Finding;
+import io.github.sunjirapath.ssg.model.Graph;
+import io.github.sunjirapath.ssg.output.DiagramOutput;
+import io.github.sunjirapath.ssg.output.JsonOutput;
+import io.github.sunjirapath.ssg.output.MarkdownOutput;
 import io.github.sunjirapath.ssg.scan.Discovery;
 import io.github.sunjirapath.ssg.scan.JavaIndex;
 import io.github.sunjirapath.ssg.scan.Repo;
@@ -14,10 +22,45 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GatewayJavaDslTest {
+
+    @Test
+    void unresolvedUriCredentialsStayOutOfEveryOutput(@TempDir Path tmp) throws IOException {
+        var repo = TempRepo.at(tmp.resolve("gateway")).app()
+                .resource("application.properties", "spring.application.name=gateway\n")
+                .java("app/Routes.java", """
+                        package app;
+                        @Configuration class Routes {
+                            @Bean RouteLocator routes(RouteLocatorBuilder b, Urls factory) {
+                                return b.routes().route(r -> r.path("/x/**")
+                                    .uri(factory.resolve("https://CANARY_USER:CANARY_PASSWORD@host/x?token=CANARY_TOKEN#CANARY_FRAGMENT"))).build();
+                            }
+                        }
+                        """);
+        var result = Pipeline.scan(new Pipeline.Options(List.of(repo.root()), "default", null, null));
+        var graph = result.graph();
+        assertThat(graph.findings()).anySatisfy(f -> {
+            assertThat(f.kind()).isEqualTo(Finding.Kind.UNRESOLVED);
+            assertThat(f.message()).contains("gateway route uri not resolved statically");
+            assertThat(f.evidence()).anySatisfy(e -> assertThat(e.file()).endsWith("Routes.java"));
+        });
+        Path out = tmp.resolve("out");
+        JsonOutput.write(graph, out);
+        MarkdownOutput.write(graph, result.repoRoots(), out);
+        DiagramOutput.write(graph, out);
+        try (var files = Files.walk(out)) {
+            for (Path file : files.filter(Files::isRegularFile).toList()) assertNoCredentials(Files.readString(file));
+        }
+        assertNoCredentials(GraphDiff.report(new Graph(List.of(), List.of(), List.of()), graph));
+    }
+
+    private static void assertNoCredentials(String output) {
+        assertThat(output).doesNotContain("CANARY_USER", "CANARY_PASSWORD", "CANARY_TOKEN", "CANARY_FRAGMENT");
+    }
 
     @Test
     void extractsEndpointsAndCallsFromJavaRouteDsl(@TempDir Path repo) throws IOException {

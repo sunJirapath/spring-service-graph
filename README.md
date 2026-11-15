@@ -20,7 +20,9 @@ build/install/ssg/bin/ssg scan --repos ./fleet/* --profile default \
 
 Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`. Releases are built by `.github/workflows/release.yml` when a `v*` tag is pushed.
 
-`./gradlew build` compiles and runs the tests. Kotlin sources are not scanned yet.
+Download the release's `SHA256SUMS` alongside the archives and run `sha256sum --check --ignore-missing SHA256SUMS` in that directory (requires `sha256sum`). Check that your downloaded archive reports `OK`. Checksums detect corruption; they are not signatures or attestations and do not authenticate a compromised release. Distributions require Java 21 on PATH or through `JAVA_HOME`; Windows uses `bin/ssg.bat`.
+
+`./gradlew build` compiles and runs the tests. Kotlin sources are not parsed; detected main Kotlin sources produce `INCOMPLETE_ANALYSIS` findings and block the impact gate.
 
 ## Options
 
@@ -29,7 +31,7 @@ Or download `ssg-<version>.zip` from GitHub Releases, unzip it and run `bin/ssg`
 | `--repos <dir>...` | yes | One or more repo checkouts. A trailing `*` or `?` segment (`./fleet/*`) is expanded by ssg itself, so it works in cmd.exe too; only directories match, sorted by path. Each repo may hold several Spring Boot apps (modules). |
 | `--profile <name>` | no, default `default` | Spring profile whose `application-<profile>.*` / `bootstrap-<profile>.*` files are layered over the base config. |
 | `--aliases <file>` | no | Host-to-target map, see Linking rules. |
-| `--config-repo <dir>` | no | Spring Cloud Config style repo. `application.*`, `application-<profile>.*`, `<app>.*` and `<app>-<profile>.*` from its root override the service's own config. Only the repo root is read. |
+| `--config-repo <dir>` | no | Spring Cloud Config style repo. `application.*`, `application-<profile>.*`, `<app>.*` and `<app>-<profile>.*` from the root and `<app>/` subfolder override the service's own config. A Config Server in the same scanned repo can select search paths instead; see [Known limits](#known-limits). |
 | `--sql-methods <m>...` | no | In-house wrapper methods that take SQL, as `method` or `Type.method`, given as several values or comma-separated. Their SQL arguments are read like `JdbcTemplate` calls. Without this, ssg reports where SQL arrives as a method parameter and suggests the wrapper to list. |
 | `--link-base <url>` | no | URL template for evidence links in the Markdown, e.g. `https://git.example/{repo}/blob/main/{file}#L{line}`. Without it, links are relative paths to the local checkout. |
 | `--out <dir>` | yes | Output directory. |
@@ -48,7 +50,7 @@ Source-defined composed `@SpringBootApplication` annotations are recognized when
 | JAX-RS `@Path` resources with `@GET`, `@POST` etc. | `@ApplicationPath` and the context path are prepended. |
 | WebFlux `RouterFunction` beans | `RouterFunctions.route(GET("/x"), h)`, `.andRoute(...)` and `route().GET("/x", h)` builders. |
 | Mappings on implemented interfaces | openapi-generator `interfaceOnly` interfaces, including `target/` and `build/generated-sources`. |
-| OpenAPI 3 / Swagger 2 spec in the module (YAML or JSON) | Fallback when the generated interface is not in the checkout. If no spec exists either, a `MISSING_INTERFACE` finding is raised. |
+| OpenAPI 3 / Swagger 2 spec in the module (YAML or JSON) | Fallback when the generated interface is not in the checkout. If no spec exists either, `MISSING_INTERFACE` marks the contract incomplete; unmatched calls are unverified, not proven contract drift. |
 
 **Outbound HTTP**
 
@@ -130,14 +132,20 @@ ssg scan --repos ... --out out-head     # on the MR branch
 ssg diff --base out-base --head out-head > impact.md
 ```
 
-The report is Markdown on stdout. It opens with **Breaking changes**:
+The report is Markdown on stdout. **Incomplete analysis**, when present, appears before **Breaking changes**:
 - removed endpoints or services that are still called
 - topics that lost their last producer but still have consumers
 - new contract drift
 
-Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported. The exit code is 0, or 3 when `--fail-on-breaking` is given and there are breaking changes.
+Then it lists what was added or removed: endpoints, calls, messaging, data and reach. It also lists confidence changes, and new and resolved findings. Evidence line numbers are ignored when matching, so moved code is not reported.
 
-To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
+With `--fail-on-breaking`, exit **4** means **incomplete analysis**, exit **3** means proven breaking changes, and exit **0** means neither was detected. Incomplete analysis takes precedence when both occur. Without the flag, a successfully rendered diff exits 0, including advisory reports with incomplete analysis. Uncertainty in **either** scan blocks the gate, even when unchanged: `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `INCOMPLETE_ANALYSIS`, unresolved edges, or a decrease in an otherwise matching edge's confidence. Malformed configuration is recorded as `PARSE_ERROR`; inputs with no discovered application and detected main Kotlin sources produce `INCOMPLETE_ANALYSIS`.
+
+CLI error exits apply to every command: **2** for invalid arguments or incompatible legacy/qualified diff inputs; **1** for I/O failures. Uncaught runtime exceptions/errors use JVM termination (ordinarily 1); external termination such as an OOM kill can have another status. Wrappers must treat every nonzero status as failure, including values other than 3/4.
+
+Rescan both inputs with this scanner and the same fleet/profile/config inputs. Old snapshots cannot recover omitted diagnostics, and snapshots do not verify source freshness. A green result covers the supplied static evidence within the known limits below; it is not proof of complete runtime compatibility. A missing generated contract cannot prove endpoint removal or contract drift; observed matching endpoints remain usable.
+
+To run this on every pull request, use the GitHub action in this repo (`uses: sunJirapath/spring-service-graph@<sha>`). It scans the fleet with the PR's base and head, posts the report as a PR comment and in the job summary, and can fail the check on incomplete analysis or breaking changes. For other CI systems, use `scripts/ssg-impact.sh`. See [docs/ci.md](docs/ci.md).
 
 ## MCP server
 
@@ -145,7 +153,11 @@ To run this on every pull request, use the GitHub action in this repo (`uses: su
 ssg mcp --graph out
 ```
 
-This serves the graph to an MCP client over stdio (JSON-RPC 2.0). The server is read-only and exposes three tools:
+This serves the graph to an MCP client over stdio (JSON-RPC 2.0). The server is read-only and exposes three tools.
+
+The graph is loaded once. Initialization and each tool result include `_meta.snapshot` with its SHA-256 and load time; every successful tool result also includes a provenance warning. The running server version is not the scan version. Snapshots do not record scan version, profile or source revisions; these and source freshness/completeness are explicitly `unknown`, including for legacy graphs. Answers are advisory static evidence. The server hashes the file before each tool call: replacement or deletion returns a tool error until you restart with a valid snapshot. It does not reload automatically or compare the snapshot with live source checkouts; an unchanged file can still describe stale sources.
+
+Requests are limited to 65,536 Java characters per line; oversized lines are drained and rejected with JSON-RPC `-32600`. Queries reject more than 200 matches, incoming edges, affected nodes or evidence entries per edge, and tool text above 65,536 characters. Limit errors return no partial result. Use a specific node ID or offline outputs; pagination is not implemented. To bound Markdown rendering, `service_card` conservatively rejects graphs whose pretty-printed JSON exceeds 65,536 characters, even if the requested service is small. The graph and lookup indexes remain in memory; these limits bound query output, not fleet loading or total heap.
 
 | Tool | Arguments | Answers |
 |---|---|---|
@@ -177,7 +189,7 @@ out/
   diagrams/<service>.mmd  Mermaid diagram per service
 ```
 
-Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services).
+Node kinds: `service`, `endpoint`, `topic`, `table`, `external`. Edge kinds: `EXPOSES`, `CALLS`, `PRODUCES`, `CONSUMES`, `OWNS`, `USES`, `REACHES` (endpoint → called endpoint, topic or table). Finding kinds: `CONTRACT_DRIFT`, `UNRESOLVED`, `MISSING_INTERFACE`, `PARSE_ERROR`, `DUPLICATE_SERVICE`, `SHARED_TABLE` (a table owned by DDL in two or more services), `INCOMPLETE_ANALYSIS` (unsupported sources or undiscovered applications).
 
 Resource IDs include their backend: `topic:kafka:orders`, `topic:rabbit:orders`, `topic:rocketmq:orders`,
 `table:sql:orders-service/orders`, and `table:mongo:orders-service/orders`. Topic nodes also carry `broker`.
@@ -212,7 +224,7 @@ A `CALLS` edge from the golden example (`src/test/resources/golden/graph.json`):
 }
 ```
 
-Output is deterministic. Values of secret-looking config keys (`password`, `secret`, `token`, `credential`, `api-key`, `private-key`) are never read into the output. Parts that cannot be resolved statically are shown as `{?}`, e.g. `GET {?}/reports/{?}`.
+Output is deterministic. Values of secret-looking config keys (`password`, `secret`, `token`, `credential`, `api-key`, `private-key`) are never read into the output. HTTP call URLs and alias-derived external URLs redact userinfo, query values and fragments. Unresolved Gateway URI diagnostics include locations without raw expressions. Evidence `--link-base` templates redact userinfo, literal query values and fragments, preserving exact query placeholder values (`{repo}`, `{file}`, `{line}`) and line fragments (`#L{line}` or `#{line}`). Put fixed evidence-link parameters in the URL path instead when possible. This is not general-purpose secret detection in arbitrary source strings. Parts that cannot be resolved statically are shown as `{?}`, e.g. `GET {?}/reports/{?}`.
 
 ## Known limits
 
@@ -222,12 +234,12 @@ Output is deterministic. Values of secret-looking config keys (`password`, `secr
 - Profile expressions such as `!dev`, `a & b`, `a | b` and parentheses are evaluated against the active profile.
 - Gateway configuration Method predicates are intersected. Repeated Method predicates in the Java DSL are still collected together and can overstate accepted methods when they conflict.
 - Cloud Stream inference covers source-visible bindings and functions. Conditional/custom/external function registrations and insufficient expression type information can leave the broker unknown.
-- Config repo: only the repo root is read, not per-app subfolders or custom search locations.
-- A non-final field or local variable that is reassigned later still folds to its initializer.
+- Config repo: by default the root and `<app>/` subfolder are read. A Config Server in the same scanned repo can replace those directories with `git.search-paths` or `native.search-locations` (`classpath:` only for native locations). `{application}` and wildcards in the last path segment are supported; files must stay inside the config checkout. A Config Server in another scanned repo is not consulted; remote servers and arbitrary filesystem locations are not fetched.
+- Initializer folding detects differing non-final field assignments within the declaring class as `UNRESOLVED`. Straight-line local reassignments fold the last assignment before each use; differing branch/loop reassignments stay `UNRESOLVED`. Constructor/setter assignments directly from parameters are ignored, retaining the initializer as a static guess. Recognized query/SQL suffix appends keep the base value and can omit appended JOIN tables; assignments from other classes are not tracked.
 - OpenAPI specs: `${openapi.<name>.base-path}` overrides are not applied; the spec's server path is used.
 - Values built by method calls (other than zero-argument helpers in the same class that only `return` an expression), `String.format` or `static {}` blocks are `UNRESOLVED`. Constants inherited from super types found in sources are resolved.
-- Java only; Kotlin sources are not scanned.
-- Memory: a scan holds the syntax trees of one repo at a time, under 20 MB of heap per MB of Java source (a 28 MB repo fits in 352 MB, a 12 MB repo in 256 MB). Raise it with `JAVA_OPTS=-Xmx1g` if needed.
+- Java only; main `.kt` sources under `src/main/kotlin`, `src/main/java`, or supported generated-source layouts are detected but not parsed. They produce `INCOMPLETE_ANALYSIS`, including Kotlin-only inputs without a discovered Java launcher. Custom Kotlin source roots are not detected.
+- Memory: prior repository indexes and syntax trees are eligible for collection after extraction; duplicate-name tracking retains only locations and evidence. Extracted facts and the linked graph still grow with the fleet. Historical single-repo measurements (28 MB of source in 352 MB heap, 12 MB in 256 MB) are not a fleet heap bound or a guarantee for other inputs. Raise the heap with `JAVA_OPTS=-Xmx1g` if needed.
 - Nested checkouts are skipped: any folder below a repo root with its own `.git` (worktrees, submodules, vendored clones).
 - JDBC: an implicit comma join (`FROM a, b`) yields only the first table; SQL built at runtime is reported as `UNRESOLVED`.
 - Static analysis misses runtime-only behaviour (dynamic URLs, service discovery lookups at runtime).
@@ -239,8 +251,10 @@ The latest verification at `ff12939` passed **893 tests**, the full build and in
 Golden tests run the full scan over the synthetic fleet in `src/test/resources/fleet` and compare against `src/test/resources/golden`. After an intended change, regenerate and review the diff:
 
 ```
-./gradlew test -PupdateGolden
+./gradlew test -PupdateGolden=true
 ```
+
+Only an explicit `true` enables regeneration; `-PupdateGolden=false` and a bare `-PupdateGolden` keep comparisons read-only. Regeneration fails when `CI` is set to a nonempty value other than `false`. CI must compare committed golden files rather than rewrite them.
 
 Real-world benchmark: `scripts/bench-clone.sh` clones spring-petclinic-microservices, its config repo, piggymetrics and ewolff/microservice-kafka at pinned commits into a git-ignored `bench/` folder (clone and read only, never built). Findings are recorded in `docs/benchmark.md`. Design background and decisions D1-D8 are in `docs/research.md`.
 

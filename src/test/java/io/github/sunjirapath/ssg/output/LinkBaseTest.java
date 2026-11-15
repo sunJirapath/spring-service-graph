@@ -9,6 +9,8 @@ import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -20,6 +22,17 @@ import java.util.TreeMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LinkBaseTest {
+
+    @ParameterizedTest
+    @ValueSource(strings = {"https:", ""})
+    void linkBaseRedactsCredentialsAndLiteralQueryValuesButKeepsLineTemplate(String scheme, @TempDir Path tmp) throws Exception {
+        MarkdownOutput.write(graph("src/main/java/Orders.java", 17), Map.of(), tmp,
+                scheme + "//CANARY_USER:CANARY_PASSWORD@git.example/{repo}/{file}?token=CANARY_TOKEN&line={line}#CANARY_FRAGMENT");
+
+        assertThat(Files.readString(tmp.resolve("services/orders.md")))
+                .contains("git.example/orders-repo/src/main/java/Orders.java", "line=17", "[redacted]")
+                .doesNotContain("CANARY_USER", "CANARY_PASSWORD", "CANARY_TOKEN", "CANARY_FRAGMENT");
+    }
 
     @Test
     void linkBaseReplacesRepoFileAndLineAndEncodesSpaces(@TempDir Path tmp) throws Exception {

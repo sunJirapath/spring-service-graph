@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 /** The questions the MCP tools answer, as plain functions over a graph. */
 public final class GraphQueries {
 
+    static final int MAX_RESULTS = 200;
     private final Graph g;
     private final Map<String, Node> nodes;
 
@@ -42,10 +43,11 @@ public final class GraphQueries {
             if (n instanceof Node.Topic topic && (t.equals(topic.name()) || t.equals(Node.Topic.idOf(topic.name())))) out.add(n.id());
             if (n instanceof Node.Table tb && (t.equals(tb.name()) || t.equals(tb.service() + "/" + tb.name())
                     || t.equals(Node.Table.idOf(tb.service(), tb.name())))) out.add(n.id());
+            bounded(out);
         }
         if (out.isEmpty()) throw new IllegalArgumentException("no node matches '" + target
                 + "'; use a service or topic name, 'METHOD /path', a table name, or a node id from graph.json");
-        return out;
+        return bounded(out);
     }
 
     /**
@@ -60,29 +62,29 @@ public final class GraphQueries {
         if (!path.startsWith("/")) return List.of();
         String method = parts.length >= 2 ? parts[parts.length - 2] : "*";
         String service = parts.length >= 3 ? parts[0] : null;
-        var candidates = g.nodes().stream().filter(Node.Endpoint.class::isInstance).map(Node.Endpoint.class::cast)
-                .filter(e -> service == null || e.service().equalsIgnoreCase(service))
-                .filter(e -> method.equals("*") || e.method().equals("*") || e.method().equalsIgnoreCase(method))
-                .toList();
         for (var pick : List.<java.util.function.Predicate<Node.Endpoint>>of(
                 e -> e.path().equals(path),
                 e -> !e.path().contains("**") && PathMatch.matches(path, e.path()),
                 e -> PathMatch.matches(path, e.path()))) {
-            var hits = candidates.stream().filter(pick).map(Node::id).toList();
-            if (!hits.isEmpty()) return hits;
+            var hits = g.nodes().stream().filter(Node.Endpoint.class::isInstance).map(Node.Endpoint.class::cast)
+                    .filter(e -> service == null || e.service().equalsIgnoreCase(service))
+                    .filter(e -> method.equals("*") || e.method().equals("*") || e.method().equalsIgnoreCase(method))
+                    .filter(pick).map(Node::id).limit(MAX_RESULTS + 1L).toList();
+            if (!hits.isEmpty()) return bounded(hits);
         }
         return List.of();
     }
 
     /** Every edge pointing at the target (or, for a service, at it or its endpoints), except EXPOSES. */
     public Map<String, Object> whoCalls(String target) {
-        var ids = expand(resolve(target));
+        var matches = resolve(target);
+        var ids = expand(matches);
         var edges = g.edges().stream().filter(e -> e.kind() != Edge.Kind.EXPOSES && ids.contains(e.to()))
-                .map(GraphQueries::view).toList();
+                .limit(MAX_RESULTS + 1L).toList();
         var out = new LinkedHashMap<String, Object>();
         out.put("target", target);
-        out.put("matches", resolve(target));
-        out.put("incoming", edges);
+        out.put("matches", matches);
+        out.put("incoming", bounded(edges).stream().map(GraphQueries::view).toList());
         return out;
     }
 
@@ -106,6 +108,7 @@ public final class GraphQueries {
                 row.put("depth", d);
                 row.put("because", view(e));
                 affected.add(row);
+                bounded(affected);
                 if (nodes.get(e.from()) instanceof Node.Endpoint) next.add(e.from());
             }
             frontier = next;
@@ -122,6 +125,12 @@ public final class GraphQueries {
     }
 
     public String serviceCard(String service) {
+        // shortcut: bound the complete input before rendering a card; add streaming pages if larger fleets need cards.
+        try {
+            McpServer.boundedJson(g);
+        } catch (java.io.IOException e) {
+            throw new IllegalArgumentException("service card input exceeds 65536 characters; use offline service pages", e);
+        }
         return MarkdownOutput.servicePage(g, service);
     }
 
@@ -153,7 +162,13 @@ public final class GraphQueries {
         m.put("to", e.to());
         m.put("confidence", e.confidence().name());
         if (!e.attrs().isEmpty()) m.put("attrs", e.attrs());
-        m.put("evidence", e.evidence().stream().map(Object::toString).toList());
+        m.put("evidence", bounded(e.evidence()).stream().map(Object::toString).toList());
         return m;
+    }
+
+    private static <T> List<T> bounded(List<T> items) {
+        if (items.size() > MAX_RESULTS)
+            throw new IllegalArgumentException("query exceeds 200 results; use a more specific node id or offline output (no partial result returned)");
+        return items;
     }
 }

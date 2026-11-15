@@ -1,6 +1,7 @@
 package io.github.sunjirapath.ssg.diff;
 
 import io.github.sunjirapath.ssg.link.PathMatch;
+import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Edge;
 import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Finding;
@@ -36,8 +37,12 @@ public final class GraphDiff {
         this.headNodes = head.nodes().stream().collect(Collectors.toMap(Node::id, Function.identity()));
     }
 
-    /** The Markdown report plus its breaking changes, for callers that gate on them. */
-    public record Result(String markdown, List<String> breaking) {}
+    /** Proven breaking changes and uncertainty are separate gate outcomes. */
+    public record Result(String markdown, List<String> breaking, List<String> incomplete) {
+        public Result(String markdown, List<String> breaking) {
+            this(markdown, breaking, List.of());
+        }
+    }
 
     public static Result compare(Graph base, Graph head) {
         boolean legacy = java.util.stream.Stream.concat(base.nodes().stream(), head.nodes().stream())
@@ -93,8 +98,14 @@ public final class GraphDiff {
         md.append("| findings | ").append(base.findings().size()).append(" | ").append(head.findings().size()).append(" |\n\n");
 
         List<String> breaking = breaking(removedNodes, newFindings);
+        List<String> incomplete = incomplete(baseEdges, headEdges);
+        if (!incomplete.isEmpty()) {
+            md.append("## Incomplete analysis\n\nThe gate cannot establish safety:\n\n");
+            incomplete.forEach(l -> md.append("- ").append(l).append('\n'));
+            md.append('\n');
+        }
         md.append("## Breaking changes\n\n");
-        if (breaking.isEmpty()) md.append("_None found._\n\n");
+        if (breaking.isEmpty()) md.append(incomplete.isEmpty() ? "_None found._\n\n" : "_None proven; analysis is incomplete._\n\n");
         else {
             breaking.forEach(l -> md.append("- ").append(l).append('\n'));
             md.append('\n');
@@ -120,7 +131,34 @@ public final class GraphDiff {
                 && newFindings.isEmpty() && fixedFindings.isEmpty() && !confidenceChanged) {
             md.append("No changes.\n");
         }
-        return new Result(md.toString(), breaking);
+        return new Result(md.toString(), breaking, incomplete);
+    }
+
+    private List<String> incomplete(Map<String, Edge> baseEdges, Map<String, Edge> headEdges) {
+        var lines = new TreeSet<String>();
+        incomplete(lines, "Base", base);
+        incomplete(lines, "Head", head);
+        headEdges.forEach((key, edge) -> {
+            Edge previous = baseEdges.get(key);
+            if (previous != null && edge.confidence().compareTo(previous.confidence()) > 0) {
+                lines.add("Head confidence decreased: " + labelOf(headNodes, edge.from()) + " " + edge.kind()
+                        + " " + labelOf(headNodes, edge.to()) + " (" + previous.confidence() + " -> " + edge.confidence() + ")");
+            }
+        });
+        return List.copyOf(lines);
+    }
+
+    private static void incomplete(TreeSet<String> lines, String scan, Graph graph) {
+        for (Finding f : graph.findings()) {
+            if (f.kind() != Finding.Kind.CONTRACT_DRIFT && f.kind() != Finding.Kind.SHARED_TABLE) {
+                lines.add(scan + " " + f.kind() + " in " + f.service() + ": " + f.message() + " - " + ev(f.evidence()));
+            }
+        }
+        for (Edge e : graph.edges()) {
+            if (e.confidence() == Confidence.UNRESOLVED) {
+                lines.add(scan + " unresolved " + e.kind() + " " + e.from() + " -> " + e.to());
+            }
+        }
     }
 
     // ---------------------------------------------------------------- breaking changes
@@ -130,6 +168,9 @@ public final class GraphDiff {
         var lines = new ArrayList<String>();
         for (Node n : removedNodes.values()) {
             if (!(n instanceof Node.Endpoint) && !(n instanceof Node.Service)) continue;
+            if (n instanceof Node.Endpoint && head.findings().stream().anyMatch(f ->
+                    f.service().equals(owner(baseNodes, n.id())) && (f.kind() == Finding.Kind.MISSING_INTERFACE
+                    || f.kind() == Finding.Kind.PARSE_ERROR || f.kind() == Finding.Kind.INCOMPLETE_ANALYSIS))) continue;
             // A surviving service may have retired its call together with the endpoint.
             var callers = incoming(base, n.id(), Edge.Kind.CALLS).stream().map(e -> owner(baseNodes, e.from()))
                     .filter(c -> headNodes.containsKey(Node.Service.idOf(c)) && !c.equals(owner(baseNodes, n.id())))

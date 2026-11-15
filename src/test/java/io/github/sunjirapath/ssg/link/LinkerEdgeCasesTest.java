@@ -20,6 +20,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LinkerEdgeCasesTest {
 
     @Test
+    void missingContractDoesNotHideObservedMatchesOrProveUnmatchedDrift() {
+        Graph graph = link(service("caller",
+                        call("feign", "GET", exact("lb://orders/known"), ev(1)),
+                        call("feign", "GET", exact("lb://orders/generated"), ev(2))),
+                service("orders", endpoint("GET", "/known", ev(3)),
+                        new Fact.Problem("MISSING_INTERFACE", "GeneratedApi is absent", ev(4))));
+
+        assertThat(calls(graph)).extracting(Edge::to).contains(Node.Endpoint.idOf("orders", "GET", "/known"),
+                Node.Service.idOf("orders"));
+        assertThat(calls(graph)).filteredOn(e -> e.to().equals(Node.Service.idOf("orders"))).singleElement()
+                .satisfies(e -> assertThat(e.attrs()).containsEntry("contract", "unavailable"));
+        assertThat(io.github.sunjirapath.ssg.output.MarkdownOutput.servicePage(graph, "caller"))
+                .contains("**contract unavailable**");
+        assertThat(graph.findings()).noneMatch(f -> f.kind() == Finding.Kind.CONTRACT_DRIFT)
+                .anySatisfy(f -> {
+                    assertThat(f.kind()).isEqualTo(Finding.Kind.UNRESOLVED);
+                    assertThat(f.message()).contains("/generated", "incomplete contract of orders");
+                });
+    }
+
+    @Test
     void loadBalancedNameLinksCaseInsensitivelyToService() {
         Graph graph = link(service("caller", call("feign", "GET", exact("lb://ORDERS/orders/1"), ev("Call.java", 3))),
                 service("Orders", endpoint("GET", "/orders/{id}", ev("Orders.java", 4))));

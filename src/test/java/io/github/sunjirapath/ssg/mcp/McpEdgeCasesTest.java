@@ -8,18 +8,24 @@ import io.github.sunjirapath.ssg.model.Evidence;
 import io.github.sunjirapath.ssg.model.Graph;
 import io.github.sunjirapath.ssg.model.Node;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import io.github.sunjirapath.ssg.output.JsonOutput;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class McpEdgeCasesTest {
 
@@ -154,8 +160,7 @@ class McpEdgeCasesTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    void whoCallsAnswersForGraphWithTwoThousandEndpoints() {
+    void whoCallsRejectsTwoThousandEdgesInsteadOfReturningAnUnboundedResult() {
         var nodes = new ArrayList<Node>();
         var edges = new ArrayList<Edge>();
         var target = service("target");
@@ -168,9 +173,122 @@ class McpEdgeCasesTest {
             edges.add(edge(Edge.Kind.CALLS, caller.id(), endpoint.id(), i + 1));
         }
 
-        var incoming = (List<Map<String, Object>>) new GraphQueries(new Graph(nodes, edges, List.of()))
-                .whoCalls("target").get("incoming");
-        assertThat(incoming).hasSize(2_000);
+        var queries = new GraphQueries(new Graph(nodes, edges, List.of()));
+        assertThatThrownBy(() -> queries.whoCalls("target"))
+                .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("200 results");
+        JsonNode reply = server(new Graph(nodes, edges, List.of())).handle("""
+                {"jsonrpc":"2.0","id":1,"method":"tools/call",
+                 "params":{"name":"who_calls","arguments":{"target":"target"}}}
+                """);
+        assertThat(reply.at("/result/isError").asBoolean()).isTrue();
+        assertThat(reply.at("/result/content/0/text").asText()).contains("no partial result");
+        assertThat((List<?>) queries.whoCalls("target GET /items/0").get("incoming")).hasSize(1);
+    }
+
+    @Test
+    void impactAndAmbiguousMatchesAreBounded() {
+        var target = service("target");
+        var nodes = new ArrayList<Node>(List.of(target));
+        var edges = new ArrayList<Edge>();
+        for (int i = 0; i <= GraphQueries.MAX_RESULTS; i++) {
+            var endpoint = endpoint("caller" + i, "GET", "/same");
+            nodes.add(endpoint);
+            edges.add(edge(Edge.Kind.CALLS, endpoint.id(), target.id(), i + 1));
+        }
+        var queries = new GraphQueries(new Graph(nodes, edges, List.of()));
+        assertThatThrownBy(() -> queries.impactOf("target", 1)).hasMessageContaining("200 results");
+        assertThatThrownBy(() -> queries.resolve("GET /same")).hasMessageContaining("200 results");
+    }
+
+    @Test
+    void acceptsExactlyTheResultLimitAndRejectsExcessEvidence() {
+        var caller = service("caller");
+        var target = service("target");
+        var edges = IntStream.range(0, GraphQueries.MAX_RESULTS)
+                .mapToObj(i -> edge(Edge.Kind.CALLS, caller.id(), target.id(), i + 1)).toList();
+        var queries = new GraphQueries(new Graph(List.of(caller, target), edges, List.of()));
+        assertThat((List<?>) queries.whoCalls("target").get("incoming")).hasSize(GraphQueries.MAX_RESULTS);
+        var evidence = IntStream.range(0, GraphQueries.MAX_RESULTS + 1)
+                .mapToObj(i -> new Evidence("repo", "Source.java", i + 1)).toList();
+        var excessive = new Edge(Edge.Kind.CALLS, caller.id(), target.id(), Confidence.EXACT, new TreeMap<>(), evidence);
+        var withEvidence = new GraphQueries(new Graph(List.of(caller, target), List.of(excessive), List.of()));
+        assertThatThrownBy(() -> withEvidence.whoCalls("target")).hasMessageContaining("200 results");
+    }
+
+    @Test
+    void rejectsOversizedTextAndServiceCardsWithoutPartialContent() {
+        var caller = service("caller");
+        var target = service("target");
+        String huge = "x".repeat(McpServer.MAX_TEXT_CHARS);
+        for (var attrs : List.of(Map.of("path", huge), Map.of(huge, "value"))) {
+            var edge = new Edge(Edge.Kind.CALLS, caller.id(), target.id(), Confidence.EXACT, new TreeMap<>(attrs), List.of());
+            var server = server(new Graph(List.of(caller, target), List.of(edge), List.of()));
+            for (String query : List.of("\"name\":\"who_calls\",\"arguments\":{\"target\":\"target\"}",
+                    "\"name\":\"service_card\",\"arguments\":{\"service\":\"caller\"}")) {
+                JsonNode reply = server.handle("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{" + query + "}}");
+                assertThat(reply.at("/result/isError").asBoolean()).isTrue();
+                assertThat(reply.at("/result/content/0/text").asText()).contains("65536");
+                assertThat(reply.at("/result/content/0/text").asText().length()).isLessThan(McpServer.MAX_TEXT_CHARS);
+            }
+        }
+    }
+
+    @Test
+    void oversizedRequestIsDrainedAndNextRequestStillWorks() throws Exception {
+        String oversized = "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"ping\",\"padding\":\""
+                + "x".repeat(McpServer.MAX_REQUEST_CHARS) + "\"}";
+        var server = server(graph());
+        assertThat(server.handle(oversized).at("/error/code").asInt()).isEqualTo(-32600);
+        var bytes = new ByteArrayOutputStream();
+        server.serve(new BufferedReader(new StringReader(oversized + "\n{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"ping\"}\n")),
+                new PrintStream(bytes, true, StandardCharsets.UTF_8));
+        var lines = bytes.toString(StandardCharsets.UTF_8).lines().toList();
+        assertThat(lines).hasSize(2);
+        assertThat(JSON.readTree(lines.get(0)).at("/error/code").asInt()).isEqualTo(-32600);
+        assertThat(JSON.readTree(lines.get(1)).path("id").asInt()).isEqualTo(2);
+    }
+
+    @Test
+    void snapshotReplacementWithSameSizeAndMtimeAndDeletionFailClosed(@TempDir Path tmp) throws Exception {
+        JsonOutput.write(new Graph(List.of(service("orders")), List.of(), List.of()), tmp);
+        Path file = tmp.resolve("graph.json");
+        var mtime = Files.getLastModifiedTime(file);
+        var server = McpServer.fromSnapshot(tmp, "test");
+        String query = """
+                {"jsonrpc":"2.0","id":1,"method":"tools/call",
+                 "params":{"name":"who_calls","arguments":{"target":"orders"}}}
+                """;
+        assertThat(server.handle(query).at("/result/isError").asBoolean()).isFalse();
+        String replacement = Files.readString(file).replace("orders", "stocks");
+        Files.writeString(file, replacement);
+        Files.setLastModifiedTime(file, mtime);
+        var stale = server.handle(query);
+        assertThat(stale.at("/result/isError").asBoolean()).isTrue();
+        assertThat(stale.at("/result/content/0/text").asText()).contains("stale", "restart");
+        var reloaded = McpServer.fromSnapshot(file, "test");
+        assertThat(reloaded.handle(query.replace("orders", "stocks")).at("/result/isError").asBoolean()).isFalse();
+        Files.delete(file);
+        assertThat(reloaded.handle(query).at("/result/content/0/text").asText()).contains("unavailable", "restart");
+    }
+
+    @Test
+    void snapshotMetadataSeparatesServerVersionFromUnknownScanProvenance(@TempDir Path tmp) throws Exception {
+        JsonOutput.write(new Graph(List.of(service("orders"), new Node.Topic(Node.Topic.idOf("events"), "events")),
+                List.of(), List.of()), tmp);
+        var server = McpServer.fromSnapshot(tmp, "server-test");
+        var init = server.handle("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\"}").path("result");
+        assertThat(init.at("/serverInfo/version").asText()).isEqualTo("server-test");
+        var snapshot = init.at("/_meta/snapshot");
+        assertThat(snapshot.path("sha256").asText()).matches("[0-9a-f]{64}");
+        assertThat(snapshot.path("loadedAt").asText()).isNotBlank();
+        for (String key : List.of("scanVersion", "profile", "sourceRevisions", "sourceFreshness", "completeness"))
+            assertThat(snapshot.path(key).asText()).as(key).isEqualTo("unknown");
+        var reply = server.handle("""
+                {"jsonrpc":"2.0","id":2,"method":"tools/call",
+                 "params":{"name":"who_calls","arguments":{"target":"orders"}}}
+                """);
+        assertThat(reply.at("/result/_meta/snapshot")).isEqualTo(snapshot);
+        assertThat(reply.at("/result/content/1/text").asText()).contains("unknown", "advisory");
     }
 
     private static JsonNode toolText(McpServer server, String name, String arguments) throws Exception {
