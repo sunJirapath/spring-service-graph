@@ -32,6 +32,7 @@ public final class DiagramOutput {
             var mine = arrows.stream().filter(a -> a.from.equals(s.id()) || a.to.equals(s.id())).toList();
             TextFile.write(out.resolve("diagrams/" + g.fileName(s.name()) + ".mmd"), mermaid(g, s, mine));
         }
+        TextFile.removeRetired(graph, out, "diagrams", ".mmd");
     }
 
     private static List<Arrow> arrows(GraphView g) {

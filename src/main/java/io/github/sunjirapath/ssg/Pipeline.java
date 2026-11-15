@@ -63,7 +63,7 @@ public final class Pipeline {
                 SeenService previous = seen.put(s.name(), new SeenService(repo.name() + "/" + s.path(), s.nameEvidence()));
                 String prev = previous == null ? null : previous.location();
                 if (prev != null) {
-                    System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
+                    System.err.println(logLine("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path()));
                     // two apps with one name merge into one graph node; say so instead of hiding it
                     extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
                             + "' is used by " + prev + " and " + repo.name() + "/" + s.path(),
@@ -74,7 +74,7 @@ public final class Pipeline {
                 facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
                 for (Config.Problem pr : s.config().problems()) {
-                    extra.add(new Finding(Finding.Kind.PARSE_ERROR, s.name(), pr.message(), List.of(pr.evidence())));
+                    extra.add(new Finding(pr.kind(), s.name(), pr.message(), List.of(pr.evidence())));
                 }
             }
             for (Path file : index.unsupportedSources()) {
@@ -97,6 +97,16 @@ public final class Pipeline {
         if (previous != null && !previous.equals(repo.root()))
             throw new IllegalArgumentException("repository name '" + repo.name() + "' is ambiguous: "
                     + previous + " and " + repo.root() + "; use distinct checkout directory names");
+    }
+
+    private static String logLine(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (Character.isISOControl(c) || Character.getType(c) == Character.LINE_SEPARATOR
+                    || Character.getType(c) == Character.PARAGRAPH_SEPARATOR) out.append(String.format("\\u%04x", c));
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
     }
 
     /** aliases.yml: a flat map of host -> service name (or a name for an external system). */

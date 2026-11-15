@@ -280,6 +280,26 @@ final class Modules {
         return hasBuildMetadata;
     }
 
+    /** The local descriptor that explicitly selects an unsupported Boot 2 parent or BOM. */
+    Optional<Path> bootTwo(Path module) {
+        var seen = new HashSet<Path>();
+        for (Path at = module; at != null && seen.add(at); at = parent.get(at)) {
+            Pom pom = poms.get(at);
+            if (pom == null) continue;
+            var declarations = new java.util.ArrayList<String>();
+            declarations.add(pom.parent());
+            for (Matcher d = DEPENDENCY.matcher(pom.text()); d.find(); ) declarations.add(d.group(1));
+            for (String declaration : declarations) {
+                if (!first(GROUP, declaration).filter("org.springframework.boot"::equals).isPresent()
+                        || !first(ARTIFACT, declaration).filter(a -> a.equals("spring-boot-starter-parent")
+                            || a.equals("spring-boot-dependencies")).isPresent()) continue;
+                String version = resolve(module, first(VERSION, declaration).orElse(null));
+                if (version != null && version.startsWith("2.")) return Optional.of(at.resolve("pom.xml"));
+            }
+        }
+        return Optional.empty();
+    }
+
     /** The modules {@code module} declares itself or through its parent poms. */
     Set<Path> direct(Path module) {
         var out = new LinkedHashSet<Path>();

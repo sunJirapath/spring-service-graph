@@ -151,12 +151,12 @@ public final class GraphDiff {
     private static void incomplete(TreeSet<String> lines, String scan, Graph graph) {
         for (Finding f : graph.findings()) {
             if (f.kind() != Finding.Kind.CONTRACT_DRIFT && f.kind() != Finding.Kind.SHARED_TABLE) {
-                lines.add(scan + " " + f.kind() + " in " + f.service() + ": " + f.message() + " - " + ev(f.evidence()));
+                lines.add(scan + " " + f.kind() + " in " + escape(f.service()) + ": " + escape(f.message()) + " - " + ev(f.evidence()));
             }
         }
         for (Edge e : graph.edges()) {
             if (e.confidence() == Confidence.UNRESOLVED) {
-                lines.add(scan + " unresolved " + e.kind() + " " + e.from() + " -> " + e.to());
+                lines.add(scan + " unresolved " + e.kind() + " " + escape(e.from()) + " -> " + escape(e.to()));
             }
         }
     }
@@ -176,7 +176,7 @@ public final class GraphDiff {
                     .filter(c -> headNodes.containsKey(Node.Service.idOf(c)) && !c.equals(owner(baseNodes, n.id())))
                     .filter(c -> head.edges().stream().anyMatch(e -> stillCalls(c, n, e)))
                     .collect(Collectors.toCollection(TreeSet::new));
-            if (!callers.isEmpty()) lines.add("Removed " + label(n) + " is still called by " + String.join(", ", callers));
+            if (!callers.isEmpty()) lines.add("Removed " + label(n) + " is still called by " + escape(String.join(", ", callers)));
         }
         for (Node n : baseNodes.values()) {
             if (!(n instanceof Node.Topic t) || !headNodes.containsKey(t.id())) continue;
@@ -185,12 +185,12 @@ public final class GraphDiff {
             var consumers = incoming(head, t.id(), Edge.Kind.CONSUMES).stream().map(e -> owner(headNodes, e.from()))
                     .collect(Collectors.toCollection(TreeSet::new));
             if (producedBefore && !producedNow && !consumers.isEmpty()) {
-                lines.add("Topic `" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.broker() + ")")
-                        + " has no producer any more but is still consumed by " + String.join(", ", consumers));
+                lines.add("Topic `" + escape(t.name()) + "`" + (legacyResource(t) ? "" : " (" + escape(t.broker()) + ")")
+                        + " has no producer any more but is still consumed by " + escape(String.join(", ", consumers)));
             }
         }
         for (Finding f : newFindings.values()) {
-            if (f.kind() == Finding.Kind.CONTRACT_DRIFT) lines.add("New contract drift in " + f.service() + ": " + f.message() + " — " + ev(f.evidence()));
+            if (f.kind() == Finding.Kind.CONTRACT_DRIFT) lines.add("New contract drift in " + escape(f.service()) + ": " + escape(f.message()) + " — " + ev(f.evidence()));
         }
         return lines.stream().sorted().toList();
     }
@@ -219,7 +219,7 @@ public final class GraphDiff {
             var callers = incoming(g, n.id(), Edge.Kind.CALLS).stream().map(e -> owner(nodes, e.from()))
                     .collect(Collectors.toCollection(TreeSet::new));
             md.append("- ").append(label(n));
-            if (!callers.isEmpty()) md.append(" — called by ").append(String.join(", ", callers));
+            if (!callers.isEmpty()) md.append(" — called by ").append(escape(String.join(", ", callers)));
             md.append('\n');
         }
         md.append('\n');
@@ -234,7 +234,7 @@ public final class GraphDiff {
             md.append("- ").append(labelOf(nodes, e.from())).append(" **").append(e.kind().name().toLowerCase()).append("** ")
                     .append(labelOf(nodes, e.to()));
             String detail = e.attrs().entrySet().stream().filter(a -> !a.getKey().equals("chain"))
-                    .map(a -> a.getKey() + "=" + a.getValue()).collect(Collectors.joining(", "));
+                    .map(a -> escape(a.getKey()) + "=" + escape(a.getValue())).collect(Collectors.joining(", "));
             if (!detail.isEmpty()) md.append(" (").append(detail).append(')');
             md.append(" `").append(e.confidence()).append("` — ").append(ev(e.evidence())).append('\n');
         }
@@ -261,7 +261,7 @@ public final class GraphDiff {
         if (changed.isEmpty()) return;
         md.append("## ").append(title).append("\n\n");
         for (Finding f : changed.values()) {
-            md.append("- **").append(f.kind()).append("** `").append(f.service()).append("`: ").append(f.message())
+            md.append("- **").append(f.kind()).append("** `").append(escape(f.service())).append("`: ").append(escape(f.message()))
                     .append(" — ").append(ev(f.evidence())).append('\n');
         }
         md.append('\n');
@@ -312,21 +312,35 @@ public final class GraphDiff {
 
     private static String label(Node n) {
         return switch (n) {
-            case Node.Service s -> "service `" + s.name() + "`";
-            case Node.Endpoint e -> "`" + e.service() + " " + e.method() + " " + e.path() + "`";
-            case Node.Topic t -> "topic `" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.broker() + ")");
-            case Node.Table t -> "table `" + t.service() + "/" + t.name() + "`" + (legacyResource(t) ? "" : " (" + t.store() + ")");
-            case Node.External x -> "external `" + x.name() + "`";
+            case Node.Service s -> "service `" + escape(s.name()) + "`";
+            case Node.Endpoint e -> "`" + escape(e.service()) + " " + escape(e.method()) + " " + escape(e.path()) + "`";
+            case Node.Topic t -> "topic `" + escape(t.name()) + "`" + (legacyResource(t) ? "" : " (" + escape(t.broker()) + ")");
+            case Node.Table t -> "table `" + escape(t.service()) + "/" + escape(t.name()) + "`" + (legacyResource(t) ? "" : " (" + escape(t.store()) + ")");
+            case Node.External x -> "external `" + escape(x.name()) + "`";
         };
     }
 
     private static String labelOf(Map<String, Node> nodes, String id) {
         Node n = nodes.get(id);
-        return n == null ? "`" + id + "`" : label(n);
+        return n == null ? "`" + escape(id) + "`" : label(n);
     }
 
     private static String ev(List<Evidence> evidence) {
-        return evidence.stream().filter(Objects::nonNull).limit(3).map(e -> "`" + e + "`").collect(Collectors.joining(", "));
+        return evidence.stream().filter(Objects::nonNull).limit(3).map(e -> "`" + escape(e.toString()) + "`").collect(Collectors.joining(", "));
+    }
+
+    private static String escape(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (c == '<') out.append("&lt;");
+            else if (c == '>') out.append("&gt;");
+            else if (c == '&') out.append("&amp;");
+            else if ("`[]!\\".indexOf(c) >= 0 || Character.isISOControl(c)
+                    || Character.getType(c) == Character.LINE_SEPARATOR || Character.getType(c) == Character.PARAGRAPH_SEPARATOR)
+                out.append("&#").append(c).append(';');
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
     }
 
 }

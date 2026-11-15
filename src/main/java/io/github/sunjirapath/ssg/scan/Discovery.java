@@ -119,12 +119,15 @@ public final class Discovery {
         for (Path module : apps.keySet()) {
             Set<Path> libraries = modules.all(module, apps.keySet());
             Config config = configs.get(module);
+            modules.bootTwo(module).ifPresent(pom -> config.problem(new Config.Problem(
+                    "Spring Boot 2.x is not supported; analysis may be incomplete", index.repo().evidence(pom, 1),
+                    io.github.sunjirapath.ssg.model.Finding.Kind.INCOMPLETE_ANALYSIS)));
             String serviceName = names.get(module);
             if (!nacos.isEmpty()) config.putAll(NacosSeed.load(index.repo(), nacos, serviceName, profile));
             if (remoteRoot != null) config.putAll(remoteConfig(remoteRepo, remoteRoot, remotePaths, serviceName, profile));
             // shortcut: without build metadata, one app still receives all sources; add descriptors to scope sibling modules.
-            List<CompilationUnit> units = apps.size() == 1 && !modules.hasBuildMetadata() ? index.units()
-                    : used(index, module, libraries, apps.keySet(), refs, config);
+            List<CompilationUnit> units = used(index, module, libraries, apps.keySet(), refs, config);
+            if (apps.size() == 1 && !modules.hasBuildMetadata()) units = index.units();
             services.add(new Service(serviceName, index.repo(), module, config, index, units, List.copyOf(libraries)));
         }
         return services;
@@ -228,7 +231,7 @@ public final class Discovery {
         resourceRoots.add(module.resolve("src/main/resources"));
         libraries.stream().sorted().forEach(lib -> resourceRoots.add(lib.resolve("src/main/resources")));
         resourceRoots.removeIf(root -> !inside(index.repo().root(), root));
-        var xmlBeans = new XmlBeans(config, resourceRoots);
+        var xmlBeans = new XmlBeans(config, resourceRoots, index.repo());
         var packages = new ArrayList<Pattern>();
         var feignPackages = new ArrayList<Pattern>();
         var mapperScans = new ArrayList<MapperScan>();

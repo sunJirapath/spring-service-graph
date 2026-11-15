@@ -49,6 +49,7 @@ public final class MarkdownOutput {
             TextFile.write(w.out.resolve("services/" + w.g.fileName(s.name()) + ".md"), w.servicePage(s));
         }
         TextFile.write(w.out.resolve("index.md"), w.index());
+        TextFile.removeRetired(graph, w.out, "services", ".md");
     }
 
     /** One service page with evidence as plain {@code repo/file:line} text (no links), e.g. for MCP. */

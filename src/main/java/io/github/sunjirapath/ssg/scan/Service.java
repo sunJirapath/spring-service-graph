@@ -65,6 +65,6 @@ public record Service(String name, Repo repo, Path moduleRoot, Config config, Ja
         Value r = config.resolve(v.text());
         var via = new ArrayList<>(v.via());
         via.addAll(r.via());
-        return new Value(r.text(), v.confidence().and(r.confidence()), v.raw(), via);
+        return new Value(r.text(), v.confidence().and(r.confidence()), Config.redactSecretDefaults(v.raw()), via);
     }
 }

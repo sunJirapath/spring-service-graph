@@ -2,6 +2,7 @@ package io.github.sunjirapath.ssg.scan;
 
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Evidence;
+import io.github.sunjirapath.ssg.model.Finding;
 import io.github.sunjirapath.ssg.model.Value;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -39,7 +40,11 @@ public final class Config {
 
     /** {@code value} is null for secret keys. */
     public record Entry(String value, Evidence evidence) {}
-    public record Problem(String message, Evidence evidence) {}
+    public record Problem(String message, Evidence evidence, Finding.Kind kind) {
+        public Problem(String message, Evidence evidence) {
+            this(message, evidence, Finding.Kind.PARSE_ERROR);
+        }
+    }
 
     private static final Pattern SECRET = Pattern.compile(
             "(?i).*(password|passwd|secret|token|credential|api[-_.]?key|private[-_.]?key).*");
@@ -149,6 +154,8 @@ public final class Config {
 
     public List<Problem> problems() { return List.copyOf(problems); }
 
+    void problem(Problem problem) { problems.add(problem); }
+
     /** Bound entries in key order: higher-precedence lists replace the entire lower-precedence list. */
     public Map<String, Entry> withPrefix(String prefix) {
         var out = new LinkedHashMap<String, Entry>();
@@ -182,6 +189,7 @@ public final class Config {
     }
 
     private Value resolve(String text, int depth) {
+        text = redactSecretDefaults(text);
         if (text.contains("#{")) return Value.unresolved(text);
         int start = text.indexOf("${");
         if (start < 0) return Value.exact(text);
@@ -194,7 +202,9 @@ public final class Config {
         String key = sep < 0 ? inner : inner.substring(0, sep);
         Value replacement;
         Entry e = entries.get(key);
-        if (e != null && e.value() != null) {
+        if (SECRET.matcher(key).matches()) {
+            replacement = Value.unresolved("${" + key + "}");
+        } else if (e != null && e.value() != null) {
             replacement = resolve(e.value(), depth + 1).withConfidence(Confidence.RESOLVED, e.evidence());
         } else if (sep >= 0) {
             replacement = resolve(inner.substring(sep + 1), depth + 1).withConfidence(Confidence.RESOLVED, null);
@@ -205,6 +215,25 @@ public final class Config {
         Value tail = resolve(text.substring(end + 1), depth + 1);
         Value out = head.concat(replacement, text).concat(tail, text);
         return new Value(out.text(), out.confidence(), text, out.via());
+    }
+
+    /** Strip sensitive defaults from both folded values and retained source expressions. */
+    public static String redactSecretDefaults(String text) {
+        var out = new StringBuilder();
+        int copied = 0;
+        for (int start = text.indexOf("${"); start >= 0; start = text.indexOf("${", start + 2)) {
+            int sep = start + 2;
+            while (sep < text.length() && text.charAt(sep) != ':' && text.charAt(sep) != '}'
+                    && !text.startsWith("${", sep)) sep++;
+            if (sep < text.length() && text.charAt(sep) == ':' && SECRET.matcher(text.substring(start + 2, sep)).matches()) {
+                int end = matchingBrace(text, start + 2);
+                if (end < 0) end = text.length();
+                out.append(text, copied, sep).append('}');
+                copied = Math.min(end + 1, text.length());
+                start = end - 1;
+            }
+        }
+        return copied == 0 ? text : out.append(text, copied, text.length()).toString();
     }
 
     private static int matchingBrace(String s, int from) {
