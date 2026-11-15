@@ -38,18 +38,19 @@ public record Repo(String name, Path root) {
      */
     public List<Path> files(Path start) throws IOException {
         var out = new ArrayList<Path>();
-        if (!Files.isDirectory(start)) return out;
+        if (!Files.isDirectory(start) || !Discovery.inside(root, start)) return out;
         Files.walkFileTree(start, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 String n = dir.getFileName() == null ? "" : dir.getFileName().toString();
                 boolean nestedRepo = !dir.toAbsolutePath().normalize().equals(root) && Files.exists(dir.resolve(".git"));
-                return n.equals(".git") || n.equals("node_modules") || nestedRepo ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
+                return n.equals(".git") || n.equals("node_modules") || nestedRepo || !Discovery.inside(root, dir)
+                        ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
             }
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                if (attrs.isRegularFile()) out.add(file);
+                if (attrs.isRegularFile() && Discovery.inside(root, file)) out.add(file);
                 return FileVisitResult.CONTINUE;
             }
 

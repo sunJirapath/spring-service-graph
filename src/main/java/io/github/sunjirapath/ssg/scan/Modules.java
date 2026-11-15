@@ -80,12 +80,12 @@ final class Modules {
                 if (rel.contains("/src/") || rel.contains("/target/") || rel.contains("/build/")) continue; // fixtures and build output
                 try {
                     if (name.equals("pom.xml")) {
-                        m.poms.put(f.getParent(), pom(Files.readString(f)));
+                        m.poms.put(f.getParent(), pom(Config.readUtf8(f)));
                     } else if (name.equals("build.gradle") || name.equals("build.gradle.kts")) {
-                        builds.put(f.getParent(), CODE_COMMENT.matcher(Files.readString(f)).replaceAll(" "));
+                        builds.put(f.getParent(), CODE_COMMENT.matcher(Config.readUtf8(f)).replaceAll(" "));
                     } else if (name.equals("settings.gradle") || name.equals("settings.gradle.kts")) {
                         var remaps = new HashMap<String, Path>();
-                        Matcher r = PROJECT_DIR.matcher(CODE_COMMENT.matcher(Files.readString(f)).replaceAll(" "));
+                        Matcher r = PROJECT_DIR.matcher(CODE_COMMENT.matcher(Config.readUtf8(f)).replaceAll(" "));
                         while (r.find()) remaps.put(r.group(1), f.getParent().resolve(r.group(2)).normalize());
                         settings.put(f.getParent(), remaps);
                     }
@@ -264,7 +264,7 @@ final class Modules {
                     if (!file.startsWith(repo.root()) || !Files.isRegularFile(file)) continue;
                     Path canonical = file.toRealPath();
                     if (!canonical.startsWith(repo.root().toRealPath()) || !seen.add(canonical)) continue;
-                    String script = CODE_COMMENT.matcher(Files.readString(file)).replaceAll(" ");
+                    String script = CODE_COMMENT.matcher(Config.readUtf8(file)).replaceAll(" ");
                     text.append('\n').append(script);
                     pending.add(script);
                 } catch (IOException | RuntimeException e) {

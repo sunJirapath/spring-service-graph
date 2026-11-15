@@ -3,7 +3,6 @@ package io.github.sunjirapath.ssg.link;
 import io.github.sunjirapath.ssg.model.Value;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 /**
  * Matches a called path against an endpoint path template, segment by segment.
@@ -15,26 +14,28 @@ public final class PathMatch {
     private PathMatch() {}
 
     public static boolean matches(String call, String endpoint) {
-        return match(segments(call), 0, segments(endpoint), 0);
+        String[] a = segments(call), b = segments(endpoint);
+        boolean[] next = new boolean[b.length + 1];
+        // Dynamic programming avoids exponential ** backtracking and recursion on long paths.
+        for (int i = a.length; i >= 0; i--) {
+            boolean[] row = new boolean[b.length + 1];
+            for (int j = b.length; j >= 0; j--) {
+                if (i < a.length && isRest(a[i]))
+                    row[j] = next[j] || j < b.length && row[j + 1];
+                else if (j < b.length && isRest(b[j]))
+                    row[j] = row[j + 1] || i < a.length && next[j];
+                else if (i == a.length || j == b.length)
+                    row[j] = i == a.length && j == b.length;
+                else row[j] = a[i].equals(Value.UNKNOWN) && i == a.length - 1
+                            || segment(a[i], b[j]) && next[j + 1];
+            }
+            next = row;
+        }
+        return next[0];
     }
 
     private static String[] segments(String p) {
         return Arrays.stream(p.split("/")).filter(s -> !s.isEmpty()).toArray(String[]::new);
-    }
-
-    private static boolean match(String[] a, int i, String[] b, int j) {
-        // ** swallows zero or more segments; whatever follows it must still match
-        if (i < a.length && isRest(a[i])) {
-            for (int k = j; k <= b.length; k++) if (match(a, i + 1, b, k)) return true;
-            return false;
-        }
-        if (j < b.length && isRest(b[j])) {
-            for (int k = i; k <= a.length; k++) if (match(a, k, b, j + 1)) return true;
-            return false;
-        }
-        if (i == a.length || j == b.length) return i == a.length && j == b.length;
-        if (a[i].equals(Value.UNKNOWN) && i == a.length - 1) return true;
-        return segment(a[i], b[j]) && match(a, i + 1, b, j + 1);
     }
 
     /** {@code **} and Spring's {@code {*rest}} capture-the-rest variable. */
@@ -49,8 +50,8 @@ public final class PathMatch {
             String px = prefix(x), py = prefix(y), sx = suffix(x), sy = suffix(y);
             return (px.startsWith(py) || py.startsWith(px)) && (sx.endsWith(sy) || sy.endsWith(sx));
         }
-        if (xv) return regex(x).matcher(y).matches();
-        if (yv) return regex(y).matcher(x).matches();
+        if (xv) return templateMatches(x, y);
+        if (yv) return templateMatches(y, x);
         return x.equals(y);
     }
 
@@ -63,14 +64,18 @@ public final class PathMatch {
         return template.substring(i + 1);
     }
 
-    /** {@code acc-{id}} -> {@code \Qacc-\E[^/]*}; {@code *} -> any. */
-    private static Pattern regex(String template) {
-        var sb = new StringBuilder();
+    /** Each placeholder is a wildcard; literal chunks can be located without a backtracking regex. */
+    private static boolean templateMatches(String template, String value) {
         String[] parts = template.split("\\{[^}]*}|\\*", -1);
-        for (int i = 0; i < parts.length; i++) {
-            if (i > 0) sb.append("[^/]*");
-            sb.append(Pattern.quote(parts[i]));
+        if (parts.length == 1) return template.equals(value);
+        if (!value.startsWith(parts[0]) || !value.endsWith(parts[parts.length - 1])) return false;
+        int at = parts[0].length();
+        int end = value.length() - parts[parts.length - 1].length();
+        for (int i = 1; i < parts.length - 1; i++) {
+            at = value.indexOf(parts[i], at);
+            if (at < 0) return false;
+            at += parts[i].length();
         }
-        return Pattern.compile(sb.toString());
+        return at <= end;
     }
 }

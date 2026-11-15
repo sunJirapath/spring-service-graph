@@ -238,7 +238,7 @@ public final class Discovery {
         var reactiveMongoRepositories = new ArrayList<RepositoryScan>();
         var defaultPersistencePackages = new ArrayList<Pattern>();
         var named = new HashSet<String>();
-        libraries.forEach(lib -> named.addAll(autoConfigs(lib)));
+        libraries.forEach(lib -> named.addAll(autoConfigs(index.repo(), lib)));
         var pending = new ArrayDeque<TypeDeclaration<?>>();
         own.forEach(cu -> types(cu).stream().filter(t -> t instanceof ClassOrInterfaceDeclaration c && isApp(index, c))
                 .forEach(pending::add));
@@ -670,17 +670,21 @@ public final class Discovery {
     }
 
     /** Auto-configuration classes a library module registers in {@code META-INF}. */
-    private static List<String> autoConfigs(Path module) {
+    private static List<String> autoConfigs(Repo repo, Path module) {
         var out = new ArrayList<String>();
         Path meta = module.resolve("src/main/resources/META-INF");
         try {
-            Matcher m = FACTORIES.matcher(Config.readText(meta.resolve("spring.factories")).replaceAll("\\\\\\R", ""));
+            Path factories = meta.resolve("spring.factories");
+            if (!inside(repo.root(), factories)) throw new IOException("registration path escapes repository");
+            Matcher m = FACTORIES.matcher(Config.readText(factories).replaceAll("\\\\\\R", ""));
             while (m.find()) for (String c : m.group(1).split(",")) out.add(c.strip().replace('$', '.'));
         } catch (IOException e) {
             // no spring.factories
         }
         try {
-            for (String line : Config.readText(meta.resolve("spring/" + IMPORTS)).split("\\R")) {
+            Path imports = meta.resolve("spring/" + IMPORTS);
+            if (!inside(repo.root(), imports)) throw new IOException("registration path escapes repository");
+            for (String line : Config.readText(imports).split("\\R")) {
                 if (!line.isBlank() && !line.strip().startsWith("#")) out.add(line.strip().replace('$', '.'));
             }
         } catch (IOException e) {

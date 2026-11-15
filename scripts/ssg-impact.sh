@@ -51,7 +51,7 @@ case "$code" in
   *) echo "ssg-impact: ssg diff failed with exit code $code" >&2; exit "$code" ;;
 esac
 # Exit 4 takes precedence, so a report can be incomplete and also contain proven breaks.
-if awk '/^## Breaking changes$/ { section=1; next } /^## / { section=0 }
+if [ "$code" = 3 ] || awk '/^## Breaking changes$/ { section=1; next } /^## / { section=0 }
         section && /^- / { found=1 } END { exit !found }' "$out/impact.md"; then
   echo true > "$out/breaking"
 else

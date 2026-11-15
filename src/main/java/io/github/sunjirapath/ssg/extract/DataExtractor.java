@@ -17,7 +17,6 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public final class DataExtractor implements Extractor {
                 if (("/" + s.repo().relative(f)).contains("/src/")) continue; // module resources are read by migrations()
                 if (("/" + s.repo().relative(f)).matches("(?i).*/tests?/.*")) continue;
                 try {
-                    String code = blankComments(Files.readString(f));
+                    String code = blankComments(Config.readUtf8(f));
                     Matcher m = CREATE_TABLE.matcher(code);
                     while (m.find()) {
                         int line = (int) code.substring(0, m.start()).chars().filter(ch -> ch == '\n').count() + 1;
@@ -214,18 +213,20 @@ public final class DataExtractor implements Extractor {
                         String name = f.getFileName().toString().toLowerCase(Locale.ROOT);
                         if (javaDir && !name.endsWith(".xml")) continue;
                         try { // one unreadable or malformed file must not hide the others
-                            if (name.endsWith(".sql")) sql(s, f, Files.readString(f), facts);
+                            if (name.endsWith(".sql")) sql(s, f, Config.readUtf8(f), facts);
                             else if (name.endsWith(".xml")) {
-                                String text = Files.readString(f);
+                                String text = Config.readUtf8(f);
                                 if (text.contains("<mapper")) {
                                     text = XML_COMMENT.matcher(text).replaceAll(m -> m.group().replaceAll("[^\\n]", " "));
                                     if (types == null) types = declaredTypes(s);
                                     if (!module.equals(s.moduleRoot()) && !types.containsKey(namespace(text))) continue; // a shared mapper this service never uses
                                 }
                                 xml(s, f, text, facts, types == null ? Map.of() : types);
-                            } else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Files.readString(f), facts);
+                            } else if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".json")) yaml(s, f, Config.readUtf8(f), facts);
                         } catch (IOException | RuntimeException e) {
-                            System.err.println("warn: cannot read " + f + ": " + e.getMessage());
+                            facts.add(new Fact.Problem("INCOMPLETE_ANALYSIS", "cannot analyze resource: "
+                                    + e.getClass().getSimpleName(), s.repo().evidence(f, 1)));
+                            System.err.println("warn: cannot read " + f + ": " + e.getClass().getSimpleName());
                         }
                     }
                 } catch (IOException e) {

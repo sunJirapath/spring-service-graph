@@ -38,7 +38,11 @@ final class NacosSeed {
             for (Path f : repo.files(repo.root())) {
                 String n = f.getFileName().toString().toLowerCase();
                 if (!n.endsWith(".sql") || !(n.contains("nacos") || n.contains("config"))) continue;
-                rows.addAll(parse(f, Config.readText(f)));
+                try {
+                    rows.addAll(parse(f, Config.readText(f)));
+                } catch (IOException | RuntimeException e) {
+                    System.err.println("warn: cannot read Nacos seed: " + e.getClass().getSimpleName());
+                }
             }
         } catch (IOException e) {
             System.err.println("warn: cannot read Nacos seed in " + repo.root() + ": " + e.getMessage());

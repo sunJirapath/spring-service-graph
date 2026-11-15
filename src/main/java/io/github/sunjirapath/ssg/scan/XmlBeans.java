@@ -51,7 +51,7 @@ final class XmlBeans {
                 factory.setExpandEntityReferences(false);
                 var builder = factory.newDocumentBuilder();
                 builder.setErrorHandler(new DefaultHandler());
-                try (var input = Files.newInputStream(resource.file())) {
+                try (var input = new java.io.ByteArrayInputStream(Config.readBytes(resource.file()))) {
                     var elements = builder.parse(input).getElementsByTagName("*");
                     for (int i = 0; i < elements.getLength(); i++) {
                         Element element = (Element) elements.item(i);

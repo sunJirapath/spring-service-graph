@@ -102,9 +102,18 @@ public final class Pipeline {
     /** aliases.yml: a flat map of host -> service name (or a name for an external system). */
     static Map<String, String> aliases(Path file) throws IOException {
         if (file == null) return Map.of();
-        Object loaded = new Yaml().load(Files.readString(file));
+        Object loaded;
+        try (var reader = Files.newBufferedReader(file)) {
+            loaded = new Yaml().load(reader);
+        } catch (org.yaml.snakeyaml.error.YAMLException e) {
+            throw new IllegalArgumentException("invalid aliases YAML");
+        }
         var out = new TreeMap<String, String>();
-        if (loaded instanceof Map<?, ?> m) m.forEach((k, v) -> out.put(String.valueOf(k), String.valueOf(v)));
+        if (loaded instanceof Map<?, ?> m) m.forEach((k, v) -> {
+            if (k instanceof Map<?, ?> || k instanceof java.util.Collection<?> || v instanceof Map<?, ?> || v instanceof java.util.Collection<?>)
+                throw new IllegalArgumentException("aliases: expected a flat map of host: target");
+            out.put(String.valueOf(k), String.valueOf(v));
+        });
         else if (loaded != null) throw new IllegalArgumentException(file + ": expected a map of host: target");
         return out;
     }
