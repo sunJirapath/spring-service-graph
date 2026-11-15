@@ -9,7 +9,9 @@ permissions:
   contents: read
 
 jobs:
+  # Owner-only PR gate: skip PRs not authored by the repo owner or coming from forks.
   build:
+    if: github.event_name != 'pull_request' || (github.event.pull_request.user.login == github.repository_owner && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON('["self-hosted","pc-builder"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v7
@@ -21,6 +23,7 @@ jobs:
       - run: ./gradlew build --console=plain
 
   impact-action:
+    if: github.event_name != 'pull_request' || (github.event.pull_request.user.login == github.repository_owner && github.event.pull_request.head.repo.full_name == github.repository)
     # end-to-end check of action.yml: a head checkout without AccountController must be reported as breaking
     runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON('["self-hosted","pc-builder"]') || 'ubuntu-latest' }}
     steps:
