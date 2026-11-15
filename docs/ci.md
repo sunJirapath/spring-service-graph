@@ -18,6 +18,8 @@ It configures the Gradle user-home cache with `gradle/actions/setup-gradle`; it 
 
 ## GitHub Actions
 
+In this repository, PR jobs run only for PRs authored by the repository owner from a branch in this repo. Other PRs, including fork PRs, are skipped by design. Maintainers can run CI on an outside contribution by pushing its branch to this repo.
+
 Add `.github/workflows/ssg-impact.yml` to each service repo:
 
 ```yaml
