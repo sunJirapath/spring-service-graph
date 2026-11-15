@@ -57,7 +57,7 @@ extractors use specific literal config keys where needed.
 |---|---|
 | Not tested | Deployed application startup, live Kafka/RabbitMQ or databases, service discovery and live traffic. Unit and source-scan results do not establish runtime integration correctness. |
 | Not tested | A multi-version Java/Spring/Cloud Stream runtime matrix or external CLI/MCP client implementations. JSON/diff/MCP regression coverage is local to this project. |
-| Not rerun at `ff12939` | The complete 200-repository corpus. Its results remain pinned to the scanner in [the audit summary](audits/README.md). Four pinned-input repeat scans recorded at `cd43ff3` predate the final review fixes. |
+| Not rerun at `ff12939` | The complete 200-repository corpus. Its results remain pinned to the scanner in the earlier audit summary (removed from the tree, kept in git history). Four pinned-input repeat scans recorded at `cd43ff3` predate the final review fixes. |
 | Not measured at `ff12939` | Fresh performance comparisons or peak heap. Earlier Nacos/Markdown synthetic measurements are recorded in PR #5 at `cd43ff3`; GraphView indexes retain O(E) edge references. |
 | Known extraction limit | Repeated Gateway Java DSL Method predicates are collected together; only configuration predicates have the intersection fix. Conflicting DSL predicates can overstate accepted methods. |
 | Known extraction limit | Conditional/custom/external function registrations and expressions without sufficient source type information can leave StreamBridge binder selection unknown. |
