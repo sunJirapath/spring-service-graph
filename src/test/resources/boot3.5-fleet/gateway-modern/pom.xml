@@ -1,0 +1,1 @@
+<project><modelVersion>4.0.0</modelVersion><groupId>test</groupId><artifactId>boot3-modern-gateway</artifactId><version>1</version><parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.5.16</version></parent></project>

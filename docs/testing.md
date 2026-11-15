@@ -1,5 +1,14 @@
 # Testing and validation
 
+## Spring Boot compatibility fixture (2026-11-15)
+
+Added `Boot35FleetTest` with four Java-only source services declaring Boot
+**3.5.16**. It asserts service and endpoint nodes, both Gateway property prefixes,
+all five supported HTTP client styles, evidence, and resolved confidence. The API
+uses Jakarta imports; YAML, properties and a `prod` profile property are present.
+This fixture and its tests were not run in this environment. It does not exercise
+runtime startup or imported config locations.
+
 ## Round 3 source-only hardening (2026-11-14)
 
 Added regressions for release checksums and Gradle cache configuration, best-effort comment lookup/missing `gh`, newline-delimited fleet paths with spaces/CRLF (`CiConfigurationTest`); snapshot replacement/deletion and explicit unknown provenance, bounded MCP requests/results/text (`McpEdgeCasesTest`); explicit golden-update opt-in and CI refusal (`GoldenTest`); and real JVM exit statuses 0/1/2/3/4 (`MainProcessTest`). `ExtractCoverageTest.methodCallReceiverNamedRestTemplateIsRecognizedByHint` now checks the URL, client kind and confidence as well as the verb. The previous 2,000-edge MCP success assertion now expects a limit error and checks that a specific endpoint still works.
@@ -33,9 +42,14 @@ of the 893-test build.
 | Resource identity and consumers | Backend-qualified IDs, legacy JSON, mixed-format diff rejection, MCP aliases and distinct colliding topic labels (`ResourceIdentityTest`, `OutputCoverageTest`). Rescan both diff inputs with the same scanner version when upgrading. |
 | Graph indexes | Adjacency lookup preserves input edge order (`GraphViewIndexTest`); output suites cover Markdown and diagrams. |
 
-Framework probes exercised Spring Framework **7.0.10** MVC mappings and Spring Boot
-**4.1.2** YAML loading, Binder and placeholder behavior on Java 21. They do not
-establish compatibility with every Spring or Cloud Stream version.
+Static source fixture coverage includes Boot **3.5.16** (`Boot35FleetTest`) and the
+Boot **4.0.1** Petclinic field fixture. Framework probes exercised Spring Framework
+**7.0.10** MVC mappings and Spring Boot **4.1.2** YAML loading, Binder and placeholder
+behavior on Java 21. These exact inputs do not establish support for every Boot 3.5
+or 4.x release, Boot 2.x, or runtime integration. `spring.config.import` locations
+are not followed; only discovered local application and profile-specific config files
+are loaded. `@ConfigurationProperties` is not evaluated with Spring Binder semantics;
+extractors use specific literal config keys where needed.
 
 ## Remaining gaps and untested behavior
 
