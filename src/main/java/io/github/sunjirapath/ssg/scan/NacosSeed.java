@@ -36,7 +36,7 @@ final class NacosSeed {
         var rows = new ArrayList<Row>();
         try {
             for (Path f : repo.files(repo.root())) {
-                String n = f.getFileName().toString().toLowerCase();
+                String n = f.getFileName().toString().toLowerCase(java.util.Locale.ROOT);
                 if (!n.endsWith(".sql") || !(n.contains("nacos") || n.contains("config"))) continue;
                 try {
                     rows.addAll(parse(f, Config.readText(f)));

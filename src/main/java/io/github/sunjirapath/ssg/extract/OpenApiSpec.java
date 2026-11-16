@@ -107,7 +107,7 @@ final class OpenApiSpec {
                 Value path = Mappings.joinValues(prefix, base, Value.exact(scalar(p.getKeyNode())))
                         .withConfidence(Confidence.RESOLVED, null);
                 int line = op.getKeyNode().getStartMark().getLine() + 1;
-                out.add(new Fact.Endpoint(verb.toUpperCase(), path, s.repo().evidence(file, line), "openapi", null));
+                out.add(new Fact.Endpoint(verb.toUpperCase(java.util.Locale.ROOT), path, s.repo().evidence(file, line), "openapi", null));
             }
         }
     }

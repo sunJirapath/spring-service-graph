@@ -325,7 +325,7 @@ public final class InboundHttpExtractor implements Extractor {
         if (!(o.getParentNode().orElse(null) instanceof VariableDeclarator v)) return null;
         return o.findAncestor(ClassOrInterfaceDeclaration.class).flatMap(c -> Ann.find(c, "ConfigurationProperties"))
                 .flatMap(ann -> Ann.attr(ann, "prefix", "value")).map(e -> s.eval(e).text())
-                .map(prefix -> prefix + "." + v.getNameAsString().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase() + ".prefix")
+                .map(prefix -> prefix + "." + v.getNameAsString().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase(java.util.Locale.ROOT) + ".prefix")
                 .orElse(null);
     }
 

@@ -59,7 +59,7 @@ final class Mappings {
         if (e instanceof FieldAccessExpr f) return List.of(f.getNameAsString());
         // a static import like GET, not a variable holding the method
         if (e instanceof NameExpr n && n.getNameAsString().matches("[A-Z]+")) return List.of(n.getNameAsString());
-        if (e.isStringLiteralExpr()) return List.of(e.asStringLiteralExpr().asString().toUpperCase());
+        if (e.isStringLiteralExpr()) return List.of(e.asStringLiteralExpr().asString().toUpperCase(java.util.Locale.ROOT));
         return List.of("*");
     }
 

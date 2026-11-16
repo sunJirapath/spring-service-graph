@@ -85,7 +85,7 @@ public final class OutboundHttpExtractor implements Extractor {
         for (MethodDeclaration m : Mappings.mappedMethods(c, s, md -> Mappings.exchange(md, s).isPresent())) {
             var mapping = Mappings.exchange(m, s).orElseThrow();
             List<String> verbs = mapping.annotation().getName().getIdentifier().equals("HttpExchange")
-                    ? Ann.attr(mapping.annotation(), "method").map(s::eval).map(v -> List.of(v.text().toUpperCase()))
+                    ? Ann.attr(mapping.annotation(), "method").map(s::eval).map(v -> List.of(v.text().toUpperCase(java.util.Locale.ROOT)))
                             .orElse(List.of("*"))
                     : mapping.methods();
             for (Value mp : mapping.paths()) {
@@ -145,7 +145,7 @@ public final class OutboundHttpExtractor implements Extractor {
         }
         String verb = verbCall.getNameAsString().equals("method")
                 ? verbCall.getArguments().stream().findFirst().map(a -> Mappings.enumNames(a).getFirst()).orElse("*")
-                : verbCall.getNameAsString().toUpperCase();
+                : verbCall.getNameAsString().toUpperCase(java.util.Locale.ROOT);
         if (verbCall.getNameAsString().equals("method") && verbCall.getArguments().size() != 1) return Optional.empty();
         boolean gatewayDsl = call.findAncestor(MethodDeclaration.class)
                 .filter(md -> md.getType().asString().endsWith("RouteLocator")).isPresent();
@@ -171,7 +171,7 @@ public final class OutboundHttpExtractor implements Extractor {
             default -> null;
         };
         String type = name == null ? "" : s.index().declaredType(name, root).orElse("");
-        String text = (type + " " + verbCall.getScope().map(Object::toString).orElse("")).toLowerCase();
+        String text = (type + " " + verbCall.getScope().map(Object::toString).orElse("")).toLowerCase(java.util.Locale.ROOT);
         return text.contains("webclient") ? "webclient" : text.contains("restclient") ? "restclient" : null;
     }
 
@@ -194,7 +194,7 @@ public final class OutboundHttpExtractor implements Extractor {
         };
         if (name.isEmpty()) return false;
         Optional<String> type = scope instanceof MethodCallExpr ? Optional.empty() : s.index().declaredType(name, scope);
-        return type.map(types::contains).orElseGet(() -> name.toLowerCase().contains(nameHint));
+        return type.map(types::contains).orElseGet(() -> name.toLowerCase(java.util.Locale.ROOT).contains(nameHint));
     }
 
     /**

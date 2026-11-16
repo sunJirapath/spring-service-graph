@@ -120,7 +120,7 @@ public final class MarkdownOutput {
         md.append("## Data\n\n");
         table(md, List.of("Table", "Store", "Relation", "Confidence", "Evidence"), data, e -> {
             var t = (Node.Table) g.nodes.get(e.to());
-            return Arrays.asList(code(t.name()), escape(t.store()), e.kind().name().toLowerCase(), e.confidence().name(),
+            return Arrays.asList(code(t.name()), escape(t.store()), e.kind().name().toLowerCase(java.util.Locale.ROOT), e.confidence().name(),
                     evidence(dir, e.evidence()));
         });
 

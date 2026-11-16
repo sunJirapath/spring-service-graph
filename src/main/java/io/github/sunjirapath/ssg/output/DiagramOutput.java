@@ -51,7 +51,7 @@ public final class DiagramOutput {
                 }
                 case CONSUMES -> { from = e.to(); to = e.from(); label = "consume"; }
                 case PRODUCES -> { from = e.from(); to = e.to(); label = "produce"; }
-                default -> { from = e.from(); to = e.to(); label = e.kind().name().toLowerCase(); }
+                default -> { from = e.from(); to = e.to(); label = e.kind().name().toLowerCase(java.util.Locale.ROOT); }
             }
             labels.computeIfAbsent(from + "\0" + to, k -> new TreeSet<>()).add(label);
         }

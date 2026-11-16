@@ -231,7 +231,7 @@ public final class GraphDiff {
         if (rows.isEmpty()) return;
         md.append("## ").append(title).append("\n\n");
         for (Edge e : rows) {
-            md.append("- ").append(labelOf(nodes, e.from())).append(" **").append(e.kind().name().toLowerCase()).append("** ")
+            md.append("- ").append(labelOf(nodes, e.from())).append(" **").append(e.kind().name().toLowerCase(java.util.Locale.ROOT)).append("** ")
                     .append(labelOf(nodes, e.to()));
             String detail = e.attrs().entrySet().stream().filter(a -> !a.getKey().equals("chain"))
                     .map(a -> escape(a.getKey()) + "=" + escape(a.getValue())).collect(Collectors.joining(", "));
@@ -246,7 +246,7 @@ public final class GraphDiff {
         headEdges.forEach((k, h) -> {
             Edge b = baseEdges.get(k);
             if (b != null && b.confidence() != h.confidence()) {
-                rows.add(labelOf(headNodes, h.from()) + " " + h.kind().name().toLowerCase() + " " + labelOf(headNodes, h.to())
+                rows.add(labelOf(headNodes, h.from()) + " " + h.kind().name().toLowerCase(java.util.Locale.ROOT) + " " + labelOf(headNodes, h.to())
                         + ": " + b.confidence() + " → " + h.confidence());
             }
         });
