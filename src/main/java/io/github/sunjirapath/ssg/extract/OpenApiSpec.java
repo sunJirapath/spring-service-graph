@@ -14,7 +14,6 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ final class OpenApiSpec {
         try {
             for (Path f : s.repo().files(s.moduleRoot()).stream().filter(f -> candidate(s, f)).toList()) {
                 try { // one broken file must not hide the others
-                    String text = Files.readString(f);
+                    String text = Config.readUtf8(f);
                     if (!text.contains("openapi") && !text.contains("swagger")) continue;
                     for (Node doc : Config.composeAll(new StringReader(text))) {
                         if (doc instanceof MappingNode root && (get(root, "openapi").isPresent() || get(root, "swagger").isPresent())) {
@@ -64,7 +63,7 @@ final class OpenApiSpec {
                         }
                     }
                 } catch (IOException | RuntimeException e) {
-                    System.err.println("warn: cannot read OpenAPI spec " + f + ": " + e.getMessage());
+                    System.err.println("warn: cannot read OpenAPI spec " + f + ": " + e.getClass().getSimpleName());
                 }
             }
         } catch (IOException e) {

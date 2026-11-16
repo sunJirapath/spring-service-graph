@@ -104,9 +104,9 @@ public final class Main {
         var options = new Pipeline.Options(repos, single(opts, "--profile", "default"),
                 aliases.isEmpty() ? null : Path.of(aliases), configRepo.isEmpty() ? null : Path.of(configRepo), sqlMethods);
         var result = Pipeline.scan(options);
-        JsonOutput.write(result.graph(), out);
         MarkdownOutput.write(result.graph(), result.repoRoots(), out, single(opts, "--link-base", ""));
         DiagramOutput.write(result.graph(), out);
+        JsonOutput.write(result.graph(), out);
         var g = result.graph();
         System.out.printf("%d nodes, %d edges, %d findings -> %s%n", g.nodes().size(), g.edges().size(),
                 g.findings().size(), out.toAbsolutePath().normalize());

@@ -80,12 +80,12 @@ final class Modules {
                 if (rel.contains("/src/") || rel.contains("/target/") || rel.contains("/build/")) continue; // fixtures and build output
                 try {
                     if (name.equals("pom.xml")) {
-                        m.poms.put(f.getParent(), pom(Files.readString(f)));
+                        m.poms.put(f.getParent(), pom(Config.readUtf8(f)));
                     } else if (name.equals("build.gradle") || name.equals("build.gradle.kts")) {
-                        builds.put(f.getParent(), CODE_COMMENT.matcher(Files.readString(f)).replaceAll(" "));
+                        builds.put(f.getParent(), CODE_COMMENT.matcher(Config.readUtf8(f)).replaceAll(" "));
                     } else if (name.equals("settings.gradle") || name.equals("settings.gradle.kts")) {
                         var remaps = new HashMap<String, Path>();
-                        Matcher r = PROJECT_DIR.matcher(CODE_COMMENT.matcher(Files.readString(f)).replaceAll(" "));
+                        Matcher r = PROJECT_DIR.matcher(CODE_COMMENT.matcher(Config.readUtf8(f)).replaceAll(" "));
                         while (r.find()) remaps.put(r.group(1), f.getParent().resolve(r.group(2)).normalize());
                         settings.put(f.getParent(), remaps);
                     }
@@ -264,7 +264,7 @@ final class Modules {
                     if (!file.startsWith(repo.root()) || !Files.isRegularFile(file)) continue;
                     Path canonical = file.toRealPath();
                     if (!canonical.startsWith(repo.root().toRealPath()) || !seen.add(canonical)) continue;
-                    String script = CODE_COMMENT.matcher(Files.readString(file)).replaceAll(" ");
+                    String script = CODE_COMMENT.matcher(Config.readUtf8(file)).replaceAll(" ");
                     text.append('\n').append(script);
                     pending.add(script);
                 } catch (IOException | RuntimeException e) {
@@ -278,6 +278,26 @@ final class Modules {
     /** Whether any Maven or Gradle build/settings descriptor was read from this repo. */
     boolean hasBuildMetadata() {
         return hasBuildMetadata;
+    }
+
+    /** The local descriptor that explicitly selects an unsupported Boot 2 parent or BOM. */
+    Optional<Path> bootTwo(Path module) {
+        var seen = new HashSet<Path>();
+        for (Path at = module; at != null && seen.add(at); at = parent.get(at)) {
+            Pom pom = poms.get(at);
+            if (pom == null) continue;
+            var declarations = new java.util.ArrayList<String>();
+            declarations.add(pom.parent());
+            for (Matcher d = DEPENDENCY.matcher(pom.text()); d.find(); ) declarations.add(d.group(1));
+            for (String declaration : declarations) {
+                if (!first(GROUP, declaration).filter("org.springframework.boot"::equals).isPresent()
+                        || !first(ARTIFACT, declaration).filter(a -> a.equals("spring-boot-starter-parent")
+                            || a.equals("spring-boot-dependencies")).isPresent()) continue;
+                String version = resolve(module, first(VERSION, declaration).orElse(null));
+                if (version != null && version.startsWith("2.")) return Optional.of(at.resolve("pom.xml"));
+            }
+        }
+        return Optional.empty();
     }
 
     /** The modules {@code module} declares itself or through its parent poms. */

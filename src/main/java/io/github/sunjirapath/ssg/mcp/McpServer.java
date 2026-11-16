@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.sunjirapath.ssg.model.Graph;
+import io.github.sunjirapath.ssg.output.JsonOutput;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -63,8 +63,8 @@ public final class McpServer {
     /** Hash and parse the same bytes; replacement or removal blocks subsequent tool calls until restart. */
     public static McpServer fromSnapshot(Path path, String version) throws IOException {
         Path file = (Files.isDirectory(path) ? path.resolve("graph.json") : path).toAbsolutePath().normalize();
-        byte[] bytes = Files.readAllBytes(file);
-        return new McpServer(new GraphQueries(JSON.readValue(bytes, Graph.class)), version, file,
+        byte[] bytes = JsonOutput.readSnapshot(file);
+        return new McpServer(new GraphQueries(JsonOutput.parseSnapshot(bytes)), version, file,
                 HexFormat.of().formatHex(digest().digest(bytes)));
     }
 
@@ -79,8 +79,8 @@ public final class McpServer {
     private void checkSnapshot() throws IOException {
         if (snapshotFile == null) return;
         var hash = digest();
-        try (var in = new DigestInputStream(Files.newInputStream(snapshotFile), hash)) {
-            in.transferTo(java.io.OutputStream.nullOutputStream());
+        try {
+            hash.update(JsonOutput.readSnapshot(snapshotFile));
         } catch (IOException e) {
             throw new IOException("snapshot is unavailable; regenerate it and restart the MCP server");
         }
@@ -114,10 +114,13 @@ public final class McpServer {
         try {
             req = JSON.readTree(line);
         } catch (IOException e) {
-            return error(null, -32700, "parse error: " + e.getMessage().lines().findFirst().orElse(""));
+            return error(null, -32700, "parse error");
         }
-        if (!req.isObject()) return error(null, -32600, "invalid request: expected one JSON object (batches are not supported)");
+        if (req == null || !req.isObject()) return error(null, -32600, "invalid request: expected one JSON object (batches are not supported)");
         JsonNode id = req.get("id");
+        if (!"2.0".equals(req.path("jsonrpc").asText()) || !req.path("method").isTextual()
+                || id != null && !id.isNull() && !id.isTextual() && !id.isNumber())
+            return error(null, -32600, "invalid request");
         String method = req.path("method").asText("");
         if (id == null || id.isNull()) return null; // notification, e.g. notifications/initialized
         try {

@@ -32,6 +32,7 @@ public final class DiagramOutput {
             var mine = arrows.stream().filter(a -> a.from.equals(s.id()) || a.to.equals(s.id())).toList();
             TextFile.write(out.resolve("diagrams/" + g.fileName(s.name()) + ".mmd"), mermaid(g, s, mine));
         }
+        TextFile.removeRetired(graph, out, "diagrams", ".mmd");
     }
 
     private static List<Arrow> arrows(GraphView g) {
@@ -70,10 +71,10 @@ public final class DiagramOutput {
             case Node.Topic t -> "queue";
             case Node.External x -> "cloud";
             default -> "component";
-        }).append(" \"").append(g.label(id).replace("\"", "'")).append("\" as ").append(alias).append('\n'));
+        }).append(" \"").append(label(g.label(id)).replace("\"", "'")).append("\" as ").append(alias).append('\n'));
         sb.append('\n');
         for (Arrow a : shown) {
-            sb.append(aliases.get(a.from)).append(" --> ").append(aliases.get(a.to)).append(" : ").append(a.label).append('\n');
+            sb.append(aliases.get(a.from)).append(" --> ").append(aliases.get(a.to)).append(" : ").append(label(a.label)).append('\n');
         }
         return sb.append("@enduml\n").toString();
     }
@@ -82,7 +83,7 @@ public final class DiagramOutput {
         var aliases = aliases(g, arrows, List.of(s.id()));
         var sb = new StringBuilder("flowchart LR\n");
         aliases.forEach((id, alias) -> {
-            String label = g.label(id).replace("\"", "#quot;");
+            String label = label(g.label(id)).replace("\"", "#quot;");
             sb.append("  ").append(alias).append(switch (g.nodes.get(id)) {
                 case Node.Topic t -> "[/\"" + label + "\"/]";
                 case Node.Table t -> "[(\"" + label + "\")]";
@@ -91,9 +92,18 @@ public final class DiagramOutput {
             }).append('\n');
         });
         for (Arrow a : arrows) {
-            sb.append("  ").append(aliases.get(a.from)).append(" -->|").append(a.label).append("| ").append(aliases.get(a.to)).append('\n');
+            sb.append("  ").append(aliases.get(a.from)).append(" -->|").append(label(a.label)).append("| ").append(aliases.get(a.to)).append('\n');
         }
         return sb.toString();
+    }
+
+    private static String label(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (Character.isISOControl(c) || "<>|%\\".indexOf(c) >= 0) out.append(' ');
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
     }
 
     /** Stable short aliases (n0, n1, ...) in node-id order, avoiding name-escaping collisions. */

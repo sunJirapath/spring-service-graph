@@ -1,5 +1,89 @@
 # Testing and validation
 
+## Security review and opt-in real projects (2026-11-15, source inspection only)
+
+No commands, tests, builds, shell probes or real-project scans were run for this
+review. The tests below have source-derived expectations, not observed goldens.
+`SecurityFindingsTest` deliberately contains unskipped `// FINDING:` regressions;
+they record unresolved defects and can fail the ordinary suite. Do not interpret
+the opt-in suite being absent as a security verdict, or disable those findings to
+obtain a green build.
+
+New adversarial suites: `HostileRepoSecurityTest`, `PathMatchSecurityTest`,
+`OutputSecurityTest`, `SnapshotSecurityTest`, `McpSecurityTest`, `PipelineSecurityTest`,
+`ShellSecurityTest`, and `SecurityFindingsTest`. Shell regressions require Bash
+(the same Git Bash/PATH selection as `CiConfigurationTest`); they stub the tool
+and never invoke GitHub or clone projects. Symlink probes are unskipped and need
+an environment that permits creating symlinks. All new scratch directories use
+`WorkspaceTempDirFactory` under `build/security-tests/`, without changing TEMP/TMP.
+Child JVM probes have deadlines, heap limits, separate stdio and forced cleanup.
+
+The two classes in `io.github.sunjirapath.ssg.real`, `ScannerRealProjectTest` and
+`MutationRealProjectTest`, are opt-in. They use JUnit assumptions with clear
+messages when `REAL_PROJECTS_DIR`, `MANIFEST.json`, or a listed project is missing.
+The manifest's `projects` array supplies `name`, `path`, `url`, `sha`, `bootVersion`,
+`buildTool` and `notes`; manifest SHAs identify the supplied pins, but the harness
+does not run git to verify checkout identity. No absolute checkout paths or
+observed project file/graph totals are encoded in assertions.
+
+For Claude or a later authorized runner (these commands were **not** executed):
+
+```powershell
+$env:REAL_PROJECTS_DIR = 'E:/rv/_real'
+.\gradlew.bat test --tests '*RealProjectTest' --offline --console=plain
+```
+
+```sh
+REAL_PROJECTS_DIR=/path/to/preclones ./gradlew test --tests '*RealProjectTest' --offline
+```
+
+Offline execution requires the existing Gradle/JDK/dependency caches. Without the
+variable, normal test discovery skips this group. Neither suite builds, launches
+or modifies the Spring applications. It only invokes this tool's real `Main`
+entry in child JVMs on disposable source copies. Copies exclude VCS metadata,
+build artifacts, wrappers, dotenv files, secret directories and private-key files;
+only scanner input types are copied. This is static integration coverage.
+
+Per manifest entry the suite checks repeat-output bytes (JSON, Markdown and
+diagrams), every edge's evidence path and line bounds, a literal mapping quoted
+on a reported line, config-secret candidates against endpoint/topic/table names,
+source-copy tree/size/hash preservation, original input hashes, scratch-tree write
+boundaries, and MCP initialize/list/query response envelopes and size bounds.
+Evidence has no quoted-construct field, so the literal check is a spot check;
+line existence/bounds are exhaustive. Secret candidates shorter than four
+characters or unresolved placeholders are excluded to avoid generic-name noise;
+secret values are not printed in assertion diagnostics. Config defaults and
+credentials encoded in arbitrary non-secret keys remain a review limitation.
+
+The mutation suite selects a literal `@GetMapping` from scanned evidence. A small
+disposable caller repository establishes a surviving cross-repo RestTemplate
+caller before the baseline; then one real mapping is renamed and one missing
+RestTemplate call is added to that caller. This is necessary because `diff` only
+marks removed endpoints breaking when a surviving service still calls them.
+Assertions allow exactly that endpoint removal/addition and contract drift for
+the old and missing paths, with no unrelated breaking messages. Contract drift
+itself is breaking in the current CLI. The microservices case separately selects
+an existing linked cross-service caller, removes its target mapping, and requires
+exit 3. Existing incomplete analysis is retained: exit 4 fails these strict
+mutation checks for investigation, rather than being filtered or skipped.
+
+Boot 2.x is intentionally expected to produce an explicit `INCOMPLETE_ANALYSIS`
+finding and gate exit 4; current discovery lacks version detection, so the
+Piggymetrics invariant is an unresolved `FINDING`, not a claimed passing result.
+Other remaining gaps include arbitrary Gateway regex execution, unsafe XML being
+dropped without a finding, unclassified parser diagnostics, diff Markdown escaping,
+secret placeholder defaults, whole-output transactions/stale-file removal,
+raw control characters in duplicate-service warnings,
+repository-wide CPU/heap budgets, unreadable-file gate integrity, and concurrent
+filesystem replacement races. Junction behavior, native renderers, runtime
+Spring behavior and platform differences were not exercised. Claude should run
+and triage these probes before adding exact observed golden values.
+Source/config text, build metadata and XML resources now have a 4 MiB per-file guard; saved graphs are
+limited to 32 MiB. YAML traversal is limited to depth 64 and 100,000 node visits,
+in addition to SnakeYAML's loader limits. These are failure limits, not measured
+whole-scan CPU/heap guarantees. Existing ordinary output files are still replaced;
+replacement must be atomic or the write fails closed on that filesystem.
+
 ## Spring Boot compatibility fixture (2026-11-15)
 
 Added `Boot35FleetTest` with four Java-only source services declaring Boot

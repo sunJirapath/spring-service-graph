@@ -63,7 +63,7 @@ public final class Pipeline {
                 SeenService previous = seen.put(s.name(), new SeenService(repo.name() + "/" + s.path(), s.nameEvidence()));
                 String prev = previous == null ? null : previous.location();
                 if (prev != null) {
-                    System.err.println("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path());
+                    System.err.println(logLine("warn: service name '" + s.name() + "' found twice: " + prev + " and " + repo.name() + "/" + s.path()));
                     // two apps with one name merge into one graph node; say so instead of hiding it
                     extra.add(new Finding(Finding.Kind.DUPLICATE_SERVICE, s.name(), "service name '" + s.name()
                             + "' is used by " + prev + " and " + repo.name() + "/" + s.path(),
@@ -74,7 +74,7 @@ public final class Pipeline {
                 facts.addAll(ReachAnalysis.analyze(s, facts));
                 all.add(new Linker.ServiceFacts(s.name(), repo.name(), s.path(), facts));
                 for (Config.Problem pr : s.config().problems()) {
-                    extra.add(new Finding(Finding.Kind.PARSE_ERROR, s.name(), pr.message(), List.of(pr.evidence())));
+                    extra.add(new Finding(pr.kind(), s.name(), pr.message(), List.of(pr.evidence())));
                 }
             }
             for (Path file : index.unsupportedSources()) {
@@ -99,12 +99,31 @@ public final class Pipeline {
                     + previous + " and " + repo.root() + "; use distinct checkout directory names");
     }
 
+    private static String logLine(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (Character.isISOControl(c) || Character.getType(c) == Character.LINE_SEPARATOR
+                    || Character.getType(c) == Character.PARAGRAPH_SEPARATOR) out.append(String.format("\\u%04x", c));
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
+    }
+
     /** aliases.yml: a flat map of host -> service name (or a name for an external system). */
     static Map<String, String> aliases(Path file) throws IOException {
         if (file == null) return Map.of();
-        Object loaded = new Yaml().load(Files.readString(file));
+        Object loaded;
+        try (var reader = Files.newBufferedReader(file)) {
+            loaded = new Yaml().load(reader);
+        } catch (org.yaml.snakeyaml.error.YAMLException e) {
+            throw new IllegalArgumentException("invalid aliases YAML");
+        }
         var out = new TreeMap<String, String>();
-        if (loaded instanceof Map<?, ?> m) m.forEach((k, v) -> out.put(String.valueOf(k), String.valueOf(v)));
+        if (loaded instanceof Map<?, ?> m) m.forEach((k, v) -> {
+            if (k instanceof Map<?, ?> || k instanceof java.util.Collection<?> || v instanceof Map<?, ?> || v instanceof java.util.Collection<?>)
+                throw new IllegalArgumentException("aliases: expected a flat map of host: target");
+            out.put(String.valueOf(k), String.valueOf(v));
+        });
         else if (loaded != null) throw new IllegalArgumentException(file + ": expected a map of host: target");
         return out;
     }

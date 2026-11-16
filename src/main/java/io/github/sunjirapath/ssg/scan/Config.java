@@ -2,6 +2,7 @@ package io.github.sunjirapath.ssg.scan;
 
 import io.github.sunjirapath.ssg.model.Confidence;
 import io.github.sunjirapath.ssg.model.Evidence;
+import io.github.sunjirapath.ssg.model.Finding;
 import io.github.sunjirapath.ssg.model.Value;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -39,11 +40,16 @@ public final class Config {
 
     /** {@code value} is null for secret keys. */
     public record Entry(String value, Evidence evidence) {}
-    public record Problem(String message, Evidence evidence) {}
+    public record Problem(String message, Evidence evidence, Finding.Kind kind) {
+        public Problem(String message, Evidence evidence) {
+            this(message, evidence, Finding.Kind.PARSE_ERROR);
+        }
+    }
 
     private static final Pattern SECRET = Pattern.compile(
             "(?i).*(password|passwd|secret|token|credential|api[-_.]?key|private[-_.]?key).*");
     private static final int MAX_DEPTH = 16;
+    public static final int MAX_TEXT_BYTES = 4 * 1024 * 1024;
 
     private final Map<String, Entry> entries = new TreeMap<>();
     private final List<Problem> problems = new ArrayList<>();
@@ -64,6 +70,10 @@ public final class Config {
 
     public void addFile(Repo repo, Path file, String profile) {
         if (!Files.isRegularFile(file)) return;
+        if (!Discovery.inside(repo.root(), file)) {
+            problems.add(new Problem("configuration path escapes repository", repo.evidence(file, 1)));
+            return;
+        }
         try {
             String text = readText(file);
             if (file.toString().endsWith(".properties")) addProperties(repo, file, text, profile);
@@ -102,7 +112,7 @@ public final class Config {
 
     /** UTF-8 without BOM; legacy files that are not valid UTF-8 are read as ISO-8859-1, as Spring does for .properties. */
     static String readText(Path file) throws IOException {
-        byte[] bytes = Files.readAllBytes(file);
+        byte[] bytes = readBytes(file);
         String text;
         try {
             text = java.nio.charset.StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString();
@@ -110,6 +120,21 @@ public final class Config {
             text = new String(bytes, java.nio.charset.StandardCharsets.ISO_8859_1);
         }
         return text.startsWith("﻿") ? text.substring(1) : text;
+    }
+
+    /** Shared byte budget for source, metadata and resource readers, before parser allocation. */
+    public static byte[] readBytes(Path file) throws IOException {
+        try (var input = Files.newInputStream(file)) {
+            byte[] bytes = input.readNBytes(MAX_TEXT_BYTES + 1);
+            if (bytes.length > MAX_TEXT_BYTES) throw new IOException("source exceeds 4194304 bytes");
+            return bytes;
+        }
+    }
+
+    public static String readUtf8(Path file) throws IOException {
+        String text = java.nio.charset.StandardCharsets.UTF_8.newDecoder()
+                .decode(java.nio.ByteBuffer.wrap(readBytes(file))).toString();
+        return text.startsWith("\uFEFF") ? text.substring(1) : text;
     }
 
     public void putAll(Config other) {
@@ -128,6 +153,8 @@ public final class Config {
     }
 
     public List<Problem> problems() { return List.copyOf(problems); }
+
+    void problem(Problem problem) { problems.add(problem); }
 
     /** Bound entries in key order: higher-precedence lists replace the entire lower-precedence list. */
     public Map<String, Entry> withPrefix(String prefix) {
@@ -162,6 +189,7 @@ public final class Config {
     }
 
     private Value resolve(String text, int depth) {
+        text = redactSecretDefaults(text);
         if (text.contains("#{")) return Value.unresolved(text);
         int start = text.indexOf("${");
         if (start < 0) return Value.exact(text);
@@ -174,7 +202,9 @@ public final class Config {
         String key = sep < 0 ? inner : inner.substring(0, sep);
         Value replacement;
         Entry e = entries.get(key);
-        if (e != null && e.value() != null) {
+        if (SECRET.matcher(key).matches()) {
+            replacement = Value.unresolved("${" + key + "}");
+        } else if (e != null && e.value() != null) {
             replacement = resolve(e.value(), depth + 1).withConfidence(Confidence.RESOLVED, e.evidence());
         } else if (sep >= 0) {
             replacement = resolve(inner.substring(sep + 1), depth + 1).withConfidence(Confidence.RESOLVED, null);
@@ -185,6 +215,25 @@ public final class Config {
         Value tail = resolve(text.substring(end + 1), depth + 1);
         Value out = head.concat(replacement, text).concat(tail, text);
         return new Value(out.text(), out.confidence(), text, out.via());
+    }
+
+    /** Strip sensitive defaults from both folded values and retained source expressions. */
+    public static String redactSecretDefaults(String text) {
+        var out = new StringBuilder();
+        int copied = 0;
+        for (int start = text.indexOf("${"); start >= 0; start = text.indexOf("${", start + 2)) {
+            int sep = start + 2;
+            while (sep < text.length() && text.charAt(sep) != ':' && text.charAt(sep) != '}'
+                    && !text.startsWith("${", sep)) sep++;
+            if (sep < text.length() && text.charAt(sep) == ':' && SECRET.matcher(text.substring(start + 2, sep)).matches()) {
+                int end = matchingBrace(text, start + 2);
+                if (end < 0) end = text.length();
+                out.append(text, copied, sep).append('}');
+                copied = Math.min(end + 1, text.length());
+                start = end - 1;
+            }
+        }
+        return copied == 0 ? text : out.append(text, copied, text.length()).toString();
     }
 
     private static int matchingBrace(String s, int from) {
@@ -259,8 +308,7 @@ public final class Config {
     // --- YAML: composed to nodes (not objects) so we keep line marks
 
     private void addYaml(Repo repo, Path file, String text, String profile) {
-        var yaml = new Yaml(new LoaderOptions());
-        for (var doc : yaml.composeAll(new StringReader(unfiltered(repo, file, text)))) {
+        for (var doc : composeAll(new StringReader(unfiltered(repo, file, text)))) {
             if (doc == null) continue; // empty document between --- separators
             var flat = new LinkedHashMap<String, Entry>();
             var lists = new HashSet<String>();
@@ -320,7 +368,7 @@ public final class Config {
         Path root = repo.root().toAbsolutePath().normalize();
         for (Path dir = file.toAbsolutePath().normalize().getParent(); dir != null && dir.startsWith(root); dir = dir.getParent()) {
             Path pom = dir.resolve("pom.xml");
-            if (!Files.isRegularFile(pom)) continue;
+            if (!Files.isRegularFile(pom) || !Discovery.inside(root, pom)) continue;
             try {
                 var m = POM_ARTIFACT.matcher(POM_PARENT.matcher(readText(pom)).replaceAll(""));
                 return m.find() ? m.group(1) : null;
@@ -435,7 +483,27 @@ public final class Config {
     /** Reads a whole YAML/JSON file as SnakeYAML nodes, for extractors that walk non-config YAML. */
     public static List<org.yaml.snakeyaml.nodes.Node> composeAll(Reader reader) {
         var out = new ArrayList<org.yaml.snakeyaml.nodes.Node>();
-        new Yaml(new LoaderOptions()).composeAll(reader).forEach(out::add);
+        int[] budget = {100_000};
+        new Yaml(new LoaderOptions()).composeAll(reader).forEach(node -> {
+            validateYaml(node, 0, Collections.newSetFromMap(new IdentityHashMap<>()), budget);
+            out.add(node);
+        });
         return out;
+    }
+
+    private static void validateYaml(Node node, int depth, Set<Node> ancestors, int[] budget) {
+        if (node == null) return;
+        if (depth > 64 || --budget[0] < 0) throw new IllegalArgumentException("YAML analysis limit exceeded");
+        if (!ancestors.add(node)) throw new IllegalArgumentException("recursive YAML alias");
+        try {
+            if (node instanceof SequenceNode sequence)
+                sequence.getValue().forEach(child -> validateYaml(child, depth + 1, ancestors, budget));
+            else if (node instanceof MappingNode mapping) for (NodeTuple tuple : mapping.getValue()) {
+                validateYaml(tuple.getKeyNode(), depth + 1, ancestors, budget);
+                validateYaml(tuple.getValueNode(), depth + 1, ancestors, budget);
+            }
+        } finally {
+            ancestors.remove(node);
+        }
     }
 }

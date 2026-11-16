@@ -23,11 +23,17 @@ final class XmlBeans {
     private static final String BEANS = "http://www.springframework.org/schema/beans";
     private final Config config;
     private final List<Path> roots;
+    private final Repo repo;
     private final Set<Path> seen = new HashSet<>();
 
     XmlBeans(Config config, List<Path> roots) {
+        this(config, roots, null);
+    }
+
+    XmlBeans(Config config, List<Path> roots, Repo repo) {
         this.config = config;
         this.roots = List.copyOf(roots);
+        this.repo = repo;
     }
 
     Set<String> classes(String location) {
@@ -51,7 +57,7 @@ final class XmlBeans {
                 factory.setExpandEntityReferences(false);
                 var builder = factory.newDocumentBuilder();
                 builder.setErrorHandler(new DefaultHandler());
-                try (var input = Files.newInputStream(resource.file())) {
+                try (var input = new java.io.ByteArrayInputStream(Config.readBytes(resource.file()))) {
                     var elements = builder.parse(input).getElementsByTagName("*");
                     for (int i = 0; i < elements.getLength(); i++) {
                         Element element = (Element) elements.item(i);
@@ -64,8 +70,11 @@ final class XmlBeans {
                         } else if ("import".equals(name)) add(element.getAttribute("resource"), resource, pending);
                     }
                 }
-            } catch (IOException | SAXException | ParserConfigurationException | IllegalArgumentException ignored) {
-                // Missing, invalid or unsafe XML supplies no registrations; never widen the component scan.
+            } catch (IOException | SAXException | ParserConfigurationException | IllegalArgumentException e) {
+                Path file = resource.file();
+                config.problem(new Config.Problem("cannot read XML bean registrations: " + e.getClass().getSimpleName(),
+                        repo == null ? new io.github.sunjirapath.ssg.model.Evidence("", resource.root().relativize(file).toString().replace('\\', '/'), 1)
+                                : repo.evidence(file, 1)));
             }
         }
         return classes;

@@ -34,8 +34,8 @@ import io.github.sunjirapath.ssg.model.Value;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -77,23 +77,95 @@ public final class JavaIndex {
                 // comments are never read; tokens are needed while parsing, node positions (evidence lines) come from them
                 .setAttributeComments(false));
         var shared = new HashMap<Object, Object>(); // equal positions and names, one copy each
+        int remainingTokens = 2_000_000;
         try {
-            for (Path f : repo.files(repo.root()).stream().filter(idx::isMainSource).toList()) {
+            for (Path f : repo.files(repo.root())) {
+                boolean source = idx.isMainSource(f);
+                String relative = idx.rel(f);
+                if (!source && (relative.contains("/src/test/") || relative.contains("/build/") || relative.contains("/target/"))) continue;
+                // Resource/metadata rejections must reach the gate even if their individual reader only logs errors.
+                if (source || f.getFileName().toString().toLowerCase(java.util.Locale.ROOT)
+                        .matches("(?s).*\\.(ya?ml|properties|xml|json|sql|gradle|kts|factories|imports)")) {
+                    try {
+                        if (Files.size(f) > Config.MAX_TEXT_BYTES) {
+                            idx.problems.add(new Problem(f, 1, "source size limit exceeded"));
+                            continue;
+                        }
+                    } catch (IOException e) {
+                        idx.problems.add(new Problem(f, 1, "cannot inspect source: " + e.getClass().getSimpleName()));
+                        continue;
+                    }
+                }
+                if (!source) continue;
                 if (f.toString().endsWith(".kt")) {
                     idx.unsupportedSources.add(f);
                     continue;
                 }
-                var result = parser.parse(f);
-                result.getProblems().stream().filter(p -> result.getResult()
-                        .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
-                        problemLine(p),
-                        p.getMessage().lines().findFirst().orElse("parse error"))));
-                result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
+                try {
+                    String sourceText = Config.readUtf8(f);
+                    int tokens = sourceTokens(sourceText);
+                    if (tokens > remainingTokens) throw new IllegalArgumentException("repository token limit exceeded");
+                    remainingTokens -= tokens;
+                    var result = parser.parse(sourceText);
+                    result.getProblems().stream().filter(p -> result.getResult()
+                            .map(cu -> !recordAnnotationProblem(p, cu)).orElse(true)).forEach(p -> idx.problems.add(new Problem(f,
+                            problemLine(p),
+                            safeProblemMessage(p))));
+                    result.getResult().ifPresent(cu -> idx.add(f, cu, shared));
+                } catch (IOException | RuntimeException | StackOverflowError e) {
+                    idx.problems.add(new Problem(f, 1, "cannot analyze Java source: " + e.getClass().getSimpleName()));
+                }
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         return idx;
+    }
+
+    /** Reject excessive syntax before JavaParser allocates an AST or walks a recursive expression. */
+    private static int sourceTokens(String source) {
+        int tokens = 0, depth = 0, expression = 0;
+        for (int i = 0; i < source.length(); i++) {
+            char c = source.charAt(i);
+            if (Character.isWhitespace(c)) continue;
+            if (c == '/' && i + 1 < source.length()) {
+                if (source.charAt(i + 1) == '/') {
+                    while (i + 1 < source.length() && source.charAt(i + 1) != '\n' && source.charAt(i + 1) != '\r') i++;
+                    continue;
+                }
+                if (source.charAt(i + 1) == '*') {
+                    int end = source.indexOf("*/", i + 2);
+                    i = end < 0 ? source.length() : end + 1;
+                    continue;
+                }
+            }
+            if (++tokens > 10_000 || ++expression > 1024)
+                throw new IllegalArgumentException("Java syntax limit exceeded");
+            if (c == '"' || c == '\'') {
+                boolean block = c == '"' && source.startsWith("\"\"\"", i);
+                i += block ? 3 : 1;
+                while (i < source.length()) {
+                    if (source.charAt(i) == '\\') i += 2;
+                    else if (block && source.startsWith("\"\"\"", i)) { i += 2; break; }
+                    else if (!block && source.charAt(i) == c) break;
+                    else i++;
+                }
+            } else if (Character.isJavaIdentifierPart(c)) {
+                while (i + 1 < source.length() && Character.isJavaIdentifierPart(source.charAt(i + 1))) i++;
+            } else if (c == '(' || c == '[' || c == '{') {
+                if (++depth > 128) throw new IllegalArgumentException("Java nesting limit exceeded");
+            } else if (c == ')' || c == ']' || c == '}') depth = Math.max(0, depth - 1);
+            if (c == ';' || c == '{' || c == '}') expression = 0;
+        }
+        return tokens;
+    }
+
+    private static String safeProblemMessage(com.github.javaparser.Problem problem) {
+        // Lexer/parser diagnostics quote source literals, which can be credentials.
+        String message = problem.getMessage().lines().findFirst().orElse("parse error");
+        if (problem.getCause().orElse(null) instanceof TokenMgrException || message.startsWith("Lexical error"))
+            return "Lexical error (source text omitted)";
+        return message.startsWith("Parse error") ? "Parse error (source text omitted)" : message;
     }
 
     private static int problemLine(com.github.javaparser.Problem problem) {

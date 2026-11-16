@@ -119,12 +119,15 @@ public final class Discovery {
         for (Path module : apps.keySet()) {
             Set<Path> libraries = modules.all(module, apps.keySet());
             Config config = configs.get(module);
+            modules.bootTwo(module).ifPresent(pom -> config.problem(new Config.Problem(
+                    "Spring Boot 2.x is not supported; analysis may be incomplete", index.repo().evidence(pom, 1),
+                    io.github.sunjirapath.ssg.model.Finding.Kind.INCOMPLETE_ANALYSIS)));
             String serviceName = names.get(module);
             if (!nacos.isEmpty()) config.putAll(NacosSeed.load(index.repo(), nacos, serviceName, profile));
             if (remoteRoot != null) config.putAll(remoteConfig(remoteRepo, remoteRoot, remotePaths, serviceName, profile));
             // shortcut: without build metadata, one app still receives all sources; add descriptors to scope sibling modules.
-            List<CompilationUnit> units = apps.size() == 1 && !modules.hasBuildMetadata() ? index.units()
-                    : used(index, module, libraries, apps.keySet(), refs, config);
+            List<CompilationUnit> units = used(index, module, libraries, apps.keySet(), refs, config);
+            if (apps.size() == 1 && !modules.hasBuildMetadata()) units = index.units();
             services.add(new Service(serviceName, index.repo(), module, config, index, units, List.copyOf(libraries)));
         }
         return services;
@@ -228,7 +231,7 @@ public final class Discovery {
         resourceRoots.add(module.resolve("src/main/resources"));
         libraries.stream().sorted().forEach(lib -> resourceRoots.add(lib.resolve("src/main/resources")));
         resourceRoots.removeIf(root -> !inside(index.repo().root(), root));
-        var xmlBeans = new XmlBeans(config, resourceRoots);
+        var xmlBeans = new XmlBeans(config, resourceRoots, index.repo());
         var packages = new ArrayList<Pattern>();
         var feignPackages = new ArrayList<Pattern>();
         var mapperScans = new ArrayList<MapperScan>();
@@ -238,7 +241,7 @@ public final class Discovery {
         var reactiveMongoRepositories = new ArrayList<RepositoryScan>();
         var defaultPersistencePackages = new ArrayList<Pattern>();
         var named = new HashSet<String>();
-        libraries.forEach(lib -> named.addAll(autoConfigs(lib)));
+        libraries.forEach(lib -> named.addAll(autoConfigs(index.repo(), lib)));
         var pending = new ArrayDeque<TypeDeclaration<?>>();
         own.forEach(cu -> types(cu).stream().filter(t -> t instanceof ClassOrInterfaceDeclaration c && isApp(index, c))
                 .forEach(pending::add));
@@ -670,17 +673,21 @@ public final class Discovery {
     }
 
     /** Auto-configuration classes a library module registers in {@code META-INF}. */
-    private static List<String> autoConfigs(Path module) {
+    private static List<String> autoConfigs(Repo repo, Path module) {
         var out = new ArrayList<String>();
         Path meta = module.resolve("src/main/resources/META-INF");
         try {
-            Matcher m = FACTORIES.matcher(Config.readText(meta.resolve("spring.factories")).replaceAll("\\\\\\R", ""));
+            Path factories = meta.resolve("spring.factories");
+            if (!inside(repo.root(), factories)) throw new IOException("registration path escapes repository");
+            Matcher m = FACTORIES.matcher(Config.readText(factories).replaceAll("\\\\\\R", ""));
             while (m.find()) for (String c : m.group(1).split(",")) out.add(c.strip().replace('$', '.'));
         } catch (IOException e) {
             // no spring.factories
         }
         try {
-            for (String line : Config.readText(meta.resolve("spring/" + IMPORTS)).split("\\R")) {
+            Path imports = meta.resolve("spring/" + IMPORTS);
+            if (!inside(repo.root(), imports)) throw new IOException("registration path escapes repository");
+            for (String line : Config.readText(imports).split("\\R")) {
                 if (!line.isBlank() && !line.strip().startsWith("#")) out.add(line.strip().replace('$', '.'));
             }
         } catch (IOException e) {

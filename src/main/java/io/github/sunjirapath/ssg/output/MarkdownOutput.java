@@ -49,6 +49,7 @@ public final class MarkdownOutput {
             TextFile.write(w.out.resolve("services/" + w.g.fileName(s.name()) + ".md"), w.servicePage(s));
         }
         TextFile.write(w.out.resolve("index.md"), w.index());
+        TextFile.removeRetired(graph, w.out, "services", ".md");
     }
 
     /** One service page with evidence as plain {@code repo/file:line} text (no links), e.g. for MCP. */
@@ -72,9 +73,9 @@ public final class MarkdownOutput {
 
         var md = new StringBuilder();
         md.append("---\n")
-                .append("service: ").append(s.name()).append('\n')
-                .append("repo: ").append(s.repo()).append('\n')
-                .append("path: ").append(s.path()).append('\n')
+                .append("service: ").append(escape(s.name())).append('\n')
+                .append("repo: ").append(escape(s.repo())).append('\n')
+                .append("path: ").append(escape(s.path())).append('\n')
                 .append("exposes: ").append(exposes.size()).append('\n')
                 .append("calls: ").append(calls.size()).append('\n')
                 .append("publishes: ").append(produces.size()).append('\n')
@@ -82,8 +83,8 @@ public final class MarkdownOutput {
                 .append("tables: ").append(data.stream().map(Edge::to).distinct().count()).append('\n')
                 .append("findings: ").append(findings.size()).append('\n')
                 .append("---\n\n")
-                .append("# ").append(s.name()).append("\n\n")
-                .append("Repo `").append(s.repo()).append("`, module `").append(s.path()).append("`.\n\n");
+                .append("# ").append(escape(s.name())).append("\n\n")
+                .append("Repo ").append(code(s.repo())).append(", module ").append(code(s.path())).append(".\n\n");
 
         md.append("## Exposes\n\n");
         table(md, List.of("Method", "Path", "Called by", "Reaches", "Source", "Confidence", "Evidence"), exposes, e -> {
@@ -92,8 +93,8 @@ public final class MarkdownOutput {
                     .collect(Collectors.joining(", "));
             String reaches = g.from(e.to(), Edge.Kind.REACHES).stream().map(r -> g.label(r.to())).distinct().sorted()
                     .map(MarkdownOutput::code).collect(Collectors.joining("<br>"));
-            return Arrays.asList(ep.method(), code(ep.path()), callers.isEmpty() ? "-" : callers, reaches.isEmpty() ? "-" : reaches,
-                    e.attrs().get("source"), e.confidence().name(), evidence(dir, e.evidence()));
+            return Arrays.asList(escape(ep.method()), code(ep.path()), callers.isEmpty() ? "-" : escape(callers), reaches.isEmpty() ? "-" : reaches,
+                    escape(e.attrs().get("source")), e.confidence().name(), evidence(dir, e.evidence()));
         });
 
         md.append("## Calls\n\n");
@@ -102,24 +103,24 @@ public final class MarkdownOutput {
             String matched = target instanceof Node.Endpoint ep ? code(ep.method() + " " + ep.path())
                     : target instanceof Node.Service ? ("unavailable".equals(e.attrs().get("contract"))
                     ? "**contract unavailable**" : "**no matching endpoint**") : "-";
-            return Arrays.asList(g.owner(e.to()), e.attrs().get("method"), code(e.attrs().get("path")), e.attrs().get("client"),
+            return Arrays.asList(escape(g.owner(e.to())), escape(e.attrs().get("method")), code(e.attrs().get("path")), escape(e.attrs().get("client")),
                     matched, e.confidence().name(), evidence(dir, e.evidence()));
         });
 
         md.append("## Publishes\n\n");
         table(md, List.of("Topic", "Consumers", "Via", "Confidence", "Evidence"), produces, e -> Arrays.asList(
-                code(g.label(e.to())), others(e.to(), Edge.Kind.CONSUMES), e.attrs().get("via"), e.confidence().name(),
+                code(g.label(e.to())), others(e.to(), Edge.Kind.CONSUMES), escape(e.attrs().get("via")), e.confidence().name(),
                 evidence(dir, e.evidence())));
 
         md.append("## Consumes\n\n");
         table(md, List.of("Topic", "Producers", "Via", "Confidence", "Evidence"), consumes, e -> Arrays.asList(
-                code(g.label(e.to())), others(e.to(), Edge.Kind.PRODUCES), e.attrs().get("via"), e.confidence().name(),
+                code(g.label(e.to())), others(e.to(), Edge.Kind.PRODUCES), escape(e.attrs().get("via")), e.confidence().name(),
                 evidence(dir, e.evidence())));
 
         md.append("## Data\n\n");
         table(md, List.of("Table", "Store", "Relation", "Confidence", "Evidence"), data, e -> {
             var t = (Node.Table) g.nodes.get(e.to());
-            return Arrays.asList(code(t.name()), t.store(), e.kind().name().toLowerCase(), e.confidence().name(),
+            return Arrays.asList(code(t.name()), escape(t.store()), e.kind().name().toLowerCase(), e.confidence().name(),
                     evidence(dir, e.evidence()));
         });
 
@@ -134,7 +135,7 @@ public final class MarkdownOutput {
 
     private String others(String topicId, Edge.Kind kind) {
         String s = g.to(topicId, kind).stream().map(e -> g.owner(e.from())).distinct().sorted().collect(Collectors.joining(", "));
-        return s.isEmpty() ? "-" : s;
+        return s.isEmpty() ? "-" : escape(s);
     }
 
     // ---------------------------------------------------------------- index
@@ -152,7 +153,7 @@ public final class MarkdownOutput {
 
         md.append("## Services\n\n");
         table(md, List.of("Service", "Repo", "Module", "Exposes", "Calls", "Publishes", "Consumes", "Findings"), services, s -> Arrays.asList(
-                "[" + s.name() + "](services/" + g.fileName(s.name()) + ".md)", s.repo(), code(s.path()),
+                "[" + escape(s.name()) + "](services/" + g.fileName(s.name()) + ".md)", escape(s.repo()), code(s.path()),
                 count(s.id(), Edge.Kind.EXPOSES), count(s.id(), Edge.Kind.CALLS), count(s.id(), Edge.Kind.PRODUCES),
                 count(s.id(), Edge.Kind.CONSUMES),
                 String.valueOf(g.graph.findings().stream().filter(f -> f.service().equals(s.name())).count())));
@@ -163,7 +164,7 @@ public final class MarkdownOutput {
             if (e.kind() != Edge.Kind.CALLS) continue;
             deps.computeIfAbsent(g.owner(e.from()) + " → " + g.owner(e.to()), k -> new TreeSet<>()).add(e.attrs().get("client"));
         }
-        table(md, List.of("From → To", "Clients"), List.copyOf(deps.entrySet()), d -> Arrays.asList(d.getKey(), String.join(", ", d.getValue())));
+        table(md, List.of("From → To", "Clients"), List.copyOf(deps.entrySet()), d -> Arrays.asList(escape(d.getKey()), escape(String.join(", ", d.getValue()))));
 
         md.append("## Topics\n\n");
         var topicNodes = g.graph.nodes().stream().filter(Node.Topic.class::isInstance).toList();
@@ -174,7 +175,7 @@ public final class MarkdownOutput {
         var byKind = g.graph.findings().stream().collect(Collectors.groupingBy(Finding::kind, TreeMap::new, Collectors.counting()));
         table(md, List.of("Kind", "Count"), List.copyOf(byKind.entrySet()), k -> Arrays.asList(k.getKey().name(), k.getValue().toString()));
         for (Finding f : g.graph.findings()) {
-            md.append("- **").append(f.kind()).append("** `").append(f.service()).append("`: ").append(escape(f.message()))
+            md.append("- **").append(f.kind()).append("** ").append(code(f.service())).append(": ").append(escape(f.message()))
                     .append(" — ").append(evidence(dir, f.evidence())).append('\n');
         }
         return md.toString();
@@ -187,6 +188,10 @@ public final class MarkdownOutput {
     // ---------------------------------------------------------------- helpers
 
     private static String safeLinkBase(String template) {
+        String lower = template.toLowerCase(java.util.Locale.ROOT);
+        if (!(lower.startsWith("https://") || lower.startsWith("http://") || template.startsWith("//"))
+                || template.codePoints().anyMatch(c -> Character.isISOControl(c) || Character.isWhitespace(c)))
+            throw new IllegalArgumentException("--link-base requires an HTTP(S) URL without whitespace or controls");
         String safe = template.replaceAll("(?<=//)[^/?#]*@", "[redacted]@");
         int fragment = safe.indexOf('#');
         if (fragment >= 0 && !safe.substring(fragment + 1).matches("L?\\{line}")) {
@@ -226,24 +231,56 @@ public final class MarkdownOutput {
             Path root = repoRoots.get(e.repo());
             String text = e.repo() + "/" + e.file() + ":" + e.line();
             if (linkBase != null) {
-                return "[" + text + "](" + linkBase.replace("{repo}", e.repo()).replace("{file}", e.file().replace(" ", "%20"))
-                        .replace("{line}", String.valueOf(e.line())) + ")";
+                return "[" + escape(text) + "](" + link(linkBase.replace("{repo}", link(e.repo())).replace("{file}", link(e.file()))
+                        .replace("{line}", String.valueOf(e.line()))) + ")";
             }
-            if (root == null) return "`" + text + "`";
+            if (root == null) return code(text);
             Path target = root.resolve(e.file());
             // no relative path exists across drives (C: vs E:), so link the absolute file URI there
             String link = target.getRoot() != null && target.getRoot().equals(fromDir.getRoot())
                     ? fromDir.relativize(target).toString().replace('\\', '/').replace(" ", "%20")
                     : target.toUri().toString();
-            return "[" + text + "](" + link + "#L" + e.line() + ")";
+            return "[" + escape(text) + "](" + link(link) + "#L" + e.line() + ")";
         }).collect(Collectors.joining("<br>"));
     }
 
     private static String code(String s) {
-        return s == null ? "" : "`" + s + "`";
+        return s == null ? "" : "`" + escapeCode(s) + "`";
     }
 
     private static String escape(String s) {
-        return s.replace("<", "&lt;").replace(">", "&gt;");
+        if (s == null) return "";
+        var out = new StringBuilder();
+        s.codePoints().forEach(c -> {
+            if (c == '<') out.append("&lt;");
+            else if (c == '>') out.append("&gt;");
+            else if (c == '&') out.append("&amp;");
+            else if ("[]!\\".indexOf(c) >= 0 || Character.isISOControl(c)) out.append("&#").append(c).append(';');
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
+    }
+
+    private static String escapeCode(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (c == '<') out.append("&lt;");
+            else if (c == '>') out.append("&gt;");
+            else if (c == '&') out.append("&amp;");
+            else if (c == '`' || Character.isISOControl(c)) out.append("&#").append(c).append(';');
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
+    }
+
+    private static String link(String text) {
+        var out = new StringBuilder();
+        text.codePoints().forEach(c -> {
+            if (c <= 32 || c >= 127 || "()<>\"'`\\".indexOf(c) >= 0)
+                out.append(java.net.URLEncoder.encode(new String(Character.toChars(c)), java.nio.charset.StandardCharsets.UTF_8)
+                        .replace("+", "%20"));
+            else out.appendCodePoint(c);
+        });
+        return out.toString();
     }
 }

@@ -129,17 +129,36 @@ public final class GatewayExtractor implements Extractor {
                 case "SetPath" -> path = f.args.isEmpty() ? path : f.args.getFirst();
                 case "RewritePath" -> {
                     if (f.args.size() < 2) continue;
+                    if (path.length() > 4096 || f.args.getFirst().length() > 512 || f.args.get(1).length() > 1024)
+                        return Value.unresolved("RewritePath work limit exceeded");
                     try {
                         String replacement = f.args.get(1).replace("$\\{", "${");
-                        path = path.replace("**", WILD).replaceAll(f.args.getFirst(), replacement).replace(WILD, "**");
-                    } catch (IllegalArgumentException | IndexOutOfBoundsException e) { // bad regex or group ref
-                        return Value.unresolved("RewritePath=" + String.join(", ", f.args));
+                        path = Pattern.compile(f.args.getFirst()).matcher(new RewriteInput(path.replace("**", WILD)))
+                                .replaceAll(replacement).replace(WILD, "**");
+                        if (path.length() > 65536) return Value.unresolved("RewritePath output limit exceeded");
+                    } catch (IllegalArgumentException | IndexOutOfBoundsException | StackOverflowError e) {
+                        return Value.unresolved("RewritePath rejected or work limit exceeded");
                     }
                 }
                 default -> { }
             }
         }
         return Value.exact(path.isEmpty() ? "/" : path);
+    }
+
+    /** Bound regex engine reads rather than relying on cancellation of a backtracking thread. */
+    private static final class RewriteInput implements CharSequence {
+        private final String text;
+        private int remaining = 100_000;
+
+        private RewriteInput(String text) { this.text = text; }
+        public int length() { return text.length(); }
+        public char charAt(int index) {
+            if (--remaining < 0) throw new IllegalArgumentException("regex work limit exceeded");
+            return text.charAt(index);
+        }
+        public CharSequence subSequence(int start, int end) { return text.subSequence(start, end); }
+        public String toString() { return text; }
     }
 
     /** {@code r -> r.path("/x/**").filters(f -> f.stripPrefix(1)).uri("lb://svc")} inside a RouteLocator bean. */
