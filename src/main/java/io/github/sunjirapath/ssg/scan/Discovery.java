@@ -754,7 +754,7 @@ public final class Discovery {
         String prefix = "spring.cloud.config.server.";
         var out = new ArrayList<String>();
         server.withPrefix(prefix).forEach((k, e) -> {
-            String norm = k.substring(prefix.length()).replaceAll("\\[\\d+]$", "").replaceAll("[-_]", "").toLowerCase();
+            String norm = k.substring(prefix.length()).replaceAll("\\[\\d+]$", "").replaceAll("[-_]", "").toLowerCase(java.util.Locale.ROOT);
             if (!norm.equals(key) || e.value() == null) return;
             for (String p : e.value().split(",")) {
                 Value v = server.resolve(p.strip());

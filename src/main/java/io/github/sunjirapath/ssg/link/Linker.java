@@ -112,7 +112,7 @@ public final class Linker {
             var tables = keys.stream().map(k -> "`" + k.substring(k.indexOf(':') + 1) + "`").distinct().toList();
             findings.add(new Finding(Finding.Kind.SHARED_TABLE, services.first(), (tables.size() == 1 ? "table " : "tables ")
                     + String.join(", ", tables) + (tables.size() == 1 ? " is" : " are") + " owned by " + services.size()
-                    + " services: " + String.join(", ", services), keys.stream().flatMap(k -> evidence.get(k).stream()).toList()));
+                    + " services: " + String.join(", ", services), keys.stream().flatMap(k -> evidence.get(k).stream()).sorted().toList()));
         });
     }
 

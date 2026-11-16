@@ -48,7 +48,9 @@ public final class JsonOutput {
     public static Graph parseSnapshot(byte[] bytes) throws IOException {
         if (bytes == null || bytes.length > MAX_SNAPSHOT_BYTES) throw new IOException("invalid graph snapshot");
         try {
+            // Unknown fields are ignored so a snapshot from a newer version (additive fields) still loads.
             Graph graph = new ObjectMapper().enable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                    .disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .readValue(bytes, Graph.class);
             if (graph == null || graph.nodes() == null || graph.edges() == null || graph.findings() == null)
                 throw new IOException("invalid graph snapshot");

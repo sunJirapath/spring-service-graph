@@ -175,7 +175,7 @@ public final class GatewayExtractor implements Extractor {
             for (MethodCallExpr c : calls) {
                 if (!c.getNameAsString().equals("method")) continue;
                 for (var a : c.getArguments()) {
-                    verbs.add((a instanceof FieldAccessExpr f ? f.getNameAsString() : s.index().eval(a).text()).toUpperCase());
+                    verbs.add((a instanceof FieldAccessExpr f ? f.getNameAsString() : s.index().eval(a).text()).toUpperCase(java.util.Locale.ROOT));
                 }
             }
             if (verbs.isEmpty()) verbs.add("*");
